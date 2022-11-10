@@ -25,5 +25,7 @@ public class SignUpDto {
     private String dateOfBirth;
     @ApiModelProperty(value = "Phone number", required = true)
     private String phoneNumber;
+    @ApiModelProperty(value = "User's staff ID", required = true)
+    private String staffId;
 
 }

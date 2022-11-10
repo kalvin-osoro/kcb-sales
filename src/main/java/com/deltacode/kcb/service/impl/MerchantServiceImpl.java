@@ -74,7 +74,7 @@ public class MerchantServiceImpl implements MerchantService {
             MerchantDetails merchantDetails = new MerchantDetails();
             logger.info("get Merchant Account Type");
             Optional<MerchantAccountType> optionalMerchAgentAccountType = merchantAccountTypeRepository.findById(
-                    onboardMerchantRequest.getMerchAgentAccountTypeId());
+                    onboardMerchantRequest.getMerchantAccountTypeId());
             logger.info("getting Merchant County");
             Optional<County> county = countyRepository.findById(
                     onboardMerchantRequest.getCountyCode());
@@ -181,9 +181,6 @@ public class MerchantServiceImpl implements MerchantService {
         }
 
         }
-
-
-
 
 
     @Override

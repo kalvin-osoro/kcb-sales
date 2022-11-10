@@ -30,8 +30,6 @@ public class AccountTypeDto  {
     @ApiModelProperty(value = "Acc Type status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
-    @NotBlank(message = "Created by is mandatory")
-    private Long createdBy;
     public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();

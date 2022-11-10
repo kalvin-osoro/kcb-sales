@@ -16,4 +16,6 @@ public interface DSRDetailsRepository extends JpaRepository<DSRDetails, Long> {
     List<DSRDetails> findDSRDetailsByStatus(Status status);
     Optional<DSRDetails>findDSRDetailsBySystemUserId(long id);
     List<DSRDetails> findAllByDsrTeam(DSRTeam dsrTeam);
+
+    Optional<DSRDetails> findDSRDetailsByUsername(String username);
 }

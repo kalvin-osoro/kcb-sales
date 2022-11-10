@@ -1,6 +1,6 @@
 package com.deltacode.kcb.controller;
+import com.deltacode.kcb.DSRModule.payload.request.ZoneRequest;
 import com.deltacode.kcb.payload.ZoneDto;
-import com.deltacode.kcb.payload.ZoneResponse;
 import com.deltacode.kcb.service.ZoneService;
 import com.deltacode.kcb.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -10,12 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Zone Controller Rest Api")
 @RestController()
-@RequestMapping(path = "/dsr-team/zone")
+@RequestMapping(path = "/zone")
 public class ZoneController {
     private final ZoneService zoneService;
 
@@ -25,38 +26,33 @@ public class ZoneController {
     @ApiOperation(value = "Create Zone Api")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<ZoneDto> createZone(@Valid @RequestBody ZoneDto zoneDto){
-        return  new ResponseEntity<>(zoneService.createZone(zoneDto), HttpStatus.CREATED);
+    public ResponseEntity<?> addZone(@Valid @RequestBody ZoneRequest  zoneRequest, HttpServletRequest request) {
+        return new ResponseEntity<>(zoneService.addZone(zoneRequest,request), HttpStatus.CREATED);
     }
-    @ApiOperation(value = "Fetching all Zone  Api")
-    @GetMapping
-    public ZoneResponse getAllZones(
-            @RequestParam(value = "pageNo",defaultValue = AppConstants.DEFAULT_PAGE_NUMBER,required = false) int pageNo,
-            @RequestParam(value ="pageSize",defaultValue = AppConstants.DEFAULT_PAGE_SIZE,required = false) int pageSize,
-            @RequestParam(value = "sortBy",defaultValue = AppConstants.DEFAULT_SORT_BY,required = false) String sortBy,
-            @RequestParam(value = "sortDir",defaultValue = AppConstants.DEFAULT_SORT_DIR,required = false) String sortDir
-    ){
-        return zoneService.getAllZones(pageNo,pageSize,sortBy,sortDir);
-    }
-    @ApiOperation(value = "Fetching  Zone  Api by Id")
-    @GetMapping("/{id}")
-    public ResponseEntity<ZoneDto> getZoneById(@PathVariable Long id){
-        return new ResponseEntity<>(zoneService.getZoneById(id),HttpStatus.OK);
-    }
-    //update zone
-    @ApiOperation(value = "Update Zone Api")
+
+    @ApiOperation(value = "Get All Zones Api")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateBank(@Valid @RequestBody ZoneDto bankDto,@PathVariable Long id){
-        return zoneService.updateZone(bankDto,id);
+    @RequestMapping(value = "/get-all-zones", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllZones(HttpServletRequest request) {
+        return zoneService.getAllZones(request);
     }
-    //delete zone
+//    @ApiOperation(value = "Get Zone By Id Api")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+//    public ResponseEntity<?> getAllZoneById(@PathVariable long id, HttpServletRequest httpServletRequest) {
+//        return zoneService.getAllZones(id,httpServletRequest);
+//    }
     @ApiOperation(value = "Delete Zone Api")
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteZone(@PathVariable Long id){
-        zoneService.deleteZoneById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @RequestMapping(value = "/delete-zone/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteZone(@PathVariable long id, HttpServletRequest httpServletRequest) {
+        return zoneService.deleteZone(id, httpServletRequest);
+    }
+    @ApiOperation(value = "Edit Zone Api")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(value = "/edit-zone/{id}")
+    public ResponseEntity<?> editZone(@Valid @RequestBody ZoneRequest zoneRequest, HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(zoneService.editZone(zoneRequest,httpServletRequest), HttpStatus.OK);
     }
 
 }

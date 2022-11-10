@@ -1,5 +1,6 @@
 package com.deltacode.kcb.controller;
 
+import com.deltacode.kcb.DSRModule.payload.request.DSRTeamRequest;
 import com.deltacode.kcb.payload.DSRDto;
 import com.deltacode.kcb.payload.DSRResponse;
 import com.deltacode.kcb.DSRModule.service.DSRService;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -25,53 +27,29 @@ public class DSRController {
         this.dsrService = dsrService;
     }
 
-    //create DSR
-    @ApiOperation(value = "Create Dsr REST API")
-    @PostMapping("/teams/{teamId}/dsr")
-    public ResponseEntity<DSRDto> createDsr(@PathVariable(value = "teamId") long teamId,
-                                              @Valid @RequestBody DSRDto dsrDto) {
-        return new ResponseEntity<>(dsrService.createDSR(teamId, dsrDto), HttpStatus.CREATED);
+    @RequestMapping(value = "/add-dsr-team", method = RequestMethod.POST)
+    public ResponseEntity<?> addDSRTeam(@RequestBody DSRTeamRequest dsrTeamRequest, HttpServletRequest httpServletRequest) {
+        return dsrService.addDSRTeam(dsrTeamRequest, httpServletRequest);
     }
 
-    @ApiOperation(value = "Get All Dsr By Team ID REST API")
-    @GetMapping("/teams/{teamId}/dsr")
-    public List<DSRDto> getDsrByTeamId(@PathVariable(value = "teamId") Long teamId) {
-        return dsrService.getDSRByTeamId(teamId);
+    @RequestMapping(value = "/edit-dsr-team", method = RequestMethod.POST)
+    public ResponseEntity<?> editDSRTeam(@RequestBody DSRTeamRequest dsrTeamRequest, HttpServletRequest httpServletRequest) {
+        return dsrService.editDSRTeam(dsrTeamRequest, httpServletRequest);
     }
 
-    @ApiOperation(value = "Fetching all Dsr  Api")
-    @GetMapping("/dsr")
-    public DSRResponse getAllDSRs(
-            @RequestParam(value = "pageNo",defaultValue = AppConstants.DEFAULT_PAGE_NUMBER,required = false) int pageNo,
-            @RequestParam(value ="pageSize",defaultValue = AppConstants.DEFAULT_PAGE_SIZE,required = false) int pageSize,
-            @RequestParam(value = "sortBy",defaultValue = AppConstants.DEFAULT_SORT_BY,required = false) String sortBy,
-            @RequestParam(value = "sortDir",defaultValue = AppConstants.DEFAULT_SORT_DIR,required = false) String sortDir
-    ){
-        return dsrService.getAllDSRs(pageNo,pageSize,sortBy,sortDir);
+    @RequestMapping(value = "/get-all-dsr-teams", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllDSRTeams() {
+        return dsrService.getAllDSRTeams();
     }
 
-    @ApiOperation(value = "Get Single DSR By ID REST API")
-    @GetMapping("/teams/{teamId}/dsr/{id}")
-    public ResponseEntity<DSRDto> getDsrById(@PathVariable(value = "teamId") Long teamId,
-                                               @PathVariable(value = "id") Long dsrId){
-        DSRDto dsrDto = dsrService.getDSRById(teamId, dsrId);
-        return new ResponseEntity<>(dsrDto, HttpStatus.OK);
+    @RequestMapping(value = "/get-team-members/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getTeamMembersByTeamId(@PathVariable long id) {
+        return dsrService.getTeamMembersByTeamId(id);
     }
 
-    @ApiOperation(value = "Update DSR By ID REST API")
-    @PutMapping("/teams/{teamId}/dsr/{id}")
-    public ResponseEntity<DSRDto> updateDsr(@PathVariable(value = "teamId") Long teamId,
-                                              @PathVariable(value = "id") Long dsrId,
-                                              @Valid @RequestBody DSRDto dsrDto){
-        DSRDto updatedDsr = dsrService.updateDSR(teamId, dsrId, dsrDto);
-        return new ResponseEntity<>(updatedDsr, HttpStatus.OK);
+    @RequestMapping(value = "/delete-dsr-team/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteDSRTeam(@PathVariable long id, HttpServletRequest httpServletRequest) {
+        return dsrService.deleteDSRTeam(id, httpServletRequest);
     }
 
-    @ApiOperation(value = "Delete DSR By ID REST API")
-    @DeleteMapping("/teams/{teamId}/dsr/{id}")
-    public ResponseEntity<String> deleteDsr(@PathVariable(value = "teamId") Long teamId,
-                                             @PathVariable(value = "id") Long dsrId){
-        dsrService.deleteDSR(teamId, dsrId);
-        return new ResponseEntity<>("DSR deleted successfully", HttpStatus.OK);
-    }
 }

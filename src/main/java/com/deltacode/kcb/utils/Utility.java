@@ -2,6 +2,10 @@ package com.deltacode.kcb.utils;
 
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LinearRing;
+import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,5 +84,29 @@ return new Date();
         arrValidStatus.add("O"); // Operator
         arrValidStatus.add("F"); // Field agent
         return arrValidStatus.contains(status);
+    }
+    public static boolean validateExpectedResponse(String expectedResponse) throws Exception{
+        expectedResponse = expectedResponse.trim();
+        ArrayList<String> arrValidStatus = new ArrayList<>();
+        arrValidStatus.add("T");
+        arrValidStatus.add("C");
+        arrValidStatus.add("B");
+        return arrValidStatus.contains(expectedResponse);
+    }
+
+    //fuction to check weather a point is inside a polygon or not
+    public static boolean isPointInPolygon(Coordinate[] coordinates, Coordinate point) {
+        GeometryFactory geometryFactory = new GeometryFactory();//create a geometry factory
+        LinearRing linearRing = geometryFactory.createLinearRing(coordinates);//create a linear ring
+        Polygon polygon = geometryFactory.createPolygon(linearRing, null);//create a polygon
+        return polygon.contains(geometryFactory.createPoint(point));//
+    }
+
+    public static String generatePassword() {
+        //generate 4 digit random number
+        Random rand = new Random();//instance of random class
+        int randInt = rand.nextInt(10000);
+        String password = String.format("%04d", randInt);
+        return password;
     }
 }

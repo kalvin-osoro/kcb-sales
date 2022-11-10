@@ -50,7 +50,7 @@ public class DSRDetails {
     @Column(name="location")
     private String location;
 
-    @Column(name="gender",  columnDefinition="varchar(1) default '' comment 'F is Female, F is Female'")
+    @Column(name="gender")
     private String gender;
 
     @Column(name="national_id")

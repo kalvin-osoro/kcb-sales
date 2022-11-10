@@ -23,6 +23,7 @@ public class UserApp {
     private Long id;
     private String username;
     private String password;
+    private String staffId;
     private String email;
     private String firstName;
     private String lastName;
@@ -38,4 +39,13 @@ public class UserApp {
     @JoinTable(name = "user_roles",joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+    private  Boolean isVerified = Boolean.FALSE;
+    private Boolean firstLogin = Boolean.TRUE;
+
+
+
+
+    public void setIsVerified(boolean isVerified) {
+        this.isVerified = isVerified;
+    }
 }

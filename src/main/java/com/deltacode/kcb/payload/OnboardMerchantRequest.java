@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class OnboardMerchantRequest {
     private org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
     private Long userAccountTypeId;
-    private Long merchAgentAccountTypeId;
+    private Long merchantAccountTypeId;
     private String businessName;
     private String mobileNumber;
     private String email;

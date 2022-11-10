@@ -18,6 +18,7 @@ public class UserAppDto  {
     private String lastName;
     private String phoneNumber;
     private String middleName;
+    private String staffId;
     private String dateOfBirth;
     private Set<Role> roles;
 

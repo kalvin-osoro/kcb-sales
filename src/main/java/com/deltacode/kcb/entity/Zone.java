@@ -1,5 +1,7 @@
 package com.deltacode.kcb.entity;
 
+import com.deltacode.kcb.DSRModule.models.DSRTeam;
+import com.deltacode.kcb.DSRModule.models.ZoneCoordinates;
 import com.deltacode.kcb.utils.Status;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -8,7 +10,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,7 +32,16 @@ public class Zone   {
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
     @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Team> teams =new HashSet<>();
+    private Set<DSRTeam> teams =new HashSet<>();
+    @Column(name = "created_by")
+    private String createdBy;
+    private String updatedBy;
+    private Date updatedOn;
+    private Date createdOn;
+
     private Boolean deleted = Boolean.FALSE;
+
+    @OneToMany(mappedBy = "zone")
+    private List<ZoneCoordinates> coordinatesList;
 
 }

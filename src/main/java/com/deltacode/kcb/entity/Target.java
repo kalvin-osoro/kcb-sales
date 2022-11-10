@@ -1,5 +1,8 @@
 package com.deltacode.kcb.entity;
 
+import com.deltacode.kcb.payload.Campaign;
+import com.deltacode.kcb.payload.Onboarding;
+import com.deltacode.kcb.payload.Visits;
 import com.deltacode.kcb.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +31,12 @@ public class Target {
     private  Long id;
     private Integer target;
     private String targetName;
+    @Embedded
+    private Onboarding onboarding;
+    @Embedded
+    private Campaign campaign;
+    @Embedded
+    private Visits visits;
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
 

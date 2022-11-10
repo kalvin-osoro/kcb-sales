@@ -1,5 +1,6 @@
 package com.deltacode.kcb.DSRModule.models;
 
+import com.deltacode.kcb.entity.Zone;
 import com.deltacode.kcb.utils.Status;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -43,5 +44,9 @@ public class DSRTeam {
 
     @Column(name="updated_by")
     private String updatedBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "zone_id",nullable = false)
+    private Zone zone;
 
 }

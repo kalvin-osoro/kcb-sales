@@ -10,11 +10,18 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @ApiModel(description = "Target object")
 public class TargetDto {
+    @ApiModelProperty(notes = "Target ID")
     private Long id;
+    @ApiModelProperty(notes = "Target Name")
+    @NotEmpty(message = "Target name is required")
+    private String name;
+    @ApiModelProperty(notes = "Target Description")
+    private String description;
+    @ApiModelProperty(notes = "Target Visits")
+    private Visits visits;
+    @ApiModelProperty(notes = "Target Campaign")
+    private Campaign campaign;
+    @ApiModelProperty(notes = "Target Onboarding")
+    private Onboarding onboarding;
 
-   @NotEmpty(message = "Target is required")
-    @ApiModelProperty(value = "Target")
-    private String targetName;
-    @ApiModelProperty(value = "User Acc Type status")
-    private Integer target;
 }

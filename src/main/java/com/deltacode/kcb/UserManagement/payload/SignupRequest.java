@@ -16,6 +16,7 @@ public class SignupRequest {
     private String firstName;
     private String lastName;
     private String otherName;
+    private String staffId;
     private String location;
     private String gender;
     private String idNumber;

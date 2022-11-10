@@ -47,6 +47,7 @@ public class AccountTypeImpl implements AccountTypeService {
           accountType.setAccountTypeCode(accountTypeDto.getAccountTypeCode());
           accountType.setStatus(Status.ACTIVE);
           accountType.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+
           accountTypeRepository.save(accountType);
 
             responseObject.put("status", "success");
