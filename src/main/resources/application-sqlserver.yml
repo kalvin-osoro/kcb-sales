@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=kcb_fs_db
+    username: user
+    password: password
+  #   driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.SQLServer2012Dialect
+            format_sql: true
