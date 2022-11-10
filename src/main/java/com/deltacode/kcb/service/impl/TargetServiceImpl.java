@@ -13,35 +13,49 @@ import java.util.LinkedHashMap;
 public class TargetServiceImpl implements TargetService {
     @Autowired
     private TargetRepository targetRepository;
+    //Hardcoded values for testing purposes
+    private static final int onboardingTarget = (int) (Math.random() * 100);
+    private static final int onboardingAchieved = (int) (Math.random() * 100);
+    private static final int onboardingCommission = (int) (Math.random() * 100);
+    private static final int campaignTarget = (int) (Math.random() * 100);
+    private static final int campaignAchieved = (int) (Math.random() * 100);
+    private static final int campaignCommission = (int) (Math.random() * 100);
+    private static final int visitsTarget = (int) (Math.random() * 100);
+    private static final int visitsAchieved = (int) (Math.random() * 100);
+    private static final int visitsCommission = (int) (Math.random() * 100);
 
 
     @Override
     public ResponseEntity<?> getAllTarget() {
         LinkedHashMap<String, Object> responseParams = new LinkedHashMap<>();
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
+
         try {
             //hardcoded for now targets for now
-            responseParams.put("onboardingTarget", 100);
-            responseParams.put("onboardingAchieved", 50);
-            responseParams.put("onboardingPercentage", 50);
-            responseParams.put("campaignTarget", 100);
-            responseParams.put("campaignAchieved", 50);
-            responseParams.put("campaignPercentage", 50);
-            responseParams.put("visitsTarget", 100);
-            responseParams.put("visitAchieved", 50);
-            responseParams.put("visitPercentage", 50);
+            responseParams.put("onboardingTarget", onboardingTarget);
+            responseParams.put("onboardingAchieved", onboardingAchieved);
+            responseParams.put("onboardingCommission", onboardingCommission + "Ksh");
+            responseParams.put("campaignTarget", campaignTarget);
+            responseParams.put("campaignAchieved", campaignAchieved);
+            responseParams.put("campaignCommission", campaignCommission + "Ksh");
+            responseParams.put("visitsTarget", visitsTarget);
+            responseParams.put("visitAchieved", visitsAchieved);
+            responseParams.put("visitsCommission", visitsCommission + "Ksh");
 
-            responseObject.put("status", "success");
+            responseObject.put("status", 1);
             responseObject.put("message", "Target fetched successfully");
             responseObject.put("data", responseParams);
             return ResponseEntity.ok().body(responseObject);
 
         } catch (Exception e) {
-            responseObject.put("status", "error");
+            responseObject.put("status", 0);
             responseObject.put("message", "Error fetching target");
             responseObject.put("data", responseParams);
         }
         return ResponseEntity.ok().body(responseObject);
+
+
+
 
     }
 }
