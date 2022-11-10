@@ -9,4 +9,5 @@ public interface SmsService {
     ResponseEntity<?> validateOtp(ValidateOTPRequest validateOTPRequest);
     ResponseEntity<?> accountLookUp(String phoneNumber, String staffId);
     ResponseEntity<?>resetPassword(ResetPasswordRequest resetPasswordRequest);
+
 }
