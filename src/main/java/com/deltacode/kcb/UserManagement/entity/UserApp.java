@@ -40,7 +40,7 @@ public class UserApp {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     private  Boolean isVerified = Boolean.FALSE;
-    private Boolean firstLogin = Boolean.TRUE;
+//    private Boolean firstLogin = Boolean.TRUE;
 
 
 

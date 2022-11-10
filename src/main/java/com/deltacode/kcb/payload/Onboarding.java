@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 public class Onboarding {
     private Integer onboardingTarget;
     private Integer onboardingAchieved;
-    private Integer onboardingPercentage;
+    private Integer onboardingCommission;
 
     public Onboarding() {
     }

@@ -13,7 +13,7 @@ import javax.persistence.Embeddable;
 public class Campaign {
     private Integer campaignTarget;
     private Integer campaignAchieved;
-    private Integer campaignPercentage;
+    private Integer campaignCommission;
 
     public Campaign() {
     }

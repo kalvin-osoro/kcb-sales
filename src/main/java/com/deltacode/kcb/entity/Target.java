@@ -30,7 +30,6 @@ public class Target {
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private  Long id;
     private Integer target;
-    private String targetName;
     @Embedded
     private Onboarding onboarding;
     @Embedded

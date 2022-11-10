@@ -13,7 +13,7 @@ import javax.persistence.Embeddable;
 public class Visits {
     private Integer visitsTarget;
     private Integer visitsAchieved;
-    private Integer visitsPercentage;
+    private Integer visitsCommission;
 
     public Visits() {
     }
