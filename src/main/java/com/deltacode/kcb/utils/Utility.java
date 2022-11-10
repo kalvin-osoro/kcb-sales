@@ -36,11 +36,7 @@ public class Utility {
         return formatter1.parse(formatter1.format(date));
     }
 
-  public static int generateOtp(){
-        Random rand = new Random();
-        int randInt = rand.nextInt(10000);
-        return  randInt;
-    }
+
 
 //    public static String generateUniqueNoByDate(){
 //        SimpleDateFormat formatter1 = new SimpleDateFormat ("ddMMyy");
@@ -108,5 +104,12 @@ return new Date();
         int randInt = rand.nextInt(10000);
         String password = String.format("%04d", randInt);
         return password;
+    }
+
+    public static int generateOtp() {
+        //generate 4 digit random number
+        Random rand = new Random();
+        int randInt = rand.nextInt(10000);
+        return randInt;
     }
 }
