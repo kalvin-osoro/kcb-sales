@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
+@RequestMapping(path = "/api/v1")
 public class AcquiringAssetVC {
 
     @Autowired
@@ -44,7 +46,7 @@ public class AcquiringAssetVC {
 
 
 
-        //TODO;
+        //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -66,6 +68,7 @@ public class AcquiringAssetVC {
     @PostMapping("/acquiring-sync-crm-asset")
     public ResponseEntity<?> syncCRMAssets() {
 
+        //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -107,6 +110,7 @@ public class AcquiringAssetVC {
 
 
 
+        //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);
 
         //Response
