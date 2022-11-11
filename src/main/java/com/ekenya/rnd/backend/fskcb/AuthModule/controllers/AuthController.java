@@ -3,8 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.JWTAuthResponse;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.LoginRequest;
+import com.ekenya.rnd.backend.fskcb.AuthModule.models.LoginRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.PrivilegeRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
@@ -70,7 +69,7 @@ public class AuthController {
         List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
 
 
-        //
+        //Response
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode node = objectMapper.createObjectNode();
         node.put("token",token);
@@ -118,8 +117,10 @@ public class AuthController {
         UserRole userRole = roleRepository.findByName("ROLE_ADMIN").get();//get role from db
         userAccount.setRoles(Collections.singleton(userRole));//set role to user
         userRepository.save(userAccount);//save user to db
-        //
+
+        //Response
         ObjectNode node = new ObjectMapper().createObjectNode();
+        node.putPOJO("username",addUserRequest.getStaffNo());
         return ResponseEntity.ok(new AppResponse(1,node,"User registered successfully"));
 
     }

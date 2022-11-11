@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.UserManagement.payload;
+package com.ekenya.rnd.backend.fskcb.AuthModule.models;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
