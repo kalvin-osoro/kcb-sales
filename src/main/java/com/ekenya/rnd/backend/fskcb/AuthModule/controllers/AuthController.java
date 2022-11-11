@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.models.LookupRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
@@ -57,7 +58,7 @@ public class AuthController {
     @PostMapping("/login")
     @ApiOperation(value = "Login Api")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest){
-        Authentication authentication =authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getStaffNo(),
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getStaffNo(),
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         //get token from token provider
@@ -79,51 +80,21 @@ public class AuthController {
         return ResponseEntity.ok(new AppResponse(1,node,"User login successful"));
 
     }
-    @PostMapping("/signup")
-    @ApiOperation(value = "Signup Api")
-    public ResponseEntity<?> registerUser(@RequestBody AddUserRequest addUserRequest){
-        //check if user already exists by username or email
-        if(userRepository.existsByUsername(addUserRequest.getStaffNo())){
-            return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
-        }
-        if(userRepository.existsByEmail(addUserRequest.getEmail())){
-            return new ResponseEntity<>("Email already exists",HttpStatus.BAD_REQUEST);
-        }
-        //create new user object
-        UserAccount userAccount = new UserAccount();
-        userAccount.setUsername(addUserRequest.getStaffNo());
-        //userAccount.setDateOfBirth(addUserVM.getDateOfBirth());
-        userAccount.setEmail(addUserRequest.getEmail());
-        userAccount.setPassword(passwordEncoder.encode(addUserRequest.getPassword()));
-        //userAccount.setPhoneNumber(addUserVM.getPhoneNumber());
-        //userAccount.setFirstName(addUserVM.getFirstName());
-        //userAccount.setLastName(addUserVM.getLastName());
-        //userAccount.setMiddleName(addUserVM.getMiddleName());
 
-        //userAccount.setStaffId(addUserVM.getStaffId());
-        //userAccount.setPhoneNumber(addUserVM.getPhoneNumber());
 
-        if(roleRepository.findAll().isEmpty()){
-            UserRole role = new UserRole();
-            role.setName("ROLE_ADMIN");
+    @PostMapping("/lookup-user")
+    @ApiOperation(value = "Login Api")
+    public ResponseEntity<?> lookupUser(@RequestBody LookupRequest loginRequest) {
 
-            Set<Privilege> rolePrivileges = new HashSet<>(privilegeRepository.findAll());
-            role.setPrivileges(rolePrivileges);
+        //TOD
 
-            //
-            roleRepository.save(role);
-            //
-        }
-        UserRole userRole = roleRepository.findByName("ROLE_ADMIN").get();//get role from db
-        userAccount.setRoles(Collections.singleton(userRole));//set role to user
-        userRepository.save(userAccount);//save user to db
+
 
         //Response
-        ObjectNode node = new ObjectMapper().createObjectNode();
-        node.putPOJO("username",addUserRequest.getStaffNo());
-        return ResponseEntity.ok(new AppResponse(1,node,"User registered successfully"));
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        //
+        return ResponseEntity.ok(new AppResponse(1,node,"User login successful"));
     }
-
 
 }

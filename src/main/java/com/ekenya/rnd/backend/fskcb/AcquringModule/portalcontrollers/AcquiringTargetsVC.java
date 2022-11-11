@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddTargetRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAssetRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -12,16 +13,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class AcquiringAssetVC {
+public class AcquiringTargetsVC {
 
     @Autowired
     IAcquiringService acquiringService;
 
-    @PostMapping("/acquiring-create-asset")
-    public ResponseEntity<?> createAsset(@RequestBody AcquiringAddAssetRequest model) {
+    @PostMapping("/acquiring-create-target")
+    public ResponseEntity<?> createAcquiringAsset(@RequestBody AcquiringAddTargetRequest assetManagementRequest) {
 
 
-        //TODO; INSIDE SERVICE
+        //
+
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -39,10 +42,10 @@ public class AcquiringAssetVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-assets", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAsset() {
+    @RequestMapping(value = "/acquiring-get-all-targets", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllTargets() {
 
-
+        //
 
         //TODO;
         boolean success = false;//acquiringService..(model);
@@ -63,50 +66,37 @@ public class AcquiringAssetVC {
     }
 
 
-    @PostMapping("/acquiring-sync-crm-asset")
-    public ResponseEntity<?> syncCRMAssets() {
+    @RequestMapping(value = "/acquiring-get-agents-in-target", method = RequestMethod.GET)
+    public ResponseEntity<?> getAcquiringAgentsInTarget(AcquiringDSRsInTargetRequest model) {
 
+        //
+
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
 
-    // Expected output =>
 
-    //{
-    //    "serialNo":"",
-    //    "status":"",
-    //    "dateIssued":"dd-MMM-yyyy",
-    //    "dateAdded":"dd-MMM-yyyy",
-    //    "issuedTo":"AgentID",//MerchantID
-    //    "visitReports":[{
-    //        "merchantID":"",
-    //        "merchantName":"",
-    //        "locationName":"",
-    //        "DSRID":"",
-    //        "visitDate":""
-    //    }],
-    //    "photos":[{"name":"","link":"/jjj.png"}]
-    //}
-    @PostMapping("/acquiring-get-asset-by-id")
-    public ResponseEntity<?> getAssetById(@RequestParam int id) {
+    @RequestMapping(value = "/acquiring-sync-crm-targets", method = RequestMethod.GET)
+    public ResponseEntity<?> getAcquiringSyncTargetsWithCRM() {
 
+        //
 
-
-
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response

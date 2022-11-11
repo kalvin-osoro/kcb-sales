@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.CrmModule;
+package com.ekenya.rnd.backend.fskcb.CrmAdapter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

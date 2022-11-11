@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb;
 
-import com.ekenya.rnd.backend.fskcb.CrmModule.CrmIntegrations;
-import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
+import com.ekenya.rnd.backend.fskcb.CrmAdapter.CrmIntegrations;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

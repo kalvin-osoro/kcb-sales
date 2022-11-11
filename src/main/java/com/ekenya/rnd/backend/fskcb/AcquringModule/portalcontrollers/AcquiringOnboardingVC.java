@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringOnbordMerchantRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAssetRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -12,16 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class AcquiringAssetVC {
+public class AcquiringOnboardingVC {
 
     @Autowired
     IAcquiringService acquiringService;
 
-    @PostMapping("/acquiring-create-asset")
-    public ResponseEntity<?> createAsset(@RequestBody AcquiringAddAssetRequest model) {
+    //Channel request
+    @PostMapping("/acquiring-onboard-customer")
+    public ResponseEntity<?> onboardNewMerchant(@RequestBody AquiringOnbordMerchantRequest assetManagementRequest) {
 
-
-        //TODO; INSIDE SERVICE
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -39,12 +40,11 @@ public class AcquiringAssetVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-assets", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAsset() {
+    //List all onboarded merchants
+    @RequestMapping(value = "/acquiring-get-all-onboarded-customers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllMerchantOnboardings() {
 
-
-
-        //TODO;
+//TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -63,50 +63,11 @@ public class AcquiringAssetVC {
     }
 
 
-    @PostMapping("/acquiring-sync-crm-asset")
-    public ResponseEntity<?> syncCRMAssets() {
-
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
+    @PostMapping("/acquiring-approve-onboarding")
+    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AcquiringApproveMerchantOnboarindRequest assetManagementRequest) {
 
 
-    // Expected output =>
-
-    //{
-    //    "serialNo":"",
-    //    "status":"",
-    //    "dateIssued":"dd-MMM-yyyy",
-    //    "dateAdded":"dd-MMM-yyyy",
-    //    "issuedTo":"AgentID",//MerchantID
-    //    "visitReports":[{
-    //        "merchantID":"",
-    //        "merchantName":"",
-    //        "locationName":"",
-    //        "DSRID":"",
-    //        "visitDate":""
-    //    }],
-    //    "photos":[{"name":"","link":"/jjj.png"}]
-    //}
-    @PostMapping("/acquiring-get-asset-by-id")
-    public ResponseEntity<?> getAssetById(@RequestParam int id) {
-
-
-
-
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
