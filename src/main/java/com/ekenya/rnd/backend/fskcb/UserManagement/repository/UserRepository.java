@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<UserAccount, Long> {
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
     UserAccount findByResetPasswordToken(String token);
-        @Query("SELECT c FROM UserApp c WHERE c.email = ?1")
+        @Query("SELECT c FROM UserAccount c WHERE c.email = ?1")
         UserAccount findByEmaili(String email);
         Optional<UserAccount> findByPhoneNumberAndStaffId(String phoneNo, String staffId);
 

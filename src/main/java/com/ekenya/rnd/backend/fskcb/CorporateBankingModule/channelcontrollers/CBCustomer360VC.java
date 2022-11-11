@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/corporate-customer-view")
+@RestController
 @Api(value = "corporate Banking customer 360")
 public class CBCustomer360VC {
 
-    @RequestMapping(value = "/corporate-customer360/{customerid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/cb-customer360/{customerid}", method = RequestMethod.GET)
     public RequestEntity<?> getCustomer360View(@PathVariable long customerId){
         return null;
     }}

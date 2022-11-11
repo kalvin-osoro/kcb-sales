@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController(value = "/agency")
+@RestController
 public class AgencyCustomer360VC {
-    @RequestMapping(value = "/customer360/{customerid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/agency-customer360/{customerid}", method = RequestMethod.GET)
     public RequestEntity<?> getCustomer360View(@PathVariable long customerId){
 
         return null;

@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.CrmModule.CrmIntegrations;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,10 @@ public class SpringBootKcbRestApiApplication   {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-
+//
 //	@Bean
-//	public AuditorAware<String> auditorAware() {
-//		return new SpringSecurityAuditorAware();
+//	public ExcelService excelService() {
+//		return new ExcelService();
 //	}
 
 	public static void main(String[] args) {

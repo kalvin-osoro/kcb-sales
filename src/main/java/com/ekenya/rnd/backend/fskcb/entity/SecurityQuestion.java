@@ -1,6 +1,5 @@
-package com.deltacode.kcb.entity;
+package com.ekenya.rnd.backend.fskcb.entity;
 
-import com.deltacode.kcb.UserManagement.entity.UserApp;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;

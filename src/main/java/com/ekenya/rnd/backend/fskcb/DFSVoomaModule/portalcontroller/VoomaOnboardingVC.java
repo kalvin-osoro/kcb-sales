@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestController("/dfs/vooma-merchant")
-public class VoomaMerchantOnboardingVC {
+@RestController
+public class VoomaOnboardingVC {
     @Autowired
     private MerchantService merchantDetailsService;
 
@@ -38,7 +38,7 @@ public class VoomaMerchantOnboardingVC {
     @Autowired
     private FileStorageService fileStorageService;
 
-    @PostMapping("/create-vooma-merchant-account")
+    @PostMapping("/vooma-create-account")
     public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
                                                    @RequestParam("frontID") MultipartFile frontID,
                                                    @RequestParam("backID") MultipartFile backID,
@@ -74,7 +74,7 @@ public class VoomaMerchantOnboardingVC {
 //        return userTypeService.getAllAgentMerchantUserType();
 //    }
 
-    @GetMapping("fileupload/dfs-merchant/{filename:.+}")
+    @GetMapping("/vooma-fileupload/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         System.out.println("filename "+filename);
@@ -83,7 +83,7 @@ public class VoomaMerchantOnboardingVC {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
-    @GetMapping("fileupload2/dfs-merchant/{filename:.+}")
+    @GetMapping("/vooma-fileupload2/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
         System.out.println("filename "+filename);

@@ -3,17 +3,17 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 import org.springframework.http.RequestEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController(value = "/dfs-visits")
+@RestController
 public class VoomaCustomerVisitsVC {
-    @PostMapping(value = "customer-visits/create")
+    @PostMapping(value = "/vooma-create-customer-visits")
     public RequestEntity<?>createVisit(){
         return null;
     }
-    @GetMapping(value = "customer-visits/get-all-visits")
+    @GetMapping(value = "/vooma-get-all-customer-visits")
     public RequestEntity<?>getAllVisits(){
         return null;
     }
-    @GetMapping(value = "customer-visits/get-all-visits-by-customer-id/{customerid}")
+    @GetMapping(value = "/vooma-get-customer-visits-by-id/{customerid}")
     public RequestEntity<?>getAllVisitsByCustomerId(@PathVariable long customerId){
         return null;
     }

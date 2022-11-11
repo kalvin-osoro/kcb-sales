@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestController("corporate-banking-onboarding")
+@RestController
 public class CBOnboardingVC {
 
     private final CustomerDetailsService customerDetailsService;
@@ -22,7 +22,7 @@ public class CBOnboardingVC {
         this.customerAppointmentService = customerAppointmentService;
     }
 
-    @PostMapping("/create-corporate-banking-customer-account")
+    @PostMapping("/cb-create-customer-account")
     public ResponseEntity<?> createCustomerAccount(@RequestParam("customerdata") String customerdata,
                                                    @RequestParam("frontIdCapture") MultipartFile frontIdCapture,
                                                    @RequestParam("backIdCapture") MultipartFile backIdCapture,

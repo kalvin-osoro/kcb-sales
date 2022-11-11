@@ -4,13 +4,13 @@ import com.ekenya.rnd.backend.fskcb.payload.GetLeadRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/dfs-lead")
+@RestController
 public class VoomaLeadsVC {
-    @PostMapping("/create-lead")
+    @PostMapping("/vooma-create-lead")
     public ResponseEntity<?> createLead(@RequestBody GetLeadRequest leadRequest ) {
         return null;
     }
-    @RequestMapping(value = "/get-all-dfs-leads", method = RequestMethod.GET)
+    @RequestMapping(value = "/vooma-get-all-leads", method = RequestMethod.GET)
     public ResponseEntity<?> getAllLeads() {
         return null;
     }

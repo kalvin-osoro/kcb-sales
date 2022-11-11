@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Role;
+import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
 import org.apache.poi.ss.usermodel.Cell;
@@ -106,7 +106,7 @@ public class ExcelHelper {
                     cellIdx++;
                 }
                 //add user to db and assign default  role
-                Optional<Role> role = roleRepository.findByName("ROLE_USER");
+                Optional<UserRole> role = roleRepository.findByName("ROLE_USER");
                 //set role
                 userAccount.setRoles(new HashSet<>(Arrays.asList(role.get())));
                 //add to list

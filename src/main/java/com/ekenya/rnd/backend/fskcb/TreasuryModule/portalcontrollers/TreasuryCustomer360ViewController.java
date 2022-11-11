@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/treasury-customer-360")
+@RestController
+@RequestMapping(path = "/api/v1")
 public class TreasuryCustomer360ViewController {
-    @RequestMapping(value = "/details-customer/{customerid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/treasury-customer360/{customerid}", method = RequestMethod.GET)
     public RequestEntity<?> getCustomer360View(@PathVariable long customerId){
         return null;
     }

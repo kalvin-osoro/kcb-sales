@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestController("/api/portal/dfs-assets")
+@RestController
 public class VoomaAssetsVC {
 
     private final AssetService assetService;
@@ -16,12 +16,12 @@ public class VoomaAssetsVC {
         this.assetService = assetService;
     }
 
-    @RequestMapping(value = "/get-assets", method = RequestMethod.GET)
+    @RequestMapping(value = "/vooma-get-assets", method = RequestMethod.GET)
     public ResponseEntity<?> getAssets() {
         return assetService.getAllAssets();
     }
 
-    @RequestMapping(value = "/create-asset-management", method = RequestMethod.POST)
+    @RequestMapping(value = "/vooma-create-asset", method = RequestMethod.POST)
     public  ResponseEntity<?> createAssetManagement( @RequestParam("assetDetails") String assetDetails,
                                                      @RequestParam("assetFiles") MultipartFile[] assetFiles,
                                                      HttpServletRequest httpServletRequest) {

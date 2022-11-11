@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Role;
+import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
@@ -23,15 +23,15 @@ public class RoleService {
         this.userRepository = userRepository;
     }
 
-    public List<Role> getRoles(){
+    public List<UserRole> getRoles(){
         return roleRepository.findAll();
     }
 
-    public void save(Role client) {
+    public void save(UserRole client) {
         roleRepository.save(client);
     }
 
-    public Role findById(long id) {
+    public UserRole findById(long id) {
         return roleRepository.findById(id).orElse(null);
     }
 
@@ -42,8 +42,8 @@ public class RoleService {
 
     public void assignRole(Long userId, Long roleId){
         UserAccount user = userRepository.findById(userId).orElse(null);
-        Role role = roleRepository.findById(roleId).orElse(null);
-        Set<Role> userRoles = (Set<Role>) user.getRoles();
+        UserRole role = roleRepository.findById(roleId).orElse(null);
+        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
         userRoles.add(role);
         user.setRoles(userRoles);
         userRepository.save(user);
@@ -51,18 +51,18 @@ public class RoleService {
 
     public void unassignRole(Long userId, Long roleId){
         UserAccount user = userRepository.findById(userId).orElse(null);
-        Set<Role> userRoles = (Set<Role>) user.getRoles();
+        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
         userRoles.removeIf(x -> Objects.equals(x.getId(), roleId));
         user.setRoles(userRoles);
         userRepository.save(user);
     }
 
-    public Set<Role> getUserRoles(UserAccount user){
-        return (Set<Role>) user.getRoles();
+    public Set<UserRole> getUserRoles(UserAccount user){
+        return (Set<UserRole>) user.getRoles();
     }
 
 
-    public List<Role> getUserNotRoles(UserAccount user){
+    public List<UserRole> getUserNotRoles(UserAccount user){
         return roleRepository.getUserNotRoles(user.getId());
     }
 }

@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.security;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Role;
+import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,11 +44,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 //                .collect(Collectors.toList());
 //    }
 
-    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {
+    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<UserRole> roles) {
         final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        for (Role role: roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            for (Privilege privilege: role.getPrivileges()) {
+        for (UserRole userRole : roles) {
+            authorities.add(new SimpleGrantedAuthority(userRole.getName()));
+            for (Privilege privilege: userRole.getPrivileges()) {
                 authorities.add(new SimpleGrantedAuthority(privilege.getName()));
             }
         }

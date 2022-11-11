@@ -4,13 +4,14 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryLeadRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/treasury-lead")
+@RestController
+@RequestMapping(path = "/api/v1")
 public class TreasuryLeadController {
-    @PostMapping("/add")
+    @PostMapping("/treasury-leads-add")
     public ResponseEntity<?> createLead(@RequestBody TreasuryLeadRequest leadRequest ) {
         return null;
     }
-    @RequestMapping(value = "/getAllLeads", method = RequestMethod.GET)
+    @RequestMapping(value = "/treasury-get-all-leads", method = RequestMethod.GET)
     public ResponseEntity<?> getLead() {
         return null;
     }

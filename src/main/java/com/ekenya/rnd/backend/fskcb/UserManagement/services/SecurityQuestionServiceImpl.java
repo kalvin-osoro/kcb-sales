@@ -1,9 +1,9 @@
-package com.deltacode.kcb.service.impl;
+package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.deltacode.kcb.entity.SecurityQuestion;
 import com.deltacode.kcb.payload.SecurityQuestionRequest;
-import com.deltacode.kcb.repository.SecurityQuestionRepository;
-import com.deltacode.kcb.service.SecurityQuestionService;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.SecurityQuestionService;
+import com.ekenya.rnd.backend.fskcb.entity.SecurityQuestion;
+import com.ekenya.rnd.backend.fskcb.repository.SecurityQuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

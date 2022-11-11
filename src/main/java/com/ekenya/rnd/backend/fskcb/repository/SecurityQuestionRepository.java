@@ -1,6 +1,6 @@
-package com.deltacode.kcb.repository;
+package com.ekenya.rnd.backend.fskcb.repository;
 
-import com.deltacode.kcb.entity.SecurityQuestion;
+import com.ekenya.rnd.backend.fskcb.entity.SecurityQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

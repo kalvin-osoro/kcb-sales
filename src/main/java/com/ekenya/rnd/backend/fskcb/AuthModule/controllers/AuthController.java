@@ -1,6 +1,7 @@
-package com.ekenya.rnd.backend.fskcb.UserManagement.controller;
+package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Role;
+import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
+import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.JWTAuthResponse;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.LoginRequest;
@@ -9,6 +10,9 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.repository.PrivilegeRepositor
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
+import com.ekenya.rnd.backend.responses.AppResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +27,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Auth Controller for Field Agent Rest Api")
 @RestController
-@RequestMapping
-
+@RequestMapping(path = "/api/v1")
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -65,11 +70,14 @@ public class AuthController {
         List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
 
 
-
-        return ResponseEntity.ok(new JWTAuthResponse(token,username,roles));
-        //return response entity
-
-//        return ResponseEntity.ok(new JWTAuthResponse(token, "Bearer"));
+        //
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("token",token);
+        node.putPOJO("username",username);
+        node.putPOJO("roles",roles);
+        node.putPOJO("profiles",objectMapper.createArrayNode());
+        return ResponseEntity.ok(new AppResponse(1,node,"User login successful"));
 
     }
     @PostMapping("/signup")
@@ -96,10 +104,23 @@ public class AuthController {
         //userAccount.setStaffId(addUserVM.getStaffId());
         //userAccount.setPhoneNumber(addUserVM.getPhoneNumber());
 
-        Role userRole = roleRepository.findByName("ROLE_ADMIN").get();//get role from db
+        if(roleRepository.findAll().isEmpty()){
+            UserRole role = new UserRole();
+            role.setName("ROLE_ADMIN");
+
+            Set<Privilege> rolePrivileges = new HashSet<>(privilegeRepository.findAll());
+            role.setPrivileges(rolePrivileges);
+
+            //
+            roleRepository.save(role);
+            //
+        }
+        UserRole userRole = roleRepository.findByName("ROLE_ADMIN").get();//get role from db
         userAccount.setRoles(Collections.singleton(userRole));//set role to user
         userRepository.save(userAccount);//save user to db
-        return ResponseEntity.ok("User registered successfully");
+        //
+        ObjectNode node = new ObjectMapper().createObjectNode();
+        return ResponseEntity.ok(new AppResponse(1,node,"User registered successfully"));
 
     }
 

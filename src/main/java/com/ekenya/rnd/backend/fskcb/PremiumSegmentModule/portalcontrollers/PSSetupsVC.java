@@ -8,23 +8,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController(value = "/premium-segment-setup")
+@RestController
+@RequestMapping(path = "/api/v1")
 public class PSSetupsVC {
-    @RequestMapping(value = "/create-product",method = RequestMethod.POST)
+    @RequestMapping(value = "/ps-setups-create-product",method = RequestMethod.POST)
     public RequestEntity<?> addPremiumProduct(@RequestBody PremiumProductRequest premiumProductRequest){
         return null;
     }
-    @RequestMapping(value = "/get-all-premium-product",method = RequestMethod.GET)
+    @RequestMapping(value = "/ps-get-all-product",method = RequestMethod.GET)
     public RequestEntity<?> getAllPremiumProducts(){
         return null;
     }
  //delete premium product
-    @RequestMapping(value = "/delete-premium-product",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/ps-delete-product",method = RequestMethod.DELETE)
     public RequestEntity<?> deletePremiumProduct(@RequestBody ProductRequest productRequest){
         return null;
     }
     //edit premium product
-    @RequestMapping(value = "/edit-premium-product",method = RequestMethod.PUT)
+    @RequestMapping(value = "/ps-edit-product",method = RequestMethod.PUT)
     public RequestEntity<?> editPremiumProduct(@RequestBody PremiumProductRequest premiumProductRequest){
         return null;
     }

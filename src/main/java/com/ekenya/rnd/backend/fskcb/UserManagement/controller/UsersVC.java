@@ -33,10 +33,8 @@ import java.io.UnsupportedEncodingException;
 @Api(value = "Upload User  Rest Api")
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/user")
-
-
-public class UserManagement {
+@RequestMapping(path = "/api/v1")
+public class UsersVC {
 
     @Autowired
     private JavaMailSender mailSender;
@@ -49,7 +47,7 @@ public class UserManagement {
     @ApiOperation(value = "Upload Users Rest  Api")
     @PreAuthorize("hasRole('ADMIN')")
 
-    @PostMapping("/upload")
+    @PostMapping("/users-upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
 
@@ -70,37 +68,37 @@ public class UserManagement {
     }
 
 
-//    @GetMapping("/users")
-//    public ResponseEntity<List<UserApp>> getAllUsers() {
-//        try {
-//            List<UserApp> userApps = excelService.getAllUsers();
-//
-//            if (userApps.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//
-//            return new ResponseEntity<>(userApps, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-@ApiOperation(value = "Fetching all Users  Api")
-@PreAuthorize("hasRole('ADMIN')")
-@GetMapping("user")
-public UserAppResponse getAllUsers(
-        @RequestParam(value = "pageNo",defaultValue = AppConstants.DEFAULT_PAGE_NUMBER,required = false) int pageNo,
-        @RequestParam(value ="pageSize",defaultValue = AppConstants.DEFAULT_PAGE_SIZE,required = false) int pageSize,
-        @RequestParam(value = "sortBy",defaultValue = AppConstants.DEFAULT_SORT_BY,required = false) String sortBy,
-        @RequestParam(value = "sortDir",defaultValue = AppConstants.DEFAULT_SORT_DIR,required = false) String sortDir
-){
-    return excelService.getAllUsers(pageNo,pageSize,sortBy,sortDir);
-}
-    @GetMapping("/forgot_password")
+    //    @GetMapping("/users")
+    //    public ResponseEntity<List<UserApp>> getAllUsers() {
+    //        try {
+    //            List<UserApp> userApps = excelService.getAllUsers();
+    //
+    //            if (userApps.isEmpty()) {
+    //                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    //            }
+    //
+    //            return new ResponseEntity<>(userApps, HttpStatus.OK);
+    //        } catch (Exception e) {
+    //            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    //        }
+    //    }
+    @ApiOperation(value = "Fetching all Users  Api")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users-all")
+    public UserAppResponse getAllUsers(
+            @RequestParam(value = "pageNo",defaultValue = AppConstants.DEFAULT_PAGE_NUMBER,required = false) int pageNo,
+            @RequestParam(value ="pageSize",defaultValue = AppConstants.DEFAULT_PAGE_SIZE,required = false) int pageSize,
+            @RequestParam(value = "sortBy",defaultValue = AppConstants.DEFAULT_SORT_BY,required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = AppConstants.DEFAULT_SORT_DIR,required = false) String sortDir
+    ){
+        return excelService.getAllUsers(pageNo,pageSize,sortBy,sortDir);
+    }
+    @GetMapping("/users-forgot-password")
     public String showForgotPasswordForm() {
         return "forgot_password_form";
 
     }
-    @PostMapping("/forgot_password")
+    @PostMapping("/users-forgot-password")
     public String processForgotPassword(HttpServletRequest request, Model model) {
         String email = request.getParameter("email");
         String token = RandomString.make(30);
@@ -143,7 +141,7 @@ public UserAppResponse getAllUsers(
 
         mailSender.send(message);
     }
-    @GetMapping("/reset_password")
+    @GetMapping("/users-reset-password")
     public String showResetPasswordForm(@Param(value = "token") String token, Model model) {
         UserAccount userAccount = userService.getByResetPasswordToken(token);
         model.addAttribute("token", token);
@@ -156,7 +154,7 @@ public UserAppResponse getAllUsers(
         return "reset_password_form";
     }
 
-    @PostMapping("/reset_password")
+    @PostMapping("/users-reset-password")
     public String processResetPassword(HttpServletRequest request, Model model) {
         String token = request.getParameter("token");
         String password = request.getParameter("password");
@@ -178,28 +176,20 @@ public UserAppResponse getAllUsers(
     //update user
     @ApiOperation(value = "Update User  Api")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/update/{id}")
+    @PutMapping("/users-update/{id}")
     public UserAppDto updateUser(@Valid @RequestBody UserAppDto userAppDto, @PathVariable Long id){
         return excelService.updateUser(userAppDto,id);
     }
-
-
-
     //find user by id
     @ApiOperation(value = "Find User by Id  Api")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/find/{id}")
+    @GetMapping("/users-find/{id}")
     public UserAppDto findUserById(@PathVariable Long id){
         return excelService.getUserById(id);
     }
 
-    @RequestMapping(value = "/delete-user/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/users-delete-user/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteAgent(@PathVariable long id,HttpServletRequest httpServletRequest) {
         return excelService.deleteSystemUser(id, httpServletRequest);
     }
-
-
-
-
-
 }

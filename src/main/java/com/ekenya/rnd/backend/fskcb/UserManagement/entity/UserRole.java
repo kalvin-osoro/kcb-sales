@@ -18,7 +18,7 @@ import java.util.Set;
 @Where(clause = "deleted = false")
 @DynamicInsert
 @DynamicUpdate
-public class Role {
+public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

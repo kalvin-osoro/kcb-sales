@@ -1,8 +1,15 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/agency/reports")
+@RestController
 public class AgencyReportsVC {
-    //TODO: implement the reports controller for all required dfs reports
+    //
+    @RequestMapping(value = "/get-agency-summary", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllLeads() {
+        return null;
+    }
 }

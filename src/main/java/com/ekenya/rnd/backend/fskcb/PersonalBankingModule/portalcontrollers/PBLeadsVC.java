@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/personal-banking-lead")
+@RestController
+@RequestMapping(path = "/api/v1")
 public class PBLeadsVC {
-    @RequestMapping(value = "/create-personal-banking-lead", method = RequestMethod.POST)
+    @RequestMapping(value = "/pb-create-lead", method = RequestMethod.POST)
     public RequestEntity<?> createLead(@RequestBody PBLeadRequest leadRequest) {
         return null;
     }
-    @RequestMapping(value = "/get-all-personal-banking-leads", method = RequestMethod.GET)
+    @RequestMapping(value = "/pb-get-all-leads", method = RequestMethod.GET)
     public RequestEntity<?> getAllLeads() {
         return null;
     }

@@ -5,15 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class AcquringAssetVC {
+public class AcquiringAssetVC {
 
-    @PostMapping("/create-agency-asset")
-    public ResponseEntity<?> createAsset(@RequestBody AgencyAssetRequest assetManagementRequest) {
+    @PostMapping("/create-acquiring-asset")
+    public ResponseEntity<?> createAcquiringAsset(@RequestBody AgencyAssetRequest assetManagementRequest) {
         return null;
     }
 
-    @RequestMapping(value = "/get-all-agency-assets", method = RequestMethod.GET)
-    public ResponseEntity<?> getAsset() {
+    @RequestMapping(value = "/get-all-acquiring-assets", method = RequestMethod.GET)
+    public ResponseEntity<?> getAcquiringAsset() {
         return null;
     }
 }

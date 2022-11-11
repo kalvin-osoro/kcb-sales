@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.payload;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Role;
+import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
@@ -20,6 +20,6 @@ public class UserAppDto  {
     private String middleName;
     private String staffId;
     private String dateOfBirth;
-    private Set<Role> roles;
+    private Set<UserRole> roles;
 
 }
