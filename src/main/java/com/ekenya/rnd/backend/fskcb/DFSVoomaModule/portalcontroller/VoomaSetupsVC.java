@@ -1,65 +1,31 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.VoomaAddQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaService;
 import com.ekenya.rnd.backend.fskcb.payload.ProductRequest;
-import com.ekenya.rnd.backend.responses.AppResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/v1")
 public class VoomaSetupsVC {
-    
-    @Autowired
-    IVoomaService voomaService;
-
-    @PostMapping("/vooma-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody VoomaAddQuestionnaireRequest assetManagementRequest) {
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
+    @RequestMapping(value = "/vooma-add-product",method = RequestMethod.POST)
+    public RequestEntity<?>addDFSProduct(@RequestBody ProductRequest productRequest){
+        return null;
     }
-
-    @RequestMapping(value = "/vooma-get-all-questionnaires", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllQuestionnaires() {
-
-        //
-        List<ObjectNode> list = null;//acquiringService.loadQuestionnaires();
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null ){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
+    @RequestMapping(value = "/vooma-get-all-products",method = RequestMethod.GET)
+    public ResponseEntity<?>getAllProducts(){
+        return null;
+    }
+    //edit product
+    @RequestMapping(value = "/vooma-edit-product",method = RequestMethod.PUT)
+    public RequestEntity<?>editProduct(@RequestBody ProductRequest productRequest){
+        return null;
+    }
+    //delete product
+    @RequestMapping(value = "/vooma-delete-product",method = RequestMethod.DELETE)
+    public RequestEntity<?>deleteProduct(@RequestBody ProductRequest productRequest){
+        return null;
     }
 }

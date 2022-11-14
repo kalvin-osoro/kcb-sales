@@ -1,83 +1,18 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyLeadRequest;
-import com.ekenya.rnd.backend.responses.AppResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1")
 public class AgencyLeadsVC {
-
-
-    //Assign lead to a sales person
-    @PostMapping("/agency-assign-lead")
-    public ResponseEntity<?> assignLead(@RequestBody AgencyAssignLeadRequest model) {
-
-
-
-        //TODO;
-        boolean success = false;//agencyService.assigneLeadtoDSR(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }
-
-        //Response
-        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-
-    }
-
-    @PostMapping("/agency-create-lead")
+    @PostMapping("/create-agency-lead")
     public ResponseEntity<?> createLead(@RequestBody AgencyLeadRequest leadRequest ) {
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }
-
-
-        //Response
-        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return null;
     }
-    @RequestMapping(value = "/agency-get-all-leads", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-all-agency-leads", method = RequestMethod.GET)
     public ResponseEntity<?> getAllLeads() {
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }
-
-        //Response
-        return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        return null;
     }
 
 }

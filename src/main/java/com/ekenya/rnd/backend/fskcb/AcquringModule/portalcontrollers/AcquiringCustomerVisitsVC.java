@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.CustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.CustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,16 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1")
 public class AcquiringCustomerVisitsVC {
 
     @Autowired
     IAcquiringService acquiringService;
     @PostMapping("/acquiring-schedule-customer-visit")
-    public ResponseEntity<?> scheduleAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> scheduleCustomerVisit(@RequestBody CustomerVisitsRequest assetManagementRequest) {
 
 
-        //TODO; INSIDE SERVICE
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -40,10 +39,11 @@ public class AcquiringCustomerVisitsVC {
     }
 
     @PostMapping("/acquiring-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CustomerVisitsRequest assetManagementRequest) {
 
 
-        //TODO; INSIDE SERVICE
+
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -62,10 +62,9 @@ public class AcquiringCustomerVisitsVC {
     }
 
     @RequestMapping(value = "/acquiring-get-all-customer-visits", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAcquiringCustomerVisits() {
+    public ResponseEntity<?> getAllCustomerVisits() {
 
 
-        //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -85,4 +84,26 @@ public class AcquiringCustomerVisitsVC {
 
 
 
+    @PostMapping("/acquiring-get-customer-visit-questionnaire")
+    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody CustomerVisitQuestionnaireRequest assetManagementRequest) {
+
+
+
+
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 }
