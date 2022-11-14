@@ -3,9 +3,10 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
-import com.ekenya.rnd.backend.fskcb.service.FileStorageService;
-import com.ekenya.rnd.backend.fskcb.utils.Status;
-import com.ekenya.rnd.backend.fskcb.utils.Utility;
+
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
+import com.ekenya.rnd.backend.utils.Status;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
