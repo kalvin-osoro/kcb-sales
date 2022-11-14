@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class AcquiringTargetsVC {
 
@@ -18,14 +20,8 @@ public class AcquiringTargetsVC {
     IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-create-target")
-    public ResponseEntity<?> createAcquiringAsset(@RequestBody AcquiringAddTargetRequest assetManagementRequest) {
-
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> createAcquiringTarget(@RequestBody AcquiringAddTargetRequest acquiringAddTargetRequest) {
+        boolean success = acquiringService.addNewTarget(acquiringAddTargetRequest);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -43,11 +39,8 @@ public class AcquiringTargetsVC {
 
     @RequestMapping(value = "/acquiring-get-all-targets", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTargets() {
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        List<?> acquiringTargetsResponse = acquiringService.loadTargets();
+        boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -67,11 +60,10 @@ public class AcquiringTargetsVC {
 
     @RequestMapping(value = "/acquiring-get-agents-in-target", method = RequestMethod.GET)
     public ResponseEntity<?> getAcquiringAgentsInTarget(AcquiringDSRsInTargetRequest model) {
+        List<?> acquiringTargetsResponse = acquiringService.loadDSRsInTarget(model);
+        boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
 
-        //
 
-        //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

@@ -1,15 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcqAsset;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetFilesEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcqAssetRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringLeadsRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.service.FileStorageService;
+import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.fskcb.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,24 +27,29 @@ import java.util.Optional;
 public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final  IAcquiringLeadsRepository mLeadsRepo;
+    private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final ModelMapper modelMapper;
     private final AcqAssetRepository acqAssetRepository;
     private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
 
+    private final IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository;
+
     public AcquiringPortalPortalService(IAcquiringLeadsRepository mLeadsRepo,
-                                        AcquiringAssetRepository acquiringAssetRepository,
+                                        IAcquiringTargetsRepository iAcquiringTargetsRepository, AcquiringAssetRepository acquiringAssetRepository,
                                         ModelMapper modelMapper,
                                         AcqAssetRepository acqAssetRepository,
                                         FileStorageService fileStorageService,
-                                        AcquiringAssetFileRepository acquiringAssetFileRepository) {
+                                        AcquiringAssetFileRepository acquiringAssetFileRepository, IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository) {
         this.mLeadsRepo = mLeadsRepo;
+        this.iAcquiringTargetsRepository = iAcquiringTargetsRepository;
         this.acquiringAssetRepository = acquiringAssetRepository;
         this.modelMapper = modelMapper;
         this.acqAssetRepository = acqAssetRepository;
         this.fileStorageService = fileStorageService;
         this.acquiringAssetFileRepository = acquiringAssetFileRepository;
+        this.iAcquiringDSRsInTargetRepository = iAcquiringDSRsInTargetRepository;
     }
 
 
@@ -59,7 +60,55 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
     @Override
     public List<ObjectNode> loadTargets() {
+        try {
+            List<ObjectNode> targets = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringTargetEntity target : iAcquiringTargetsRepository.findAll()) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("id", target.getId());
+                node.put("name", target.getTargetName());
+                node.put("description", target.getTargetDesc());
+                node.put("status", target.getStatus().toString());
+                node.put("value", target.getTargetValue());
+                node.put("achievement", target.getTargetAchievement());
+                node.put("source", target.getTargetSource());
+                node.put("startDate", target.getStartDate().toString());
+                node.put("endDate", target.getEndDate().toString());
+                node.put("type", target.getAquiringTargetType().toString());
+                targets.add(node);
+            }
+            return targets;
+        } catch (Exception e) {
+            log.error("Error loading targets", e);
+        }
         return null;
+    }
+
+    @Override
+    public boolean addNewTarget(AcquiringAddTargetRequest acquiringAddTargetRequest) {
+        try {
+            if (acquiringAddTargetRequest == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
+            AcquiringTargetEntity acquiringTargetEntity=new AcquiringTargetEntity();
+            acquiringTargetEntity.setTargetName(acquiringAddTargetRequest.getTargetName());
+            acquiringTargetEntity.setTargetSource(acquiringAddTargetRequest.getTargetSource());
+            acquiringTargetEntity.setAquiringTargetType(acquiringAddTargetRequest.getAquiringTargetType());
+            acquiringTargetEntity.setTargetDesc(acquiringAddTargetRequest.getTargetDesc());
+            acquiringTargetEntity.setStatus(Status.ACTIVE);
+            acquiringTargetEntity.setTargetValue(acquiringAddTargetRequest.getTargetValue());
+            acquiringTargetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            iAcquiringTargetsRepository.save(acquiringTargetEntity);
+            return true;
+
+            //save
+        } catch (Exception e) {
+            log.error("Error while adding new target", e);
+        }
+        return false;
     }
 
     @Override
@@ -176,6 +225,28 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
         return null;
     }
 
+    @Override
+    public List<ObjectNode> loadDSRsInTarget(AcquiringDSRsInTargetRequest model) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringDSRsInTargetEntity acquiringDSRsInTargetEntity : iAcquiringDSRsInTargetRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringDSRsInTargetEntity.getId());
+                asset.put("dsrName",acquiringDSRsInTargetEntity.getDsrName());
+                asset.put("targetName",acquiringDSRsInTargetEntity.getTargetName());
+                asset.put("setTarget",acquiringDSRsInTargetEntity.getSetTarget());
+                asset.put("achievedTarget",acquiringDSRsInTargetEntity.getAchievedTarget());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all assets",e);
+        }
+        return null;
+    }
 
 
 }

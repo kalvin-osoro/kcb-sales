@@ -1,6 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +14,7 @@ public interface IAcquiringPortalService {
     boolean assigneLeadtoDSR(AcquiringAssignLeadRequest model);
 
     List<ObjectNode> loadTargets();
+    boolean addNewTarget(AcquiringAddTargetRequest acquiringAddTargetRequest);
 
     //Assets
     boolean addAsset(String assetDetails, MultipartFile[] assetFiles);
@@ -25,4 +28,6 @@ public interface IAcquiringPortalService {
 
     //Visits
     List<ObjectNode> loadQuestionnaires();
+
+    List<ObjectNode> loadDSRsInTarget(AcquiringDSRsInTargetRequest model);
 }
