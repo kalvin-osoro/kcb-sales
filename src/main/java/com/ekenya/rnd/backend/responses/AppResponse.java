@@ -1,6 +1,10 @@
 package com.ekenya.rnd.backend.responses;
 
 
+import org.springframework.http.ResponseEntity;
+
+import java.util.LinkedHashMap;
+
 public class AppResponse {
     private int status = 0;
     private String message;
@@ -12,6 +16,10 @@ public class AppResponse {
         this.status = status;
         this.data = data;
         this.message = message;
+    }
+
+    public static ResponseEntity<?> build(LinkedHashMap<String, Object> responseObject) {
+        return ResponseEntity.ok(new AppResponse((int) responseObject.get("status"), responseObject.get("data"), (String) responseObject.get("message")));
     }
 
     public int getStatus() {

@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.controller;
 
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.LiquidationTypeService;
 import com.ekenya.rnd.backend.fskcb.utils.AppConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,5 +19,53 @@ import javax.validation.Valid;
 
 @RequestMapping(path = "/config/liquidationTypes")
 public class LiquidationTypeController {
+    private final LiquidationTypeService liquidationTypeService;
+
+    public LiquidationTypeController(LiquidationTypeService liquidationTypeService) {
+        this.liquidationTypeService = liquidationTypeService;
+    }
+
+    //create liquidationType
+    @ApiOperation(value = "Create Liquidation Type Api")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public ResponseEntity<?> createLiquidationType(@Valid @RequestBody LiquidationTypeDto liquidationTypeDto) {
+        return new ResponseEntity<>(liquidationTypeService.createLiquidationType(liquidationTypeDto), HttpStatus.CREATED);
+    }
+
+    //get All liquidationTypes
+    @ApiOperation(value = "Fetching all Liquidation Type  Api")
+    @GetMapping
+    public LiquidationResponse getAllLiquidationTypes(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir
+    ) {
+        return liquidationTypeService.getAllLiquidationType(pageNo, pageSize, sortBy, sortDir);
+    }
+
+    //get liquidationType by id
+    @ApiOperation(value = "Fetching Liquidation Type by Id Api")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getLiquidationTypeById(@PathVariable Long id) {
+        return liquidationTypeService.getLiquidationTypeById(id);
+    }
+
+    //update liquidationType
+    @ApiOperation(value = "Update Liquidation Type Api")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/update")
+    public ResponseEntity<?> updateLiquidationType(@Valid @RequestBody LiquidationTypeDto liquidationTypeDto) {
+        return liquidationTypeService.updateLiquidationType(liquidationTypeDto);
+    }
+    //delete liquidationType
+    @ApiOperation(value = "Delete Liquidation Type Api")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteLiquidationType(@PathVariable Long id) {
+        liquidationTypeService.deleteLiquidationTypeById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

@@ -15,9 +15,12 @@ import javax.annotation.Resource;
 
 @SpringBootApplication
 @EnableSwagger2
-//@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @Slf4j
 public class SpringBootKcbRestApiApplication   {
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 	@Autowired
 	private CrmIntegrations crmIntegrations;
 	public static String accessToken ;
@@ -27,11 +30,6 @@ public class SpringBootKcbRestApiApplication   {
 
 
 
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
-//
 //	@Bean
 //	public ExcelService excelService() {
 //		return new ExcelService();

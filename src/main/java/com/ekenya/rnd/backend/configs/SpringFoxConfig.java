@@ -44,7 +44,7 @@ public class SpringFoxConfig {
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(List.of(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.deltacode.kcb"))
+                .apis(RequestHandlerSelectors.basePackage("com.ekenya.rnd.backend"))
                 .paths(PathSelectors.any())
                 .build();
     }
