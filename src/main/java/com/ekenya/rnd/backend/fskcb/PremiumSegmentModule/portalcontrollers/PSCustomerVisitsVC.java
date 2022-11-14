@@ -2,8 +2,7 @@ package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSService;
-import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -18,7 +17,7 @@ public class PSCustomerVisitsVC {
 
     //
     @Autowired
-    IPSService psService;
+    IPSPortalService psService;
 
     @PostMapping("/ps-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody PSCustomerVisitsRequest model) {

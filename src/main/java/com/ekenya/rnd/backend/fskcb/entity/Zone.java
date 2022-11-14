@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.entity;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRTeam;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.ZoneCoordinates;
-import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;

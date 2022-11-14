@@ -1,9 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.PrivilegeRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.Privilege;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.PrivilegeRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

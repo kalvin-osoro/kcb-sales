@@ -1,32 +1,65 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.Payload.TreasuryProductRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
+import com.ekenya.rnd.backend.responses.AppResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1")
 public class TreasurySetupVC {
-    @RequestMapping(value = "/treasury-setup-add-product", method = RequestMethod.POST)
-    public ResponseEntity<?>addTreasuryProduct(@RequestBody TreasuryProductRequest treasuryProductRequest) {
-        return null;
+
+    @Autowired
+    ITreasuryPortalService acquiringService;
+
+    @PostMapping("/treasury-create-questionnaire")
+    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
+
+
+        //TODO;
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
-    // get all treasury products
-    @RequestMapping(value = "/treasury-get-all-products", method = RequestMethod.GET)
-    public ResponseEntity<?>getAllTreasuryProducts() {
-        return null;
-    }
-    // delete treasury product
-    @RequestMapping(value = "/treasury-delete-product", method = RequestMethod.DELETE)
-    public ResponseEntity<?>deleteTreasuryProduct(@RequestBody TreasuryProductRequest treasuryProductRequest) {
-        return null;
-    }
-    // update treasury product
-    @RequestMapping(value = "/treasury-update-product", method = RequestMethod.PUT)
-    public ResponseEntity<?>updateTreasuryProduct(@RequestBody TreasuryProductRequest treasuryProductRequest) {
-        return null;
+
+    @RequestMapping(value = "/treasury-get-all-questionnaires", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllQuestionnaires() {
+
+        //
+        List<ObjectNode> list = null;//acquiringService.loadQuestionnaires();
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list != null ){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
 }

@@ -1,14 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.LookupRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.LoginRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.PrivilegeRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.PrivilegeRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +12,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,10 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")

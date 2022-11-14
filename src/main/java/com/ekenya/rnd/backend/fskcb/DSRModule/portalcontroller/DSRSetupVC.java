@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRService;
+import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import io.swagger.annotations.Api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping
 public class DSRSetupVC {
-    private final DSRService dsrService;
+    private final IDSRPortalService dsrService;
 
-    public DSRSetupVC(DSRService dsrService) {
+    public DSRSetupVC(IDSRPortalService dsrService) {
         this.dsrService = dsrService;
     }
 

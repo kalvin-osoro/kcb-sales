@@ -1,11 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.channelcontroller;
 
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBService;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PBChannelOnboardingVC {
 
     @Autowired
-    IPBService pbService;
+    IPBPortalService pbService;
 
     @PostMapping("/pb-create-account")
     public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,

@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

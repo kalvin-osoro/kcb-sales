@@ -1,9 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.RoleRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +27,10 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public void save(UserRole client) {
+    public boolean save(UserRole client) {
         roleRepository.save(client);
+
+        return true;
     }
 
     public UserRole findById(long id) {
@@ -36,25 +38,33 @@ public class RoleService {
     }
 
     //delete role
-    public void delete(long id) {
+    public boolean delete(long id) {
         roleRepository.delete(findById(id));
+
+        return true;
     }
 
-    public void assignRole(Long userId, Long roleId){
+    public boolean assignRole(Long userId, Long roleId){
         UserAccount user = userRepository.findById(userId).orElse(null);
         UserRole role = roleRepository.findById(roleId).orElse(null);
         Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
         userRoles.add(role);
         user.setRoles(userRoles);
         userRepository.save(user);
+
+        //
+        return true;
     }
 
-    public void unassignRole(Long userId, Long roleId){
+    public boolean unassignRole(Long userId, Long roleId){
         UserAccount user = userRepository.findById(userId).orElse(null);
         Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
         userRoles.removeIf(x -> Objects.equals(x.getId(), roleId));
         user.setRoles(userRoles);
         userRepository.save(user);
+        //
+
+        return true;
     }
 
     public Set<UserRole> getUserRoles(UserAccount user){

@@ -1,9 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.RetailModule.portalcontrollers;//package ekenya.co.ke.frp_kcb.RetailModule.controllers;
 
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailLeadRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailService;
+import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class RetailLeadsVC {
     
     @Autowired
-    IRetailService retailService;
+    IRetailPortalService retailService;
 
     //Assign lead to a sales person
     @PostMapping("/retail-assign-lead")

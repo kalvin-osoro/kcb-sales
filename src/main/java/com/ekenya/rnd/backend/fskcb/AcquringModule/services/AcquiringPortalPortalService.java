@@ -9,7 +9,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.Acqui
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringLeadsRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.service.FileStorageService;
+import com.ekenya.rnd.backend.fskcb.files.IFileStorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,20 +34,20 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final ModelMapper modelMapper;
     private final AcqAssetRepository acqAssetRepository;
-    private final FileStorageService fileStorageService;
+    private final IFileStorageService IFileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
 
     public AcquiringPortalPortalService(IAcquiringLeadsRepository mLeadsRepo,
                                         AcquiringAssetRepository acquiringAssetRepository,
                                         ModelMapper modelMapper,
                                         AcqAssetRepository acqAssetRepository,
-                                        FileStorageService fileStorageService,
+                                        IFileStorageService IFileStorageService,
                                         AcquiringAssetFileRepository acquiringAssetFileRepository) {
         this.mLeadsRepo = mLeadsRepo;
         this.acquiringAssetRepository = acquiringAssetRepository;
         this.modelMapper = modelMapper;
         this.acqAssetRepository = acqAssetRepository;
-        this.fileStorageService = fileStorageService;
+        this.IFileStorageService = IFileStorageService;
         this.acquiringAssetFileRepository = acquiringAssetFileRepository;
     }
 
@@ -90,7 +90,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
             List<String> filePathList = new ArrayList<>();
             //save files
-            filePathList =fileStorageService.saveMultipleFileWithSpecificFileName("Asset_",assetFiles);
+            filePathList = IFileStorageService.saveMultipleFileWithSpecificFileName("Asset_",assetFiles);
             //
             filePathList.forEach(filePath ->{
                 AcquiringAssetFilesEntity assetFilesEntity = new AcquiringAssetFilesEntity();

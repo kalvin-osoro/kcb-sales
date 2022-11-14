@@ -1,30 +1,64 @@
 package com.ekenya.rnd.backend.fskcb.RetailModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailProductRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
+import com.ekenya.rnd.backend.responses.AppResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/retail-setup")
+import java.util.List;
+
+@RestController
+@RequestMapping(path = "/api/v1")
 public class RetailSetupsVC {
-    @RequestMapping(value = "/add-retail-product",method = RequestMethod.POST)
-    public ResponseEntity<?>addRetailProduct(@RequestBody RetailProductRequest retailProductRequest){
-        return null;
+    @Autowired
+    IRetailPortalService acquiringService;
+
+    @PostMapping("/retail-create-questionnaire")
+    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
+
+
+        //TODO;
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
-    @RequestMapping(value = "/get-all-retail-product",method = RequestMethod.GET)
-    public ResponseEntity<?>getAllRetailProducts(){
-        return null;
-    }
-    // delete retail product
-    @RequestMapping(value = "/delete-retail-product",method = RequestMethod.DELETE)
-    public ResponseEntity<?>deleteRetailProduct(@RequestBody RetailProductRequest retailProductRequest){
-        return null;
-    }
-    //update retail product
-    @RequestMapping(value = "/update-retail-product",method = RequestMethod.PUT)
-    public ResponseEntity<?>updateRetailProduct(@RequestBody RetailProductRequest retailProductRequest){
-        return null;
+
+    @RequestMapping(value = "/retail-get-all-questionnaires", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllQuestionnaires() {
+
+        //
+        List<ObjectNode> list = null;//acquiringService.loadQuestionnaires();
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list != null ){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
 }

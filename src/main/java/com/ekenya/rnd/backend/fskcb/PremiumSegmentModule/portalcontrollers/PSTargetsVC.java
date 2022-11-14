@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSDSRsInTargetRequest;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSService;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class PSTargetsVC {
 
     @Autowired
-    IPSService psService;
+    IPSPortalService psService;
 
     @PostMapping("/ps-create-target")
     public ResponseEntity<?> createPSAsset(@RequestBody PSAddTargetRequest assetManagementRequest) {
