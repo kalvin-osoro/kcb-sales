@@ -1,7 +1,7 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringOnbordMerchantRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,16 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1")
-public class AcquiringCustomerVisitsVC {
+@RequestMapping(path = "/api/v1/ch")
+public class AcquiringChannelOnboardingVC {
 
     @Autowired
     IAcquiringService acquiringService;
-    @PostMapping("/acquiring-schedule-customer-visit")
-    public ResponseEntity<?> scheduleAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
 
+    //Channel request
+    @PostMapping("/acquiring-onboard-customer")
+    public ResponseEntity<?> onboardNewMerchant(@RequestBody AquiringOnbordMerchantRequest assetManagementRequest) {
 
-        //TODO; INSIDE SERVICE
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -39,33 +40,11 @@ public class AcquiringCustomerVisitsVC {
         }
     }
 
-    @PostMapping("/acquiring-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    //List all onboarded merchants
+    @RequestMapping(value = "/acquiring-get-all-onboarded-customers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllMerchantOnboardings() {
 
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
-
-    @RequestMapping(value = "/acquiring-get-all-customer-visits", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAcquiringCustomerVisits() {
-
-
-        //TODO; INSIDE SERVICE
+//TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -82,7 +61,6 @@ public class AcquiringCustomerVisitsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-
 
 
 }

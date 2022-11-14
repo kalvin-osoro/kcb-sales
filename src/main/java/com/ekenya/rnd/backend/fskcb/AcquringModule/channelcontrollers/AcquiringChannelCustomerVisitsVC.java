@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
@@ -12,13 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1")
-public class AcquiringCustomerVisitsVC {
+@RequestMapping(path = "/api/v1/ch")
+public class AcquiringChannelCustomerVisitsVC {
 
     @Autowired
     IAcquiringService acquiringService;
-    @PostMapping("/acquiring-schedule-customer-visit")
-    public ResponseEntity<?> scheduleAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    @PostMapping("/acquiring-create-customer-visit")
+    public ResponseEntity<?> createAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
 
 
         //TODO; INSIDE SERVICE
@@ -39,8 +39,8 @@ public class AcquiringCustomerVisitsVC {
         }
     }
 
-    @PostMapping("/acquiring-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    @PostMapping("/acquiring-update-customer-visit")
+    public ResponseEntity<?> updateAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
 
 
         //TODO; INSIDE SERVICE
@@ -62,7 +62,7 @@ public class AcquiringCustomerVisitsVC {
     }
 
     @RequestMapping(value = "/acquiring-get-all-customer-visits", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAcquiringCustomerVisits() {
+    public ResponseEntity<?> getAllAcquiringCustomerVisitsByDSR(@RequestBody int dsrId) {
 
 
         //TODO; INSIDE SERVICE
@@ -82,7 +82,5 @@ public class AcquiringCustomerVisitsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-
-
 
 }
