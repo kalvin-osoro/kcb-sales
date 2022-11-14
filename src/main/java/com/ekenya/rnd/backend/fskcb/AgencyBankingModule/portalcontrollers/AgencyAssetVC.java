@@ -1,9 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAddAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyService;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AgencyAssetVC {
 
     @Autowired
-    IAgencyService agencyService;
+    IAgencyPortalService agencyService;
     @PostMapping("/agency-create-asset")
     public ResponseEntity<?> createAsset(@RequestBody AgencyAddAssetRequest model) {
 

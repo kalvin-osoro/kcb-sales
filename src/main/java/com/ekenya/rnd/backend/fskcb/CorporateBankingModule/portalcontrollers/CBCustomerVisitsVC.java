@@ -1,9 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBService;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.IBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 public class CBCustomerVisitsVC {
     //
-   private final ICBService cbService;
+   private final IBPortalService cbService;
 
-    public CBCustomerVisitsVC(ICBService service) {
+    public CBCustomerVisitsVC(IBPortalService service) {
         this.cbService = service;
     }
 
@@ -87,8 +86,6 @@ public class CBCustomerVisitsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-
-
 
     @PostMapping("/cb-get-customer-visit-questionnaire")
     public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody CBCustomerVisitQuestionnaireRequest assetManagementRequest) {

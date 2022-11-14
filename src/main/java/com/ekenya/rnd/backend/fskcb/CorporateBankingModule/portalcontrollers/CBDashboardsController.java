@@ -1,6 +1,5 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBSummaryRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1")
-public class CBReportController {
+public class CBDashboardsController {
     //
 
     @PostMapping("/cb-onboarding-summary")

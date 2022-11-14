@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.VoomaSummaryRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,7 +15,7 @@ public class VoomaReportsVC {
     //
 
     @Autowired
-    IVoomaService voomaService;
+    IVoomaChannelService voomaService;
 
     @PostMapping("/vooma-onboarding-summary")
     public ResponseEntity<?> getOnboardingSummary(@RequestBody VoomaSummaryRequest filters) {
