@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.CustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.CustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AcquiringCustomerVisitsVC {
 
     @Autowired
-    IAcquiringService acquiringService;
+    IAcquiringPortalService acquiringService;
     @PostMapping("/acquiring-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody CustomerVisitsRequest assetManagementRequest) {
 

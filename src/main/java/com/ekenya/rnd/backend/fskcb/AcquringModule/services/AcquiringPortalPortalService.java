@@ -13,10 +13,10 @@ import com.ekenya.rnd.backend.fskcb.service.FileStorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class AcquiringService implements IAcquiringService{
+public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final  IAcquiringLeadsRepository mLeadsRepo;
     private final AcquiringAssetRepository acquiringAssetRepository;
@@ -37,12 +37,12 @@ public class AcquiringService implements IAcquiringService{
     private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
 
-    public AcquiringService(IAcquiringLeadsRepository mLeadsRepo,
-                            AcquiringAssetRepository acquiringAssetRepository,
-                            ModelMapper modelMapper,
-                            AcqAssetRepository acqAssetRepository,
-                            FileStorageService fileStorageService,
-                            AcquiringAssetFileRepository acquiringAssetFileRepository) {
+    public AcquiringPortalPortalService(IAcquiringLeadsRepository mLeadsRepo,
+                                        AcquiringAssetRepository acquiringAssetRepository,
+                                        ModelMapper modelMapper,
+                                        AcqAssetRepository acqAssetRepository,
+                                        FileStorageService fileStorageService,
+                                        AcquiringAssetFileRepository acquiringAssetFileRepository) {
         this.mLeadsRepo = mLeadsRepo;
         this.acquiringAssetRepository = acquiringAssetRepository;
         this.modelMapper = modelMapper;
@@ -63,26 +63,35 @@ public class AcquiringService implements IAcquiringService{
     }
 
     @Override
-    public ResponseEntity<?> addAsset(String assetDetails, MultipartFile[] assetFiles) {
+    public boolean addAsset(String assetDetails, MultipartFile[] assetFiles) {
         try {
             if (assetDetails == null) {
-                return ResponseEntity.badRequest().body("Asset details are required");
+                return false;
+                //return ResponseEntity.badRequest().body("Asset details are required");
             }
-            List<String> filePathList = new ArrayList<>();
+            //
+
             ObjectMapper mapper = new ObjectMapper();
+
             AcquiringAddAssetRequest acquiringAddAssetRequest =
                     mapper.readValue(assetDetails,AcquiringAddAssetRequest.class);
-            Optional<AcqAsset> optionalAsset = acqAssetRepository.findById(
-                    acquiringAddAssetRequest.getDeviceId());
+
+            Optional<AcqAsset> optionalAsset = acqAssetRepository.findById( acquiringAddAssetRequest.getDeviceId());
+
             AcquiringAssetEntity acquiringAssetEntity = new AcquiringAssetEntity();
             acquiringAssetEntity.setAssetType(optionalAsset.get());
+            //
             acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
+            //
             acquiringAssetEntity.setCondition(acquiringAddAssetRequest.getCondition());
-
+            //
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(acquiringAssetEntity);
+            //
+
+            List<String> filePathList = new ArrayList<>();
             //save files
-            filePathList =fileStorageService.saveMultipleFileWithSpecificFileName(
-                    "Asset_",assetFiles);
+            filePathList =fileStorageService.saveMultipleFileWithSpecificFileName("Asset_",assetFiles);
+            //
             filePathList.forEach(filePath ->{
                 AcquiringAssetFilesEntity assetFilesEntity = new AcquiringAssetFilesEntity();
                 assetFilesEntity.setAcquiringAssetEntity(savedAsset);
@@ -91,18 +100,46 @@ public class AcquiringService implements IAcquiringService{
             });
 
         } catch (JsonMappingException e) {
-            return ResponseEntity.badRequest().body("Invalid asset details");
+            //return ResponseEntity.badRequest().body("Invalid asset details");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
-        return null;
+        return false;
     }
 
     @Override
-    public ResponseEntity<?> getAllAssets() {
+    public List<ObjectNode> getAllAssets() {
         try {
-            List<AcquiringAssetEntity> acquiringAssetEntityList=acquiringAssetRepository.findAll();
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringAssetEntity  acquiringAssetEntity : acquiringAssetRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringAssetEntity.getId());
+                asset.put("condition",acquiringAssetEntity.getCondition());
+                asset.put("sno",acquiringAssetEntity.getSerialNumber());
+                //asset.put("type",acquiringAssetEntity.getAssetType());
+                //
+                ArrayNode images = mapper.createArrayNode();
+
+                //"http://10.20.2.12:8484/"
+
+                // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
+                for (String path: acquiringAssetEntity.getImages().split(";")) {
+                    images.add(path);
+                }
+
+                asset.put("images",images);
+
+
+                //
+                list.add(asset);
+            }
+
+
+            return list;
+
         } catch (Exception e) {
             log.error("Error occurred while fetching all assets",e);
         }
@@ -110,9 +147,11 @@ public class AcquiringService implements IAcquiringService{
     }
 
     @Override
-    public ResponseEntity<?> getAssetById(Long id) {
+    public ObjectNode getAssetById(Long id) {
         try {
             AcquiringAssetEntity acquiringAssetEntity=acquiringAssetRepository.findById(id).get();
+
+
         } catch (Exception e) {
             log.error("Error occurred while fetching asset by id",e);
         }
@@ -120,13 +159,15 @@ public class AcquiringService implements IAcquiringService{
     }
 
     @Override
-    public ResponseEntity<?> deleteAssetById(Long id) {
+    public boolean deleteAssetById(Long id) {
         try {
             acquiringAssetRepository.deleteById(id);
+            //
+            return true;
         } catch (Exception e) {
             log.error("Error occurred while deleting asset by id",e);
         }
-        return null;
+        return false;
     }
 
 

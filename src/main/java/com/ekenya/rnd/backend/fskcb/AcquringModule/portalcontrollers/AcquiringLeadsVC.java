@@ -2,8 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AcquiringLeadsVC {
 
     @Autowired
-    IAcquiringService acquiringService;
+    IAcquiringPortalService acquiringService;
 
     //Assign lead to a sales person
     @PostMapping("/acquiring-assign-lead")

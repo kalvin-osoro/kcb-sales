@@ -43,5 +43,6 @@ public class AcquiringAssetEntity {
     private Date lastServiceDate;
     @Embedded
     private VisitsReport visitsReport;
+ private String images;
 
 }

@@ -2,8 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AcquiringTargetsVC {
 
     @Autowired
-    IAcquiringService acquiringService;
+    IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-create-target")
     public ResponseEntity<?> createAcquiringAsset(@RequestBody AcquiringAddTargetRequest assetManagementRequest) {

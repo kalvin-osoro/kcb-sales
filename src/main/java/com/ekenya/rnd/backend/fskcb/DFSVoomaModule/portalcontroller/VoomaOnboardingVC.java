@@ -1,12 +1,16 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.BusinessTypeService;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.LiquidationTypeService;
-import com.ekenya.rnd.backend.fskcb.UserManagement.services.BankService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaService;
 import com.ekenya.rnd.backend.fskcb.service.*;
+import com.ekenya.rnd.backend.responses.AppResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
@@ -18,80 +22,55 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class VoomaOnboardingVC {
     @Autowired
-    private MerchantService merchantDetailsService;
-
-    @Autowired
-    private BankService bankService;
-
-
-    @Autowired
-    private BusinessTypeService businessTypeService;
-
-    @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private LiquidationTypeService liquidationTypeService;
-
+    private IVoomaService voomaService;
 
 
     @Autowired
     private FileStorageService fileStorageService;
 
-    @PostMapping("/vooma-create-account")
-    public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
-                                                   @RequestParam("frontID") MultipartFile frontID,
-                                                   @RequestParam("backID") MultipartFile backID,
-                                                   @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
-                                                   @RequestParam("certificateOFGoodConduct") MultipartFile certificateOFGoodConduct,
-                                                   @RequestParam("businessLicense") MultipartFile businessLicense,
-                                                   @RequestParam("fieldApplicationForm") MultipartFile fieldApplicationForm,
-                                                   @RequestParam("shopPhoto") MultipartFile shopPhoto,
-                                                   @RequestParam("customerPhoto") MultipartFile customerPhoto,
-                                                   @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
-                                                   @RequestParam("signatureDoc") MultipartFile signatureDoc,
-                                                   @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc,
-                                                   HttpServletRequest httpServletRequest){
-        return merchantDetailsService.addMerchant(frontID, backID, kraPinCertificate,certificateOFGoodConduct,
-                businessLicense, fieldApplicationForm, merchDetails,
-                shopPhoto, customerPhoto,
-                companyRegistrationDoc, signatureDoc, businessPermitDoc, httpServletRequest);
+
+    //List all onboarded merchants
+    @RequestMapping(value = "/vooma-get-all-onboarded-customers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllMerchantOnboardings() {
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
-//    @RequestMapping(value = "/get-merchant-details/{merchantid}", method = RequestMethod.POST)
-//    public  ResponseEntity<?> getMerchantDetails(@PathVariable String merchantid) {
-//        return merchantDetailsService.findMerchantByAccountNumber(merchantid);
-//    }
-    //TODO: add the rest of the endpoints
-    //onboarded merchants
 
-//    @RequestMapping(value = "/get-merchant-detail-geo-map-details/{merchantid}", method = RequestMethod.POST)
-//    public  ResponseEntity<?> getMerchantGeomapDetails(@PathVariable String merchantid) {
-//        return merchantDetailsService.findMerchantGeoMapDetails(merchantid);
-//    }
 
-//    @RequestMapping(value = "/get-agent-merch-account", method = RequestMethod.GET)
-//    public ResponseEntity<?> getUserTypes() {
-//        return userTypeService.getAllAgentMerchantUserType();
-//    }
+    @PostMapping("/vooma-approve-onboarding")
+    public ResponseEntity<?> approveOnboarding(@RequestBody AcquiringApproveMerchantOnboarindRequest assetManagementRequest) {
 
-    @GetMapping("/vooma-fileupload/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        System.out.println("filename "+filename);
-        Resource file = fileStorageService.load(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
-    }
-    @GetMapping("/vooma-fileupload2/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
-        System.out.println("filename "+filename);
-        Resource file = fileStorageService.load(filename);
-        MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
-                .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
-                .body(file);
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
 }

@@ -1,44 +1,115 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
-import com.ekenya.rnd.backend.fskcb.service.CustomerAppointmentService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBService;
+import com.ekenya.rnd.backend.responses.AppResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(path = "/api/v1")
 public class CBCustomerVisitsVC {
     //
-   private final CustomerAppointmentService customerAppointmentService;
+   private final ICBService cbService;
 
-    public CBCustomerVisitsVC(CustomerAppointmentService customerAppointmentService) {
-        this.customerAppointmentService = customerAppointmentService;
-    }
-
-    @RequestMapping(value = "/cb-create-customer-appointment", method = RequestMethod.POST)
-    public ResponseEntity<?> createCustomerAppointment(@RequestParam CustomerAppointementRequest customerAppointmentRequest)
-    {
-        return customerAppointmentService.createCustomerAppointment(customerAppointmentRequest);
-    }
-    //update customer appointment
-    @RequestMapping(value = "/cb-update-customer-appointment", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerAppointment(@RequestParam CustomerAppointementRequest customerAppointmentRequest)
-    {
-        return customerAppointmentService.editCustomerAppointment(customerAppointmentRequest);
-    }
-    //get customer appointment by dsrId
-    @RequestMapping(value = "/cb-get-customer-appointment", method = RequestMethod.GET)
-    public ResponseEntity<?> getCustomerAppointment(@RequestParam Long dsrId)
-    {
-        return customerAppointmentService.getAllAppointmentByDsrId(dsrId);
+    public CBCustomerVisitsVC(ICBService service) {
+        this.cbService = service;
     }
 
-    //delete customer appointment
-    @RequestMapping(value = "/cb-delete-customer-appointment", method = RequestMethod.GET)
-    public ResponseEntity<?> deleteCustomerAppointment(@RequestParam Long appointmentId)
-    {
-        return customerAppointmentService.deleteCustomerAppointment(appointmentId);
+    @PostMapping("/cb-schedule-customer-visit")
+    public ResponseEntity<?> scheduleCustomerVisit(@RequestBody CBCustomerVisitsRequest model) {
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/cb-reschedule-customer-visit")
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CBCustomerVisitsRequest assetManagementRequest) {
+
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @RequestMapping(value = "/cb-get-all-customer-visits", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCustomerVisits() {
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+
+
+    @PostMapping("/cb-get-customer-visit-questionnaire")
+    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody CBCustomerVisitQuestionnaireRequest assetManagementRequest) {
+
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
     }
 }

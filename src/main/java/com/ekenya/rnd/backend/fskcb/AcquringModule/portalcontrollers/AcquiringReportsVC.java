@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AcquiringReportsVC {
 
     @Autowired
-    IAcquiringService acquiringService;
+    IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-onboarding-summary")
     public ResponseEntity<?> getOnboardingSummary(@RequestBody AcquringSummaryRequest filters) {
@@ -21,7 +21,7 @@ public class AcquiringReportsVC {
         //Expected Response structure
         //Take last 7 days
         //[{
-        //    "mID":"",
+        //    "MID":"",
         //    "merchant_name":"",
         //    "date_onboarded":"dd-MMM-yyyy",
         //    "onboarding_status":"pending",//approved, rejected
