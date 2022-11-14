@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.fskcb.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBDSRsInTargetRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBService;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class PBTargetsVC {
 
     @Autowired
-    IPBService pbService;
+    IPBPortalService pbService;
 
     @PostMapping("/pb-create-target")
     public ResponseEntity<?> createPBAsset(@RequestBody PBAddTargetRequest assetManagementRequest) {

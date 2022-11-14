@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasurySummaryRequest;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryService;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class TreasuryDashboardsVC {
 
     @Autowired
-    ITreasuryService treasuryService;
+    ITreasuryPortalService treasuryService;
 
     @PostMapping("/treasury-onboarding-summary")
     public ResponseEntity<?> getOnboardingSummary(@RequestBody TreasurySummaryRequest filters) {

@@ -1,11 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class VoomaChannelOnboardingVC {
 
     @Autowired
-    IPBService pbService;
+    IVoomaPortalService voomaService;
 
     @PostMapping("/vooma-onboard-customer")
     public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,

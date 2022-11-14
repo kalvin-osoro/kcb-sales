@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.payload;
 
-import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

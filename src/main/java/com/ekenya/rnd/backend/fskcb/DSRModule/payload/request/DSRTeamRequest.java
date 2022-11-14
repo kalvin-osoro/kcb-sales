@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.payload.request;
 
-import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

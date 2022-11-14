@@ -1,9 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.security;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.Privilege;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.Privilege;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

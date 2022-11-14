@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.PdfPCell;

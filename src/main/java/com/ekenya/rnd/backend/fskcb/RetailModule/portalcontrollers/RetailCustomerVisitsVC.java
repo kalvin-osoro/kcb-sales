@@ -2,9 +2,7 @@ package com.ekenya.rnd.backend.fskcb.RetailModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailService;
-import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
-import com.ekenya.rnd.backend.fskcb.payload.GetCustomerRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -13,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController()
+@RestController
+@RequestMapping(path = "/api/v1")
 public class RetailCustomerVisitsVC {
     @Autowired
-    IRetailService retailService;
+    IRetailPortalService retailService;
 
     @PostMapping("/retail-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody PBCustomerVisitsRequest model) {

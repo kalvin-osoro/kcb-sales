@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.payload;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 

@@ -1,9 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.RetailModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailApproveMerchantOnboarindRequest;
-import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailService;
-import com.ekenya.rnd.backend.fskcb.service.CustomerDetailsService;
+import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,14 +9,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController("/api/retail")
 public class RetailOnboardingVC {
     @Autowired
-    IRetailService retailService;
+    IRetailPortalService retailService;
 
 
 

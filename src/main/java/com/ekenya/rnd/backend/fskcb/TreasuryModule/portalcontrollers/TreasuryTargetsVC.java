@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryDSRsInTargetRequest;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryService;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class TreasuryTargetsVC {
 
     @Autowired
-    ITreasuryService retailService;
+    ITreasuryPortalService retailService;
 
     @PostMapping("/treasury-create-target")
     public ResponseEntity<?> createTreasuryAsset(@RequestBody TreasuryAddTargetRequest assetManagementRequest) {

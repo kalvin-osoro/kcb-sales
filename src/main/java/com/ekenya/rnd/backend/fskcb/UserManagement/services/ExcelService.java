@@ -1,10 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.entity.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersListRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppDto;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppResponse;
-import com.ekenya.rnd.backend.fskcb.UserManagement.repository.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import com.ekenya.rnd.backend.fskcb.exception.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -45,9 +46,9 @@ public class ExcelService {
     //    public List<UserApp> getAllUsers() {
 //        return userRepository.findAll();
 //    }
-    public UserAppResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    public UserAppResponse getAllUsers(UsersListRequest model) {
+        Sort sort = model.sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(model.sortBy).ascending() : Sort.by(model.sortBy).descending();
+        Pageable pageable = PageRequest.of(model.pageNo, model.pageSize, sort);
         //create a pageable instance
         Page<UserAccount> user = userRepository.findAll(pageable);
         //get content from pageable instance

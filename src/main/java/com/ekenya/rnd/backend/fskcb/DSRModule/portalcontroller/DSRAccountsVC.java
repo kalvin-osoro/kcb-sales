@@ -138,4 +138,72 @@ public class DSRAccountsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+    @PostMapping("/dsr-unlock-user")
+    public ResponseEntity<?> unlockAccount(@RequestBody int id ) {
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+
+
+    @PostMapping("/dsr-lock-account")
+    public ResponseEntity<?> lockAccount(@RequestBody int id ) {
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/dsr-reset-pin")
+    public ResponseEntity<?> resetPIN(@RequestBody int id ) {
+
+
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 }

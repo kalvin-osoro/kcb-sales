@@ -1,10 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSLeadRequest;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSService;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class PSLeadsVC {
     
     @Autowired
-    IPSService psService;
+    IPSPortalService psService;
 
     //Assign lead to a sales person
     @PostMapping("/ps-assign-lead")

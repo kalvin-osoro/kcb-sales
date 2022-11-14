@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.payload;
 
 import com.ekenya.rnd.backend.fskcb.entity.QuestionsType;
-import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

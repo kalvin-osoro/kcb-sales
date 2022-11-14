@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBService;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class PBLeadsVC {
 
     @Autowired
-    IPBService pbService;
+    IPBPortalService pbService;
 
     //Assign lead to a sales person
     @PostMapping("/pb-assign-lead")

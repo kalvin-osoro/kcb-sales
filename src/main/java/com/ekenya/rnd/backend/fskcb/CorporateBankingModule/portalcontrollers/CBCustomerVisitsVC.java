@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.IBPortalService;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 public class CBCustomerVisitsVC {
     //
-   private final IBPortalService cbService;
+   private final ICBPortalService cbService;
 
-    public CBCustomerVisitsVC(IBPortalService service) {
+    public CBCustomerVisitsVC(ICBPortalService service) {
         this.cbService = service;
     }
 

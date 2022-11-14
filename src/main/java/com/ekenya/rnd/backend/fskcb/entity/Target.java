@@ -3,7 +3,7 @@ package com.ekenya.rnd.backend.fskcb.entity;
 import com.ekenya.rnd.backend.fskcb.payload.Campaign;
 import com.ekenya.rnd.backend.fskcb.payload.Onboarding;
 import com.ekenya.rnd.backend.fskcb.payload.Visits;
-import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

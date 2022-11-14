@@ -1,8 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRDetails;
-import com.ekenya.rnd.backend.fskcb.entity.MerchantDetails;
-import com.ekenya.rnd.backend.fskcb.utils.Status;
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
