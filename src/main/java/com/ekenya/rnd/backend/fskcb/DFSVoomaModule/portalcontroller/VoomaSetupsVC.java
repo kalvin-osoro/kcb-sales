@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.VoomaAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBCampaignsRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCampaignsRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

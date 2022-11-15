@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.security;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.Privilege;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfile;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
@@ -30,10 +30,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     //implementation of UserDetailsService
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        UserAccount userAccount = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElseThrow(() ->
-                new UsernameNotFoundException("User not found with username or email : " + usernameOrEmail));
-        return new User(userAccount.getUsername(), userAccount.getPassword(), getAuthorities(userAccount.getRoles()));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserAccount userAccount = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with email : " + email));
+        return new User(userAccount.getStaffNo(), userAccount.getPassword(), getAuthorities(userAccount.getRoles()));
     }
 
 
@@ -48,8 +48,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for (UserRole userRole : roles) {
             authorities.add(new SimpleGrantedAuthority(userRole.getName()));
-            for (Privilege privilege: userRole.getPrivileges()) {
-                authorities.add(new SimpleGrantedAuthority(privilege.getName()));
+            for (UserProfile userProfile : userRole.getUserProfiles()) {
+                authorities.add(new SimpleGrantedAuthority(userProfile.getName()));
             }
         }
         return authorities;

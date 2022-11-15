@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyCustomerVisitQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgencyCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.fskcb.files.IFileStorageService;
 import com.ekenya.rnd.backend.responses.AppResponse;

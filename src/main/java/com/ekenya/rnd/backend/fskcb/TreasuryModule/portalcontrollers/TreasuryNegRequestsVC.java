@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSCustomerVisitsRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

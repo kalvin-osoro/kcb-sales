@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryCustomerVisitQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryCustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

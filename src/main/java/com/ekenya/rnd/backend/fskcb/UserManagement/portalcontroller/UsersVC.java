@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.AssignUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.ResetUserPasswordRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

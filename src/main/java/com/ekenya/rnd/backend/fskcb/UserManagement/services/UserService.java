@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
+
 @Service
 @Transactional
 public class UserService {
@@ -17,7 +19,7 @@ public class UserService {
 
 
     public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
-        UserAccount userAccount = userRepository.findByEmaili(email);
+        UserAccount userAccount = userRepository.findByEmail(email).get();
         if (userAccount != null) {
             userAccount.setResetPasswordToken(token);
             userRepository.save(userAccount);

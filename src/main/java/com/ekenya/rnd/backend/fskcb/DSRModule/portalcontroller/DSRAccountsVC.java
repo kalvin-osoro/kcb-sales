@@ -1,9 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.AddDSRAccountRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.ExportDSRAccountsRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.ImportDSRAccountsRequest;
-import com.ekenya.rnd.backend.fskcb.payload.GetLeadRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRAccountsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportDSRAccountsRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

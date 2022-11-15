@@ -1,13 +1,12 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRDetails;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRTeam;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRTeamRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.payload.response.DSRDetailsResponse;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.response.DSRTeamResponse;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRDetailsRepository;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRTeamRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.ZoneCoordinatesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
 import com.ekenya.rnd.backend.fskcb.exception.MessageResponse;
@@ -27,17 +26,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 @Slf4j
 
 @Service
 public class DSRPortalService implements IDSRPortalService {
 
     @Autowired
-    private DSRTeamRepository dsrTeamRepository;
+    private DSRTeamsRepository dsrTeamsRepository;
 
     @Autowired
-    private DSRDetailsRepository dsrDetailsRepository;
+    private DSRAccountsRepository dsrAccountsRepository;
 
 
 
@@ -55,7 +54,7 @@ public class DSRPortalService implements IDSRPortalService {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         try {
             if(dsrTeamRequest == null) throw new RuntimeException("Bad request");
-            if (dsrTeamRepository.existsByTeamName(dsrTeamRequest.getTeamName())) {
+            if (dsrTeamsRepository.existsByName(dsrTeamRequest.getTeamName())) {
                 return ResponseEntity
                         .ok()
                         .body(new MessageResponse("Error: DSR team is already taken!", "failed"));
@@ -66,13 +65,13 @@ public class DSRPortalService implements IDSRPortalService {
             logger.info("adding team step 2");
 
 
-            DSRTeam dsrTeam = new DSRTeam();
-            dsrTeam.setTeamName(dsrTeamRequest.getTeamName());
-            dsrTeam.setTeamLocation(dsrTeamRequest.getTeamLocation());
+            DSRTeamEntity dsrTeam = new DSRTeamEntity();
+            dsrTeam.setName(dsrTeamRequest.getTeamName());
+            dsrTeam.setLocation(dsrTeamRequest.getTeamLocation());
             dsrTeam.setCreatedBy(userId);
             dsrTeam.setStatus(Status.ACTIVE);
             dsrTeam.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            dsrTeamRepository.save(dsrTeam);
+            dsrTeamsRepository.save(dsrTeam);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR team "
                     +dsrTeamRequest.getTeamName()+" successfully created");
@@ -92,15 +91,15 @@ public class DSRPortalService implements IDSRPortalService {
                 throw new RuntimeException("Status is invalid");
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             String userId = userDetails.getUsername();
-            Optional<DSRTeam> optionalDSRTeam =
-                    dsrTeamRepository.findById(dsrTeamRequest.getId());
-            DSRTeam dsrTeam = optionalDSRTeam.get();
+            Optional<DSRTeamEntity> optionalDSRTeam =
+                    dsrTeamsRepository.findById(dsrTeamRequest.getId());
+            DSRTeamEntity dsrTeam = optionalDSRTeam.get();
             dsrTeam.setStatus(dsrTeamRequest.getStatus());
-            dsrTeam.setTeamName(dsrTeamRequest.getTeamName());
-            dsrTeam.setTeamLocation(dsrTeamRequest.getTeamLocation());
+            dsrTeam.setName(dsrTeamRequest.getTeamName());
+            dsrTeam.setLocation(dsrTeamRequest.getTeamLocation());
             dsrTeam.setUpdatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeam.setUpdatedBy(userId);
-            dsrTeamRepository.save(dsrTeam);
+            dsrTeamsRepository.save(dsrTeam);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR team "
                     +dsrTeamRequest.getTeamName()+" successfully updated");
@@ -115,15 +114,15 @@ public class DSRPortalService implements IDSRPortalService {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         LinkedHashMap<String, Object> responseParams = new LinkedHashMap<>();
         try {
-            List<DSRTeam> dsrTeamList = dsrTeamRepository.findDSRTeamByStatus(Status.ACTIVE);
+            List<DSRTeamEntity> dsrTeamList = dsrTeamsRepository.findByStatus(Status.ACTIVE);
             List<DSRTeamResponse> dsrTeamResponseList = new ArrayList<>();
             DSRTeamResponse dsrDsrTeamResponse;
             for (int i= 0; i<dsrTeamList.size(); i++){
-                int teamMembersCount = dsrDetailsRepository.findAllByDsrTeam(dsrTeamList.get(i)).size();
+                int teamMembersCount = dsrAccountsRepository.findAllByTeamId(dsrTeamList.get(i).getId()).size();
                 dsrDsrTeamResponse = new DSRTeamResponse(
                         dsrTeamList.get(i).getId(),
-                        dsrTeamList.get(i).getTeamName(),
-                        dsrTeamList.get(i).getTeamLocation(),
+                        dsrTeamList.get(i).getName(),
+                        dsrTeamList.get(i).getLocation(),
                         dsrTeamList.get(i).getCreatedBy()  != null? dsrTeamList.get(i).getCreatedBy():null,
                         dsrTeamList.get(i).getStatus().equals(Status.ACTIVE)?"Active":"Inactive",
 
@@ -158,10 +157,10 @@ public class DSRPortalService implements IDSRPortalService {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         LinkedHashMap<String, Object> responseParams = new LinkedHashMap<>();
         try{
-            Optional<DSRTeam> optionalDSRTeam = dsrTeamRepository.findById(id);
+            Optional<DSRTeamEntity> optionalDSRTeam = dsrTeamsRepository.findById(id);
             if(!optionalDSRTeam.isPresent()) throw new RuntimeException("Team is not present");
-            List<DSRDetails> dsrDetailsList =
-                    dsrDetailsRepository.findAllByDsrTeam(optionalDSRTeam.get());
+            List<DSRAccountEntity> dsrDetailsList =
+                    dsrAccountsRepository.findAllByTeamId(optionalDSRTeam.get().getId());
             if (dsrDetailsList.isEmpty()) {
                 responseObject.put("status", "success");
                 responseObject.put("message", "No members registered to this team");
@@ -183,18 +182,18 @@ public class DSRPortalService implements IDSRPortalService {
     public ResponseEntity<?> deleteDSRTeam(long id, HttpServletRequest httpServletRequest) {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         try {
-            Optional<DSRTeam> optionalDSRTeam = dsrTeamRepository.findById(id);
+            Optional<DSRTeamEntity> optionalDSRTeam = dsrTeamsRepository.findById(id);
             if(!optionalDSRTeam.isPresent()) throw new RuntimeException("Team is not present");
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             String userId = userDetails.getUsername();
-            DSRTeam dsrTeam = optionalDSRTeam.get();
+            DSRTeamEntity dsrTeam = optionalDSRTeam.get();
             dsrTeam.setStatus(Status.INACTIVE);
             dsrTeam.setUpdatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeam.setUpdatedBy(userId);
-            dsrTeamRepository.save(dsrTeam);
+            dsrTeamsRepository.save(dsrTeam);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR team "
-                    +dsrTeam.getTeamName()+" successfully deleted");
+                    +dsrTeam.getName()+" successfully deleted");
             return ResponseEntity.ok().body(responseObject);
         }catch (Exception e){
             return ResponseEntity.ok().body(new MessageResponse(e.getMessage(),"failed"));
@@ -226,25 +225,21 @@ public class DSRPortalService implements IDSRPortalService {
             if (userDetails == null)throw new RuntimeException("Service error");
             String createdBy = userDetails.getUsername();
 
-            DSRTeam optionalDSRTeam =
-                    dsrTeamRepository.findById(dsrRequest.getTeamId()).orElse(null);
-            DSRDetails dsrDetails =  DSRDetails.builder()
+            DSRTeamEntity optionalDSRTeam =
+                    dsrTeamsRepository.findById(dsrRequest.getTeamId()).orElse(null);
+            DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
                     .email(dsrRequest.getEmail())
-                    .username(dsrRequest.getUsername())
-                    .mobileNo(dsrRequest.getMobileNo())
+                    .phoneNo(dsrRequest.getMobileNo())
                     .status(Status.ACTIVE)
-                    .firstName(dsrRequest.getFirstName())
-                    .lastName(dsrRequest.getLastName())
-                    .otherName(dsrRequest.getOtherName())
+                    .fullName(dsrRequest.getFirstName())
                     .location(dsrRequest.getLocation())
                     .gender(dsrRequest.getGender().trim())
                     .idNumber(dsrRequest.getIdNumber())
-                    .systemUserId(systemUserId)
-                    .dsrTeam(optionalDSRTeam)
+                    .teamId(optionalDSRTeam.getId())
                     .createdBy(createdBy)
                     .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
                     .build();
-            dsrDetailsRepository.save(dsrDetails);
+            dsrAccountsRepository.save(dsrDetails);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR successfully added");
             return ResponseEntity.ok().body(responseObject);
@@ -267,15 +262,16 @@ public class DSRPortalService implements IDSRPortalService {
     public ResponseEntity<?> deleteDSRById(long id, HttpServletRequest httpServletRequest) {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         try{
-            Optional<DSRDetails> optionalDSRDetails = dsrDetailsRepository.findById(id);
-            DSRDetails dsrDetails = optionalDSRDetails.get();
-            excelService.deleteSystemUser(dsrDetails.getSystemUserId(),httpServletRequest);
+            Optional<DSRAccountEntity> optionalDSRAccountEntity = dsrAccountsRepository.findById(id);
+            DSRAccountEntity dsrDetails = optionalDSRAccountEntity.get();
+            //
+            excelService.deleteSystemUser(dsrDetails.getId(),httpServletRequest);
 
             dsrDetails.setStatus(Status.DELETED);
-            dsrDetailsRepository.save(dsrDetails);
+            dsrAccountsRepository.save(dsrDetails);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR "
-                    +dsrDetails.getFirstName()+" successfully deleted");
+                    +dsrDetails.getFullName()+" successfully deleted");
             return ResponseEntity.ok().body(responseObject);
         }catch (Exception e){
             return ResponseEntity.ok().body(new MessageResponse(e.getMessage(),"failed"));
@@ -300,9 +296,9 @@ public class DSRPortalService implements IDSRPortalService {
 //
 //            Optional<DSRTeam> optionalDSRTeam =
 //                    dsrTeamRepository.findById(dsrRequest.getTeamId());
-//            Optional<DSRDetails> optionalDSRDetails =
+//            Optional<DSRAccountEntity> optionalDSRAccountEntity =
 //                    dsrDetailsRepository.findById(dsrRequest.getDsrId());
-//            DSRDetails dsrDetails = optionalDSRDetails.get();
+//            DSRAccountEntity dsrDetails = optionalDSRAccountEntity.get();
 //            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 //            if (userDetails == null)throw new RuntimeException("Service error");
 //            String updatedBy = userDetails.getUsername();
@@ -337,15 +333,15 @@ public class DSRPortalService implements IDSRPortalService {
             UserDetails userDetailsObject =  (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             //logger.info("userDetailsObject "+userDetailsObject);
             if (userDetailsObject == null)throw new RuntimeException("Service error");
-            String username = userDetailsObject.getUsername();
-            Optional<DSRDetails> optionalDSRDetails =
-                    dsrDetailsRepository.findDSRDetailsByUsername(username);
-            if (!optionalDSRDetails.isPresent())
+            String staffNo = userDetailsObject.getUsername();
+            Optional<DSRAccountEntity> optionalDSRAccountEntity =
+                    dsrAccountsRepository.findByStaffNo(staffNo);
+            if (!optionalDSRAccountEntity.isPresent())
                 throw new RuntimeException("User does not exist");
 
             responseObject.put("status", "success");
             responseObject.put("message", "User profile");
-            responseParams.put("dsrProfile",optionalDSRDetails.get());
+            responseParams.put("dsrProfile",optionalDSRAccountEntity.get());
             responseObject.put("data", responseParams);
             return ResponseEntity.ok().body(responseObject);
 

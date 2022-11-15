@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSCustomerVisitQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSCustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasurySummaryRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasurySummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

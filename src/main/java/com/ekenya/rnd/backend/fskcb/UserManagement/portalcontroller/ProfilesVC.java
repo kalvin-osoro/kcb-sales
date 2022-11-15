@@ -1,6 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignProfileRolesRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveProfileRolesRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.PrivilegeService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.RoleService;
 import com.ekenya.rnd.backend.responses.AppResponse;

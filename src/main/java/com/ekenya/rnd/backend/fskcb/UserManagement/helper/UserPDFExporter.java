@@ -50,9 +50,9 @@ public class UserPDFExporter {
         for (UserAccount user : listUsers) {
             table.addCell(String.valueOf(user.getId()));
             table.addCell(user.getEmail());
-            table.addCell(user.getFirstName() + " " + user.getLastName());
+            table.addCell(user.getFullName());
             table.addCell(user.getPhoneNumber());
-            table.addCell(user.getMiddleName());
+            table.addCell(user.getStaffNo());
         }
     }
 

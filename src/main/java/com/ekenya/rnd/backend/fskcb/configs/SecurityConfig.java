@@ -3,8 +3,10 @@ package com.ekenya.rnd.backend.fskcb.configs;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtAuthenticationEntryPoint;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -79,5 +81,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 }

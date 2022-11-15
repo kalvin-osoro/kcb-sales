@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.AddZoneRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.ExportZonesRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.ImportZonesRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddZoneRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportZonesRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportZonesRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

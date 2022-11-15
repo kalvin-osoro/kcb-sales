@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.RetailModule.portalcontrollers;//package ekenya.co.ke.frp_kcb.RetailModule.controllers;
 
-import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.RetailModule.models.RetailLeadsListRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

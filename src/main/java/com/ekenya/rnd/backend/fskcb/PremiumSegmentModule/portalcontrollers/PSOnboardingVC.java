@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
