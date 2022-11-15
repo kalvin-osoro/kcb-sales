@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-
 @Service
 @Slf4j
 public class AcquiringPortalPortalService implements IAcquiringPortalService {
@@ -79,11 +77,11 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             Optional<AcqAsset> optionalAsset = acqAssetRepository.findById( acquiringAddAssetRequest.getDeviceId());
 
             AcquiringAssetEntity acquiringAssetEntity = new AcquiringAssetEntity();
-            acquiringAssetEntity.setAssetType(optionalAsset.get());
+            //acquiringAssetEntity.setAssetType(optionalAsset.get());
             //
             acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
             //
-            acquiringAssetEntity.setCondition(acquiringAddAssetRequest.getCondition());
+            acquiringAssetEntity.setAssetCondition(acquiringAddAssetRequest.getCondition());
             //
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(acquiringAssetEntity);
             //
@@ -94,7 +92,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             //
             filePathList.forEach(filePath ->{
                 AcquiringAssetFilesEntity assetFilesEntity = new AcquiringAssetFilesEntity();
-                assetFilesEntity.setAcquiringAssetEntity(savedAsset);
+                //assetFilesEntity.setAcquiringAssetEntity(savedAsset);
                 assetFilesEntity.setFilePath(filePath);
                 acquiringAssetFileRepository.save(assetFilesEntity);
             });
@@ -117,7 +115,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id",acquiringAssetEntity.getId());
-                asset.put("condition",acquiringAssetEntity.getCondition());
+                asset.put("condition",acquiringAssetEntity.getAssetCondition());
                 asset.put("sno",acquiringAssetEntity.getSerialNumber());
                 //asset.put("type",acquiringAssetEntity.getAssetType());
                 //

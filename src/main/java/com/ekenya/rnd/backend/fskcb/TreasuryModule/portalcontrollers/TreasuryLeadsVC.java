@@ -1,8 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.TreasuryLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryLeadsListRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

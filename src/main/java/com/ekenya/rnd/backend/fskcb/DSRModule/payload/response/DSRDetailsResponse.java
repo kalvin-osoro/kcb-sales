@@ -1,6 +1,5 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.payload.response;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRTeam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ public class DSRDetailsResponse {
     private String gender;
     private String idNumber;
     private Long systemUserId;
-    private DSRTeam dsrTeam;
     private String createdBy;
     private Date createdOn;
     private Date updatedOn;

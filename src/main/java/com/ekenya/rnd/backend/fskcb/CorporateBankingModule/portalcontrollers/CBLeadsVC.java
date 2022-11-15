@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBLeadsListRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

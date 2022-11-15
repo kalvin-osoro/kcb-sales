@@ -77,19 +77,19 @@ public class ExcelHelper {
                     switch (cellIdx) {
                         //first name,Middle name,Last name,E-mail,Date of birth,Phone number,Password,Username.
                         case FIRST_NAME_COLUMN_INDEX:
-                            userAccount.setFirstName(currentCell.getStringCellValue());
+                            userAccount.setFullName(currentCell.getStringCellValue());
                             break;
                             case MIDDLE_NAME_COLUMN_INDEX:
-                                userAccount.setMiddleName(currentCell.getStringCellValue());
+                                //userAccount.setMiddleName(currentCell.getStringCellValue());
                                 break;
                         case LAST_NAME_COLUMN_INDEX:
-                            userAccount.setLastName(currentCell.getStringCellValue());
+                            //userAccount.setLastName(currentCell.getStringCellValue());
                             break;
                             case EMAIL_COLUMN_INDEX:
                                 userAccount.setEmail(currentCell.getStringCellValue());
                                 break;
                         case DATE_OF_BIRTH_COLUMN_INDEX:
-                            userAccount.setDateOfBirth(currentCell.getStringCellValue());
+                            //userAccount.setDateOfBirth(currentCell.getStringCellValue());
                             break;
                             case PHONE_NUMBER_COLUMN_INDEX:
                                 userAccount.setPhoneNumber(currentCell.getStringCellValue());
@@ -98,7 +98,7 @@ public class ExcelHelper {
                             userAccount.setPassword(passwordEncoder.encode(currentCell.getStringCellValue()));
                             break;
                             case USER_NAME_COLUMN_INDEX:
-                                userAccount.setUsername(currentCell.getStringCellValue());
+                                userAccount.setStaffNo(currentCell.getStringCellValue());
                                 break;
                         default:
                             break;

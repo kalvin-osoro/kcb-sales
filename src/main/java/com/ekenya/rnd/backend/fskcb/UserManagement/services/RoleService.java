@@ -45,30 +45,31 @@ public class RoleService {
     }
 
     public boolean assignRole(Long userId, Long roleId){
-        UserAccount user = userRepository.findById(userId).orElse(null);
-        UserRole role = roleRepository.findById(roleId).orElse(null);
-        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
-        userRoles.add(role);
-        user.setRoles(userRoles);
-        userRepository.save(user);
+//        UserAccount user = userRepository.findById(userId).orElse(null);
+//        UserRole role = roleRepository.findById(roleId).orElse(null);
+//        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
+//        userRoles.add(role);
+//        user.setRoles(userRoles);
+//        userRepository.save(user);
 
         //
         return true;
     }
 
     public boolean unassignRole(Long userId, Long roleId){
-        UserAccount user = userRepository.findById(userId).orElse(null);
-        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
-        userRoles.removeIf(x -> Objects.equals(x.getId(), roleId));
-        user.setRoles(userRoles);
-        userRepository.save(user);
+//        UserAccount user = userRepository.findById(userId).orElse(null);
+//        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
+//        userRoles.removeIf(x -> Objects.equals(x.getId(), roleId));
+//        user.setRoles(userRoles);
+//        userRepository.save(user);
         //
 
         return true;
     }
 
     public Set<UserRole> getUserRoles(UserAccount user){
-        return (Set<UserRole>) user.getRoles();
+//        return (Set<UserRole>) user.getRoles();
+        return null;
     }
 
 

@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersListRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UsersListRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppDto;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppResponse;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
@@ -67,11 +67,10 @@ public class ExcelService {
     public UserAppDto updateUser(UserAppDto userAppDto, Long id) {
         log.info("Updating user by id {}", id);
         UserAccount userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        userAccount.setFirstName(userAppDto.getFirstName());
-        userAccount.setLastName(userAppDto.getLastName());
+        userAccount.setFullName(userAppDto.getFirstName()+" "+userAppDto.getLastName());
         userAccount.setEmail(userAppDto.getEmail());
         userAccount.setPhoneNumber(userAppDto.getPhoneNumber());
-        userAccount.setUsername(userAppDto.getUsername());
+        userAccount.setStaffNo(userAppDto.getStaffId());
         userRepository.save(userAccount);
         return mapToDto(userAccount);
     }
@@ -103,7 +102,7 @@ public class ExcelService {
             userRepository.save(systemUser);
             responseObject.put("status", "success");
             responseObject.put("message", "Agent "
-                    +systemUser.getUsername()+" successfully deleted");
+                    +systemUser.getStaffNo()+" successfully deleted");
             responseObject.put("data", responseParams);
             return ResponseEntity.ok().body(responseObject);
         }catch (Exception e){

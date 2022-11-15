@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.PBLeadsListRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

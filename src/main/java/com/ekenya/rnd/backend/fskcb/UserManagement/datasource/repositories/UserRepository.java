@@ -10,14 +10,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserAccount, Long> {
     //retrieve user by email
 
-    Optional<UserAccount> findByUsernameOrEmail(String username, String email);
-    Optional<UserAccount> findByUsername(String username);
-    Boolean existsByUsername(String username);
+    Optional<UserAccount> findByEmail(String email);
+    Optional<UserAccount> findByStaffNo(String name);
+    Boolean existsByStaffNo(String staffNo);
     Boolean existsByEmail(String email);
     UserAccount findByResetPasswordToken(String token);
-        @Query("SELECT c FROM UserAccount c WHERE c.email = ?1")
-        UserAccount findByEmaili(String email);
-        Optional<UserAccount> findByPhoneNumberAndStaffId(String phoneNo, String staffId);
+//    @Query("SELECT c FROM UserAccount c WHERE c.email = ?1")
+//    UserAccount findByEmail(String email);
+    //Optional<UserAccount> findByStaffNo(String staffNo);
 
 
 

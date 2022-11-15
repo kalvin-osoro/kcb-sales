@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.VoomaAddTargetRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.VoomaDSRsInTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAddTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

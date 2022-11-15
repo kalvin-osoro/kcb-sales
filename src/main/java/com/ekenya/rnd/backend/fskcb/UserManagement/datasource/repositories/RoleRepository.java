@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface RoleRepository extends JpaRepository<UserRole, Long> {
     @Query(
-            value =  "SELECT FROM roles_tb WHERE id NOT IN (SELECT role_id FROM user_roles WHERE user_id = ?1)",
+            value =  "SELECT FROM dbo_roles WHERE id NOT IN (SELECT role_id FROM dbo_user_roles WHERE user_id = ?1)",
             nativeQuery = true
     )
     List<UserRole> getUserNotRoles(Long userId);

@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.Privilege;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfile;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.PrivilegeRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,48 +11,48 @@ import java.util.Set;
 @Service
 
 public class PrivilegeService {
-    public final PrivilegeRepository privilegeRepository;
+    public final UserProfilesRepository userProfilesRepository;
     
     public final RoleRepository roleRepository;
 
-    public PrivilegeService(PrivilegeRepository privilegeRepository, RoleRepository roleRepository) {
-        this.privilegeRepository = privilegeRepository;
+    public PrivilegeService(UserProfilesRepository userProfilesRepository, RoleRepository roleRepository) {
+        this.userProfilesRepository = userProfilesRepository;
         this.roleRepository = roleRepository;
     }
-    public List<Privilege> getPrivilege(){
-        return privilegeRepository.findAll();
+    public List<UserProfile> getPrivilege(){
+        return userProfilesRepository.findAll();
     }
 
     public void assignPrivilege(Long roleId, Long privilegeId){
         UserRole userRole = roleRepository.findById(roleId).orElse(null);
-        Privilege privilege = privilegeRepository.findById(privilegeId).orElse(null);
-        Set<Privilege> rolePrivileges = (Set<Privilege>) userRole.getPrivileges();
-        rolePrivileges.add(privilege);
-        userRole.setPrivileges(rolePrivileges);
+        UserProfile userProfile = userProfilesRepository.findById(privilegeId).orElse(null);
+        Set<UserProfile> roleUserProfiles = (Set<UserProfile>) userRole.getUserProfiles();
+        roleUserProfiles.add(userProfile);
+        userRole.setUserProfiles(roleUserProfiles);
         roleRepository.save(userRole);
     }
     public void unassignPrivilege(Long roleId, Long privilegeId){
         UserRole userRole = roleRepository.findById(roleId).orElse(null);
-        Set<Privilege> rolePrivileges = (Set<Privilege>) userRole.getPrivileges();
-        rolePrivileges.removeIf(x -> x.getId().equals(privilegeId));
-        userRole.setPrivileges(rolePrivileges);
+        Set<UserProfile> roleUserProfiles = (Set<UserProfile>) userRole.getUserProfiles();
+        roleUserProfiles.removeIf(x -> x.getId().equals(privilegeId));
+        userRole.setUserProfiles(roleUserProfiles);
         roleRepository.save(userRole);
     }
 
-    public void save(Privilege privilege) {
-        privilegeRepository.save(privilege);
+    public void save(UserProfile userProfile) {
+        userProfilesRepository.save(userProfile);
     }
-    public Set<Privilege> getRolePrivileges(UserRole userRole){
-        return (Set<Privilege>) userRole.getPrivileges();
+    public Set<UserProfile> getRolePrivileges(UserRole userRole){
+        return (Set<UserProfile>) userRole.getUserProfiles();
     }
-   public List<Privilege> getRoleNotPrivilege(Long roleId){
-        return privilegeRepository.getRoleNotPrivilege(roleId);
+   public List<UserProfile> getRoleNotPrivilege(Long roleId){
+        return userProfilesRepository.getRoleNotPrivilege(roleId);
     }
     public void delete(long id) {
-        privilegeRepository.delete(findById(id));
+        userProfilesRepository.delete(findById(id));
     }
 
-    public Privilege findById(long id) {
-        return privilegeRepository.findById(id).orElse(null);
+    public UserProfile findById(long id) {
+        return userProfilesRepository.findById(id).orElse(null);
     }
 }

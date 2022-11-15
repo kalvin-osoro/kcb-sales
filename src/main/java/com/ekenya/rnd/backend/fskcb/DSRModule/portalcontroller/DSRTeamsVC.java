@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.AddTeamRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.ExportTeamsRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.ImportTeamsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportTeamsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportTeamsRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
