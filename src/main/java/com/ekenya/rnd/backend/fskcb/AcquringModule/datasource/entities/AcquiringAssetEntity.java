@@ -38,10 +38,14 @@ public class AcquiringAssetEntity {
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
-    private String condition;
+    @Column(name = "condition")
+    private AssetCondition assetCondition;
     private Date lastServiceDate;
+    private String longitude;
+    private String latitude;
     @Embedded
     private VisitsReport visitsReport;
- private String images;
+    private String images;
+    private boolean assigned=false;
 
 }

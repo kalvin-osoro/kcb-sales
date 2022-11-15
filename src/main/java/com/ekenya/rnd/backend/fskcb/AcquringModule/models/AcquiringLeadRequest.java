@@ -1,34 +1,28 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.AcquringModule.models;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "dbo_aqc_leads")
-public class AcquiringLeadEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class AcquiringLeadRequest {
     private  Integer customerId;
     private String businessUnit;
     private String topic;
-    @Enumerated(EnumType.STRING)
     private Priority priority;
     private Long dsrId;
     private String dsrName;
-    @Enumerated(EnumType.STRING)
     private LeadStatus leadStatus;
     private boolean assigned=false;
     private String startDate;
     private String endDate;
-
 }

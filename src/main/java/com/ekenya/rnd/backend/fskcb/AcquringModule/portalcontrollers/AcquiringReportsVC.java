@@ -9,15 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class AcquiringReportsVC {
 
     @Autowired
     IAcquiringPortalService acquiringService;
 
-    @PostMapping("/acquiring-onboarding-summary")
-    public ResponseEntity<?> getOnboardingSummary(@RequestBody AcquringSummaryRequest filters) {
 
+
+    //get onboarding summary for last 7 days based on filters
+    @RequestMapping(value = "/acquiring-get-onboarding-summary", method = RequestMethod.POST)
+    public ResponseEntity<?> getOnboardingSummary(@RequestBody AcquringSummaryRequest filters) {
         //Expected Response structure
         //Take last 7 days
         //[{
@@ -28,64 +32,25 @@ public class AcquiringReportsVC {
         //    "coordinates":{"lat":"","lng":""]
         //}]
 
+        //Response
+        List<?> node = acquiringService.getOnboardingSummary(filters);
+        boolean success = node == null;
 
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
-
             //Response
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
-    @RequestMapping(value = "/acquiring-customer-visits-summary", method = RequestMethod.GET)
-    public ResponseEntity<?> getCustomerVisitsSummary(@RequestBody AcquringSummaryRequest filters) {
-
-
-
-        //Expected Response structure
-        //Take last 7 days
-        //[{
-        //    "mID":"",
-        //    "merchant_name":"",
-        //    "date_visited":"dd-MMM-yyyy",
-        //    "visits_status":"upcoming",//completed, fail/expired
-        //    "coordinates":{"lat":"","lng":""]
-        //}]
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
-
-
-    @RequestMapping(value = "/acquiring-targets-summary", method = RequestMethod.GET)
+    @RequestMapping(value = "/acquiring-targets-summary", method = RequestMethod.POST)
     public ResponseEntity<?> getTargetsSummary(@RequestBody AcquringSummaryRequest filters) {
+        List<?> list = acquiringService.getTargetsSummary(filters);
 
 
         //Expected Response structure
@@ -101,7 +66,7 @@ public class AcquiringReportsVC {
 
 
         //TODO;
-        boolean success = false;//acquiringService..(model);
+        boolean success = list == null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -118,8 +83,10 @@ public class AcquiringReportsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-leads-summary", method = RequestMethod.GET)
+    @RequestMapping(value = "/acquiring-leads-summary", method = RequestMethod.POST)
     public ResponseEntity<?> getLeadsSummary(@RequestBody AcquringSummaryRequest filters) {
+        List<?> list = acquiringService.getLeadsSummary(filters);
+        boolean success = list == null;
 
 
         //Expected Response structure
@@ -139,8 +106,6 @@ public class AcquiringReportsVC {
         //}]
 
 
-        //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -160,6 +125,8 @@ public class AcquiringReportsVC {
 
     @RequestMapping(value = "/acquiring-assets-summary", method = RequestMethod.GET)
     public ResponseEntity<?> getAssetsSummary(@RequestBody AcquringSummaryRequest filters) {
+        List<?> list = acquiringService.getAssetsSummary(filters);
+        boolean success = list == null;
 
 
         //Expected Response structure
@@ -169,17 +136,11 @@ public class AcquiringReportsVC {
         //    "working_assets":"500",
         //    "assigned_assets":"500",
         //    "unassigned_assets":"500",
-        //    "open_leads_by_status":{
-        //          "hot":500,
-        //            "warm":300,
-        //                "cold":78
-        //    },
         //    "assets_loc":[{"serial":"","latlng":{"lat":"","lng":""},"pic":"/gg.png"},{}],
         //}]
 
 
         //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

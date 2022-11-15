@@ -36,6 +36,6 @@ public class AcquiringTargetEntity {
     private AquiringTargetType aquiringTargetType;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private TargetStatus targetStatus;
 
 }
