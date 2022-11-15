@@ -11,18 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class AcquiringCustomerVisitsVC {
 
     @Autowired
     IAcquiringPortalService acquiringService;
     @PostMapping("/acquiring-schedule-customer-visit")
-    public ResponseEntity<?> scheduleCustomerVisit(@RequestBody CustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> scheduleCustomerVisit(@RequestBody CustomerVisitsRequest customerVisitsRequest) {
 
 
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = acquiringService.scheduleCustomerVisit(customerVisitsRequest);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -38,14 +38,9 @@ public class AcquiringCustomerVisitsVC {
         }
     }
 
-    @PostMapping("/acquiring-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CustomerVisitsRequest assetManagementRequest) {
-
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+    @PutMapping("/acquiring-reschedule-customer-visit/{id}")
+    public ResponseEntity<?> reScheduleCustomerVisit(@PathVariable Long id, @RequestBody CustomerVisitsRequest customerVisitsRequest) {
+        boolean success = acquiringService.reScheduleCustomerVisit(customerVisitsRequest, id);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -63,9 +58,10 @@ public class AcquiringCustomerVisitsVC {
 
     @RequestMapping(value = "/acquiring-get-all-customer-visits", method = RequestMethod.GET)
     public ResponseEntity<?> getAllCustomerVisits() {
+        List<?> acquiringCustomerVisit = acquiringService.loadCustomerVisits();
+        boolean success = acquiringCustomerVisit == null;
 
 
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -82,15 +78,13 @@ public class AcquiringCustomerVisitsVC {
         }
     }
 
+    //get questionnaire responses by visit id and questionnaire id
+    @RequestMapping(value = "/acquiring-get-customer-visit-questionnaire-responses/{visitId}/{questionnaireId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@PathVariable Long visitId, @PathVariable Long questionnaireId) {
+        List<?> acquiringCustomerVisit = acquiringService.getCustomerVisitQuestionnaireResponses(visitId, questionnaireId);
+        boolean success = acquiringCustomerVisit == null;
 
 
-    @PostMapping("/acquiring-get-customer-visit-questionnaire")
-    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody CustomerVisitQuestionnaireRequest assetManagementRequest) {
-
-
-
-
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

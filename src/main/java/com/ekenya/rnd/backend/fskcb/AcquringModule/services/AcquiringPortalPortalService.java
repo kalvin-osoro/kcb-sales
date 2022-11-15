@@ -34,15 +34,19 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
     private final AcqAssetRepository acqAssetRepository;
     private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
+    private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
+    private final AcquiringQuestionnaireRepository acquiringQuestionnaireRepository;
 
     private final IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository;
+
+    private final AcquiringQuestionerResponseRepository acquiringQuestionerResponseRepository;
 
     public AcquiringPortalPortalService(IAcquiringLeadsRepository mLeadsRepo,
                                         IAcquiringTargetsRepository iAcquiringTargetsRepository, AcquiringAssetRepository acquiringAssetRepository,
                                         ModelMapper modelMapper,
                                         AcqAssetRepository acqAssetRepository,
                                         FileStorageService fileStorageService,
-                                        AcquiringAssetFileRepository acquiringAssetFileRepository, IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository) {
+                                        AcquiringAssetFileRepository acquiringAssetFileRepository, AcquiringCustomerVisitRepository acquiringCustomerVisitRepository, AcquiringQuestionnaireRepository acquiringQuestionnaireRepository, IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository, AcquiringQuestionerResponseRepository acquiringQuestionerResponseRepository) {
         this.mLeadsRepo = mLeadsRepo;
         this.iAcquiringTargetsRepository = iAcquiringTargetsRepository;
         this.acquiringAssetRepository = acquiringAssetRepository;
@@ -50,7 +54,10 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
         this.acqAssetRepository = acqAssetRepository;
         this.fileStorageService = fileStorageService;
         this.acquiringAssetFileRepository = acquiringAssetFileRepository;
+        this.acquiringCustomerVisitRepository = acquiringCustomerVisitRepository;
+        this.acquiringQuestionnaireRepository = acquiringQuestionnaireRepository;
         this.iAcquiringDSRsInTargetRepository = iAcquiringDSRsInTargetRepository;
+        this.acquiringQuestionerResponseRepository = acquiringQuestionerResponseRepository;
     }
 
 
@@ -245,6 +252,116 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
         } catch (Exception e) {
             log.error("Error occurred while fetching all assets",e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean scheduleCustomerVisit(CustomerVisitsRequest customerVisitsRequest) {
+        try {
+            if (customerVisitsRequest==null){
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringCustomerVisitEntity acquiringCustomerVisitEntity=new AcquiringCustomerVisitEntity();
+            acquiringCustomerVisitEntity.setMerchantName(customerVisitsRequest.getMerchantName());
+            acquiringCustomerVisitEntity.setVisitDate(customerVisitsRequest.getVisitDate());
+            acquiringCustomerVisitEntity.setReasonForVisit(customerVisitsRequest.getReasonForVisit());
+            acquiringCustomerVisitEntity.setStatus(Status.ACTIVE);
+            acquiringCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            acquiringCustomerVisitEntity.setDsrName(customerVisitsRequest.getDsrName());
+            //save
+            acquiringCustomerVisitRepository.save(acquiringCustomerVisitEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit",e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean reScheduleCustomerVisit(CustomerVisitsRequest customerVisitsRequest,Long id) {
+        //update schedule customer visit by only changing the date
+        try {
+            if (customerVisitsRequest==null){
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringCustomerVisitEntity acquiringCustomerVisitEntity=acquiringCustomerVisitRepository.findById(id).get();
+            acquiringCustomerVisitEntity.setVisitDate(customerVisitsRequest.getVisitDate());
+            acquiringCustomerVisitEntity.setUpdatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            acquiringCustomerVisitRepository.save(acquiringCustomerVisitEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit",e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> loadCustomerVisits() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringCustomerVisitEntity acquiringCustomerVisitEntity : acquiringCustomerVisitRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringCustomerVisitEntity.getId());
+                asset.put("merchantName",acquiringCustomerVisitEntity.getMerchantName());
+                asset.put("visitDate",acquiringCustomerVisitEntity.getVisitDate());
+                asset.put("reasonForVisit",acquiringCustomerVisitEntity.getReasonForVisit());
+                asset.put("dsrName",acquiringCustomerVisitEntity.getDsrName());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all assets",e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addNewQuestionnaire(AcquiringAddQuestionnaireRequest acquiringAddQuestionnaireRequest) {
+        //add new questionnaire
+        try {
+            if (acquiringAddQuestionnaireRequest==null){
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringQuestionnaireQuestionEntity acquiringQuestionnaireEntity=new AcquiringQuestionnaireQuestionEntity();
+            acquiringQuestionnaireEntity.setQuestion(acquiringAddQuestionnaireRequest.getQuestion());
+            acquiringQuestionnaireEntity.setQuestionnaireDescription(acquiringAddQuestionnaireRequest.getQuestionnaireDescription());
+            acquiringQuestionnaireEntity.setQuestionnaireDescription(acquiringAddQuestionnaireRequest.getQuestionnaireDescription());
+            acquiringQuestionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            acquiringQuestionnaireRepository.save(acquiringQuestionnaireEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit",e);
+        }
+            return false;
+    }
+
+    @Override
+    public List<?> getCustomerVisitQuestionnaireResponses(Long visitId, Long questionnaireId) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringQuestionerResponseEntity acquiringCustomerVisitQuestionnaireResponseEntity : acquiringQuestionerResponseRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringCustomerVisitQuestionnaireResponseEntity.getId());
+                asset.put("questionId",acquiringCustomerVisitQuestionnaireResponseEntity.getQuestionId());
+                asset.put("response",acquiringCustomerVisitQuestionnaireResponseEntity.getResponse());
+                asset.put("visitId",acquiringCustomerVisitQuestionnaireResponseEntity.getVisitId());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching responses",e);
         }
         return null;
     }
