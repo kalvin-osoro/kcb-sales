@@ -50,7 +50,7 @@ public class AcquiringAssetVC {
         List<?> acquiringAssetResponse = acquiringService.getAllAssets();
 
 
-        boolean success = acquiringAssetResponse == null;
+        boolean success = acquiringAssetResponse == null;//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

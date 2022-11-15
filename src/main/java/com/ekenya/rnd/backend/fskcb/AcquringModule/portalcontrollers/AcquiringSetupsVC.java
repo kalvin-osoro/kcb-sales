@@ -18,11 +18,8 @@ public class AcquiringSetupsVC {
     IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest acquiringAddQuestionnaireRequest) {
+        boolean success = acquiringService.addNewQuestionnaire(acquiringAddQuestionnaireRequest);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

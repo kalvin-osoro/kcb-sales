@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.entity.Zone;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,32 +11,31 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dbo_aqc_targets")
-
+@Table(name = "acquiring_customer_visits")
 @DynamicUpdate
 @DynamicInsert
-public class AcquiringTargetEntity {
+public class AcquiringCustomerVisitEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
-    private Long id;
-    private String targetName;
-    private String targetDesc;
-    private Integer targetValue;
-    private Integer targetAchievement;
-    private  String targetSource;
-    private Date startDate;
-    private String endDate;
-    @Enumerated(EnumType.STRING)
-    private AquiringTargetType aquiringTargetType;
-    private Date createdOn;
+    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
+    private  Long id;
+    //dsr id from dsr table
+    private  Long dsrId;
+    private String dsrName;
+    private String merchantName;
+    private String reasonForVisit;
+    private String visitDate;
     @Enumerated(EnumType.STRING)
     private Status status;
+//    private Zone zone;
+    private Date createdOn;
+    private Date updatedOn;
+    private boolean isCompleted=false;
+
 
 }

@@ -1,15 +1,12 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcqAsset;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetFilesEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcqAssetRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringLeadsRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.files.IFileStorageService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
+
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
+import com.ekenya.rnd.backend.utils.Status;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,24 +26,36 @@ import java.util.Optional;
 public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final  IAcquiringLeadsRepository mLeadsRepo;
+    private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final ModelMapper modelMapper;
     private final AcqAssetRepository acqAssetRepository;
-    private final IFileStorageService IFileStorageService;
+    private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
+    private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
+    private final AcquiringQuestionnaireRepository acquiringQuestionnaireRepository;
+
+    private final IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository;
+
+    private final AcquiringQuestionerResponseRepository acquiringQuestionerResponseRepository;
 
     public AcquiringPortalPortalService(IAcquiringLeadsRepository mLeadsRepo,
-                                        AcquiringAssetRepository acquiringAssetRepository,
+                                        IAcquiringTargetsRepository iAcquiringTargetsRepository, AcquiringAssetRepository acquiringAssetRepository,
                                         ModelMapper modelMapper,
                                         AcqAssetRepository acqAssetRepository,
-                                        IFileStorageService IFileStorageService,
-                                        AcquiringAssetFileRepository acquiringAssetFileRepository) {
+                                        FileStorageService fileStorageService,
+                                        AcquiringAssetFileRepository acquiringAssetFileRepository, AcquiringCustomerVisitRepository acquiringCustomerVisitRepository, AcquiringQuestionnaireRepository acquiringQuestionnaireRepository, IAcquiringDSRsInTargetRepository iAcquiringDSRsInTargetRepository, AcquiringQuestionerResponseRepository acquiringQuestionerResponseRepository) {
         this.mLeadsRepo = mLeadsRepo;
+        this.iAcquiringTargetsRepository = iAcquiringTargetsRepository;
         this.acquiringAssetRepository = acquiringAssetRepository;
         this.modelMapper = modelMapper;
         this.acqAssetRepository = acqAssetRepository;
-        this.IFileStorageService = IFileStorageService;
+        this.fileStorageService = fileStorageService;
         this.acquiringAssetFileRepository = acquiringAssetFileRepository;
+        this.acquiringCustomerVisitRepository = acquiringCustomerVisitRepository;
+        this.acquiringQuestionnaireRepository = acquiringQuestionnaireRepository;
+        this.iAcquiringDSRsInTargetRepository = iAcquiringDSRsInTargetRepository;
+        this.acquiringQuestionerResponseRepository = acquiringQuestionerResponseRepository;
     }
 
 
@@ -57,7 +66,55 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
     @Override
     public List<ObjectNode> loadTargets() {
+        try {
+            List<ObjectNode> targets = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringTargetEntity target : iAcquiringTargetsRepository.findAll()) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("id", target.getId());
+                node.put("name", target.getTargetName());
+                node.put("description", target.getTargetDesc());
+                node.put("status", target.getStatus().toString());
+                node.put("value", target.getTargetValue());
+                node.put("achievement", target.getTargetAchievement());
+                node.put("source", target.getTargetSource());
+                node.put("startDate", target.getStartDate().toString());
+                node.put("endDate", target.getEndDate().toString());
+                node.put("type", target.getAquiringTargetType().toString());
+                targets.add(node);
+            }
+            return targets;
+        } catch (Exception e) {
+            log.error("Error loading targets", e);
+        }
         return null;
+    }
+
+    @Override
+    public boolean addNewTarget(AcquiringAddTargetRequest acquiringAddTargetRequest) {
+        try {
+            if (acquiringAddTargetRequest == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
+            AcquiringTargetEntity acquiringTargetEntity=new AcquiringTargetEntity();
+            acquiringTargetEntity.setTargetName(acquiringAddTargetRequest.getTargetName());
+            acquiringTargetEntity.setTargetSource(acquiringAddTargetRequest.getTargetSource());
+            acquiringTargetEntity.setAquiringTargetType(acquiringAddTargetRequest.getAquiringTargetType());
+            acquiringTargetEntity.setTargetDesc(acquiringAddTargetRequest.getTargetDesc());
+            acquiringTargetEntity.setStatus(Status.ACTIVE);
+            acquiringTargetEntity.setTargetValue(acquiringAddTargetRequest.getTargetValue());
+            acquiringTargetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            iAcquiringTargetsRepository.save(acquiringTargetEntity);
+            return true;
+
+            //save
+        } catch (Exception e) {
+            log.error("Error while adding new target", e);
+        }
+        return false;
     }
 
     @Override
@@ -88,7 +145,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
             List<String> filePathList = new ArrayList<>();
             //save files
-            filePathList = IFileStorageService.saveMultipleFileWithSpecificFileName("Asset_",assetFiles);
+            filePathList =fileStorageService.saveMultipleFileWithSpecificFileName("Asset_",assetFiles);
             //
             filePathList.forEach(filePath ->{
                 AcquiringAssetFilesEntity assetFilesEntity = new AcquiringAssetFilesEntity();
@@ -174,6 +231,138 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
         return null;
     }
 
+    @Override
+    public List<ObjectNode> loadDSRsInTarget(AcquiringDSRsInTargetRequest model) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringDSRsInTargetEntity acquiringDSRsInTargetEntity : iAcquiringDSRsInTargetRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringDSRsInTargetEntity.getId());
+                asset.put("dsrName",acquiringDSRsInTargetEntity.getDsrName());
+                asset.put("targetName",acquiringDSRsInTargetEntity.getTargetName());
+                asset.put("setTarget",acquiringDSRsInTargetEntity.getSetTarget());
+                asset.put("achievedTarget",acquiringDSRsInTargetEntity.getAchievedTarget());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all assets",e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean scheduleCustomerVisit(CustomerVisitsRequest customerVisitsRequest) {
+        try {
+            if (customerVisitsRequest==null){
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringCustomerVisitEntity acquiringCustomerVisitEntity=new AcquiringCustomerVisitEntity();
+            acquiringCustomerVisitEntity.setMerchantName(customerVisitsRequest.getMerchantName());
+            acquiringCustomerVisitEntity.setVisitDate(customerVisitsRequest.getVisitDate());
+            acquiringCustomerVisitEntity.setReasonForVisit(customerVisitsRequest.getReasonForVisit());
+            acquiringCustomerVisitEntity.setStatus(Status.ACTIVE);
+            acquiringCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            acquiringCustomerVisitEntity.setDsrName(customerVisitsRequest.getDsrName());
+            //save
+            acquiringCustomerVisitRepository.save(acquiringCustomerVisitEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit",e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean reScheduleCustomerVisit(CustomerVisitsRequest customerVisitsRequest,Long id) {
+        //update schedule customer visit by only changing the date
+        try {
+            if (customerVisitsRequest==null){
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringCustomerVisitEntity acquiringCustomerVisitEntity=acquiringCustomerVisitRepository.findById(id).get();
+            acquiringCustomerVisitEntity.setVisitDate(customerVisitsRequest.getVisitDate());
+            acquiringCustomerVisitEntity.setUpdatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            acquiringCustomerVisitRepository.save(acquiringCustomerVisitEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit",e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> loadCustomerVisits() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringCustomerVisitEntity acquiringCustomerVisitEntity : acquiringCustomerVisitRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringCustomerVisitEntity.getId());
+                asset.put("merchantName",acquiringCustomerVisitEntity.getMerchantName());
+                asset.put("visitDate",acquiringCustomerVisitEntity.getVisitDate());
+                asset.put("reasonForVisit",acquiringCustomerVisitEntity.getReasonForVisit());
+                asset.put("dsrName",acquiringCustomerVisitEntity.getDsrName());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all assets",e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addNewQuestionnaire(AcquiringAddQuestionnaireRequest acquiringAddQuestionnaireRequest) {
+        //add new questionnaire
+        try {
+            if (acquiringAddQuestionnaireRequest==null){
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringQuestionnaireQuestionEntity acquiringQuestionnaireEntity=new AcquiringQuestionnaireQuestionEntity();
+            acquiringQuestionnaireEntity.setQuestion(acquiringAddQuestionnaireRequest.getQuestion());
+            acquiringQuestionnaireEntity.setQuestionnaireDescription(acquiringAddQuestionnaireRequest.getQuestionnaireDescription());
+            acquiringQuestionnaireEntity.setQuestionnaireDescription(acquiringAddQuestionnaireRequest.getQuestionnaireDescription());
+            acquiringQuestionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            acquiringQuestionnaireRepository.save(acquiringQuestionnaireEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit",e);
+        }
+            return false;
+    }
+
+    @Override
+    public List<?> getCustomerVisitQuestionnaireResponses(Long visitId, Long questionnaireId) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for(AcquiringQuestionerResponseEntity acquiringCustomerVisitQuestionnaireResponseEntity : acquiringQuestionerResponseRepository.findAll()){
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id",acquiringCustomerVisitQuestionnaireResponseEntity.getId());
+                asset.put("questionId",acquiringCustomerVisitQuestionnaireResponseEntity.getQuestionId());
+                asset.put("response",acquiringCustomerVisitQuestionnaireResponseEntity.getResponse());
+                asset.put("visitId",acquiringCustomerVisitQuestionnaireResponseEntity.getVisitId());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching responses",e);
+        }
+        return null;
+    }
 
 
 }
