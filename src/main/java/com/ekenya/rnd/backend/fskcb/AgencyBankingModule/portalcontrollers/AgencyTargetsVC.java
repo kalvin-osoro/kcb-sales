@@ -21,9 +21,9 @@ public class AgencyTargetsVC {
     IAgencyPortalService agencyService;
 
     @PostMapping("/agency-create-target")
-    public ResponseEntity<?> createAgencyTarget(@RequestBody AgencyAddTargetRequest acquiringAddTargetRequest) {
+    public ResponseEntity<?> createAgencyTarget(@RequestBody AgencyAddTargetRequest agencyAddTargetRequest) {
 
-        boolean success = false;//acquiringService.addNewTarget(acquiringAddTargetRequest);
+        boolean success = agencyService.createAgencyTarget(agencyAddTargetRequest);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -39,10 +39,33 @@ public class AgencyTargetsVC {
         }
     }
 
-    @PostMapping(value = "/agency-get-all-targets")
+    @RequestMapping(value = "/agency-get-all-targets", method = RequestMethod.POST)
     public ResponseEntity<?> getAllTargets() {
+        List<?> agencyTargetsResponse = agencyService.loadAgencyTargets();
+        boolean success = agencyTargetsResponse != null;// agencyTargetsResponse.size() > 0;
 
-        boolean success = false;//
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(agencyTargetsResponse));
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+
+    @PostMapping("/agency-get-dsrs-in-target")
+    public ResponseEntity<?> getDSRsInTarget(@RequestBody AgencyDSRsInTargetRequest agencyDSRsInTargetRequest) {
+       //TODO;
+        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -60,33 +83,8 @@ public class AgencyTargetsVC {
     }
 
 
-    @PostMapping(value = "/agency-get-agents-in-target")
-    public ResponseEntity<?> getAgencyAgentsInTarget(AgencyDSRsInTargetRequest model) {
 
-
-        List<?> acquiringTargetsResponse = null;//acquiringService.loadDSRsInTarget(model);
-        boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
-
-
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
-
-
-
-    @PostMapping(value = "/agency-sync-crm-targets")
+    @RequestMapping(value = "/agency-sync-crm-targets", method = RequestMethod.GET)
     public ResponseEntity<?> getAgencySyncTargetsWithCRM() {
 
         //

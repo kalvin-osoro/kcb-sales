@@ -83,7 +83,7 @@ public class AcquiringCustomerVisitsVC {
     @PostMapping(value = "/acquiring-get-customer-visit-questionnaire-responses/{visitId}/{questionnaireId}")
     public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@PathVariable Long visitId, @PathVariable Long questionnaireId) {
         List<?> acquiringCustomerVisit = acquiringService.getCustomerVisitQuestionnaireResponses(visitId, questionnaireId);
-        boolean success = acquiringCustomerVisit == null;
+        boolean success = acquiringCustomerVisit != null;
 
 
 
@@ -92,6 +92,7 @@ public class AcquiringCustomerVisitsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(acquiringCustomerVisit));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

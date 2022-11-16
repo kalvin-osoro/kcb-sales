@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyApproveOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1")
@@ -20,15 +23,16 @@ public class AgencyOnboardingVC {
     //List all onboarded merchants
     @PostMapping(value = "/agency-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
+        List<?> list = acquiringService.loadAllOnboardedAgents();
+        boolean success = list != null;
 
-//TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -41,12 +45,9 @@ public class AgencyOnboardingVC {
 
 
     @PostMapping("/agency-approve-onboarding")
-    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AgencyApproveOnboarindRequest assetManagementRequest) {
+    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AgencyOnboardingEntity agencyOnboardingEntity) {
 
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = acquiringService.approveAgentOnboarding(agencyOnboardingEntity);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

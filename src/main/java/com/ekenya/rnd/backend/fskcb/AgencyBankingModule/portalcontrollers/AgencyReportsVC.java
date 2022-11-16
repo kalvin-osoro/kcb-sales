@@ -1,41 +1,35 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencySummaryRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1")
 public class AgencyReportsVC {
+    @Autowired
+    IAgencyPortalService agencyService;
     //
 
     @PostMapping("/agency-onboarding-summary")
     public ResponseEntity<?> getOnboardingSummary(@RequestBody AgencySummaryRequest filters) {
 
-        //Expected Response structure
-        //Take last 7 days
-        //[{
-        //    "mID":"",
-        //    "merchant_name":"",
-        //    "date_onboarded":"dd-MMM-yyyy",
-        //    "onboarding_status":"pending",//approved, rejected
-        //    "coordinates":{"lat":"","lng":""]
-        //}]
-
-
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        List<?> list = agencyService.getAgentOnboardSummary(filters);
+        boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
