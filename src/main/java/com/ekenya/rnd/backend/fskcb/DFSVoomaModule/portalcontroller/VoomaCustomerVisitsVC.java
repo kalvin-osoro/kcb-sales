@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,20 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class VoomaCustomerVisitsVC {
 
     @Autowired
-    IVoomaChannelService voomaService;
+    IVoomaPortalService voomaService;
     
     @PostMapping("/vooma-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody VoomaCustomerVisitsRequest model) {
-
-
-        //TODO; INSEIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success= voomaService.scheduleCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -41,11 +41,11 @@ public class VoomaCustomerVisitsVC {
     }
 
     @PostMapping("/vooma-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody VoomaCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody VoomaCustomerVisitsRequest voomaCustomerVisitsRequest) {
 
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = voomaService.reScheduleCustomerVisit(voomaCustomerVisitsRequest);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,16 +64,14 @@ public class VoomaCustomerVisitsVC {
 
     @PostMapping(value = "/vooma-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?> customerVisits = voomaService.getAllCustomerVisits();
+        boolean success = customerVisits != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(customerVisits));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

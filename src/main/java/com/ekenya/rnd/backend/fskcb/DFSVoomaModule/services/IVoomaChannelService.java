@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
@@ -46,4 +47,5 @@ public interface IVoomaChannelService {
     ResponseEntity<?> getLiquidationTypeById(Long id);
     ResponseEntity<?> updateLiquidationType(LiquidationTypeDto liquidationTypeDto);
     ResponseEntity<?> deleteLiquidationTypeById(Long id);
+
 }
