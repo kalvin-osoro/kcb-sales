@@ -42,7 +42,7 @@ public class AgencySetupVC {
         return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 
     }
-    @RequestMapping(value = "agency-setups-get-all-products",method = RequestMethod.GET)
+    @RequestMapping(value = "agency-setups-get-all-products",method = RequestMethod.POST)
     public ResponseEntity<?>getAllProducts(){
 
         //TODO; INSIDE SERVICE
@@ -62,7 +62,7 @@ public class AgencySetupVC {
 
     }
     //edit product
-    @RequestMapping(value = "/agency-setups-edit-product",method = RequestMethod.PUT)
+    @RequestMapping(value = "/agency-setups-edit-product",method = RequestMethod.POST)
     public ResponseEntity<?>editProduct(@RequestBody AgencyProductRequest productRequest){
 
 

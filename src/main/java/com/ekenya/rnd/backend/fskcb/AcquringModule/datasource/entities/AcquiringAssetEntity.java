@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRDetails;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,9 +31,9 @@ public class AcquiringAssetEntity {
    @OneToOne
     private AcqAsset assetType;
     private String serialNumber;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dsr_id")
-    private DSRDetails dsrDetails;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "dsr_id")
+//    private DSRAccountEntity dsrDetails;
     private Date dateAssigned;
     @Column(name="status")
     @Enumerated(EnumType.STRING)

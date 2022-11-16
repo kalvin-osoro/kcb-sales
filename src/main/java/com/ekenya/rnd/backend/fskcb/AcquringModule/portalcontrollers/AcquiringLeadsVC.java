@@ -43,8 +43,10 @@ public class AcquiringLeadsVC {
     //List all leads
     @RequestMapping(value = "/acquiring-get-all-leads", method = RequestMethod.GET)
     public ResponseEntity<?> getAllLeads() {
-        List<?>leadResponse = acquiringService.getAllLeads();
-        boolean success = leadResponse != null;
+        List<?> acquiringLeadRequests = acquiringService.getAllLeads();
+        boolean success = acquiringLeadRequests != null;
+
+
 
 
 
@@ -53,6 +55,7 @@ public class AcquiringLeadsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(acquiringLeadRequests));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

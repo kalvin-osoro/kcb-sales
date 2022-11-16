@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,15 +17,14 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "acquiring_questionnare_responses")
+@Table(name = "agency_questionnare_responses")
 @DynamicInsert
 @DynamicUpdate
-public class AcquiringQuestionerResponseEntity {
+public class AgencyBankingQuestionerResponseEntity {
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private Long id;
     private Long visitId;
     private Long questionId;
     private  String response;
-
 }

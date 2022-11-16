@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class AgencyCustomerVisitsVC {
@@ -18,11 +20,10 @@ public class AgencyCustomerVisitsVC {
     IAgencyPortalService agencyService;
     
     @PostMapping("/agency-schedule-customer-visit")
-    public ResponseEntity<?> scheduleCustomerVisit(@RequestBody AgencyCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> scheduleCustomerVisit(@RequestBody AgencyCustomerVisitsRequest agencyCustomerVisitsRequest) {
+        //TODO; INSIDE SERVICE
+        boolean success = agencyService.scheduleCustomerVisit(agencyCustomerVisitsRequest);
 
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -41,11 +42,8 @@ public class AgencyCustomerVisitsVC {
 
     @PostMapping("/agency-reschedule-customer-visit")
     public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody AgencyCustomerVisitsRequest assetManagementRequest) {
-
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        //TODO; INSIDE SERVICE
+        boolean success = agencyService.reScheduleCustomerVisit(assetManagementRequest);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -62,17 +60,19 @@ public class AgencyCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/agency-get-all-customer-visits", method = RequestMethod.GET)
+   //get all customer visits using @postmapping
+    @PostMapping("/agency-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
-
-
-        boolean success = false;//acquiringService..(model);
+        //TODO; INSIDE SERVICE
+        List<?> customerVisits = agencyService.getAllCustomerVisits();
+        boolean success = customerVisits != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(customerVisits));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -84,20 +84,17 @@ public class AgencyCustomerVisitsVC {
     }
 
 
-
-    @PostMapping("/agency-get-customer-visit-questionnaire")
-    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody AgencyCustomerVisitQuestionnaireRequest assetManagementRequest) {
-
-
-
-
-        boolean success = false;//acquiringService..(model);
-
+    @PostMapping("/agency-get-customer-visit-questionnaire-response")
+        public ResponseEntity<?> getCustomerVisitQuestionnaireResponse(@RequestBody AgencyCustomerVisitQuestionnaireRequest agencyCustomerVisitQuestionnaireRequest) {
+            //TODO; INSIDE SERVICE
+        List<?> agencyBankingCustomerVisit = agencyService.getCustomerVisitQuestionnaireResponse(agencyCustomerVisitQuestionnaireRequest);
+            boolean success = agencyBankingCustomerVisit != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(agencyBankingCustomerVisit));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

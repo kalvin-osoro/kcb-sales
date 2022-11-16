@@ -89,6 +89,7 @@ public class AcquiringReportsVC {
         boolean success = list == null;
 
 
+
         //Expected Response structure
         //Take last 7 days
         //[{
