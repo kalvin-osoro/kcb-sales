@@ -9,42 +9,51 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class UserService {
+public class UsersService implements IUsersService {
     @Autowired
     private UserRepository userRepository;
 
 
-    public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
+    public boolean updateResetPasswordToken(String token, String email) throws UserNotFoundException {
         UserAccount userAccount = userRepository.findByEmail(email).get();
         if (userAccount != null) {
             userAccount.setResetPasswordToken(token);
             userRepository.save(userAccount);
+
+            return true;
         } else {
             throw new UserNotFoundException("User not found with email " + email);
         }
+
     }
 
     public UserAccount getByResetPasswordToken(String token) {
         return userRepository.findByResetPasswordToken(token);
     }
 
-    public void updatePassword(UserAccount userAccount, String newPassword) {
+    public boolean updatePassword(UserAccount userAccount, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
         userAccount.setPassword(encodedPassword);
 
         userAccount.setResetPasswordToken(null);
         userRepository.save(userAccount);
+
+        return true;
     }
     public UserAccount findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("UseApp","id", + id));
     }
 
-
+    @Override
+    public List<UserAccount> loadAllUsers() {
+        return userRepository.findAll();
+    }
 
 
 }

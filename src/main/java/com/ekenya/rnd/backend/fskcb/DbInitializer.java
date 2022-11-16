@@ -104,6 +104,7 @@ public class DbInitializer {
             //
             UserRole userRole = roleRepository.findByName(SYS_ADMIN_ROLE).get();//get role from db
             userApp.setRoles(Collections.singleton(userRole));//set role to user
+            userRepository.save(userApp);//save user to db
 
             //
             for (UserProfile profile: profilesRepository.findAll()) {

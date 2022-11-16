@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class PSChannelDashboardVC {
 
 
-    @PostMapping("/pb-summary")
+    @PostMapping("/ps-summary")
     public ResponseEntity<?> getSummary() {
 
         //Resp =>
@@ -42,7 +42,7 @@ public class PSChannelDashboardVC {
     }
 
 
-    @PostMapping("/pb-get-nearby-customers")
+    @PostMapping("/ps-get-nearby-customers")
     public ResponseEntity<?> getNearbyCustomers(@RequestBody AcquiringNearbyCustomersRequest request) {
 
         //Resp =>
@@ -89,7 +89,7 @@ public class PSChannelDashboardVC {
     }
 
 
-    @PostMapping("/pb-search-customers")
+    @PostMapping("/ps-search-customers")
     public ResponseEntity<?> searchCustomers(@RequestParam String query) {
 
         //Resp =>

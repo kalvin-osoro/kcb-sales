@@ -22,7 +22,7 @@ public class AcquiringReportsVC {
 
 
     //get onboarding summary for last 7 days based on filters
-    @PostMapping(value = "/acquiring-get-onboarding-summary", method = RequestMethod.POST)
+    @PostMapping(value = "/acquiring-get-onboarding-summary")
     public ResponseEntity<?> getOnboardingSummary(@RequestBody AcquringSummaryRequest filters) {
         //Expected Response structure
         //Take last 7 days
@@ -52,7 +52,7 @@ public class AcquiringReportsVC {
         }
     }
 
-    @PostMapping(value = "/acquiring-targets-summary", method = RequestMethod.POST)
+    @PostMapping(value = "/acquiring-targets-summary")
     public ResponseEntity<?> getTargetsSummary(@RequestBody AcquringSummaryRequest filters) {
         List<?> list = acquiringService.getTargetsSummary(filters);
 
@@ -87,7 +87,7 @@ public class AcquiringReportsVC {
         }
     }
 
-    @PostMapping(value = "/acquiring-leads-summary", method = RequestMethod.POST)
+    @PostMapping(value = "/acquiring-leads-summary")
     public ResponseEntity<?> getLeadsSummary(@RequestBody AcquringSummaryRequest filters) {
         List<?> list = acquiringService.getLeadsSummary(filters);
         boolean success = list == null;

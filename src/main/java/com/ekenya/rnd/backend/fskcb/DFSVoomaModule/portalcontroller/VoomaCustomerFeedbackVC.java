@@ -1,10 +1,8 @@
-package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitsRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1")
-public class AgencyCustomerFeedbackVC {
+public class VoomaCustomerFeedbackVC {
 
 
-    @PostMapping("/agency-get-customer-feedbacks")
+    @PostMapping("/vooma-get-customer-feedbacks")
     public ResponseEntity<?> getAllCustomerFeedbacks() {
         //TODO; INSIDE SERVICE
         boolean success = false;//agencyService.reScheduleCustomerVisit(assetManagementRequest);
@@ -37,7 +35,7 @@ public class AgencyCustomerFeedbackVC {
     }
 
 
-    @PostMapping("/agency-get-customer-feedback-responses")
+    @PostMapping("/vooma-get-customer-feedback-responses")
     public ResponseEntity<?> getCustomerFeedbackResponses(@RequestBody long feedbackId) {
         //TODO; INSIDE SERVICE
         boolean success = false;//agencyService.reScheduleCustomerVisit(assetManagementRequest);

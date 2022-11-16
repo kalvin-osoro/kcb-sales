@@ -33,7 +33,6 @@ public class AuthService implements IAuthService{
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-
     private UserProfilesRepository userProfilesRepository;
 
     @Autowired
