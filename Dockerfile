@@ -1,7 +1,12 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM maven:3.8.6-amazoncorretto-11 as stage1
+RUN mkdir /app
 WORKDIR /app
-EXPOSE 8384
+COPY . .
+RUN mvn clean install -Dmaven.test.skip=true
 
-COPY  spring-boot-kcb-rest-api-0.0.1-SNAPSHOT.jar app.jar
-
-ENTRYPOINT ["java","-jar","app.jar"]
+FROM adoptopenjdk/openjdk11:alpine-jre
+RUN mkdir /app
+WORKDIR /app
+COPY  --from=stage1 /app/target/spring-boot-kcb-rest-api-0.0.1-SNAPSHOT.jar /app/app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar", "--spring.profiles.active=mysql", "--server.port=8080"]
