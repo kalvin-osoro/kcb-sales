@@ -20,6 +20,7 @@ public class AcquiringLeadRequest {
     private String topic;
     private Priority priority;
     private Long dsrId;
+    private Long leadId;
     private String dsrName;
     private LeadStatus leadStatus;
     private boolean assigned=false;

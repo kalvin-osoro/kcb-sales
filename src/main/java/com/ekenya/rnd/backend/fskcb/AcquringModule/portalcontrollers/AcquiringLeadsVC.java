@@ -20,8 +20,8 @@ public class AcquiringLeadsVC {
 
     //Assign lead to dsr
     @PostMapping("/acquiring-assign-lead/{leadId}")
-    public ResponseEntity<?> assignLead(@RequestBody AcquiringLeadRequest acquiringLeadRequest,@PathVariable Long leadId) {
-        boolean success = acquiringService.assignLeadToDsr(acquiringLeadRequest,leadId);
+    public ResponseEntity<?> assignLead(@RequestBody AcquiringLeadRequest acquiringLeadRequest) {
+        boolean success = acquiringService.assignLeadToDsr(acquiringLeadRequest);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

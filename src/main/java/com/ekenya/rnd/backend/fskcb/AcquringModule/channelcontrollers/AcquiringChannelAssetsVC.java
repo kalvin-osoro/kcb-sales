@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddAssetReportRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringCollectAssetRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;

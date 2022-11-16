@@ -29,7 +29,7 @@ public class RolesVC {
 
 //
 //    }
-@GetMapping("roles-findById/{id}")
+@PostMapping("roles-findById/{id}")
     @ResponseBody
     public UserRole findById(@PathVariable Long id) {
         return roleService.findById(id);
@@ -59,7 +59,7 @@ public class RolesVC {
 
     // Get all roles
     @ApiOperation(value = "Get all roles")
-    @GetMapping("/roles-get-all")
+    @PostMapping("/roles-get-all")
     public ResponseEntity<?> getAllRoles() {
 
         List<?> list = roleService.getRoles();

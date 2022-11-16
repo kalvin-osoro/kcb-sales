@@ -12,7 +12,7 @@ public interface IAcquiringPortalService {
 
     //Leads
     //assign lead to dsrName
-    boolean assignLeadToDsr(AcquiringLeadRequest acquiringLeadRequest,Long leadId);
+    boolean assignLeadToDsr(AcquiringLeadRequest acquiringLeadRequest);
 
 
 

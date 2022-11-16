@@ -50,9 +50,9 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
 
     @Override
-    public boolean assignLeadToDsr(AcquiringLeadRequest acquiringLeadRequest, Long leadId) {
+    public boolean assignLeadToDsr(AcquiringLeadRequest acquiringLeadRequest) {
         try {
-            AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(leadId).get();
+            AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(acquiringLeadRequest.getLeadId()).get();
             acquiringLeadEntity.setDsrId(acquiringLeadRequest.getDsrId());
             //set start date from input
             acquiringLeadEntity.setStartDate(acquiringLeadRequest.getStartDate());
