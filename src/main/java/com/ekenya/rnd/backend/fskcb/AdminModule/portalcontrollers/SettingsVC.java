@@ -1,19 +1,17 @@
-package com.ekenya.rnd.backend.fskcb.GeneralSettingsModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AdminModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
-import com.ekenya.rnd.backend.fskcb.GeneralSettingsModule.services.ISettingsService;
+import com.ekenya.rnd.backend.fskcb.AdminModule.services.ISettingsService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping(path = "/api/v1")
 public class SettingsVC {
 
     @Autowired

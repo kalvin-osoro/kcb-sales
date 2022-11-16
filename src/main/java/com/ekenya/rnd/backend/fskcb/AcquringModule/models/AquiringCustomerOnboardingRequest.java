@@ -1,4 +1,4 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.models;
 
-public class AquiringOnbordMerchantRequest {
+public class AquiringCustomerOnboardingRequest {
 }

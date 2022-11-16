@@ -1,30 +1,33 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.CustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
+import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1")
-public class AcquiringSetupsVC {
+@RequestMapping(path = "/api/v1/ch")
+public class AcquiringChannelCustomer360VC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    IAcquiringChannelService channelService;
 
-    @PostMapping("/acquiring-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest acquiringAddQuestionnaireRequest) {
-        boolean success = acquiringService.addNewQuestionnaire(acquiringAddQuestionnaireRequest);
+    @PostMapping("/acquiring-customer-lookup")
+    public ResponseEntity<?> lookupCustomer(@RequestParam String account) {
+
+
+        JsonObject resp = channelService.findCustomerByAccNo(account);//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp == null){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
@@ -37,15 +40,17 @@ public class AcquiringSetupsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-questionnaires", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllQuestionnaires() {
 
-        //
-        List<ObjectNode> list = acquiringService.loadQuestionnaires();
+    //CUSTOMER360 VIEW
+    @PostMapping("/acquiring-get-customer-details")
+    public ResponseEntity<?> getCustomerDetails(@RequestParam String account) {
+
+
+        JsonObject resp = channelService.findCustomerByAccNo(account);//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null ){
+        if(resp == null){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);

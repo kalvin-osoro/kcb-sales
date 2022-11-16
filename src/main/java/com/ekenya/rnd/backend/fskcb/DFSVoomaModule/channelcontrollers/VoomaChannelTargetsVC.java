@@ -1,7 +1,6 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,18 +8,17 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class AcquiringChannelTargetsVC {
+public class VoomaChannelTargetsVC {
 
 
     @Autowired
     IAcquiringPortalService acquiringService;
-    @PostMapping("/acquiring-get-targets-summary")
+    @PostMapping("/vooma-get-targets-summary")
     public ResponseEntity<?> getTargetsSummary() {
 
         //Resp =>

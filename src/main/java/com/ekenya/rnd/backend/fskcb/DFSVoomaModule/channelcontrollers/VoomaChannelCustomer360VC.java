@@ -1,30 +1,32 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping(path = "/api/v1")
-public class AcquiringSetupsVC {
+@RequestMapping(path = "/api/v1/ch/")
+public class VoomaChannelCustomer360VC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    IVoomaChannelService channelService;
 
-    @PostMapping("/acquiring-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest acquiringAddQuestionnaireRequest) {
-        boolean success = acquiringService.addNewQuestionnaire(acquiringAddQuestionnaireRequest);
+    @PostMapping("/vooma-customer-lookup")
+    public ResponseEntity<?> lookupCustomer(@RequestParam String account) {
+
+
+        JsonObject resp = null;//channelService.findCustomerByAccNo(account);//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp == null){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
@@ -37,15 +39,17 @@ public class AcquiringSetupsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-questionnaires", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllQuestionnaires() {
 
-        //
-        List<ObjectNode> list = acquiringService.loadQuestionnaires();
+    //CUSTOMER360 VIEW
+    @PostMapping("/vooma-get-customer-details")
+    public ResponseEntity<?> getCustomerDetails(@RequestParam String account) {
+
+
+        JsonObject resp = null;//channelService.findCustomerByAccNo(account);//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null ){
+        if(resp == null){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
@@ -57,4 +61,5 @@ public class AcquiringSetupsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
 }

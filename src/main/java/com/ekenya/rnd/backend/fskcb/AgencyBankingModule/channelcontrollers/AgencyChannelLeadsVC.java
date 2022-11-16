@@ -1,31 +1,29 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAddLeadRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
-@RequestMapping(path = "/api/v1")
-public class AcquiringLeadsVC {
+@RequestMapping(path = "/api/v1/ch")
+public class AgencyChannelLeadsVC {
 
-    @Autowired
-    IAcquiringPortalService acquiringService;
-
-    //Assign lead to a sales person
-    @PostMapping("/acquiring-assign-lead")
-    public ResponseEntity<?> createAcquiringAsset(@RequestBody AcquiringAssignLeadRequest model) {
+    //Create new lead
+    @PostMapping("/agency-create-lead")
+    public ResponseEntity<?> createAgencyAsset(@RequestBody AgencyAddLeadRequest request) {
 
 
 
         //TODO;
-        boolean success = acquiringService.assigneLeadtoDSR(model);
+        boolean success = false;//acquiringService.assigneLeadtoDSR(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -41,13 +39,11 @@ public class AcquiringLeadsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    @PostMapping(value = "/agency-get-all-leads")
+    public ResponseEntity<?> getAllLeads(@RequestBody int dsrId) {
 
-    //List all leads
-    @PostMapping(value = "/acquiring-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody AcquiringLeadsListRequest filters) {
 
-        //
-        //TODO;
+        //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);
 
         //Response

@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb;
 
-import com.ekenya.rnd.backend.fskcb.CrmAdapter.CrmIntegrations;
+import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 @Slf4j
 public class SpringBootKcbRestApiApplication   {
 	@Autowired
-	private CrmIntegrations crmIntegrations;
+	private ICRMService ICRMService;
 	public static String accessToken ;
 	@Resource
 	public Environment environment;
@@ -47,7 +47,7 @@ public class SpringBootKcbRestApiApplication   {
         System.out.println(
                 "generate token"
         );
-        accessToken = crmIntegrations.generateOauth2Token();
+        accessToken = ICRMService.generateOauth2Token();
     }
 //	@Bean
 //	CommandLineRunner init(RoleRepository roleRepository) {

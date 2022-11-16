@@ -12,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-@RestController()
+@RestController
+@RequestMapping(path = "/api/v1")
 public class AcquiringAssetVC {
 
      private final IAcquiringPortalService acquiringService;

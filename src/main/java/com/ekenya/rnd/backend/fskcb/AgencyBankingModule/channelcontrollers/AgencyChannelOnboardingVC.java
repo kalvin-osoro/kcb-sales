@@ -1,8 +1,7 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringCustomerOnboardingRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -12,20 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1")
-public class AcquiringLeadsVC {
+@RequestMapping(path = "/api/v1/ch")
+public class AgencyChannelOnboardingVC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    IAgencyPortalService acquiringService;
 
-    //Assign lead to a sales person
-    @PostMapping("/acquiring-assign-lead")
-    public ResponseEntity<?> createAcquiringAsset(@RequestBody AcquiringAssignLeadRequest model) {
-
-
+    //Channel request
+    @PostMapping("/agency-onboard-customer")
+    public ResponseEntity<?> onboardNewCustomer(@RequestBody AquiringCustomerOnboardingRequest assetManagementRequest) {
 
         //TODO;
-        boolean success = acquiringService.assigneLeadtoDSR(model);
+        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,12 +39,11 @@ public class AcquiringLeadsVC {
         }
     }
 
-    //List all leads
-    @PostMapping(value = "/acquiring-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody AcquiringLeadsListRequest filters) {
+    //List all onboarded merchants
+    @RequestMapping(value = "/agency-get-all-onboarded-customers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllOnboardings() {
 
-        //
-        //TODO;
+//TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -64,4 +60,6 @@ public class AcquiringLeadsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+
 }

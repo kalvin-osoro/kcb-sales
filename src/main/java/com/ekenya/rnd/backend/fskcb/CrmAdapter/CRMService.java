@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 
 @Service
-public class CrmIntegrationsImpl implements CrmIntegrations {
+public class CRMService implements ICRMService {
 
     @Resource
     public Environment environment;
@@ -81,7 +81,7 @@ public class CrmIntegrationsImpl implements CrmIntegrations {
     }
 
     @Override
-    public JsonObject getCustomerDetails(long accountNo) {
+    public JsonObject getCustomerDetails(String accountNo) {
         return null;
     }
 

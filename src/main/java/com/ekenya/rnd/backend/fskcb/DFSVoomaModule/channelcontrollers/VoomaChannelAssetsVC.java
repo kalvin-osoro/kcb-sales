@@ -1,9 +1,8 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddAssetReportRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringCollectAssetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAddAssetReportRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAssignAssetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCollectAssetRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,10 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class AcquiringChannelAssetsVC {
+public class VoomaChannelAssetsVC {
 
-    @PostMapping("/acquiring-assign-asset")
-    public ResponseEntity<?> assignAssetToDSR(@RequestBody AcquiringAssignAssetRequest request) {
+
+    @PostMapping("/vooma-assign-asset")
+    public ResponseEntity<?> assignAsset(@RequestBody VoomaAssignAssetRequest request) {
 
         boolean success = false;//acquiringService..(model);
 
@@ -38,9 +38,8 @@ public class AcquiringChannelAssetsVC {
         }
     }
 
-
-    @PostMapping(value = "/acquiring-get-all-assets")
-    public ResponseEntity<?> getAllDSRAssets(@RequestBody String dsrId) {
+    @PostMapping(value = "/vooma-get-all-assets")
+    public ResponseEntity<?> getAllAgentAssets(@RequestBody String dsrId) {
 
         //
         //TODO;
@@ -62,8 +61,8 @@ public class AcquiringChannelAssetsVC {
     }
 
 
-    @PostMapping("/acquiring-create-asset-report")
-    public ResponseEntity<?> createAssetReport(@RequestBody AcquiringAddAssetReportRequest request) {
+    @PostMapping("/vooma-create-asset-report")
+    public ResponseEntity<?> createAssetReport(@RequestBody VoomaAddAssetReportRequest request) {
 
         boolean success = false;//acquiringService..(model);
 
@@ -83,8 +82,8 @@ public class AcquiringChannelAssetsVC {
     }
 
 
-    @PostMapping("/acquiring-recollect-asset")
-    public ResponseEntity<?> recollectAsset(@RequestBody AcquiringCollectAssetRequest request) {
+    @PostMapping("/vooma-recollect-asset")
+    public ResponseEntity<?> recollectAsset(@RequestBody VoomaCollectAssetRequest request) {
 
         boolean success = false;//acquiringService..(model);
 

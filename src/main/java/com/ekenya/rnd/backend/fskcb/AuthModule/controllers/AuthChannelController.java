@@ -78,7 +78,7 @@ public class AuthChannelController {
     }
 
     @PostMapping("/account-lookup")
-    @ApiOperation(value = "Login Api")
+    @ApiOperation(value = "Account Lookup Api")
     public ResponseEntity<?> lookupUser(@RequestBody LookupRequest model) {
 
         //

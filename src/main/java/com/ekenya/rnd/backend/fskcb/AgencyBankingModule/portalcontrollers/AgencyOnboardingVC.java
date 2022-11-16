@@ -1,7 +1,7 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringApproveMerchantOnboarindRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyApproveOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1")
-public class AcquiringOnboardingVC {
+public class AgencyOnboardingVC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    IAgencyPortalService acquiringService;
 
     //List all onboarded merchants
-    @RequestMapping(value = "/acquiring-get-all-onboarded-customers", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllMerchantOnboardings() {
+    @PostMapping(value = "/agency-get-all-onboarded-customers")
+    public ResponseEntity<?> getAllOnboardings() {
 
 //TODO;
         boolean success = false;//acquiringService..(model);
@@ -40,8 +40,8 @@ public class AcquiringOnboardingVC {
     }
 
 
-    @PostMapping("/acquiring-approve-onboarding")
-    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AcquiringApproveMerchantOnboarindRequest assetManagementRequest) {
+    @PostMapping("/agency-approve-onboarding")
+    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AgencyApproveOnboarindRequest assetManagementRequest) {
 
 
         //TODO;

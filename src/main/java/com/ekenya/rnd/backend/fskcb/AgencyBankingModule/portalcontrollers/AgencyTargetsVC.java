@@ -1,28 +1,29 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadsListRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddAssetReportRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringCollectAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAddTargetRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyDSRsInTargetRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/ch")
-public class AcquiringChannelAssetsVC {
+@RequestMapping(path = "/api/v1")
+public class AgencyTargetsVC {
 
-    @PostMapping("/acquiring-assign-asset")
-    public ResponseEntity<?> assignAssetToDSR(@RequestBody AcquiringAssignAssetRequest request) {
+    @Autowired
+    IAgencyPortalService agencyService;
 
-        boolean success = false;//acquiringService..(model);
+    @PostMapping("/agency-create-target")
+    public ResponseEntity<?> createAgencyTarget(@RequestBody AgencyAddTargetRequest acquiringAddTargetRequest) {
 
+        boolean success = false;//acquiringService.addNewTarget(acquiringAddTargetRequest);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -38,13 +39,10 @@ public class AcquiringChannelAssetsVC {
         }
     }
 
+    @RequestMapping(value = "/agency-get-all-targets", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllTargets() {
 
-    @PostMapping(value = "/acquiring-get-all-assets")
-    public ResponseEntity<?> getAllDSRAssets(@RequestBody String dsrId) {
-
-        //
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        boolean success = false;//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -62,30 +60,38 @@ public class AcquiringChannelAssetsVC {
     }
 
 
-    @PostMapping("/acquiring-create-asset-report")
-    public ResponseEntity<?> createAssetReport(@RequestBody AcquiringAddAssetReportRequest request) {
+    @RequestMapping(value = "/agency-get-agents-in-target", method = RequestMethod.GET)
+    public ResponseEntity<?> getAgencyAgentsInTarget(AgencyDSRsInTargetRequest model) {
 
-        boolean success = false;//acquiringService..(model);
+
+        List<?> acquiringTargetsResponse = null;//acquiringService.loadDSRsInTarget(model);
+        boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
+
+
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
 
-    @PostMapping("/acquiring-recollect-asset")
-    public ResponseEntity<?> recollectAsset(@RequestBody AcquiringCollectAssetRequest request) {
 
+    @RequestMapping(value = "/agency-sync-crm-targets", method = RequestMethod.GET)
+    public ResponseEntity<?> getAgencySyncTargetsWithCRM() {
+
+        //
+
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response

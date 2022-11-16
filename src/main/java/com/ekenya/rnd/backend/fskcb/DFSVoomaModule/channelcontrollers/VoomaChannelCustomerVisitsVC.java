@@ -1,23 +1,27 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class AcquiringChannelCustomerVisitsVC {
+public class VoomaChannelCustomerVisitsVC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
-    @PostMapping("/acquiring-create-customer-visit")
-    public ResponseEntity<?> createAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest request) {
+    IVoomaChannelService channelService;
+
+    @PostMapping("/vooma-create-customer-visit")
+    public ResponseEntity<?> createCustomerVisit(@RequestBody VoomaCustomerVisitsRequest request) {
 
 
         //TODO; INSIDE SERVICE
@@ -38,8 +42,8 @@ public class AcquiringChannelCustomerVisitsVC {
         }
     }
 
-    @PostMapping("/acquiring-update-customer-visit")
-    public ResponseEntity<?> updateAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest request) {
+    @PostMapping("/vooma-update-customer-visit")
+    public ResponseEntity<?> updateCustomerVisit(@RequestBody VoomaCustomerVisitsRequest request) {
 
 
         //TODO; INSIDE SERVICE
@@ -60,8 +64,8 @@ public class AcquiringChannelCustomerVisitsVC {
         }
     }
 
-    @PostMapping(value = "/acquiring-get-all-customer-visits")
-    public ResponseEntity<?> getAllAcquiringCustomerVisitsByDSR(@RequestBody int dsrId) {
+    @PostMapping(value = "/vooma-get-all-customer-visits")
+    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody int dsrId) {
 
 
         //TODO; INSIDE SERVICE
