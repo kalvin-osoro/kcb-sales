@@ -2,10 +2,12 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryLeadsListRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +15,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 public class TreasuryLeadsVC {
 
+    @Autowired
+    ITreasuryPortalService portalService;
+
     //Assign lead to a sales person
     @PostMapping("/treasury-assign-lead")
-    public ResponseEntity<?> createLead(@RequestBody TreasuryAssignLeadRequest model) {
+    public ResponseEntity<?> assignLead(@RequestBody TreasuryAssignLeadRequest model) {
 
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService.assigneLeadtoDSR(model);
+        //INSIDE SERVICE
+        boolean success = portalService.assignLead(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,21 +42,21 @@ public class TreasuryLeadsVC {
     }
 
     //List all leads
-    @RequestMapping(value = "/treasury-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/treasury-get-all-leads")
     public ResponseEntity<?> getAllLeads(@RequestBody TreasuryLeadsListRequest filters) {
 
         //
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //
+        ArrayNode resp = portalService.loadAllLeads(filters);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
+            //ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
         }else{
 
             //Response

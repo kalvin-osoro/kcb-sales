@@ -40,7 +40,7 @@ public class VoomaChannelOnboardingVC {
     }
 
     //List all onboarded merchants
-    @RequestMapping(value = "/vooma-get-all-onboarded-customers", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
 
 //TODO;

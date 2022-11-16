@@ -1,51 +1,51 @@
-package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
+package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSCustomerVisitsRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonObject;
+import io.swagger.annotations.Api;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1")
-public class TreasuryNegRequestsVC {
+@RequestMapping(path = "/api/v1/ch/")
+public class CBChannelCustomer360VC {
 
 
-    @RequestMapping(value = "/treasury-get-all-neg-reqs", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllCustomerVisits() {
+    @PostMapping("/cb-customer-lookup")
+    public ResponseEntity<?> lookupCustomer(@RequestParam String account) {
 
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        JsonObject resp = null;//channelService.findCustomerByAccNo(account);//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (success) {
+        if (resp == null) {
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
+            ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1, node, "Request Processed Successfully"));
         } else {
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 
 
-    @PostMapping("/treasury-approve-neg-req")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody PSCustomerVisitsRequest assetManagementRequest) {
+    //CUSTOMER360 VIEW
+    @PostMapping("/cb-get-customer-details")
+    public ResponseEntity<?> getCustomerDetails(@RequestParam String account) {
 
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        JsonObject resp = null;//channelService.findCustomerByAccNo(account);//
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (success) {
+        if (resp == null) {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);

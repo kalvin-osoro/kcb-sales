@@ -62,7 +62,7 @@ public class VoomaCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/vooma-get-all-customer-visits", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
 
 

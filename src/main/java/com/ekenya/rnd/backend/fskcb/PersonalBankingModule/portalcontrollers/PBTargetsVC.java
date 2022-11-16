@@ -42,7 +42,7 @@ public class PBTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/pb-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
 
         //
@@ -66,7 +66,7 @@ public class PBTargetsVC {
     }
 
 
-    @RequestMapping(value = "/pb-get-agents-in-target", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-get-agents-in-target")
     public ResponseEntity<?> getPBAgentsInTarget(PBDSRsInTargetRequest model) {
 
         //
@@ -91,7 +91,7 @@ public class PBTargetsVC {
 
 
 
-    @RequestMapping(value = "/pb-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-sync-crm-targets")
     public ResponseEntity<?> getPBSyncTargetsWithCRM() {
 
         //

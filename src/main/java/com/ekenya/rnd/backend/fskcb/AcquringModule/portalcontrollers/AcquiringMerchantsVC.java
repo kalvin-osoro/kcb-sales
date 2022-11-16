@@ -36,7 +36,7 @@ public class AcquiringMerchantsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-merchants", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-merchants")
     public ResponseEntity<?> getAllMerchant() {
 
 

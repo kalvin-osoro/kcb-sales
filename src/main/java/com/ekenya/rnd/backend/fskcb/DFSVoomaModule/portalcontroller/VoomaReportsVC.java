@@ -52,7 +52,7 @@ public class VoomaReportsVC {
     }
 
 
-    @RequestMapping(value = "/vooma-customer-visits-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-customer-visits-summary")
     public ResponseEntity<?> getCustomerVisitsSummary(@RequestBody VoomaSummaryRequest filters) {
 
 
@@ -87,7 +87,7 @@ public class VoomaReportsVC {
     }
 
 
-    @RequestMapping(value = "/vooma-targets-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-targets-summary")
     public ResponseEntity<?> getTargetsSummary(@RequestBody VoomaSummaryRequest filters) {
 
 
@@ -121,7 +121,7 @@ public class VoomaReportsVC {
         }
     }
 
-    @RequestMapping(value = "/vooma-leads-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-leads-summary")
     public ResponseEntity<?> getLeadsSummary(@RequestBody VoomaSummaryRequest filters) {
 
 
@@ -161,7 +161,7 @@ public class VoomaReportsVC {
     }
 
 
-    @RequestMapping(value = "/vooma-assets-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-assets-summary")
     public ResponseEntity<?> getAssetsSummary(@RequestBody VoomaSummaryRequest filters) {
 
 

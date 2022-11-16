@@ -42,7 +42,7 @@ public class CBLeadsVC {
     }
 
     //List all leads
-    @RequestMapping(value = "/cb-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/cb-get-all-leads")
     public ResponseEntity<?> getAllLeads(@RequestBody CBLeadsListRequest filters) {
 
         //

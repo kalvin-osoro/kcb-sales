@@ -58,7 +58,7 @@ public class AgencyLeadsVC {
         //Response
         return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
     }
-    @RequestMapping(value = "/agency-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/agency-get-all-leads")
     public ResponseEntity<?> getAllLeads() {
 
 

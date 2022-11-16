@@ -21,21 +21,21 @@ public class DSRSetupVC {
     }
 
 
-    @RequestMapping(value = "/dsr-setups-add-dsr", method = RequestMethod.POST)
+    @PostMapping(value = "/dsr-setups-add-dsr", method = RequestMethod.POST)
     public ResponseEntity<?> addDSR(@RequestBody DSRRequest dsrRequest, HttpServletRequest httpServletRequest) {
         return dsrService.addDSR(dsrRequest, httpServletRequest);
     }
-    @RequestMapping(value = "/dsr-setups-get-all-dsrs", method = RequestMethod.GET)
+    @PostMapping(value = "/dsr-setups-get-all-dsrs")
     public ResponseEntity<?> getAllDSRs(HttpServletRequest httpServletRequest) {
         return dsrService.getAllDSRs(httpServletRequest);
     }
-    @RequestMapping(value = "/dsr-setups-delete-dsr/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/dsr-setups-delete-dsr/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteDSRById(@PathVariable long id, HttpServletRequest httpServletRequest) {
         return dsrService.deleteDSRById(id, httpServletRequest);
     }
 
 
-    @RequestMapping(value = "/dsr-setups-get-dsr-profile", method = RequestMethod.GET)
+    @PostMapping(value = "/dsr-setups-get-dsr-profile")
     public  ResponseEntity<?>getDSRProfile(HttpServletRequest httpServletRequest){
         return dsrService.getDSRProfile(httpServletRequest);
     }

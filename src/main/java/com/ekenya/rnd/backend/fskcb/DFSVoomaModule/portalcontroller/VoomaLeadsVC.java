@@ -40,7 +40,7 @@ public class VoomaLeadsVC {
     }
 
     //List all leads
-    @RequestMapping(value = "/vooma-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-leads")
     public ResponseEntity<?> getAllLeads(@RequestBody VoomaLeadsListRequest filters) {
 
         //

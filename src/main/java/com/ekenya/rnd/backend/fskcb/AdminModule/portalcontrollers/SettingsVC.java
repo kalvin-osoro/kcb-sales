@@ -37,7 +37,7 @@ public class SettingsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @RequestMapping(value = "/settings-get-all-branches", method = RequestMethod.GET)
+    @PostMapping(value = "/settings-get-all-branches")
     public ResponseEntity<?> getAllBranches() {
 
 

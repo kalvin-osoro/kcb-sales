@@ -33,7 +33,7 @@ public class DSRTeamsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @RequestMapping(value = "/dsr-get-all-teams", method = RequestMethod.GET)
+    @PostMapping(value = "/dsr-get-all-teams")
     public ResponseEntity<?> getAllTeams() {
         //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);

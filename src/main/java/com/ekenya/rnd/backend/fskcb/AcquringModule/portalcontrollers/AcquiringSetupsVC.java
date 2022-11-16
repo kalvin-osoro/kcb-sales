@@ -37,7 +37,7 @@ public class AcquiringSetupsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

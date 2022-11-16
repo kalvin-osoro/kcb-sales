@@ -43,7 +43,7 @@ public class CBCampaignsVC {
         }
     }
 
-    @RequestMapping(value = "/cb-get-all-campaigns", method = RequestMethod.GET)
+    @PostMapping(value = "/cb-get-all-campaigns")
     public ResponseEntity<?> getAllCampaigns() {
 
 

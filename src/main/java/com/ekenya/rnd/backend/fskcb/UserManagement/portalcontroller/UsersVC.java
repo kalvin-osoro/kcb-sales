@@ -38,7 +38,7 @@ public class UsersVC {
         }
     }
 
-    @RequestMapping(value = "/users-get-all-users", method = RequestMethod.GET)
+    @PostMapping(value = "/users-get-all-users")
     public ResponseEntity<?> getAllUsers() {
 
 

@@ -48,7 +48,7 @@ public class ProfilesVC {
         }
     }
 
-    @RequestMapping(value = "/users-get-all-profiles", method = RequestMethod.GET)
+    @PostMapping(value = "/users-get-all-profiles")
     public ResponseEntity<?> getAllProfiles() {
 
 

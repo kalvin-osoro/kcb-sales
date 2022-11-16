@@ -36,7 +36,7 @@ public class RetailConcessionsVC {
         }
     }
 
-    @RequestMapping(value = "/retail-get-all-concessions", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-concessions")
     public ResponseEntity<?> getAllConcessions() {
 
 
@@ -80,7 +80,7 @@ public class RetailConcessionsVC {
         }
     }
 
-    @RequestMapping(value = "/retail-get-all-tracked-covenants", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-tracked-covenants")
     public ResponseEntity<?> getAllTracked() {
 
 

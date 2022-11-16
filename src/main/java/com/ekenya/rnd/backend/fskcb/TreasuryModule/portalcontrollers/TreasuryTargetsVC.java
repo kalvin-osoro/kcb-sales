@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class TreasuryTargetsVC {
 
     @Autowired
-    ITreasuryPortalService retailService;
+    ITreasuryPortalService portalService;
 
     @PostMapping("/treasury-create-target")
-    public ResponseEntity<?> createTreasuryAsset(@RequestBody TreasuryAddTargetRequest assetManagementRequest) {
+    public ResponseEntity<?> createTarget(@RequestBody TreasuryAddTargetRequest request) {
 
 
         //
 
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        //
+        boolean success = portalService.createTarget(request);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,22 +42,22 @@ public class TreasuryTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/treasury-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/treasury-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
 
         //
 
         //TODO;
-        boolean success = false;//acquiringService..(model);
+        ArrayNode list = portalService.loadAllTargets();
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
+            //ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
@@ -66,17 +66,17 @@ public class TreasuryTargetsVC {
     }
 
 
-    @RequestMapping(value = "/treasury-get-agents-in-target", method = RequestMethod.GET)
-    public ResponseEntity<?> getTreasuryAgentsInTarget(TreasuryDSRsInTargetRequest model) {
+    @PostMapping(value = "/treasury-get-agents-in-target")
+    public ResponseEntity<?> getDSRsInTarget(@RequestBody String targetId) {
 
         //
 
         //TODO;
-        boolean success = false;//acquiringService..(model);
+        ArrayNode list = portalService.getAgentsInTarget(targetId);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
@@ -91,7 +91,7 @@ public class TreasuryTargetsVC {
 
 
 
-    @RequestMapping(value = "/treasury-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/treasury-sync-crm-targets")
     public ResponseEntity<?> getTreasurySyncTargetsWithCRM() {
 
         //

@@ -40,7 +40,7 @@ public class AgencyChannelOnboardingVC {
     }
 
     //List all onboarded merchants
-    @RequestMapping(value = "/agency-get-all-onboarded-customers", method = RequestMethod.GET)
+    @PostMapping(value = "/agency-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
 
 //TODO;

@@ -3,9 +3,11 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.Payload.TreasuryProductRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +20,14 @@ import java.util.List;
 public class TreasurySetupVC {
 
     @Autowired
-    ITreasuryPortalService acquiringService;
+    ITreasuryPortalService portalService;
 
     @PostMapping("/treasury-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
+    public ResponseEntity<?> createQuestionnaire(@RequestBody TreasuryAddQuestionnaireRequest req) {
 
 
         //TODO;
-        boolean success = false;//acquiringService..(model);
+        boolean success = portalService.createQuestionnaire(req);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,20 +44,20 @@ public class TreasurySetupVC {
         }
     }
 
-    @RequestMapping(value = "/treasury-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/treasury-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //
-        List<ObjectNode> list = null;//acquiringService.loadQuestionnaires();
+        ArrayNode list = portalService.loadAllQuestionnaires();
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(list != null ){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            //ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response

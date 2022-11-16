@@ -38,7 +38,7 @@ public class AcquiringTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
         List<?> acquiringTargetsResponse = acquiringService.loadTargets();
         boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
@@ -59,7 +59,7 @@ public class AcquiringTargetsVC {
     }
 
 
-    @RequestMapping(value = "/acquiring-get-agents-in-target", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-agents-in-target")
     public ResponseEntity<?> getAcquiringAgentsInTarget(AcquiringDSRsInTargetRequest model) {
         List<?> acquiringTargetsResponse = acquiringService.loadDSRsInTarget(model);
         boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
@@ -83,7 +83,7 @@ public class AcquiringTargetsVC {
 
 
 
-    @RequestMapping(value = "/acquiring-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-sync-crm-targets")
     public ResponseEntity<?> getAcquiringSyncTargetsWithCRM() {
 
         //

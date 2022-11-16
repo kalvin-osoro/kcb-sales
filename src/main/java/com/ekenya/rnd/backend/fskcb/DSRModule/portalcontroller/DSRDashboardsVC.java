@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DSRDashboardsVC {
     //
-    @RequestMapping(value = "/get-dsr-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/get-dsr-summary")
     public ResponseEntity<?> getSummary() {
 
         //Response

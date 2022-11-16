@@ -39,7 +39,7 @@ public class RetailSetupsVC {
         }
     }
 
-    @RequestMapping(value = "/retail-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

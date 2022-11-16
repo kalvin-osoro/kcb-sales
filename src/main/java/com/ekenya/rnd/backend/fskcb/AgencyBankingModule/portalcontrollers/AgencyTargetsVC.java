@@ -39,7 +39,7 @@ public class AgencyTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/agency-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/agency-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
 
         boolean success = false;//
@@ -60,7 +60,7 @@ public class AgencyTargetsVC {
     }
 
 
-    @RequestMapping(value = "/agency-get-agents-in-target", method = RequestMethod.GET)
+    @PostMapping(value = "/agency-get-agents-in-target")
     public ResponseEntity<?> getAgencyAgentsInTarget(AgencyDSRsInTargetRequest model) {
 
 
@@ -86,7 +86,7 @@ public class AgencyTargetsVC {
 
 
 
-    @RequestMapping(value = "/agency-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/agency-sync-crm-targets")
     public ResponseEntity<?> getAgencySyncTargetsWithCRM() {
 
         //

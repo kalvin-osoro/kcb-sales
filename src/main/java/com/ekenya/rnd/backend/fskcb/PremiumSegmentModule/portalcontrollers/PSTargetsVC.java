@@ -42,7 +42,7 @@ public class PSTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/ps-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/ps-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
 
         //
@@ -66,7 +66,7 @@ public class PSTargetsVC {
     }
 
 
-    @RequestMapping(value = "/ps-get-agents-in-target", method = RequestMethod.GET)
+    @PostMapping(value = "/ps-get-agents-in-target")
     public ResponseEntity<?> getPSAgentsInTarget(PSDSRsInTargetRequest model) {
 
         //
@@ -91,7 +91,7 @@ public class PSTargetsVC {
 
 
 
-    @RequestMapping(value = "/ps-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/ps-sync-crm-targets")
     public ResponseEntity<?> getPSSyncTargetsWithCRM() {
 
         //

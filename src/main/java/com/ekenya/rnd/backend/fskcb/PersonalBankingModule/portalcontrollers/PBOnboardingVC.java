@@ -22,7 +22,7 @@ public class PBOnboardingVC {
 
 
     //List all onboarded merchants
-    @RequestMapping(value = "/pb-get-all-onboarded-customers", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
 
         //TODO; INSIDE SERVICE
