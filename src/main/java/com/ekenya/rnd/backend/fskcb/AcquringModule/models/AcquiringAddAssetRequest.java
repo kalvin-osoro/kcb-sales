@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.models;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AssetCondition;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class AcquiringAddAssetRequest {
     private org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
     private Long deviceId;
     private String serialNumber;
-    private String condition;
+    private AssetCondition assetCondition;
     private String lastServiceDate;
     private String visitDate;
     private String dsrId;

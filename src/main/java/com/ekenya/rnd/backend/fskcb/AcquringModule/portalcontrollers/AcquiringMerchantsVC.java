@@ -18,12 +18,9 @@ public class AcquiringMerchantsVC {
     IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-get-merchant-by-id")
-    public ResponseEntity<?> createAcquiringAsset(@RequestBody AcquiringMerchantDetailsRequest assetManagementRequest) {
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getMerchantById(@RequestBody AcquiringMerchantDetailsRequest acquiringMerchantDetailsRequest) {
+        Object merchant = acquiringService.getMerchantById(acquiringMerchantDetailsRequest);
+        boolean success = merchant  == null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -40,7 +37,7 @@ public class AcquiringMerchantsVC {
     }
 
     @RequestMapping(value = "/acquiring-get-all-merchants", method = RequestMethod.GET)
-    public ResponseEntity<?> getAcquiringAsset() {
+    public ResponseEntity<?> getAllMerchant() {
 
 
         //TODO;

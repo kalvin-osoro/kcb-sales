@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class AcquiringOnboardingVC {
@@ -18,11 +21,12 @@ public class AcquiringOnboardingVC {
     IAcquiringPortalService acquiringService;
 
     //List all onboarded merchants
-    @RequestMapping(value = "/acquiring-get-all-onboarded-customers", method = RequestMethod.GET)
+    @RequestMapping(value = "/acquiring-get-all-onboarded-merchant", method = RequestMethod.GET)
     public ResponseEntity<?> getAllMerchantOnboardings() {
 
-//TODO;
-        boolean success = false;//acquiringService..(model);
+        List<?> list = acquiringService.loadAllOnboardedMerchants();
+        boolean success = list == null;
+
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -40,13 +44,10 @@ public class AcquiringOnboardingVC {
     }
 
 
-    @PostMapping("/acquiring-approve-onboarding")
-    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AcquiringApproveMerchantOnboarindRequest assetManagementRequest) {
 
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+    @PostMapping("/acquiring-approve-merchant-onboarding")
+    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AcquiringOnboardEntity acquiringOnboardEntity) {
+        boolean success = acquiringService.approveMerchantOnboarding(acquiringOnboardEntity);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
