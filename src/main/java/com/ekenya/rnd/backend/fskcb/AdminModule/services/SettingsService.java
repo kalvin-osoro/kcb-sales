@@ -1,6 +1,6 @@
-package com.ekenya.rnd.backend.fskcb.GeneralSettingsModule.services;
+package com.ekenya.rnd.backend.fskcb.AdminModule.services;
 
-import com.ekenya.rnd.backend.fskcb.GeneralSettingsModule.AddBranchRequest;
+import com.ekenya.rnd.backend.fskcb.AdminModule.AddBranchRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

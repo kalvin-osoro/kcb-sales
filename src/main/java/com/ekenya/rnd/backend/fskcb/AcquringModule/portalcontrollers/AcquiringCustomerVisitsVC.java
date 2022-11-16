@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/api/v1")
 public class AcquiringCustomerVisitsVC {
 
     @Autowired
@@ -38,7 +39,7 @@ public class AcquiringCustomerVisitsVC {
         }
     }
 
-    @PutMapping("/acquiring-reschedule-customer-visit/{id}")
+    @PostMapping("/acquiring-reschedule-customer-visit/{id}")
     public ResponseEntity<?> reScheduleCustomerVisit(@PathVariable Long id, @RequestBody CustomerVisitsRequest customerVisitsRequest) {
         boolean success = acquiringService.reScheduleCustomerVisit(customerVisitsRequest, id);
         //Response
@@ -56,7 +57,7 @@ public class AcquiringCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-customer-visits", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
         List<?> acquiringCustomerVisit = acquiringService.loadCustomerVisits();
         boolean success = acquiringCustomerVisit == null;

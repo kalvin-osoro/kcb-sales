@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringOnbordMerchantRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringCustomerOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +19,7 @@ public class AcquiringChannelOnboardingVC {
 
     //Channel request
     @PostMapping("/acquiring-onboard-customer")
-    public ResponseEntity<?> onboardNewMerchant(@RequestBody AquiringOnbordMerchantRequest assetManagementRequest) {
+    public ResponseEntity<?> onboardNewCustomer(@RequestBody AquiringCustomerOnboardingRequest assetManagementRequest) {
 
         //TODO;
         boolean success = false;//acquiringService..(model);
@@ -41,7 +41,7 @@ public class AcquiringChannelOnboardingVC {
 
     //List all onboarded merchants
     @RequestMapping(value = "/acquiring-get-all-onboarded-customers", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllMerchantOnboardings() {
+    public ResponseEntity<?> getAllOnboardings() {
 
 //TODO;
         boolean success = false;//acquiringService..(model);

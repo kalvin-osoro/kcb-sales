@@ -31,14 +31,14 @@ public class AcquiringAssetEntity {
    @OneToOne
     private AcqAsset assetType;
     private String serialNumber;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "dsr_id")
-//    private DSRAccountEntity dsrDetails;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dsr_id")
+    private DSRAccountEntity dsrDetails;
     private Date dateAssigned;
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
-    @Column(name = "condition")
+    @Column(name = "asset_condition")
     private AssetCondition assetCondition;
     private Date lastServiceDate;
     private String longitude;

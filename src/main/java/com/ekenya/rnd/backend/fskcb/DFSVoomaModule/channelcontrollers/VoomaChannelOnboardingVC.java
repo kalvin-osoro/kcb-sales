@@ -1,49 +1,27 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerOnboardingRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch/")
 public class VoomaChannelOnboardingVC {
 
     @Autowired
-    IVoomaPortalService voomaService;
+    IVoomaChannelService voomaService;
 
+    //Channel request
     @PostMapping("/vooma-onboard-customer")
-    public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
-                                                @RequestParam("frontID") MultipartFile frontID,
-                                                @RequestParam("backID") MultipartFile backID,
-                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
-                                                @RequestParam("certificateOFGoodConduct") MultipartFile certificateOFGoodConduct,
-                                                @RequestParam("businessLicense") MultipartFile businessLicense,
-                                                @RequestParam("fieldApplicationForm") MultipartFile fieldApplicationForm,
-                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
-                                                @RequestParam("customerPhoto") MultipartFile customerPhoto,
-                                                @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
-                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
-                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc,
-                                                HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> onboardNewCustomer(@RequestBody VoomaCustomerOnboardingRequest assetManagementRequest) {
 
-
-//        ResponseEntity<?> l =  voomaService.addMerchant(frontID, backID, kraPinCertificate,certificateOFGoodConduct,
-//                businessLicense, fieldApplicationForm, merchDetails,
-//                shopPhoto, customerPhoto,
-//                companyRegistrationDoc, signatureDoc, businessPermitDoc, httpServletRequest);
-
-        //TODO; INSIDE SERVICE
+        //TODO;
         boolean success = false;//acquiringService..(model);
 
         //Response
@@ -60,4 +38,27 @@ public class VoomaChannelOnboardingVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+    //List all onboarded merchants
+    @RequestMapping(value = "/vooma-get-all-onboarded-customers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllOnboardings() {
+
+//TODO;
+        boolean success = false;//acquiringService..(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
 }

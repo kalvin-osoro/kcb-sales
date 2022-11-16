@@ -17,7 +17,7 @@ public class AcquiringChannelCustomerVisitsVC {
     @Autowired
     IAcquiringPortalService acquiringService;
     @PostMapping("/acquiring-create-customer-visit")
-    public ResponseEntity<?> createAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> createAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest request) {
 
 
         //TODO; INSIDE SERVICE
@@ -39,7 +39,7 @@ public class AcquiringChannelCustomerVisitsVC {
     }
 
     @PostMapping("/acquiring-update-customer-visit")
-    public ResponseEntity<?> updateAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> updateAcquiringCustomerVisit(@RequestBody AcquiringCustomerVisitsRequest request) {
 
 
         //TODO; INSIDE SERVICE
@@ -60,7 +60,7 @@ public class AcquiringChannelCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-customer-visits", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-customer-visits")
     public ResponseEntity<?> getAllAcquiringCustomerVisitsByDSR(@RequestBody int dsrId) {
 
 

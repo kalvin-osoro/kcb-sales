@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,17 +9,41 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class AcquiringChannelTargetsVC {
+
+
     @Autowired
     IAcquiringPortalService acquiringService;
     @PostMapping("/acquiring-get-targets-summary")
     public ResponseEntity<?> getTargetsSummary() {
 
+        //Resp =>
+        //{
+        //    "onboarding":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "visits":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "leads":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "campaigns":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "cur-comission":56000,
+        //    "prev-comission":45000
+        //}
 
         //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);

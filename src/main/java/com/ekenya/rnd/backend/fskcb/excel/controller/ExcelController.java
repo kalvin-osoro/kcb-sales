@@ -38,7 +38,7 @@ public class ExcelController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-    @GetMapping("/tutorials")
+    @PostMapping("/tutorials")
     public ResponseEntity<List<Tutorial>> getAllTutorials() {
         try {
             List<Tutorial> tutorials = fileService.getAllTutorials();
