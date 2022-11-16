@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Service
-public class RoleService {
+public class RoleService implements IRolesService {
 
     private final RoleRepository roleRepository;
 
@@ -27,7 +27,7 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public boolean save(UserRole client) {
+    public boolean add(UserRole client) {
         roleRepository.save(client);
 
         return true;
@@ -38,38 +38,37 @@ public class RoleService {
     }
 
     //delete role
-    public boolean delete(long id) {
+    public boolean drop(long id) {
         roleRepository.delete(findById(id));
 
         return true;
     }
 
     public boolean assignRole(Long userId, Long roleId){
-//        UserAccount user = userRepository.findById(userId).orElse(null);
-//        UserRole role = roleRepository.findById(roleId).orElse(null);
-//        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
-//        userRoles.add(role);
-//        user.setRoles(userRoles);
-//        userRepository.save(user);
+        UserAccount user = userRepository.findById(userId).orElse(null);
+        UserRole role = roleRepository.findById(roleId).orElse(null);
+        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
+        userRoles.add(role);
+        user.setRoles(userRoles);
+        userRepository.save(user);
 
         //
         return true;
     }
 
     public boolean unassignRole(Long userId, Long roleId){
-//        UserAccount user = userRepository.findById(userId).orElse(null);
-//        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
-//        userRoles.removeIf(x -> Objects.equals(x.getId(), roleId));
-//        user.setRoles(userRoles);
-//        userRepository.save(user);
+        UserAccount user = userRepository.findById(userId).orElse(null);
+        Set<UserRole> userRoles = (Set<UserRole>) user.getRoles();
+        userRoles.removeIf(x -> Objects.equals(x.getId(), roleId));
+        user.setRoles(userRoles);
+        userRepository.save(user);
         //
 
         return true;
     }
 
     public Set<UserRole> getUserRoles(UserAccount user){
-//        return (Set<UserRole>) user.getRoles();
-        return null;
+        return (Set<UserRole>) user.getRoles();
     }
 
 

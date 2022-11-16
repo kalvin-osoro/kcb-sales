@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.IRolesService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.RoleService;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -18,11 +19,11 @@ import java.util.List;
 
 @RequestMapping(path = "/api/v1")
 public class RolesVC {
-    private final RoleService roleService;
+    private final IRolesService roleService;
 
     private final IUsersService userService;
 
-    public RolesVC(RoleService roleService, IUsersService userService) {
+    public RolesVC(IRolesService roleService, IUsersService userService) {
         this.roleService = roleService;
         this.userService = userService;
     }
@@ -37,7 +38,7 @@ public class RolesVC {
 
     @PutMapping(value="/roles-update")
     public ResponseEntity<?> update(UserRole role) {
-        roleService.save(role);
+        roleService.add(role);
         //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);
 
@@ -125,7 +126,7 @@ public class RolesVC {
     @DeleteMapping("/roles-delete/{id}")
     public ResponseEntity<?> deleteRole(@PathVariable Long id){
 
-        boolean success = roleService.delete(id);
+        boolean success = roleService.drop(id);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -145,7 +146,7 @@ public class RolesVC {
     @ApiOperation(value = "Add new role")
     @PostMapping("/roles-add-new")
     public ResponseEntity<?> addNew(UserRole role) {
-        boolean success = roleService.save(role);
+        boolean success = roleService.add(role);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
