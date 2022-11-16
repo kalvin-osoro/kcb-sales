@@ -42,7 +42,7 @@ public class RetailTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/retail-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
 
         //
@@ -66,7 +66,7 @@ public class RetailTargetsVC {
     }
 
 
-    @RequestMapping(value = "/retail-get-agents-in-target", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-agents-in-target")
     public ResponseEntity<?> getRetailAgentsInTarget(RetailDSRsInTargetRequest model) {
 
         //
@@ -91,7 +91,7 @@ public class RetailTargetsVC {
 
 
 
-    @RequestMapping(value = "/retail-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-sync-crm-targets")
     public ResponseEntity<?> getRetailSyncTargetsWithCRM() {
 
         //

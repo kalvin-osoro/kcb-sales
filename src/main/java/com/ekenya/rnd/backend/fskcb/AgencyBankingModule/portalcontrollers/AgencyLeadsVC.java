@@ -42,7 +42,7 @@ public class AgencyLeadsVC {
     }
 
 
-    @RequestMapping(value = "/agency-get-all-leads", method = RequestMethod.POST)
+    @PostMapping(value = "/agency-get-all-leads")
     public ResponseEntity<?> getAllLeads() {
         List<?> agencyLead = agencyService.getAllLeads();
         boolean success = agencyLead != null;

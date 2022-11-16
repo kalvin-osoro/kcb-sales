@@ -1,26 +1,24 @@
-package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddCovenantRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class AgencyChannelForexVC {
+public class CBChannelConcessionsVC {
+
+    @PostMapping(value = "/cb-get-customer-concessions")
+    public ResponseEntity<?> getAllCustomerConcessions(@RequestBody String account) {
 
 
-    @PostMapping("/agency-get-forex-rates")
-    public ResponseEntity<?> getForexRates() {
-
-        List<?> forexList = null;//acquiringService.loadCustomerVisits();
-
-        boolean success = forexList == null;
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

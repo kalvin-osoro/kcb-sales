@@ -13,7 +13,7 @@ public class DSRZonesVC {
     public ResponseEntity<?> createZone(@RequestBody AddZoneRequest leadRequest ) {
         return null;
     }
-    @RequestMapping(value = "/dsr-zones-get-all", method = RequestMethod.GET)
+    @PostMapping(value = "/dsr-zones-get-all")
     public ResponseEntity<?> getAllZones() {
         return null;
     }

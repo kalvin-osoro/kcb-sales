@@ -41,7 +41,7 @@ public class AcquiringLeadsVC {
 
 
     //List all leads
-    @RequestMapping(value = "/acquiring-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-leads")
     public ResponseEntity<?> getAllLeads() {
         List<?> acquiringLeadRequests = acquiringService.getAllLeads();
         boolean success = acquiringLeadRequests != null;

@@ -40,7 +40,7 @@ public class VoomaSetupsVC {
         }
     }
 
-    @RequestMapping(value = "/vooma-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

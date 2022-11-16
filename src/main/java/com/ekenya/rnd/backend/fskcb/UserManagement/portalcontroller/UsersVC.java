@@ -3,13 +3,17 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(value = "Upload User  Rest Api")
 @CrossOrigin("*")
@@ -17,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 public class UsersVC {
 
+    @Autowired
+    IUsersService usersService;
 
     @PostMapping("/users-create-user")
     public ResponseEntity<?> createUser(@RequestBody AddUserRequest leadRequest ) {
@@ -38,20 +44,20 @@ public class UsersVC {
         }
     }
 
-    @RequestMapping(value = "/users-get-all-users", method = RequestMethod.GET)
+    @PostMapping(value = "/users-get-all-users")
     public ResponseEntity<?> getAllUsers() {
 
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        List<?> list = usersService.loadAllUsers();
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
+            //ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response

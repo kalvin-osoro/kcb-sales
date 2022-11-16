@@ -38,7 +38,7 @@ public class AgencyAssetVC {
         }
     }
 
-    @RequestMapping(value = "/agency-get-all-assets", method = RequestMethod.GET)
+    @PostMapping(value = "/agency-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
 
 

@@ -21,7 +21,7 @@ public class AcquiringOnboardingVC {
     IAcquiringPortalService acquiringService;
 
     //List all onboarded merchants
-    @RequestMapping(value = "/acquiring-get-all-onboarded-merchant", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-onboarded-merchant")
     public ResponseEntity<?> getAllMerchantOnboardings() {
 
         List<?> list = acquiringService.loadAllOnboardedMerchants();

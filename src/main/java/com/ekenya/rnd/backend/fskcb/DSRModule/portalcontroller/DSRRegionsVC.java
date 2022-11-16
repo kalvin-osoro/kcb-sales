@@ -33,7 +33,7 @@ public class DSRRegionsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @RequestMapping(value = "/dsr-get-all-regions", method = RequestMethod.GET)
+    @PostMapping(value = "/dsr-get-all-regions")
     public ResponseEntity<?> getAllRegions() {
         //TODO; INSIDE SERVICE
         boolean success = false;//acquiringService..(model);

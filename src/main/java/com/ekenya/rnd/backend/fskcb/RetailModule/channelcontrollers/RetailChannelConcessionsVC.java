@@ -1,27 +1,22 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.RetailModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class AcquiringChannelForexVC {
+public class RetailChannelConcessionsVC {
 
 
-    @PostMapping("/acquiring-get-forex-rates")
-    public ResponseEntity<?> getForexRates() {
+    @PostMapping(value = "/retail-get-customer-concessions")
+    public ResponseEntity<?> getAllCustomerConcessions(@RequestBody String account) {
 
-        List<?> forexList = null;//acquiringService.loadCustomerVisits();
 
-        boolean success = forexList == null;
+        //TODO; INSIDE SERVICE
+        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -39,3 +34,4 @@ public class AcquiringChannelForexVC {
     }
 
 }
+

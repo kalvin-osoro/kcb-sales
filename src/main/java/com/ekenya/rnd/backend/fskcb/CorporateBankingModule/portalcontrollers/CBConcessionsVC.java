@@ -36,7 +36,7 @@ public class CBConcessionsVC {
         }
     }
 
-    @RequestMapping(value = "/cb-get-all-concessions", method = RequestMethod.GET)
+    @PostMapping(value = "/cb-get-all-concessions")
     public ResponseEntity<?> getAllConcessions() {
 
 
@@ -80,7 +80,7 @@ public class CBConcessionsVC {
         }
     }
 
-    @RequestMapping(value = "/cb-get-all-tracked-covenants", method = RequestMethod.GET)
+    @PostMapping(value = "/cb-get-all-tracked-covenants")
     public ResponseEntity<?> getAllTracked() {
 
 

@@ -18,7 +18,7 @@ public class RetailOnboardingVC {
 
 
     //List all onboarded merchants
-    @RequestMapping(value = "/retail-get-all-onboarded-customers", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
 
         //TODO; INSIDE SERVICE

@@ -40,7 +40,7 @@ public class AcquiringChannelOnboardingVC {
     }
 
     //List all onboarded merchants
-    @RequestMapping(value = "/acquiring-get-all-onboarded-customers", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
 
 //TODO;

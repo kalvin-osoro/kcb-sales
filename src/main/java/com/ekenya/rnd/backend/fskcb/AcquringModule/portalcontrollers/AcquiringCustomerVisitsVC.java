@@ -80,7 +80,7 @@ public class AcquiringCustomerVisitsVC {
     }
 
     //get questionnaire responses by visit id and questionnaire id
-    @RequestMapping(value = "/acquiring-get-customer-visit-questionnaire-responses/{visitId}/{questionnaireId}", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-customer-visit-questionnaire-responses/{visitId}/{questionnaireId}")
     public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@PathVariable Long visitId, @PathVariable Long questionnaireId) {
         List<?> acquiringCustomerVisit = acquiringService.getCustomerVisitQuestionnaireResponses(visitId, questionnaireId);
         boolean success = acquiringCustomerVisit != null;

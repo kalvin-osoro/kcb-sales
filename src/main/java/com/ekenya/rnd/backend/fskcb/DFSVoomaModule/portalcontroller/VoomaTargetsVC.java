@@ -42,7 +42,7 @@ public class VoomaTargetsVC {
         }
     }
 
-    @RequestMapping(value = "/vooma-get-all-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
 
         //
@@ -66,7 +66,7 @@ public class VoomaTargetsVC {
     }
 
 
-    @RequestMapping(value = "/vooma-get-agents-in-target", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-agents-in-target")
     public ResponseEntity<?> getVoomaAgentsInTarget(VoomaDSRsInTargetRequest model) {
 
         //
@@ -91,7 +91,7 @@ public class VoomaTargetsVC {
 
 
 
-    @RequestMapping(value = "/vooma-sync-crm-targets", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-sync-crm-targets")
     public ResponseEntity<?> getVoomaSyncTargetsWithCRM() {
 
         //

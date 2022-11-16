@@ -45,7 +45,7 @@ public class AcquiringAssetVC {
         }
     }
 
-    @RequestMapping(value = "/acquiring-get-all-assets", method = RequestMethod.GET)
+    @PostMapping(value = "/acquiring-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
 
         List<?> acquiringAssetResponse = acquiringService.getAllAssets();

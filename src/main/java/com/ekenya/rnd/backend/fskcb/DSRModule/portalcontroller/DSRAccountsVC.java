@@ -33,7 +33,7 @@ public class DSRAccountsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @RequestMapping(value = "/dsr-get-accounts-all", method = RequestMethod.GET)
+    @PostMapping(value = "/dsr-get-accounts-all")
     public ResponseEntity<?> getAllAccounts() {
 
         //TODO; INSIDE SERVICE

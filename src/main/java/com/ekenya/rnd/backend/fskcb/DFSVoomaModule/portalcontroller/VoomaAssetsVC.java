@@ -39,7 +39,7 @@ public class VoomaAssetsVC {
         }
     }
 
-    @RequestMapping(value = "/vooma-get-all-assets", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
 
 

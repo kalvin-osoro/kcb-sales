@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.RoleService;
-import com.ekenya.rnd.backend.fskcb.UserManagement.services.UserService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,9 +20,9 @@ import java.util.List;
 public class RolesVC {
     private final RoleService roleService;
 
-    private final UserService userService;
+    private final IUsersService userService;
 
-    public RolesVC(RoleService roleService, UserService userService) {
+    public RolesVC(RoleService roleService, IUsersService userService) {
         this.roleService = roleService;
         this.userService = userService;
     }

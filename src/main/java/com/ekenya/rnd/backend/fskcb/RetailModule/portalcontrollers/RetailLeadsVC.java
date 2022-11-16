@@ -41,7 +41,7 @@ public class RetailLeadsVC {
     }
 
     //List all leads
-    @RequestMapping(value = "/retail-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-leads")
     public ResponseEntity<?> getAllLeads(@RequestBody RetailLeadsListRequest filters) {
 
         //

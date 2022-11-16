@@ -43,7 +43,7 @@ public class PBSetupVC {
         }
     }
 
-    @RequestMapping(value = "/pb-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

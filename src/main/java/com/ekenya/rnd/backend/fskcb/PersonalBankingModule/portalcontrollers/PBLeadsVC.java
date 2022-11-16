@@ -42,7 +42,7 @@ public class PBLeadsVC {
     }
 
     //List all leads
-    @RequestMapping(value = "/pb-get-all-leads", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-get-all-leads")
     public ResponseEntity<?> getAllLeads(@RequestBody PBLeadsListRequest filters) {
 
         //

@@ -19,7 +19,7 @@ public class PSOnboardingVC {
 
 
     //List all onboarded merchants
-    @RequestMapping(value = "/ps-get-all-onboarded-customers", method = RequestMethod.GET)
+    @PostMapping(value = "/ps-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
 
         //TODO; INSIDE SERVICE

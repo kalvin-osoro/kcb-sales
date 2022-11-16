@@ -63,7 +63,7 @@ public class PSCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/ps-get-all-customer-visits", method = RequestMethod.GET)
+    @PostMapping(value = "/ps-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
 
 

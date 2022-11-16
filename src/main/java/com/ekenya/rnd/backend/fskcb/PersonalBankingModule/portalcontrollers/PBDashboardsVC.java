@@ -52,7 +52,7 @@ public class PBDashboardsVC {
     }
 
 
-    @RequestMapping(value = "/pb-customer-visits-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-customer-visits-summary")
     public ResponseEntity<?> getCustomerVisitsSummary(@RequestBody PBSummaryRequest filters) {
 
 
@@ -87,7 +87,7 @@ public class PBDashboardsVC {
     }
 
 
-    @RequestMapping(value = "/pb-targets-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-targets-summary")
     public ResponseEntity<?> getTargetsSummary(@RequestBody PBSummaryRequest filters) {
 
 
@@ -121,7 +121,7 @@ public class PBDashboardsVC {
         }
     }
 
-    @RequestMapping(value = "/pb-leads-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-leads-summary")
     public ResponseEntity<?> getLeadsSummary(@RequestBody PBSummaryRequest filters) {
 
 
@@ -161,7 +161,7 @@ public class PBDashboardsVC {
     }
 
 
-    @RequestMapping(value = "/pb-assets-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/pb-assets-summary")
     public ResponseEntity<?> getAssetsSummary(@RequestBody PBSummaryRequest filters) {
 
 

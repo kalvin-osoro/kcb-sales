@@ -43,7 +43,7 @@ public class CBSetupVC {
         }
     }
 
-    @RequestMapping(value = "/cb-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/cb-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

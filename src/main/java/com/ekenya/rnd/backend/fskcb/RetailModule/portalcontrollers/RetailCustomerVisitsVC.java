@@ -61,7 +61,7 @@ public class RetailCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/retail-get-all-customer-visits", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
 
 

@@ -52,7 +52,7 @@ public class RetailDashboardsVC {
     }
 
 
-    @RequestMapping(value = "/retail-customer-visits-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-customer-visits-summary")
     public ResponseEntity<?> getCustomerVisitsSummary(@RequestBody RetailSummaryRequest filters) {
 
 
@@ -87,7 +87,7 @@ public class RetailDashboardsVC {
     }
 
 
-    @RequestMapping(value = "/retail-targets-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-targets-summary")
     public ResponseEntity<?> getTargetsSummary(@RequestBody RetailSummaryRequest filters) {
 
 
@@ -121,7 +121,7 @@ public class RetailDashboardsVC {
         }
     }
 
-    @RequestMapping(value = "/retail-leads-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-leads-summary")
     public ResponseEntity<?> getLeadsSummary(@RequestBody RetailSummaryRequest filters) {
 
 
@@ -161,7 +161,7 @@ public class RetailDashboardsVC {
     }
 
 
-    @RequestMapping(value = "/retail-assets-summary", method = RequestMethod.GET)
+    @PostMapping(value = "/retail-assets-summary")
     public ResponseEntity<?> getAssetsSummary(@RequestBody RetailSummaryRequest filters) {
 
 

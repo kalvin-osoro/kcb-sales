@@ -20,7 +20,7 @@ public class AgencySetupVC {
     @Autowired
     IAgencyPortalService agencyService;
 
-    @RequestMapping(value = "/agency-setups-add-product",method = RequestMethod.POST)
+    @PostMapping(value = "/agency-setups-add-product")
     public ResponseEntity<?> addDFSProduct(@RequestBody AgencyProductRequest productRequest){
 
 
@@ -42,7 +42,7 @@ public class AgencySetupVC {
         return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 
     }
-    @RequestMapping(value = "agency-setups-get-all-products",method = RequestMethod.POST)
+    @PostMapping(value = "agency-setups-get-all-products")
     public ResponseEntity<?>getAllProducts(){
 
         //TODO; INSIDE SERVICE
@@ -62,7 +62,7 @@ public class AgencySetupVC {
 
     }
     //edit product
-    @RequestMapping(value = "/agency-setups-edit-product",method = RequestMethod.POST)
+    @PostMapping(value = "/agency-setups-edit-product")
     public ResponseEntity<?>editProduct(@RequestBody AgencyProductRequest productRequest){
 
 
@@ -85,7 +85,7 @@ public class AgencySetupVC {
 
     }
     //delete product
-    @RequestMapping(value = "/agency-setups-delete-product",method = RequestMethod.DELETE)
+    @PostMapping(value = "/agency-setups-delete-product")
     public ResponseEntity<?>deleteProduct(@RequestBody AgencyProductRequest productRequest){
 
         //TODO; INSIDE SERVICE
@@ -131,7 +131,7 @@ public class AgencySetupVC {
         }
     }
 
-    @RequestMapping(value = "/agency-get-all-questionnaires", method = RequestMethod.POST)
+    @PostMapping(value = "/agency-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

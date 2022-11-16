@@ -39,7 +39,7 @@ public class VoomaMerchantsVC {
         }
     }
 
-    @RequestMapping(value = "/vooma-get-all-merchants", method = RequestMethod.GET)
+    @PostMapping(value = "/vooma-get-all-merchants")
     public ResponseEntity<?> getVoomaAsset() {
 
 

@@ -43,7 +43,7 @@ public class PSSetupsVC {
         }
     }
 
-    @RequestMapping(value = "/ps-get-all-questionnaires", method = RequestMethod.GET)
+    @PostMapping(value = "/ps-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //

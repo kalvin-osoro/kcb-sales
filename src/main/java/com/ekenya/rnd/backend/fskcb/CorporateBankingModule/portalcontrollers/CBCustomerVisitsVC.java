@@ -65,7 +65,7 @@ public class CBCustomerVisitsVC {
         }
     }
 
-    @RequestMapping(value = "/cb-get-all-customer-visits", method = RequestMethod.GET)
+    @PostMapping(value = "/cb-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
 
 
