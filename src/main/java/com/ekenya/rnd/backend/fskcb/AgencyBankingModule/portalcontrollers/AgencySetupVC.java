@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCollectAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyProductRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -111,11 +111,10 @@ public class AgencySetupVC {
 
 
     @PostMapping("/agency-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
+    public ResponseEntity<?> createQuestionnaire(@RequestBody AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest agencyBankingQuestionnareQuestionRequest) {
+        boolean success = agencyService.createQuestionnaire(agencyBankingQuestionnareQuestionRequest);
 
 
-        //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -132,24 +131,25 @@ public class AgencySetupVC {
         }
     }
 
-    @RequestMapping(value = "/agency-get-all-questionnaires", method = RequestMethod.GET)
+    @RequestMapping(value = "/agency-get-all-questionnaires", method = RequestMethod.POST)
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //
-        List<ObjectNode> list = null;//agencyService.loadQuestionnaires();
+        List<?> list = agencyService.getAllQuestionnaires();
+        boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null ){
+        if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
+
+        //Response
+        return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
     }
 }

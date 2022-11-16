@@ -62,7 +62,7 @@ public class AcquiringTargetsVC {
     @RequestMapping(value = "/acquiring-get-agents-in-target", method = RequestMethod.GET)
     public ResponseEntity<?> getAcquiringAgentsInTarget(AcquiringDSRsInTargetRequest model) {
         List<?> acquiringTargetsResponse = acquiringService.loadDSRsInTarget(model);
-        boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
+        boolean success = acquiringTargetsResponse != null;// acquiringTargetsResponse.size() > 0;
 
 
 
@@ -71,6 +71,8 @@ public class AcquiringTargetsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(acquiringTargetsResponse));
+
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

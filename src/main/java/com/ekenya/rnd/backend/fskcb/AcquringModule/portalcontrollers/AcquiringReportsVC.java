@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +35,15 @@ public class AcquiringReportsVC {
         //}]
 
         //Response
-        List<?> node = acquiringService.getOnboardingSummary(filters);
-        boolean success = node == null;
+        List<?> list = acquiringService.getOnboardingSummary(filters);
+        boolean success = list != null;
 
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
             //Object
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
