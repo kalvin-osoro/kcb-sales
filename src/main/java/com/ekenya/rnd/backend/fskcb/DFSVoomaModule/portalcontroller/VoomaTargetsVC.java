@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,21 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class VoomaTargetsVC {
 
     @Autowired
-    IVoomaChannelService voomaService;
+    IVoomaPortalService voomaService;
 
     @PostMapping("/vooma-create-target")
-    public ResponseEntity<?> createVoomaAsset(@RequestBody VoomaAddTargetRequest assetManagementRequest) {
+    public ResponseEntity<?> createVoomaTarget(@RequestBody DFSVoomaAddTargetRequest voomaAddTargetRequest) {
 
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        boolean success= voomaService.createVoomaTarget(voomaAddTargetRequest);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,17 +44,15 @@ public class VoomaTargetsVC {
 
     @PostMapping(value = "/vooma-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        List<?> list = voomaService.getAllTargets();
+        boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -68,13 +66,8 @@ public class VoomaTargetsVC {
 
     @PostMapping(value = "/vooma-get-agents-in-target")
     public ResponseEntity<?> getVoomaAgentsInTarget(VoomaDSRsInTargetRequest model) {
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
-        //Response
+        //TODO: Implement this
+        boolean success = /*voomaService.getVoomaAgentsInTarget(model)*/true;
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
@@ -88,6 +81,8 @@ public class VoomaTargetsVC {
             return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //get all targets for a given agent
+
 
 
 

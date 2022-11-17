@@ -84,19 +84,17 @@ public class VoomaCustomerVisitsVC {
 
 
 
-    @PostMapping("/vooma-get-customer-visit-questionnaire")
-    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody VoomaCustomerVisitQuestionnaireRequest assetManagementRequest) {
+    @PostMapping("/vooma-get-customer-visit-questionnaire-response")
+    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody VoomaCustomerVisitQuestionnaireRequest voomaCustomerVisitQuestionnaireRequest) {
 
-
-
-
-        boolean success = false;//acquiringService..(model);
-
+        List<?> customerVisitQuestionnaireResponses = voomaService.getCustomerVisitQuestionnaireResponses(voomaCustomerVisitQuestionnaireRequest);
+        boolean success = customerVisitQuestionnaireResponses != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(customerVisitQuestionnaireResponses));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

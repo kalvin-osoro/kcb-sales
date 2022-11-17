@@ -6,13 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VoomaAddQuestionnaireRequest {
-    private Long questionnaireId;
-    private String question;
-    private  String questionnaireDescription;
+public class DFSVoomaFeedBackRequest {
+    private Long id;
+    private String customerId;
+    private String channel;
+    private String visitRef;
+    private String customerName;
+    private Integer noOfQuestionAsked;
+    private String questionAsked;
     private Date createdOn;
 }
