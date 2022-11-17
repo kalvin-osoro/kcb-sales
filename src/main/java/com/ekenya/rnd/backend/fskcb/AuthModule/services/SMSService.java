@@ -7,12 +7,14 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccou
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,7 +24,8 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+@Service
+@Slf4j
 public class SMSService implements ISmsService{
 
     //

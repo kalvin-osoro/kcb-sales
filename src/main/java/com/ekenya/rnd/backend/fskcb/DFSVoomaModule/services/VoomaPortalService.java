@@ -9,7 +9,7 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.payload.*;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -36,7 +36,7 @@ public class VoomaPortalService implements IVoomaPortalService {
     private final DFSVoomaQuestionnaireQuestionRepository dfsVoomaQuestionnaireQuestionRepository;
     private final DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
     private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
-    private final DSRAccountsRepository dsrAccountsRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
     private final DFSVoomaFeedBackRepository dfsVoomaFeedBackRepository;
 
 

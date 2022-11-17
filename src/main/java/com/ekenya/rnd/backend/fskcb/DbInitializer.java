@@ -3,7 +3,7 @@ package com.ekenya.rnd.backend.fskcb;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.*;
 import com.ekenya.rnd.backend.utils.Status;
@@ -38,7 +38,7 @@ public class DbInitializer {
     @Autowired
     IDSRAccountsRepository dSRAccountsRepository;
     @Autowired
-    DSRTeamsRepository dSRTeamsRepository;
+    IDSRTeamsRepository dSRTeamsRepository;
     @Autowired
     ProfilesAndRolesRepository profilesAndRolesRepository;
 
