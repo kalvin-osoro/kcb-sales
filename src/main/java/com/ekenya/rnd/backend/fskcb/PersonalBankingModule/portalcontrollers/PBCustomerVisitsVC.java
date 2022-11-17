@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class PBCustomerVisitsVC {
@@ -20,11 +22,7 @@ public class PBCustomerVisitsVC {
 
     @PostMapping("/pb-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody PBCustomerVisitsRequest model) {
-
-
-        //TODO; INSEIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = pbService.scheduleCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -41,12 +39,8 @@ public class PBCustomerVisitsVC {
     }
 
     @PostMapping("/pb-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody PBCustomerVisitsRequest assetManagementRequest) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody PBCustomerVisitsRequest model) {
+        boolean success = pbService.rescheduleCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -64,16 +58,14 @@ public class PBCustomerVisitsVC {
 
     @PostMapping(value = "/pb-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?> customerVisits = pbService.getAllCustomerVisits();
+        boolean success = customerVisits != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(customerVisits));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -86,19 +78,16 @@ public class PBCustomerVisitsVC {
 
 
 
-    @PostMapping("/pb-get-customer-visit-questionnaire")
+    @PostMapping("/pb-get-customer-visit-questionnaire-response")
     public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody PBCustomerVisitQuestionnaireRequest assetManagementRequest) {
-
-
-
-
-        boolean success = false;//acquiringService..(model);
-
+        List<?> customerVisits = pbService.getCustomerVisitQuestionnaireResponses(assetManagementRequest);
+        boolean success = customerVisits != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(customerVisits));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

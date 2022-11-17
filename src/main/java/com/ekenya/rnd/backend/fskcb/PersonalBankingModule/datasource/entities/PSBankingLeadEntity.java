@@ -1,24 +1,29 @@
-package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs;
+package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PBLeadRequest {
+@Entity
+@Table(name = "psbanking_leads")
+public class PSBankingLeadEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private  Integer customerId;
     private String businessUnit;
     private String topic;
+    @Enumerated(EnumType.STRING)
     private Priority priority;
     private Long dsrId;
-    private Long leadId;
     private String dsrName;
+    @Enumerated(EnumType.STRING)
     private LeadStatus leadStatus;
     private boolean assigned=false;
     private String startDate;

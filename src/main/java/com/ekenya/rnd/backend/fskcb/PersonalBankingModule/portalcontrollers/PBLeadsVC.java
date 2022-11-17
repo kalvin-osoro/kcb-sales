@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class PBLeadsVC {
@@ -21,11 +23,7 @@ public class PBLeadsVC {
     //Assign lead to a sales person
     @PostMapping("/pb-assign-lead")
     public ResponseEntity<?> createLead(@RequestBody PBAssignLeadRequest model) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService.assigneLeadtoDSR(model);
-
+        boolean success = pbService.assignLead(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -43,17 +41,15 @@ public class PBLeadsVC {
 
     //List all leads
     @PostMapping(value = "/pb-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody PBLeadsListRequest filters) {
-
-        //
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getAllLeads() {
+        List<?> leads = pbService.getAllLeads();
+        boolean success = leads != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(leads));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
