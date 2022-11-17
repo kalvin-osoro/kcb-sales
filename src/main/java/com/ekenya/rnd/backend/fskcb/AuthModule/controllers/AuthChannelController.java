@@ -42,7 +42,7 @@ public class AuthChannelController {
 
             return ResponseEntity.ok(new AppResponse(1,resp,"User login successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"User login failed"));
+        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"User login failed"));
 
     }
 
