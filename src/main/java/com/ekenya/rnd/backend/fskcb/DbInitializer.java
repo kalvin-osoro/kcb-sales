@@ -403,6 +403,7 @@ public class DbInitializer {
             DecimalFormat decFormat = new DecimalFormat("000");
             long seed = System.currentTimeMillis();
             Random random = new Random(seed);
+            int max = 99999999, min = 10000000;
             for (UserProfile profile: profilesRepository.findAll()) {
                 //Add user to profile
 
@@ -414,12 +415,12 @@ public class DbInitializer {
                     DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
                             .email(email)
                             .staffNo(staffNo)
-                            .phoneNo("2547"+(random.nextInt((999999 + 1)-100000)+100000))
+                            .phoneNo("2547"+(random.nextInt((max + 1)-min)+min))
                             .status(Status.ACTIVE)
                             .fullName(profile.getName()+" "+decFormat.format(index))
                             .location(team.getLocation())
                             .gender("other")
-                            .idNumber(""+(random.nextInt((999999 + 1)-100000)+100000))
+                            .idNumber(""+(random.nextInt((max + 1)-min)+min))
                             .teamId(team.getId())
                             .createdBy("0")
                             .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
@@ -448,6 +449,8 @@ public class DbInitializer {
                     profileUser.setProfileId(profileUser.getId());
                     profilesAndUsersRepository.save(profileUser);
 
+                    //
+                    index++;
                 }
             }
         } catch (Exception e) {

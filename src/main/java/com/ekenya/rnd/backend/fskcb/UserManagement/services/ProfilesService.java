@@ -10,46 +10,52 @@ import java.util.List;
 import java.util.Set;
 @Service
 
-public class PrivilegeService {
+public class ProfilesService implements IProfilesService{
     public final UserProfilesRepository userProfilesRepository;
     
     public final RoleRepository roleRepository;
 
-    public PrivilegeService(UserProfilesRepository userProfilesRepository, RoleRepository roleRepository) {
+    public ProfilesService(UserProfilesRepository userProfilesRepository, RoleRepository roleRepository) {
         this.userProfilesRepository = userProfilesRepository;
         this.roleRepository = roleRepository;
     }
-    public List<UserProfile> getPrivilege(){
+    public List<UserProfile> getAllProfiles(){
         return userProfilesRepository.findAll();
     }
 
-    public void assignPrivilege(Long roleId, Long privilegeId){
+    public boolean assignPrivilege(Long roleId, Long privilegeId){
         UserRole userRole = roleRepository.findById(roleId).orElse(null);
         UserProfile userProfile = userProfilesRepository.findById(privilegeId).orElse(null);
         Set<UserProfile> roleUserProfiles = (Set<UserProfile>) userRole.getUserProfiles();
         roleUserProfiles.add(userProfile);
         userRole.setUserProfiles(roleUserProfiles);
         roleRepository.save(userRole);
+
+        return true;
     }
-    public void unassignPrivilege(Long roleId, Long privilegeId){
+    public boolean unassignPrivilege(Long roleId, Long privilegeId){
         UserRole userRole = roleRepository.findById(roleId).orElse(null);
         Set<UserProfile> roleUserProfiles = (Set<UserProfile>) userRole.getUserProfiles();
         roleUserProfiles.removeIf(x -> x.getId().equals(privilegeId));
         userRole.setUserProfiles(roleUserProfiles);
         roleRepository.save(userRole);
+
+        return true;
     }
 
-    public void save(UserProfile userProfile) {
+    public boolean add(UserProfile userProfile) {
         userProfilesRepository.save(userProfile);
+        return true;
     }
-    public Set<UserProfile> getRolePrivileges(UserRole userRole){
+    public Set<UserProfile> getRoleProfiles(UserRole userRole){
         return (Set<UserProfile>) userRole.getUserProfiles();
     }
-   public List<UserProfile> getRoleNotPrivilege(Long roleId){
+   public List<UserProfile> getRoleNotProfile(Long roleId){
         return userProfilesRepository.getRoleNotPrivilege(roleId);
     }
-    public void delete(long id) {
+    public boolean drop(long id) {
         userProfilesRepository.delete(findById(id));
+        return true;
     }
 
     public UserProfile findById(long id) {

@@ -4,7 +4,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserProfileReq
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignProfileRolesRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveProfileRolesRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.services.PrivilegeService;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.ProfilesService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.RoleService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 public class ProfilesVC {
     public final RoleService roleService;
-    public  final PrivilegeService privilegeService;
+    public  final ProfilesService profilesService;
 
-    public ProfilesVC(RoleService roleService, PrivilegeService privilegeService) {
+    public ProfilesVC(RoleService roleService, ProfilesService profilesService) {
         this.roleService = roleService;
-        this.privilegeService = privilegeService;
+        this.profilesService = profilesService;
     }
 
     @PostMapping("/users-create-profile")
