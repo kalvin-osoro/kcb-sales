@@ -1,5 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.fskcb.files.IFileStorageService;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
@@ -11,28 +13,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class VoomaOnboardingVC {
     @Autowired
-    private IVoomaChannelService voomaService;
-
-
-    @Autowired
-    private IFileStorageService IFileStorageService;
+    private IVoomaPortalService voomaService;
 
 
     //List all onboarded merchants
-    @PostMapping(value = "/vooma-get-all-onboarded-customers")
+    @PostMapping(value = "/vooma-get-all-onboarded-merchant")
     public ResponseEntity<?> getAllMerchantOnboardings() {
+        List<?> list = voomaService.loadAllOnboardedMerchants();
+        boolean success = list != null;
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
 
-        //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -45,12 +45,9 @@ public class VoomaOnboardingVC {
 
 
     @PostMapping("/vooma-approve-onboarding")
-    public ResponseEntity<?> approveOnboarding(@RequestBody AcquiringApproveMerchantOnboarindRequest assetManagementRequest) {
+    public ResponseEntity<?> approveOnboarding(@RequestBody DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest) {
 
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = voomaService.approveMerchantOnboarding(dfsVoomaApproveMerchantOnboarindRequest);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

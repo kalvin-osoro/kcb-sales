@@ -25,7 +25,7 @@ public class AcquiringOnboardingVC {
     public ResponseEntity<?> getAllMerchantOnboardings() {
 
         List<?> list = acquiringService.loadAllOnboardedMerchants();
-        boolean success = list == null;
+        boolean success  = list != null;
 
 
         //Response
@@ -33,6 +33,7 @@ public class AcquiringOnboardingVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

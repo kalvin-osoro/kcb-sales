@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -72,5 +74,6 @@ public class DSRAccountEntity {
 
     @Column(name="updated_by")
     private String updatedBy;
+
 
 }

@@ -1,8 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaLeadsListRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
@@ -24,4 +22,28 @@ public interface IVoomaPortalService {
     boolean assignLeadToDsr(VoomaAssignLeadRequest model);
 
     List<ObjectNode> getAllLeads(VoomaLeadsListRequest filters);
+
+
+    List<ObjectNode> getCustomerVisitQuestionnaireResponses(VoomaCustomerVisitQuestionnaireRequest voomaCustomerVisitQuestionnaireRequest);
+
+    List<ObjectNode> getAllQuestionnaires();
+
+    boolean createQuestionnaire(VoomaAddQuestionnaireRequest voomaAddQuestionnaireRequest);
+
+    List<ObjectNode> loadAllOnboardedMerchants();
+
+    boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest);
+
+    Object getMerchantById(VoomaMerchantDetailsRequest model);
+
+    List<ObjectNode> getAllTargets();
+
+    boolean createVoomaTarget(DFSVoomaAddTargetRequest voomaAddTargetRequest);
+
+
+    List<ObjectNode> getOnboardingSummary(VoomaSummaryRequest filters);
+
+    List<ObjectNode> getAllCustomerFeedbacks();
+
+    Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequest dfsVoomaFeedBackRequest);
 }

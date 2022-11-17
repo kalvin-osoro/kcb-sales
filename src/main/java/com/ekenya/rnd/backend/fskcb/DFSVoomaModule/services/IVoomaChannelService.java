@@ -1,13 +1,16 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface IVoomaChannelService {
 
@@ -47,5 +50,6 @@ public interface IVoomaChannelService {
     ResponseEntity<?> getLiquidationTypeById(Long id);
     ResponseEntity<?> updateLiquidationType(LiquidationTypeDto liquidationTypeDto);
     ResponseEntity<?> deleteLiquidationTypeById(Long id);
+
 
 }

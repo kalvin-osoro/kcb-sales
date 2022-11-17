@@ -2,12 +2,16 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1")
@@ -15,11 +19,13 @@ public class VoomaReportsVC {
     //
 
     @Autowired
-    IVoomaChannelService voomaService;
+    IVoomaPortalService voomaService;
 
     @PostMapping("/vooma-onboarding-summary")
     public ResponseEntity<?> getOnboardingSummary(@RequestBody VoomaSummaryRequest filters) {
 
+        List<?> list = voomaService.getOnboardingSummary(filters);
+        boolean success = list != null;
         //Expected Response structure
         //Take last 7 days
         //[{
@@ -27,20 +33,20 @@ public class VoomaReportsVC {
         //    "merchant_name":"",
         //    "date_onboarded":"dd-MMM-yyyy",
         //    "onboarding_status":"pending",//approved, rejected
-        //    "coordinates":{"lat":"","lng":""]
+        //    "coordinates":{"lat":"","lng":""]},
         //}]
 
 
 
 
         //TODO;
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

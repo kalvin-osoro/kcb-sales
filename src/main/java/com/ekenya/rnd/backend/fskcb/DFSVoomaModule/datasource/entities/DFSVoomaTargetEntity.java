@@ -1,27 +1,21 @@
-package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AquiringTargetType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dbo_agency_bank_targets")
-@DynamicUpdate
-@DynamicInsert
-public class AgencyBankingTargetEntity {
+@Table(name = "dfs_vooma_targets")
+public class DFSVoomaTargetEntity {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
@@ -40,4 +34,5 @@ public class AgencyBankingTargetEntity {
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;
+
 }
