@@ -1,15 +1,19 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingVisitEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingQuestionerResponseEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingQuestionnaireQuestionEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingVisitEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingCustomerVisitRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingLeadRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingQuestionerResponseRepository;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingQuestionnaireQuestionRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PSBankingAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PBPortalService implements IPBPortalService {
     private final PSBankingLeadRepository psBankingLeadRepository;
+    private  final PSBankingQuestionnaireQuestionRepository psBankingQuestionnaireQuestionRepository;
     
     private final PSBankingCustomerVisitRepository psBankingCustomerVisitRepository;
     private final PSBankingQuestionerResponseRepository psBankingQuestionerResponseRepository;
@@ -154,6 +159,48 @@ public class PBPortalService implements IPBPortalService {
 
         } catch (Exception e) {
             log.error("Error occurred while fetching all customer visits", e);
+
+        }
+        return null;
+    }
+
+    @Override
+    public boolean createQuestionnaire(PSBankingAddQuestionnaireRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            PSBankingQuestionnaireQuestionEntity psBankingQuestionnaireQuestionEntity = new PSBankingQuestionnaireQuestionEntity();
+            psBankingQuestionnaireQuestionEntity.setQuestion(model.getQuestion());
+            psBankingQuestionnaireQuestionEntity.setQuestionnaireDescription(model.getQuestionnaireDescription());
+            psBankingQuestionnaireQuestionEntity.setQuestionnaireDescription(model.getQuestionnaireDescription());
+            psBankingQuestionnaireQuestionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            psBankingQuestionnaireQuestionRepository.save(psBankingQuestionnaireQuestionEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while creating questionnaire", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllQuestionnaires() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (PSBankingQuestionnaireQuestionEntity psBankingQuestionnaireQuestionEntity : psBankingQuestionnaireQuestionRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", psBankingQuestionnaireQuestionEntity.getId());
+                objectNode.put("question", psBankingQuestionnaireQuestionEntity.getQuestion());
+                objectNode.put("questionnaireDescription", psBankingQuestionnaireQuestionEntity.getQuestionnaireDescription());
+                list.add(objectNode);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all questionnaires", e);
 
         }
         return null;
