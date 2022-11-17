@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities;
 
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,4 +16,8 @@ public class ProfileUserEntity {
     private Long userId;
     @Column(name="profile_id")
     private Long profileId;
+
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    private Status status= Status.ACTIVE;
 }

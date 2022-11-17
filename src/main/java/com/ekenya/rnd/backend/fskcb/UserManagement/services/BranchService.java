@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.payload.BranchDto;
 import com.ekenya.rnd.backend.fskcb.payload.BranchResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 

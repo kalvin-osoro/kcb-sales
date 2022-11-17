@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignProfileRolesRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveProfileRolesRequest;
@@ -12,12 +13,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Privilege Management")
 @RestController
 @RequestMapping(path = "/api/v1")
+@Secured(SystemRoles.USER)
 public class ProfilesVC {
     public final RoleService roleService;
     public  final ProfilesService profilesService;

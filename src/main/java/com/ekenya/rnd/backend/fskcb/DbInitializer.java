@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.*;
@@ -20,7 +20,6 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Random;
-import java.util.Set;
 
 @Slf4j
 @Configuration
@@ -37,7 +36,7 @@ public class DbInitializer {
     @Autowired
     UserProfilesRepository profilesRepository;
     @Autowired
-    DSRAccountsRepository dSRAccountsRepository;
+    IDSRAccountsRepository dSRAccountsRepository;
     @Autowired
     DSRTeamsRepository dSRTeamsRepository;
     @Autowired
@@ -49,10 +48,6 @@ public class DbInitializer {
     private String DEFAULT_USER_PIN = "1234";
     private String DEFAULT_USER_PASS = "12345";
     //
-    private String SYS_ADMIN_ROLE = "SYS_ADMIN";
-    private String ADMIN_ROLE = "ADMIN";
-    private String DSR_ROLE = "DSR";
-    private String USER_ROLE = "USER";
 
 
     @EventListener
@@ -98,11 +93,12 @@ public class DbInitializer {
             userApp.setFullName(adminName);
             userApp.setPassword(passwordEncoder.encode(adminPass));
             userApp.setPhoneNumber("");
+            userApp.setAccountType(AccountType.ADMIN);
             userRepository.save(userApp);//save user to db
 
 
             //
-            UserRole userRole = roleRepository.findByName(SYS_ADMIN_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.SYS_ADMIN).get();//get role from db
             userApp.setRoles(Collections.singleton(userRole));//set role to user
             userRepository.save(userApp);//save user to db
 
@@ -122,57 +118,58 @@ public class DbInitializer {
 
     private void createSystemRoles(){
 
-        if(!roleRepository.findByName(SYS_ADMIN_ROLE).isPresent()){
+        //SystemRoles.SYS_ADMIN
+        if(!roleRepository.findByName(SystemRoles.SYS_ADMIN).isPresent()){
             //
             UserRole role = new UserRole();
-            role.setName(SYS_ADMIN_ROLE);
+            role.setName(SystemRoles.SYS_ADMIN);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
             //
             roleRepository.save(role);
         }else{
             //
-            log.info(SYS_ADMIN_ROLE +" already exists,");
+            log.info(SystemRoles.SYS_ADMIN +" already exists,");
         }
 
-        if(!roleRepository.findByName(ADMIN_ROLE).isPresent()){
+        if(!roleRepository.findByName(SystemRoles.ADMIN).isPresent()){
             //
             UserRole role = new UserRole();
-            role.setName(ADMIN_ROLE);
+            role.setName(SystemRoles.ADMIN);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
             //
             roleRepository.save(role);
         }else{
             //
-            log.info(ADMIN_ROLE +" already exists,");
+            log.info(SystemRoles.ADMIN +" already exists,");
         }
         //
-        if(!roleRepository.findByName(DSR_ROLE).isPresent()){
+        if(!roleRepository.findByName(SystemRoles.DSR).isPresent()){
             //
             UserRole role = new UserRole();
-            role.setName(DSR_ROLE);
+            role.setName(SystemRoles.DSR);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
             //
             roleRepository.save(role);
         }else{
             //
-            log.info(DSR_ROLE +" already exists,");
+            log.info(SystemRoles.DSR +" already exists,");
         }
 
         //
-        if(!roleRepository.findByName(USER_ROLE).isPresent()){
+        if(!roleRepository.findByName(SystemRoles.USER).isPresent()){
             //
             UserRole role = new UserRole();
-            role.setName(USER_ROLE);
+            role.setName(SystemRoles.USER);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
             //
             roleRepository.save(role);
         }else{
             //
-            log.info(USER_ROLE +" already exists,");
+            log.info(SystemRoles.USER +" already exists,");
         }
     }
 
@@ -194,7 +191,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -219,7 +216,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -244,7 +241,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -269,7 +266,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -294,7 +291,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -319,7 +316,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -344,7 +341,7 @@ public class DbInitializer {
             profilesRepository.save(userProfile);
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -369,7 +366,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
             ProfileRoleEntity profileRole = new ProfileRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -433,9 +430,10 @@ public class DbInitializer {
                     userApp.setFullName(dsrDetails.getFullName());
                     userApp.setPassword(passwordEncoder.encode(DEFAULT_USER_PIN));
                     userApp.setPhoneNumber(dsrDetails.getPhoneNo());
+                    userApp.setAccountType(AccountType.DSR);
                     userRepository.save(userApp);//save user to db
                     //Add to role
-                    UserRole userRole = roleRepository.findByName(DSR_ROLE).get();//get role from db
+                    UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
                     //
                     userApp.setRoles(Collections.singleton(userRole));//set role to user
                     userRepository.save(userApp);//save user to db

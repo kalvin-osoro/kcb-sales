@@ -3,8 +3,9 @@ package com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs;
 import lombok.Data;
 
 @Data
-public class ResetDSRPINRequest {
+public class ChangeDSRPhoneNoRequest {
 
-    private String dsrId;
     private String staffNo;
+
+    private String phoneNo;
 }

@@ -2,7 +2,7 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRTeamRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.response.DSRTeamResponse;
@@ -36,7 +36,7 @@ public class DSRPortalService implements IDSRPortalService {
     private DSRTeamsRepository dsrTeamsRepository;
 
     @Autowired
-    private DSRAccountsRepository dsrAccountsRepository;
+    private IDSRAccountsRepository dsrAccountsRepository;
 
 
 

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DSRAccountsRepository extends JpaRepository<DSRAccountEntity, Long> {
+public interface IDSRAccountsRepository extends JpaRepository<DSRAccountEntity, Long> {
 
 
     List<DSRAccountEntity> findByStatus(Status status);

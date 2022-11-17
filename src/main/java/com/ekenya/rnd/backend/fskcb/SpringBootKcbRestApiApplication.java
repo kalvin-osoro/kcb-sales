@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -26,7 +30,20 @@ public class SpringBootKcbRestApiApplication   {
 
 
 
+	@Bean
+	public DateTimeFormatter dateFormatter() {
+		return DateTimeFormatter.ISO_DATE_TIME;
+	}
 
+	//
+	@Bean
+	public DateFormat simpleDateFormat() {
+		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+	}
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();

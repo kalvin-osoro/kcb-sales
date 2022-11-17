@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ChangeDSRPhoneNoRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ChangePasswordRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.LoginRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
@@ -21,10 +22,8 @@ public class AuthPortalController {
     @Autowired
     private IAuthService authService;
 
-    public AuthPortalController() {
-    }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     @ApiOperation(value = "Login Api")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
         LoginResponse resp = authService.attemptLogin(loginRequest);
@@ -50,7 +49,7 @@ public class AuthPortalController {
             //
             return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"User login failed"));
+        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request Failed"));
 
     }
 
@@ -66,7 +65,23 @@ public class AuthPortalController {
             //
             return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"User login failed"));
+        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request Failed"));
+
+    }
+
+
+    @PostMapping("/change-dsr-phone-no")
+    @ApiOperation(value = "Change DSR Phone No. Api")
+    public ResponseEntity<?> changeDSRPhoneNo(@RequestBody ChangeDSRPhoneNoRequest req){
+
+        boolean success = authService.changeDSRPhoneNo(req);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //
+            return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
+        }
+        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request Failed"));
 
     }
 }
