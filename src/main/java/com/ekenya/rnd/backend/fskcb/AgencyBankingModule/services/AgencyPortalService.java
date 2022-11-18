@@ -254,7 +254,6 @@ public class AgencyPortalService implements IAgencyPortalService {
 
     @Override
     public List<ObjectNode> loadAllOnboardedAgents() {
-        //get all agents onboarded
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();

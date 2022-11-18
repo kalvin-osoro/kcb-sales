@@ -1,19 +1,15 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingVisitEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingQuestionerResponseEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingQuestionnaireQuestionEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingVisitEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingCustomerVisitRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingLeadRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingQuestionerResponseRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingQuestionnaireQuestionRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PSBankingAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PBPortalService implements IPBPortalService {
     private final PSBankingLeadRepository psBankingLeadRepository;
+    private final PSBankingTargetRepository psBankingTargetRepository;
+    private final PSBankingOnboardingRepossitory psBankingOnboardingRepository;
     private  final PSBankingQuestionnaireQuestionRepository psBankingQuestionnaireQuestionRepository;
     
     private final PSBankingCustomerVisitRepository psBankingCustomerVisitRepository;
@@ -204,6 +202,102 @@ public class PBPortalService implements IPBPortalService {
 
         }
         return null;
+    }
+
+    @Override
+    public boolean createPBTarget(PBAddTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            PSBankingTargetEntity psBankingTargetEntity = new PSBankingTargetEntity();
+            psBankingTargetEntity.setTargetName(model.getTargetName());
+            psBankingTargetEntity.setTargetSource(model.getTargetSource());
+            psBankingTargetEntity.setTargetValue(model.getTargetValue());
+            psBankingTargetEntity.setTargetType(model.getTargetType());
+            psBankingTargetEntity.setTargetType(model.getTargetType());
+            psBankingTargetEntity.setTargetDesc(model.getTargetDesc());
+            psBankingTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
+            psBankingTargetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            psBankingTargetRepository.save(psBankingTargetEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while creating target", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllTargets() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (PSBankingTargetEntity psBankingTargetEntity : psBankingTargetRepository.findAll()) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("id", psBankingTargetEntity.getId());
+                node.put("targetName", psBankingTargetEntity.getTargetName());
+                node.put("targetSource", psBankingTargetEntity.getTargetSource());
+                node.put("TargetType", psBankingTargetEntity.getTargetType().ordinal());
+                node.put("targetDesc", psBankingTargetEntity.getTargetDesc());
+                node.put("targetStatus", psBankingTargetEntity.getTargetStatus().name());
+                node.put("targetValue", psBankingTargetEntity.getTargetValue());
+                node.put("createdOn", psBankingTargetEntity.getCreatedOn().toString());
+                //add to list
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading targets", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getAllOnboardings() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (PSBankingOnboardingEntity psBankingOnboardingEntity : psBankingOnboardingRepository.findAll()) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("id", psBankingOnboardingEntity.getId());
+                node.put("customerName", psBankingOnboardingEntity.getCustomerName());
+                node.put("Region", psBankingOnboardingEntity.getRegion());
+                node.put("phoneNumber", psBankingOnboardingEntity.getCustomerPhone());
+                node.put("email", psBankingOnboardingEntity.getCustomerEmail());
+                node.put("status", psBankingOnboardingEntity.getStatus().ordinal());
+                node.put("agent Id", psBankingOnboardingEntity.getDsrId());
+                node.put("createdOn", psBankingOnboardingEntity.getCreatedOn().getTime());
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading agents", e);
+        }
+
+
+        return null;
+    }
+
+    @Override
+    public boolean approveOnboarding(PSBankingOnboardingEntity model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            PSBankingOnboardingEntity psBankingOnboardingEntity = psBankingOnboardingRepository.findById(model.getId()).orElse(null);
+            if (psBankingOnboardingEntity == null) {
+                return false;
+            }
+            psBankingOnboardingEntity.setStatus(OnboardingStatus.APPROVED);
+            psBankingOnboardingEntity.setIsApproved(true);
+            psBankingOnboardingRepository.save(psBankingOnboardingEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while approving onboarding", e);
+        }
+        return false;
     }
 }
 
