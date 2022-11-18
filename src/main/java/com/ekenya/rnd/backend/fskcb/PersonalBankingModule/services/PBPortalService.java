@@ -390,22 +390,20 @@ public class PBPortalService implements IPBPortalService {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             {
-                for (PSBankingLeadEntity psBankingLeadEntity : psBankingLeadRepository.fetchAllLeadsCreatedLast7Days()) {
+                for (PSBankingLeadEntity psBankingLeadEntity : psBankingLeadRepository.findAll()) {
                     ObjectNode asset = mapper.createObjectNode();
                     //number of leads created
                     asset.put("lead_orginates",psBankingLeadRepository.countAllLeadsCreatedLast7Days());
                     asset.put("leads_assigned",psBankingLeadRepository.countAllLeadsCreatedLast7DaysAssigned());
                     asset.put("leads_open", psBankingLeadRepository.countAllLeadsCreatedLast7DaysOpen());
                     asset.put("leads_closed", psBankingLeadRepository.countAllLeadsCreatedLast7DaysClosed());
-                    asset.put("lead_status", psBankingLeadEntity.getLeadStatus().ordinal());
-                    ObjectNode leadStatus = mapper.createObjectNode();
-                    leadStatus.put("hot", psBankingLeadRepository.countAllLeadsCreatedLast7DaysHot());
-                    leadStatus.put("warm", psBankingLeadRepository.countAllLeadsCreatedLast7DaysWarm());
-                    leadStatus.put("cold", psBankingLeadRepository.countAllLeadsCreatedLast7DaysCold());
-                    //object containing lead topic,co-oridinates and created on
-                    ObjectNode lead = mapper.createObjectNode();
-                    lead.put("lead_topic", psBankingLeadEntity.getTopic());
-                    lead.put("lead_created_on", psBankingLeadEntity.getCreatedOn().getTime());
+                    ObjectNode leadPriority = mapper.createObjectNode();
+                    leadPriority.put("hot", psBankingLeadRepository.countAllLeadsCreatedLast7DaysHot());
+                    leadPriority.put("warm", psBankingLeadRepository.countAllLeadsCreatedLast7DaysWarm());
+                    leadPriority.put("cold", psBankingLeadRepository.countAllLeadsCreatedLast7DaysCold());
+                    asset.set("lead_priority", leadPriority);
+                    asset.put("lead_topic", psBankingLeadEntity.getTopic());
+                    asset.put("lead_created_on", psBankingLeadEntity.getCreatedOn().getTime());
                     //add to list
                     list.add(asset);
                 }
