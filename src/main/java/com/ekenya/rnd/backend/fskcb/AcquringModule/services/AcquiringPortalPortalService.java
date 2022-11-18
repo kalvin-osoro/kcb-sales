@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -547,16 +548,24 @@ try {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-             {
+            {
                 for (AcquiringLeadEntity acquiringLeadEntity : acquiringLeadsRepository.fetchAllLeadsCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
-                    //all leads created in the last 7 days
+                    //number of leads created
                     asset.put("lead_orginates",acquiringLeadsRepository.countAllLeadsCreatedLast7Days());
                     asset.put("leads_assigned",acquiringLeadsRepository.countAllLeadsCreatedLast7DaysAssigned());
                     asset.put("leads_open", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysOpen());
                     asset.put("leads_closed", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysClosed());
                     asset.put("lead_status", acquiringLeadEntity.getLeadStatus().ordinal());
-                    //TODO: add open leads by status i.e. hot, warm, cold
+                    ObjectNode leadStatus = mapper.createObjectNode();
+                    leadStatus.put("hot", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysHot());
+                    leadStatus.put("warm", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysWarm());
+                    leadStatus.put("cold", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysCold());
+                    //object containing lead topic,co-oridinates and created on
+                    ObjectNode lead = mapper.createObjectNode();
+                    lead.put("lead_topic", acquiringLeadEntity.getTopic());
+                    lead.put("lead_created_on", acquiringLeadEntity.getCreatedOn().getTime());
+                    //add to list
                     list.add(asset);
                 }
                 return list;

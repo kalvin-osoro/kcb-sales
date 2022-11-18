@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionna
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingVisitEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaFeedBackEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PBPortalService implements IPBPortalService {
     private final PSBankingLeadRepository psBankingLeadRepository;
+    private  final PSBankingFeedBackRepository psBankingFeedBackRepository;
     private final PSBankingTargetRepository psBankingTargetRepository;
     private final PSBankingOnboardingRepossitory psBankingOnboardingRepository;
     private  final PSBankingQuestionnaireQuestionRepository psBankingQuestionnaireQuestionRepository;
@@ -298,6 +300,163 @@ public class PBPortalService implements IPBPortalService {
             log.error("Error occurred while approving onboarding", e);
         }
         return false;
+    }
+
+    @Override
+    public List<ObjectNode> getOnboardingSummary(PBSummaryRequest filters) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //summarize for last 7 days
+            {
+                for (PSBankingOnboardingEntity psBankingOnboardingEntity : psBankingOnboardingRepository.fetchAllOnboardingCreatedLast7Days()) {
+                    ObjectNode asset = mapper.createObjectNode();
+                    asset.put("customerName", psBankingOnboardingEntity.getCustomerName());
+                    asset.put("onboarding-status", psBankingOnboardingEntity.getStatus().ordinal());
+                    asset.put("agent Id", psBankingOnboardingEntity.getDsrId());
+                    asset.put("date_onboarded", psBankingOnboardingEntity.getCreatedOn().getTime());
+                    asset.put("latitude", psBankingOnboardingEntity.getLatitude());
+                    asset.put("longitude", psBankingOnboardingEntity.getLongitude());
+                    list.add(asset);
+                }
+                return list;
+            }
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching onboarding summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getCustomerVisitsSummary(PBSummaryRequest filters) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //summarize for last 7 days
+            {
+                for (PSBankingVisitEntity psBankingVisitEntity : psBankingCustomerVisitRepository.fetchAllVisitsCreatedLast7Days()) {
+                    ObjectNode asset = mapper.createObjectNode();
+                    asset.put("id", psBankingVisitEntity.getId());
+                    asset.put("customerName", psBankingVisitEntity.getMerchantName());
+                    asset.put("visitDate", psBankingVisitEntity.getVisitDate());
+                    asset.put("reasonForVisit", psBankingVisitEntity.getReasonForVisit());
+                    asset.put("dsrName", psBankingVisitEntity.getDsrName());
+                    list.add(asset);
+                }
+                return list;
+            }
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching onboarding summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getTargetsSummary(PBSummaryRequest filters) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //summarize for last 7 days
+            {
+                for (PSBankingTargetEntity psBankingTargetEntity : psBankingTargetRepository.fetchAllTargetsCreatedLast7Days()) {
+                    ObjectNode asset = mapper.createObjectNode();
+                    asset.put("id", psBankingTargetEntity.getId());
+                    asset.put("targetName", psBankingTargetEntity.getTargetName());
+                    asset.put("targetSource", psBankingTargetEntity.getTargetSource());
+                    asset.put("TargetType", psBankingTargetEntity.getTargetType().ordinal());
+                    asset.put("targetDesc", psBankingTargetEntity.getTargetDesc());
+                    asset.put("targetStatus", psBankingTargetEntity.getTargetStatus().name());
+                    asset.put("targetValue", psBankingTargetEntity.getTargetValue());
+                    asset.put("createdOn", psBankingTargetEntity.getCreatedOn().toString());
+                    //add to list
+                    list.add(asset);
+                }
+                return list;
+            }
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching onboarding summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getLeadsSummary(PBSummaryRequest filters) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            {
+                for (PSBankingLeadEntity psBankingLeadEntity : psBankingLeadRepository.fetchAllLeadsCreatedLast7Days()) {
+                    ObjectNode asset = mapper.createObjectNode();
+                    //number of leads created
+                    asset.put("lead_orginates",psBankingLeadRepository.countAllLeadsCreatedLast7Days());
+                    asset.put("leads_assigned",psBankingLeadRepository.countAllLeadsCreatedLast7DaysAssigned());
+                    asset.put("leads_open", psBankingLeadRepository.countAllLeadsCreatedLast7DaysOpen());
+                    asset.put("leads_closed", psBankingLeadRepository.countAllLeadsCreatedLast7DaysClosed());
+                    asset.put("lead_status", psBankingLeadEntity.getLeadStatus().ordinal());
+                    ObjectNode leadStatus = mapper.createObjectNode();
+                    leadStatus.put("hot", psBankingLeadRepository.countAllLeadsCreatedLast7DaysHot());
+                    leadStatus.put("warm", psBankingLeadRepository.countAllLeadsCreatedLast7DaysWarm());
+                    leadStatus.put("cold", psBankingLeadRepository.countAllLeadsCreatedLast7DaysCold());
+                    //object containing lead topic,co-oridinates and created on
+                    ObjectNode lead = mapper.createObjectNode();
+                    lead.put("lead_topic", psBankingLeadEntity.getTopic());
+                    lead.put("lead_created_on", psBankingLeadEntity.getCreatedOn().getTime());
+                    //add to list
+                    list.add(asset);
+                }
+                return list;
+            }
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching onboarding summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getAllCustomerFeedbacks() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (PSBankingFeedBackEntity psBankingFeedBackEntity : psBankingFeedBackRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", psBankingFeedBackEntity.getId());
+                objectNode.put("customerId", psBankingFeedBackEntity.getCustomerId());
+                objectNode.put("channel", psBankingFeedBackEntity.getChannel());
+                objectNode.put("visitRef", psBankingFeedBackEntity.getVisitRef());
+                objectNode.put("customerName", psBankingFeedBackEntity.getCustomerName());
+                objectNode.put("noOfQuestionAsked", psBankingFeedBackEntity.getNoOfQuestionAsked());
+                objectNode.put("createdOn", psBankingFeedBackEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all customer feedbacks", e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Object getCustomerFeedbackResponses(PSBankingFeedBackRequest psBankingFeedBackRequest) {
+        try {
+            PSBankingFeedBackEntity psBankingFeedBackEntity = psBankingFeedBackRepository.findById(psBankingFeedBackRequest.getId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", psBankingFeedBackEntity.getId());
+            objectNode.put("questionAsked", psBankingFeedBackEntity.getQuestionAsked());
+            objectNode.put("response", psBankingFeedBackEntity.getResponse());
+            objectNode.put("createdOn", psBankingFeedBackEntity.getCreatedOn().getTime());
+            return objectNode;
+        } catch (Exception e) {
+            log.error("Error occurred while getting merchant by id", e);
+        }
+        return null;
     }
 }
 

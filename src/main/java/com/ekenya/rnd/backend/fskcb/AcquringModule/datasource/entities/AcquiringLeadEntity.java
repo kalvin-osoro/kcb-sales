@@ -30,5 +30,6 @@ public class AcquiringLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private Date createdOn;
 
 }

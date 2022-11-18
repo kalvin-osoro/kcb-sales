@@ -318,6 +318,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                     asset.put("longitude", agencyOnboardingEntity.getLongitude());
                     list.add(asset);
                 }
+                return list;
             }
 
 

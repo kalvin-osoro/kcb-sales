@@ -38,4 +38,16 @@ public interface IPBPortalService {
     List<ObjectNode> getAllOnboardings();
 
     boolean approveOnboarding(PSBankingOnboardingEntity model);
+
+    List<ObjectNode> getOnboardingSummary(PBSummaryRequest filters);
+
+    List<ObjectNode> getCustomerVisitsSummary(PBSummaryRequest filters);
+
+    List<ObjectNode> getTargetsSummary(PBSummaryRequest filters);
+
+    List<ObjectNode> getLeadsSummary(PBSummaryRequest filters);
+
+    List<ObjectNode> getAllCustomerFeedbacks();
+
+    Object getCustomerFeedbackResponses(PSBankingFeedBackRequest psBankingFeedBackRequest);
 }
