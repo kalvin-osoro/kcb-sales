@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -28,4 +29,5 @@ public class PSBankingLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private Date createdOn;
 }

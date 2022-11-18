@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardingEntity, Long> {
-    @Query(value = "SELECT * FROM agency_onboarding WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where created_on >= current_date at time zone 'UTC' - interval '7 days'", nativeQuery = true)
     AgencyOnboardingEntity[] fetchAllOnboardingCreatedLast7Days();
+
+
 
 
 }

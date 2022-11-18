@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class PBTargetsVC {
@@ -19,13 +21,8 @@ public class PBTargetsVC {
     IPBPortalService pbService;
 
     @PostMapping("/pb-create-target")
-    public ResponseEntity<?> createPBAsset(@RequestBody PBAddTargetRequest assetManagementRequest) {
-
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+    public ResponseEntity<?> createPBTarget(@RequestBody PBAddTargetRequest model) {
+        boolean success = pbService.createPBTarget(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,17 +41,15 @@ public class PBTargetsVC {
 
     @PostMapping(value = "/pb-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        List<?> list =pbService.getAllTargets();
+        boolean success= list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
