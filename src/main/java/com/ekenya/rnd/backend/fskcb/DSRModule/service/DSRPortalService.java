@@ -2,12 +2,12 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRTeamRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.payload.response.DSRTeamResponse;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.DSRTeamsRepository;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.ZoneCoordinatesRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IZoneCoordinatesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
 import com.ekenya.rnd.backend.fskcb.exception.MessageResponse;
 import com.ekenya.rnd.backend.utils.Status;
@@ -33,15 +33,15 @@ import java.util.logging.Logger;
 public class DSRPortalService implements IDSRPortalService {
 
     @Autowired
-    private DSRTeamsRepository dsrTeamsRepository;
+    private IDSRTeamsRepository dsrTeamsRepository;
 
     @Autowired
-    private DSRAccountsRepository dsrAccountsRepository;
+    private IDSRAccountsRepository dsrAccountsRepository;
 
 
 
     @Autowired
-    private ZoneCoordinatesRepository zoneCoordinatesRepository;
+    private IZoneCoordinatesRepository zoneCoordinatesRepository;
     @Autowired
     private ExcelService excelService;
 

@@ -3,8 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs;
 import lombok.Data;
 
 @Data
-public class ChangePINRequest {
-    private String currentPIN;
-    private String newPIN;
-
+public class SecQnAnswerReq{
+    private long qnId;
+    private String answer;
 }

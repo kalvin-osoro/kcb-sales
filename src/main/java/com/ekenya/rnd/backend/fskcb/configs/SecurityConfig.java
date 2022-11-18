@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(securedEnabled = true)
 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -63,8 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sms/**").permitAll()
                 .antMatchers("/kcb-sales-effective/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
+                //
                 .anyRequest()
-                        .permitAll();
+                .authenticated();
+
+                //.permitAll();
 
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

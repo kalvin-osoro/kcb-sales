@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
@@ -11,6 +12,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,9 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "/api/v1")
+@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
+//@PreAuthorize("isAuthenticated()")
+//hasRole('USER') is the same as hasAuthority('ROLE_USER')
 public class UsersVC {
 
     @Autowired

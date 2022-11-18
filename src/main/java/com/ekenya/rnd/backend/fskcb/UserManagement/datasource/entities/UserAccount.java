@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities;
 
+import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 @Data
 @Entity
@@ -28,10 +30,12 @@ public class UserAccount {
     private String fullName;
     private String phoneNumber;
     private Boolean deleted = Boolean.FALSE;
-    //@Column(name="dob")
-    //private String dateOfBirth;
+    @Column(name="acc_type")
+    private AccountType accountType;
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
+    private Date lastLogin;
+    private String lastCoords;
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(name = "dbo_user_roles",
@@ -39,6 +43,11 @@ public class UserAccount {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
     private  Boolean isVerified = Boolean.FALSE;
+    private  Boolean shouldSetPIN = Boolean.TRUE;
+
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    private Status status= Status.ACTIVE;
     public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;
     }

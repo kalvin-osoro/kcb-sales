@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IRolesService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
@@ -10,14 +11,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @CrossOrigin(origins = "*")
 @Api(value = "Role Management")
 @RestController()
-
 @RequestMapping(path = "/api/v1")
+@PreAuthorize("hasAuthority('"+SystemRoles.ADMIN+"','"+SystemRoles.ADMIN+"')")
 public class RolesVC {
     private final IRolesService roleService;
 

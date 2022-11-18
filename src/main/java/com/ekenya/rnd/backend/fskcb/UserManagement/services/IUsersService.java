@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface IUsersService {
 
     UserAccount findById(Long id);
 
+    UserAccount findByStaffNo(String staffNo);
 
-    List<UserAccount> loadAllUsers();
+    List<ObjectNode> loadAllUsers();
 }

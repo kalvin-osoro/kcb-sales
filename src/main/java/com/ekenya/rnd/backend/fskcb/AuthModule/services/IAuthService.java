@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -12,12 +13,14 @@ public interface IAuthService {
 
     boolean attemptChangePIN(ChangePINRequest model);
 
-    int accountExists(LookupRequest model);
+    AccountLookupState accountExists(LookupRequest model);
 
     boolean sendVerificationCode(SendVerificationCodeRequest model);
 
     boolean validateVerificationCode(ValidateVerificationCodeRequest model);
     List<ObjectNode> loadSecurityQuestions();
+
+    List<ObjectNode> loadUserSecurityQuestions(String staffNo);
 
     boolean setSecurityQuestions(SetSecurityQnsRequest model);
 
@@ -28,4 +31,6 @@ public interface IAuthService {
     boolean attemptChangePassword(ChangePasswordRequest model);
 
     boolean resetDSRPIN(ResetDSRPINRequest model);
+
+    boolean changeDSRPhoneNo(ChangeDSRPhoneNoRequest model);
 }

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities;
 
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -30,4 +31,8 @@ public class UserProfile {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
     private Boolean deleted = Boolean.FALSE;
+
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    private Status status= Status.ACTIVE;
 }

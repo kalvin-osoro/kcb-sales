@@ -70,10 +70,6 @@ public class CRMService implements ICRMService {
         return null;
     }
 
-    @Override
-    public JsonObject createLoan(JsonObject jsonObject) {
-        return null;
-    }
 
     @Override
     public JsonObject createLead(JsonObject jsonObject) {
@@ -97,6 +93,36 @@ public class CRMService implements ICRMService {
 
     @Override
     public JsonObject getCustomerRefNo(String accountNumber) {
+        return null;
+    }
+
+    @Override
+    public JsonObject fetchAccountOpenedByStaffNo(String staffNo) {
+        return null;
+    }
+
+    @Override
+    public JsonObject fetchLoansSoldByStaffNo(String staffNo) {
+        return null;
+    }
+
+    @Override
+    public JsonObject fetchDeposistsByStaffNo(String staffNo) {
+        return null;
+    }
+
+    @Override
+    public JsonObject fetchInsuranceSoldByStaffNo(String staffNo) {
+        return null;
+    }
+
+    @Override
+    public JsonObject fetchCreditCardsSoldByStaffNo(String staffNo) {
+        return null;
+    }
+
+    @Override
+    public JsonObject fetchVoomaAccountsSoldByStaffNo(String staffNo) {
         return null;
     }
 }
