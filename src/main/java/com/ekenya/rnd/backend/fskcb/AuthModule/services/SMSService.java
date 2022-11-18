@@ -81,6 +81,19 @@ public class SMSService implements ISmsService{
         return false;
     }
 
+    @Override
+    public boolean sendPasswordEmail(String receiverEmail, String name, String password) {
+
+        try{
+
+            //TODO Send email ..
+        } catch (Exception e) {
+            logger.log(Level.ALL,e.getMessage(),e);
+        }
+
+        return false;
+    }
+
     @Scheduled(fixedRate = 1)
 
     private JsonObject attemptSendSMS(String message, String phoneNo) {

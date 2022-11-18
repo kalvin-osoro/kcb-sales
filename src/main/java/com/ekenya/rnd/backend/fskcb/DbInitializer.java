@@ -50,11 +50,6 @@ public class DbInitializer {
     //
 
 
-    @EventListener
-    public void onApplicationReadyEvent(ApplicationReadyEvent event) {
-        System.out.println("Application Started.");
-    }
-
     @EventListener(ApplicationReadyEvent.class)
     private void init() {
         log.info("DB initializer; Seeding db ..");

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CrmAdapter;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -73,6 +74,11 @@ public class CRMService implements ICRMService {
 
     @Override
     public JsonObject createLead(JsonObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JsonArray fetchStaffAccounts() {
         return null;
     }
 

@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -12,9 +13,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,28 +29,41 @@ import java.util.List;
 public class UsersVC {
 
     @Autowired
+    ObjectMapper mObjectMapper;
+    @Autowired
     IUsersService usersService;
 
     @PostMapping("/users-create-user")
-    public ResponseEntity<?> createUser(@RequestBody AddUserRequest leadRequest ) {
+    public ResponseEntity<?> createUser(@RequestBody AddUserRequest request ) {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
+        boolean success = usersService.attemptCreateUser(request);
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            ObjectNode node = mObjectMapper.createObjectNode();
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
+
+    @PostMapping("/users-import-users")
+    public ResponseEntity<?> importUsers(@RequestBody MultipartFile file ) {
+        //T
+        ObjectNode resp = usersService.attemptImportUsers(file);
+        if(resp != null){
+            //Object
+
+            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
     @PostMapping(value = "/users-get-all-users")
     public ResponseEntity<?> getAllUsers() {
 
@@ -74,145 +88,154 @@ public class UsersVC {
     @PostMapping("/users-sync-crm")
     public ResponseEntity<?> syncWithCRM() {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = usersService.syncUsersWithCRM();
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
     @PostMapping("/users-get-details")
-    public ResponseEntity<?> getUserById(int id) {
+    public ResponseEntity<?> getUserById(long id) {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ObjectNode node = usersService.loadUserDetails(id);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+        if(node != null){
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
     @PostMapping("/users-reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetUserPasswordRequest leadRequest ) {
+    public ResponseEntity<?> resetUserPassword(@RequestBody ResetUserPasswordRequest request ) {
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = usersService.attemptResetPassword(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
     @PostMapping("/users-assign-profile")
-    public ResponseEntity<?> assignUserProfile(@RequestBody AssignUserProfileRequest leadRequest ) {
+    public ResponseEntity<?> assignUserProfile(@RequestBody AssignUserProfileRequest request ) {
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = usersService.assignUserToProfiles(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
+    @PostMapping("/users-update-profiles")
+    public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserProfileRequest request ) {
+
+        //TODO; INSIDE SERVICE
+        boolean success = usersService.updateUserProfiles(request);
+
+        //Response
+        if(success){
+            //Object
+            ObjectNode node = mObjectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
     @PostMapping("/users-block-user")
-    public ResponseEntity<?> blockUser(@RequestBody int id ) {
+    public ResponseEntity<?> blockUser(@RequestBody long id ) {
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //
+        boolean success = usersService.attemptBlockUser(id);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
-    @PostMapping("/users-ubnlock-user")
-    public ResponseEntity<?> ubnlockUser(@RequestBody int id ) {
+    @PostMapping("/users-unblock-user")
+    public ResponseEntity<?> unblockUser(@RequestBody long id ) {
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //
+        boolean success = usersService.attemptUnblockUser(id);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
     @PostMapping("/users-get-audit-trail")
-    public ResponseEntity<?> userAuditTrail(@RequestBody int id) {
+    public ResponseEntity<?> userAuditTrail(@RequestBody long id) {
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ArrayNode resp = usersService.loadUserAuditTrail(id);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp != null){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
