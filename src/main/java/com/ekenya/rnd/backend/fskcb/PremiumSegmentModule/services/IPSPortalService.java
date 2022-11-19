@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -21,4 +22,20 @@ public interface IPSPortalService {
     List<ObjectNode> getAllCustomerVisits();
 
     List<ObjectNode> getCustomerVisitQuestionnaireResponses(PSCustomerVisitQuestionnaireRequest model);
+
+    boolean createQuestionnaire(AcquiringAddQuestionnaireRequest model);
+
+    List<ObjectNode> loadQuestionnaires();
+
+    List<ObjectNode> getAllOnboardings();
+
+    boolean approveOnboarding(PSApproveMerchantOnboarindRequest model);
+
+    List<ObjectNode> getAllCustomerFeedbacks();
+
+    Object getCustomerFeedbackResponses(PSFeedBackRequest model);
+
+    boolean createTarget(PSAddTargetRequest model);
+
+    List<ObjectNode> getAllTargets();
 }

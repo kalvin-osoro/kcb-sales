@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class PSTargetsVC {
@@ -19,19 +21,13 @@ public class PSTargetsVC {
     IPSPortalService psService;
 
     @PostMapping("/ps-create-target")
-    public ResponseEntity<?> createPSAsset(@RequestBody PSAddTargetRequest assetManagementRequest) {
-
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> createTarget(@RequestBody PSAddTargetRequest model) {
+boolean success = psService.createTarget(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
-            //Object
             ObjectNode node = objectMapper.createObjectNode();
+            //Object
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -44,17 +40,13 @@ public class PSTargetsVC {
 
     @PostMapping(value = "/ps-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
-
-        //
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
-        //Response
+        List<?> targets = psService.getAllTargets();
+        boolean success = targets != null;
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(targets));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

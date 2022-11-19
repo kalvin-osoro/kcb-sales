@@ -61,4 +61,5 @@ public interface IAcquiringPortalService {
     List<?> getLeadsSummary(AcquringSummaryRequest filters);
 
     List<?> getAssetsSummary(AcquringSummaryRequest filters);
+
 }

@@ -10,26 +10,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class PSOnboardingVC {
     @Autowired
-    IPSPortalService pssService;
+    IPSPortalService psService;
 
 
 
     //List all onboarded merchants
     @PostMapping(value = "/ps-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?> onboardings = psService.getAllOnboardings();
+        boolean success = onboardings != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(onboardings));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -42,18 +43,15 @@ public class PSOnboardingVC {
 
 
     @PostMapping("/ps-approve-onboarding")
-    public ResponseEntity<?> approveOnboarding(@RequestBody PSApproveMerchantOnboarindRequest assetManagementRequest) {
+    public ResponseEntity<?> approveOnboarding(@RequestBody PSApproveMerchantOnboarindRequest model) {
 
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = psService.approveOnboarding(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{

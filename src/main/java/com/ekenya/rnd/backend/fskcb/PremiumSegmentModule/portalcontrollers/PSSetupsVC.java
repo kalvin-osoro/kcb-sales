@@ -3,9 +3,11 @@ package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.Payload.PremiumProductRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.fskcb.payload.ProductRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
@@ -19,20 +21,19 @@ import java.util.List;
 public class PSSetupsVC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    IPSPortalService portalService;
 
     @PostMapping("/ps-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
+    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest model) {
 
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+        boolean success = portalService.createQuestionnaire(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.put("message", "Questionnaire created successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -47,13 +48,15 @@ public class PSSetupsVC {
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //
-        List<ObjectNode> list = acquiringService.loadQuestionnaires();
+        List<?> list = portalService.loadQuestionnaires();
+        boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(list != null ){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ArrayNode node = objectMapper.valueToTree(list);
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
