@@ -1,7 +1,14 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdatePasswordRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,12 +18,30 @@ public interface IUsersService {
 
     UserAccount getByResetPasswordToken(String token);
 
-    boolean updatePassword(UserAccount userAccount, String newPassword);
-
+    boolean attemptUpdatePassword(UpdatePasswordRequest model);
 
     UserAccount findById(Long id);
 
     UserAccount findByStaffNo(String staffNo);
 
+    boolean attemptCreateUser(AddUserRequest model);
+    ObjectNode attemptImportUsers(MultipartFile importFile);
+
     List<ObjectNode> loadAllUsers();
+
+    boolean syncUsersWithCRM();
+
+    ObjectNode loadUserDetails(long userId);
+
+    boolean attemptResetPassword(ResetUserPasswordRequest model);
+    boolean assignUserToProfiles(AssignUserProfileRequest model);
+    boolean updateUserProfiles(UpdateUserProfileRequest model);
+
+    boolean attemptBlockUser(Long userId);
+
+    boolean attemptUnblockUser(Long userId);
+
+    ArrayNode loadUserAuditTrail(Long userId);
+
+
 }

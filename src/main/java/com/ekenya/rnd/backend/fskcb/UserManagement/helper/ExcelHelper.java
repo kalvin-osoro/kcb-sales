@@ -1,8 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,44 +20,36 @@ import java.io.InputStream;
 import java.util.*;
 
 public class ExcelHelper {
-    private static final int FIRST_NAME_COLUMN_INDEX = 0;
-    private static final int MIDDLE_NAME_COLUMN_INDEX = 1;
-    private static final int LAST_NAME_COLUMN_INDEX = 2;
+    private static final int STAFF_NO_COLUMN_INDEX = 1;
+
+    private static final int FULL_NAME_COLUMN_INDEX = 2;
     private static final int EMAIL_COLUMN_INDEX = 3;
-    private static final int DATE_OF_BIRTH_COLUMN_INDEX = 4;
-    private final static int PHONE_NUMBER_COLUMN_INDEX = 5;
-    private final static int PASSWORD_COLUMN_INDEX = 6;
-    private final static int USER_NAME_COLUMN_INDEX = 7;
+    //private final static int ACCOUNT_TYPE_COLUMN_INDEX = 3;
+    private final static int PHONE_NUMBER_COLUMN_INDEX = 4;
     @Autowired
     static PasswordEncoder passwordEncoder;
     @Autowired
-     static RoleRepository roleRepository;
+    static RoleRepository roleRepository;
     public static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = { "firstName","middleName","lastName","email","dateOfBirth","phoneNumber","password","username" };
     static String SHEET = "Users";
-
-
-
-
-
-
     public static boolean hasExcelFormat(MultipartFile file) {
 
         return TYPE.equals(file.getContentType());
     }
 
-    public static List<UserAccount> excelToUsers(InputStream is) {
+    public static UsersExcelImportResult excelToUserAccounts(InputStream is) {
 
 //
 //
 //
         try {
+            UsersExcelImportResult result = new UsersExcelImportResult();
+
+
             Workbook workbook = new XSSFWorkbook(is);
 
-            Sheet sheet = workbook.getSheet(SHEET);
+            Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
-
-            List<UserAccount> userAccounts = new ArrayList<>();
 
             int rowNumber = 0;
             while (rows.hasNext()) {
@@ -66,67 +61,120 @@ public class ExcelHelper {
                     continue;
                 }
 
-                Iterator<Cell> cellsInRow = currentRow.iterator();
-
                 UserAccount userAccount = new UserAccount();
 
-                int cellIdx = 0;
-                while (cellsInRow.hasNext()) {
-                    Cell currentCell = cellsInRow.next();
-
-                    switch (cellIdx) {
-                        //first name,Middle name,Last name,E-mail,Date of birth,Phone number,Password,Username.
-                        case FIRST_NAME_COLUMN_INDEX:
-                            userAccount.setFullName(currentCell.getStringCellValue());
-                            break;
-                            case MIDDLE_NAME_COLUMN_INDEX:
-                                //userAccount.setMiddleName(currentCell.getStringCellValue());
-                                break;
-                        case LAST_NAME_COLUMN_INDEX:
-                            //userAccount.setLastName(currentCell.getStringCellValue());
-                            break;
-                            case EMAIL_COLUMN_INDEX:
-                                userAccount.setEmail(currentCell.getStringCellValue());
-                                break;
-                        case DATE_OF_BIRTH_COLUMN_INDEX:
-                            //userAccount.setDateOfBirth(currentCell.getStringCellValue());
-                            break;
-                            case PHONE_NUMBER_COLUMN_INDEX:
-                                userAccount.setPhoneNumber(currentCell.getStringCellValue());
-                                break;
-                        case PASSWORD_COLUMN_INDEX:
-                            userAccount.setPassword(passwordEncoder.encode(currentCell.getStringCellValue()));
-                            break;
-                            case USER_NAME_COLUMN_INDEX:
-                                userAccount.setStaffNo(currentCell.getStringCellValue());
-                                break;
-                        default:
-                            break;
+                //Staff No
+                try{
+                    Cell currentCell = currentRow.getCell(STAFF_NO_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String staffNo = currentCell.getStringCellValue();
+                    if(staffNo == null || staffNo.isEmpty() || staffNo.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Staff No.' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(STAFF_NO_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        userAccount.setStaffNo(staffNo);
                     }
-                    cellIdx++;
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(STAFF_NO_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
                 }
-                //add user to db and assign default  role
-                Optional<UserRole> role = roleRepository.findByName("ROLE_USER");
-                //set role
-                userAccount.setRoles(new HashSet<>(Arrays.asList(role.get())));
-                //add to list
-                userAccounts.add(userAccount);//add user to list
 
+                //Full Name
+                try{
 
+                    Cell currentCell = currentRow.getCell(FULL_NAME_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String name = currentCell.getStringCellValue();
+                    if(name == null || name.isEmpty() || name.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Full Name' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(FULL_NAME_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        userAccount.setFullName(name);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(FULL_NAME_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
 
+                //Phone Number
+                try{
+                    Cell currentCell = currentRow.getCell(PHONE_NUMBER_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String phoneNo = currentCell.getStringCellValue();
+                    if(phoneNo == null || phoneNo.isEmpty() || phoneNo.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Phone Number' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(PHONE_NUMBER_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else if(!phoneNo.startsWith("254")){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Phone Number' should start with '254XXX..'. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(PHONE_NUMBER_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        userAccount.setPhoneNumber(phoneNo);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(PHONE_NUMBER_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Email
+                try{
+                    Cell currentCell = currentRow.getCell(EMAIL_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String email = currentCell.getStringCellValue();
+                    if(email == null || email.isEmpty() || email.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Email' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(EMAIL_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        userAccount.setEmail(email);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(EMAIL_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //
+                if(result.getErrors().isEmpty()) {
+                    result.getAccounts().add(userAccount);
+                }
             }
-
+            //
             workbook.close();
-
-            return userAccounts;
+            //
+            return result;
         } catch (IOException e) {
-            throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
+            throw new RuntimeException("Failed to parse Excel file: " + e.getMessage());
         }
-
-
     }
-
-
 }
 
 

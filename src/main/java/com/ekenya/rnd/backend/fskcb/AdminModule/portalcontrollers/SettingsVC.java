@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AdminModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.AdminModule.AddBranchRequest;
 import com.ekenya.rnd.backend.fskcb.AdminModule.services.ISettingsService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,47 +16,45 @@ import org.springframework.web.bind.annotation.*;
 public class SettingsVC {
 
     @Autowired
+    ObjectMapper mObjectMapper;
+    @Autowired
     ISettingsService settingsServices;
 
     @PostMapping("/settings-create-branch")
-    public ResponseEntity<?> getOnboardingSummary(@RequestBody AcquringSummaryRequest filters){
+    public ResponseEntity<?> createBranch(@RequestBody AddBranchRequest request){
         //
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //
+        boolean success = settingsServices.createBranch(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping(value = "/settings-get-all-branches")
     public ResponseEntity<?> getAllBranches() {
 
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //
+        ArrayNode resp = settingsServices.loadAllBranches();
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

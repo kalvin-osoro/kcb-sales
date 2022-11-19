@@ -44,6 +44,7 @@ public class UserAccount {
     private Set<UserRole> roles;
     private  Boolean isVerified = Boolean.FALSE;
     private  Boolean shouldSetPIN = Boolean.TRUE;
+    private  Boolean blocked = Boolean.FALSE;
 
     @Column(name="status")
     @Enumerated(EnumType.STRING)

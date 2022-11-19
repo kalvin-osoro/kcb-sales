@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UsersListRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppDto;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppResponse;
@@ -35,12 +36,12 @@ public class ExcelService {
 
 
     public void save(MultipartFile file) {
-        try {
-           List<UserAccount> users= ExcelHelper.excelToUsers(file.getInputStream());
-            userRepository.saveAll(users);
-        } catch (IOException e) {
-            throw new RuntimeException("fail to store excel data: " + e.getMessage());
-        }
+//        try {
+//            UsersExcelImportResult users = ExcelHelper.excelToUserAccounts(file.getInputStream());
+//            userRepository.saveAll(users.getAccounts());
+//        } catch (IOException e) {
+//            throw new RuntimeException("fail to store excel data: " + e.getMessage());
+//        }
     }
 
     //    public List<UserApp> getAllUsers() {
