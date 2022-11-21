@@ -20,7 +20,7 @@ import java.util.Date;
 @DynamicInsert
 public class TreasuryTradeRequestEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Long id;
     private String customerName;
     private String customerID;

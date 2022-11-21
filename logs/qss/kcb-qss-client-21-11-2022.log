@@ -1,0 +1,8 @@
+INFO > 11-21-2022 18:39:42 || QssClientManager$1.subscribe() : QSS: Init Hub Connection Service, URL = http://10.211.55.5:5000/delta?uid=KCB_SALES_BACKEND
+INFO > 11-21-2022 18:39:42 || QssClientManager$1.subscribe() : QSS: Init Hub Connection Service, URL = http://10.211.55.5:5000/delta?uid=KCB_SALES_BACKEND
+INFO > 11-21-2022 18:40:04 || QssClientManager$3.subscribe() : I/O error on POST request for "http://10.211.55.5:5000/token": Connection timed out: connect; nested exception is java.net.ConnectException: Connection timed out: connect
+INFO > 11-21-2022 18:40:04 || QssClientManager$3.subscribe() : I/O error on POST request for "http://10.211.55.5:5000/token": Connection timed out: connect; nested exception is java.net.ConnectException: Connection timed out: connect
+SEVERE > 11-21-2022 18:40:04 || QssClientManager$1$1.onError() : Hub Start Error => I/O error on POST request for "http://10.211.55.5:5000/token": Connection timed out: connect; nested exception is java.net.ConnectException: Connection timed out: connect
+SEVERE > 11-21-2022 18:40:04 || QssClientManager$1$1.onError() : Hub Start Error => I/O error on POST request for "http://10.211.55.5:5000/token": Connection timed out: connect; nested exception is java.net.ConnectException: Connection timed out: connect
+INFO > 11-21-2022 18:40:04 || QssClientManager$1.subscribe() : QSS: Start Hub Connection Exit.. 
+INFO > 11-21-2022 18:40:04 || QssClientManager$1.subscribe() : QSS: Start Hub Connection Exit.. 

@@ -1,22 +1,21 @@
-package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.RetailModule.datasource.entites;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
-import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "dbo_cb_leads")
-@DynamicInsert
-@DynamicUpdate
-public class CBLeadEntity {
+@Table(name = "dbo_retail_leads")
+public class RetailLeadEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -32,5 +31,4 @@ public class CBLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
-    private Date createdOn;
 }

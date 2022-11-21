@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController("/retail-lead")
 public class RetailLeadsVC {
     
@@ -19,11 +21,9 @@ public class RetailLeadsVC {
 
     //Assign lead to a sales person
     @PostMapping("/retail-assign-lead")
-    public ResponseEntity<?> createLead(@RequestBody RetailAssignLeadRequest model) {
+    public ResponseEntity<?> assignLead(@RequestBody RetailAssignLeadRequest model) {
+        boolean success = retailService.assignLead(model);
 
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService.assigneLeadtoDSR(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,17 +42,15 @@ public class RetailLeadsVC {
 
     //List all leads
     @PostMapping(value = "/retail-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody RetailLeadsListRequest filters) {
-
-        //
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getAllLeads() {
+        List<?> leads = retailService.getAllLeads();
+        boolean success = leads != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(leads));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
