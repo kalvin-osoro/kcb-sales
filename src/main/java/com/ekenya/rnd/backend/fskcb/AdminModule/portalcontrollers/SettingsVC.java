@@ -1,9 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.AdminModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.AdminModule.AddBranchRequest;
 import com.ekenya.rnd.backend.fskcb.AdminModule.services.ISettingsService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,11 +31,11 @@ public class SettingsVC {
             ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping(value = "/settings-get-all-branches")
@@ -50,11 +49,11 @@ public class SettingsVC {
         if(resp != null){
             //Object
 
-            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

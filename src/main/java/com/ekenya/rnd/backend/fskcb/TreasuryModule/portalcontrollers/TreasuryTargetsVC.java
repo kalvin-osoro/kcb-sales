@@ -3,7 +3,7 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -36,11 +36,11 @@ public class TreasuryTargetsVC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -56,11 +56,11 @@ public class TreasuryTargetsVC {
             node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -80,11 +80,11 @@ public class TreasuryTargetsVC {
             ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -105,11 +105,11 @@ public class TreasuryTargetsVC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

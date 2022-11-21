@@ -1,13 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddRegionRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRRegionsRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportRegionsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.UpdateRegionRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRPortalService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -37,11 +33,11 @@ public class DSRRegionsVC {
             ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping(value = "/dsr-get-all-regions")
@@ -54,11 +50,11 @@ public class DSRRegionsVC {
             //Object
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -71,11 +67,11 @@ public class DSRRegionsVC {
         if(result != null){
             //Object
 
-            return ResponseEntity.ok(new AppResponse(1,result,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,result,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-update-region")
@@ -91,11 +87,11 @@ public class DSRRegionsVC {
             ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

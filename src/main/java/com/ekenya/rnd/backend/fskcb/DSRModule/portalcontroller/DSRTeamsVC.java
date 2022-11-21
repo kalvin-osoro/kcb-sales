@@ -2,10 +2,8 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportTeamsRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportTeamsRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRPortalService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,11 +32,11 @@ public class DSRTeamsVC {
             ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping(value = "/dsr-get-all-teams")
@@ -49,11 +47,11 @@ public class DSRTeamsVC {
         if(list != null){
             //Object
 
-            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-team-details")
@@ -65,11 +63,11 @@ public class DSRTeamsVC {
         if(resp != null){
             //Object
 
-            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-update-team-members")
@@ -84,11 +82,11 @@ public class DSRTeamsVC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-disable-team")
@@ -103,11 +101,11 @@ public class DSRTeamsVC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-enable-team")
@@ -122,11 +120,11 @@ public class DSRTeamsVC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

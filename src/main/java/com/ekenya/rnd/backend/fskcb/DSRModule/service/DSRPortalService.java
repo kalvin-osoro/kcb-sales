@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -320,13 +321,17 @@ public class DSRPortalService implements IDSRPortalService {
             if (dsrRequest == null)
                 throw new Exception("Bad request");
 
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            if (userDetails == null)throw new RuntimeException("Service error");
-            String createdBy = userDetails.getUsername();
+//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+//            if (userDetails == null)throw new RuntimeException("Service error");
+//            String createdBy = userDetails.getUsername();
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String createdBy = authentication.getName();
 
             DSRTeamEntity optionalDSRTeam =
                     dsrTeamsRepository.findById(dsrRequest.getTeamId()).orElse(null);
-            if(optionalDSRTeam != null){
+            if(optionalDSRTeam != null &&
+                    !dsrAccountsRepository.findByStaffNo(dsrRequest.getStaffNo()).isPresent()){
                 //
                 DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
                         .email(dsrRequest.getEmail())
@@ -348,7 +353,7 @@ public class DSRPortalService implements IDSRPortalService {
 
                 return true;
             }
-            //Team not found
+            //Team not found or dsr already exists
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }

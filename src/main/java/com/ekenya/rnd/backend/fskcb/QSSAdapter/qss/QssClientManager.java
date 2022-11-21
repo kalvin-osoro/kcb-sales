@@ -47,8 +47,8 @@ public class QssClientManager implements QSSClientInterface {
     }
 
     //
-    //private String mServiceHost = "https://devops.ekenya.co.ke:8084";
-    private String mServiceHost = "http://10.211.55.5:5000";
+    private String mServiceHost = "https://devops.ekenya.co.ke:8084";
+    //private String mServiceHost = "http://10.211.55.5:5000";
     private String serviceEndpoint = "/delta";
 
     //Client Settings

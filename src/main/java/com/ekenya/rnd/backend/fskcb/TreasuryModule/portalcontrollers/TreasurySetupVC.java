@@ -1,11 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.Payload.TreasuryProductRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -36,11 +33,11 @@ public class TreasurySetupVC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -54,11 +51,11 @@ public class TreasurySetupVC {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
             node.addAll((ArrayNode) objectMapper.valueToTree(list));
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }
