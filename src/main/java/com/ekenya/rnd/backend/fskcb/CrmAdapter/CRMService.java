@@ -16,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 
@@ -27,8 +28,14 @@ public class CRMService implements ICRMService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    public static String accessToken ;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+    @PostConstruct
+    void processToken(){
+        System.out.println("generating crm token");
+        accessToken = generateOauth2Token();
+    }
     @Override
     public String generateOauth2Token() {
 

@@ -19,11 +19,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +32,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,12 +92,36 @@ public class AuthService implements IAuthService{
 
             //Response
             LoginResponse response = new LoginResponse();
+            response.setSuccess(true);
             response.setToken(token);
             response.setExpires(Calendar.getInstance().getTime());
             response.setProfiles(roles);
             response.setType("Bearer");
             //
             return response;
+        }catch (AuthenticationException ex){
+            //
+            Optional<UserAccount> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+            //Update ..
+            if(optionalUserAccount.isPresent()){
+                UserAccount userAccount = optionalUserAccount.get();
+                userAccount.setRemLoginAttempts(userAccount.getRemLoginAttempts() - 1);
+                //
+                if(userAccount.getRemLoginAttempts() <= 0){
+                    userAccount.setBlocked(true);
+                    userAccount.setDateBlocked(Calendar.getInstance().getTime());
+                }
+                //
+                userRepository.save(userAccount);
+                //
+                LoginResponse response = new LoginResponse();
+                response.setSuccess(false);
+                response.setRemAttempts(userAccount.getRemLoginAttempts());
+                //
+                return response;
+            }
+
+            //
         }catch (Exception ex){
             //
             log.error(ex.getMessage(),ex);
@@ -142,7 +164,7 @@ public class AuthService implements IAuthService{
     public AccountLookupState accountExists(LookupRequest model) {
 
         try {
-            if(userRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            if(userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Account exists
                 return AccountLookupState.ACTIVE;
             }else if(dsrAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
@@ -162,10 +184,6 @@ public class AuthService implements IAuthService{
     public boolean sendVerificationCode(SendVerificationCodeRequest model) {
         //
         try{
-
-
-
-
 
             //
             if(smsService.sendSecurityCode(model.getStaffNo(),AuthCodeType.DEVICE_VERIFICATION)){
@@ -328,15 +346,21 @@ public class AuthService implements IAuthService{
     public boolean attemptCreatePIN(CreatePINRequest model) {
 
         try{
-            UserAccount account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            Optional<UserAccount> optionalUserAccount = userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(),model.getPhoneNo());
 
-            if(account.getShouldSetPIN() && account.getPhoneNumber() == model.getPhoneNo()){
-                //
-                account.setPassword(passwordEncoder.encode(model.getNewPin()));
+            if(optionalUserAccount.isPresent()){
 
-                userRepository.save(account);//save user to db
-
-                return true;
+                UserAccount account = optionalUserAccount.get();
+                if(account.getShouldSetPIN()){
+                    //
+                    account.setPassword(passwordEncoder.encode(model.getNewPIN()));
+                    account.setShouldSetPIN(false);
+                    account.setLastModified(Calendar.getInstance().getTime());
+                    userRepository.save(account);//save user to db
+                    return true;
+                }
+            }else{
+                //User not found ..
             }
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
@@ -409,7 +433,7 @@ public class AuthService implements IAuthService{
 
             return true;
         }catch (Exception ex){
-            log.error("Change pin/password attempt failed.", ex);
+            log.error("Change PIN/password attempt failed.", ex);
         }
         return false;
     }

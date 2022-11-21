@@ -1,7 +1,5 @@
 package com.ekenya.rnd.backend.fskcb;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers.AcquiringAssetVC;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.services.AcquiringPortalPortalService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -15,19 +13,24 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
 
 @SpringBootApplication
 @EnableSwagger2
 //@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @Slf4j
 public class SpringBootKcbRestApiApplication   {
-	@Autowired
-	private ICRMService ICRMService;
-	public static String accessToken ;
 	@Resource
 	public Environment environment;
 
@@ -58,18 +61,11 @@ public class SpringBootKcbRestApiApplication   {
 //	}
 
 	public static void main(String[] args) {
-//		new File(AcquiringPortalPortalService.uploadDirectory).mkdir();
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 
 	}
 
-		@PostConstruct
-    void processToken(){
-        System.out.println(
-                "generate token"
-        );
-        accessToken = ICRMService.generateOauth2Token();
-    }
+
 //	@Bean
 //	CommandLineRunner init(RoleRepository roleRepository) {
 //		return args -> {
@@ -84,6 +80,39 @@ public class SpringBootKcbRestApiApplication   {
 //	}
 
 
+	@Bean
+	public FileHandler prepareLogger() {
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+			Path path = Paths.get("logs/kcb-sales-backend");
+			Files.createDirectories(path);
+			// This block configure the logger with handler and formatter
+			FileHandler mFileHandler = new FileHandler("logs/kcb-sales-backend/kcb-sales-log-file-" + sdf.format(Calendar.getInstance().getTime()) + ".log");
+			//mLogger.addHandler(mFileHandler);
+			// SimpleFormatter formatter = new SimpleFormatter();
+			mFileHandler.setFormatter(new Formatter() {
+				@Override
+				public String format(LogRecord record) {
+					SimpleDateFormat logTime = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+					Calendar cal = new GregorianCalendar();
+					cal.setTimeInMillis(record.getMillis());
+					return record.getLevel() + " > " + logTime.format(cal.getTime()) + " || "
+							+ record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf(".") + 1,
+							record.getSourceClassName().length())
+							+ "." + record.getSourceMethodName() + "() : " + record.getMessage() + "\n";
+				}
+			});
+			return mFileHandler;
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 }
 

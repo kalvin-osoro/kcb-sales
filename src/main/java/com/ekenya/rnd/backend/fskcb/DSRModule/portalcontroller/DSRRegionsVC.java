@@ -1,82 +1,87 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddRegionRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRRegionsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportRegionsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.UpdateRegionRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRPortalService;
+import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController("/dsr-regions")
 public class DSRRegionsVC {
-    //TODO: implement the reports controller for all required dfs reports
-    @PostMapping("/dsr-create-regions")
-    public ResponseEntity<?> createRegion(@RequestBody AddRegionRequest model ) {
+    //
+    @Autowired
+    ObjectMapper mObjectMapper;
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+    @Autowired
+    IDSRPortalService dsrPortalService;
+    @PostMapping("/dsr-create-regions")
+    public ResponseEntity<?> createRegion(@RequestBody AddRegionRequest request ) {
+
+        //INSIDE SERVICE
+        boolean success = dsrPortalService.createRegion(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping(value = "/dsr-get-all-regions")
     public ResponseEntity<?> getAllRegions() {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ArrayNode list = dsrPortalService.getAllRegions();
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
+    @PostMapping("/dsr-import-regions")
+    public ResponseEntity<?> importRegion(@RequestBody MultipartFile file) {
+        //TODO; INSIDE SERVICE
+        ObjectNode result = dsrPortalService.attemptImportRegions(file);
+
+        //Response
+        if(result != null){
+            //Object
+
+            return ResponseEntity.ok(new AppResponse(1,result,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
     @PostMapping("/dsr-update-region")
-    public ResponseEntity<?> updateRegion(@RequestBody ImportRegionsRequest leadRequest ) {
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
-    @PostMapping("/dsr-regions-teams")
-    public ResponseEntity<?> exportRegions(@RequestBody ExportDSRRegionsRequest leadRequest ) {
+    public ResponseEntity<?> updateRegions(@RequestBody UpdateRegionRequest request ) {
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = dsrPortalService.updateRegion(request);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

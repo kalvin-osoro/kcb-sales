@@ -52,4 +52,11 @@ public class UserAccount {
     public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;
     }
+
+    @Column(name="login_attempts")
+    private int remLoginAttempts = 3;
+    @Column(name="date_blocked")
+    private Date dateBlocked;
+    @Column(name="last_modified")
+    private Date lastModified;
 }

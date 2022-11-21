@@ -94,7 +94,7 @@ public class ExcelService {
 //
 //    }
 
-    public ResponseEntity<?> deleteSystemUser(long id,HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> deleteSystemUser(long id) {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         LinkedHashMap<String, Object> responseParams = new LinkedHashMap<>();
         try {

@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddZoneRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.ZoneRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportZonesRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportZonesRequest;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class DSRZonesVC {
     //
     @PostMapping("/dsr-zones-create")
-    public ResponseEntity<?> createZone(@RequestBody AddZoneRequest leadRequest ) {
+    public ResponseEntity<?> createZone(@RequestBody ZoneRequest leadRequest ) {
         return null;
     }
     @PostMapping(value = "/dsr-zones-get-all")

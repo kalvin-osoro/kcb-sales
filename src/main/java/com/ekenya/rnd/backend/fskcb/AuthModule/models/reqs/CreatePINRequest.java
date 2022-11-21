@@ -3,7 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs;
 public class CreatePINRequest {
     private String phoneNo;
     private String staffNo;
-    private String newPin;
+    private String newPIN;
 
     public String getPhoneNo() {
         return phoneNo;
@@ -21,11 +21,11 @@ public class CreatePINRequest {
         this.staffNo = staffNo;
     }
 
-    public String getNewPin() {
-        return newPin;
+    public String getNewPIN() {
+        return newPIN;
     }
 
-    public void setNewPin(String newPin) {
-        this.newPin = newPin;
+    public void setNewPIN(String newPIN) {
+        this.newPIN = newPIN;
     }
 }
