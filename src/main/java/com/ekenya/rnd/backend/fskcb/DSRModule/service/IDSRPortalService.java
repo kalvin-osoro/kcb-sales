@@ -1,18 +1,22 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRTeamRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddRegionRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.UpdateRegionRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-
 public interface IDSRPortalService {
-    boolean addDSRTeam(DSRTeamRequest dsrTeamRequest);
-    boolean editDSRTeam(DSRTeamRequest dsrTeamRequest);
+    boolean createRegion(AddRegionRequest model);
+    boolean updateRegion(UpdateRegionRequest model);
+    ObjectNode attemptImportRegions(MultipartFile importFile);
+
+    ArrayNode getAllRegions();
+
+    boolean addDSRTeam(AddTeamRequest addTeamRequest);
+    boolean editDSRTeam(AddTeamRequest addTeamRequest);
     ArrayNode getAllDSRTeams();
     ArrayNode getTeamMembersByTeamId(long id);
     boolean deleteDSRTeam(long id);

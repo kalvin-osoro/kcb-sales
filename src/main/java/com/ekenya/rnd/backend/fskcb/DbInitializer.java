@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.*;
@@ -43,6 +45,11 @@ public class DbInitializer {
     ProfilesAndRolesRepository profilesAndRolesRepository;
 
     @Autowired
+    IDSRRegionsRepository dsrRegionsRepository;
+
+    @Autowired
+    IDSRTeamsRepository dsrTeamsRepository;
+    @Autowired
     ProfilesAndUsersRepository profilesAndUsersRepository;
 
     private String DEFAULT_USER_PIN = "1234";
@@ -62,6 +69,9 @@ public class DbInitializer {
 
         //3. Seed user admin account
         createAdminUser();
+
+        //4. Seed demo DSRs
+        createTestRegionsAndTeams();
 
         //4. Seed demo DSRs
         createTestDSRs();
@@ -391,64 +401,133 @@ public class DbInitializer {
             DSRTeamEntity team = dSRTeamsRepository.findByName(nairobiTeam).get();
 
             //
-            int index = 1;
-            DecimalFormat decFormat = new DecimalFormat("000");
-            long seed = System.currentTimeMillis();
-            Random random = new Random(seed);
-            int max = 99999999, min = 10000000;
-            for (UserProfile profile: profilesRepository.findAll()) {
-                //Add user to profile
+//            int index = 10;
+//            DecimalFormat decFormat = new DecimalFormat("000");
+//            long seed = System.currentTimeMillis();
+//            Random random = new Random(seed);
+//            int max = 99999999, min = 10000000;
+//            for (UserProfile profile: profilesRepository.findAll()) {
+//                //Add user to profile
+//
+//                String staffNo = "KCB"+decFormat.format(index);
+//                String email = "email"+index+"@kcbfieldsales.co.ke";
+//                if(!dSRAccountsRepository.findByStaffNo(staffNo).isPresent()){
+//
+//                    //Capture info
+//                    DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
+//                            .email(email)
+//                            .staffNo(staffNo)
+//                            .phoneNo("2547"+(random.nextInt((max + 1)-min)+min))
+//                            .status(Status.ACTIVE)
+//                            .fullName(profile.getName()+" "+decFormat.format(index))
+//                            .location(team.getLocation())
+//                            .gender("other")
+//                            .idNumber(""+(random.nextInt((max + 1)-min)+min))
+//                            .teamId(team.getId())
+//                            .createdBy("0")
+//                            .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
+//                            .build();
+//
+//                    //Create login profile
+//                    UserAccount userApp = new UserAccount();
+//                    userApp.setStaffNo(dsrDetails.getStaffNo());
+//                    userApp.setEmail(dsrDetails.getEmail());
+//                    userApp.setFullName(dsrDetails.getFullName());
+//                    userApp.setPassword(passwordEncoder.encode(DEFAULT_USER_PIN));
+//                    userApp.setPhoneNumber(dsrDetails.getPhoneNo());
+//                    userApp.setAccountType(AccountType.DSR);
+//                    userRepository.save(userApp);//save user to db
+//                    //Add to role
+//                    UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+//                    //
+//                    userApp.setRoles(Collections.singleton(userRole));//set role to user
+//                    userRepository.save(userApp);//save user to db
+//
+//                    //Save DSR
+//                    dSRAccountsRepository.save(dsrDetails);
+//
+//                    //Add to profile this profile
+//                    ProfileUserEntity profileUser = new ProfileUserEntity();
+//                    profileUser.setUserId(userApp.getId());
+//                    profileUser.setProfileId(profileUser.getId());
+//                    profilesAndUsersRepository.save(profileUser);
+//
+//                    //
+//                    index++;
+//                }
+//            }
 
-                String staffNo = "KCB"+decFormat.format(index);
-                String email = "email"+index+"@kcbfieldsales.co.ke";
-                if(!dSRAccountsRepository.findByStaffNo(staffNo).isPresent()){
+            String staffNo = "KCB100";
+            String email = "dsr34@kcbfieldsales.co.ke";
+            if(!dSRAccountsRepository.findByStaffNo(staffNo).isPresent()) {
 
-                    //Capture info
-                    DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
-                            .email(email)
-                            .staffNo(staffNo)
-                            .phoneNo("2547"+(random.nextInt((max + 1)-min)+min))
-                            .status(Status.ACTIVE)
-                            .fullName(profile.getName()+" "+decFormat.format(index))
-                            .location(team.getLocation())
-                            .gender("other")
-                            .idNumber(""+(random.nextInt((max + 1)-min)+min))
-                            .teamId(team.getId())
-                            .createdBy("0")
-                            .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
-                            .build();
+                //Capture info
+                DSRAccountEntity dsrDetails = DSRAccountEntity.builder()
+                        .email(email)
+                        .staffNo(staffNo)
+                        .phoneNo("254734406645")
+                        .status(Status.ACTIVE)
+                        .fullName("TEST DSR")
+                        .location(team.getLocation())
+                        .gender("other")
+                        .idNumber("")
+                        .teamId(team.getId())
+                        .createdBy("0")
+                        .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
+                        .build();
 
-                    //Create login profile
-                    UserAccount userApp = new UserAccount();
-                    userApp.setStaffNo(dsrDetails.getStaffNo());
-                    userApp.setEmail(dsrDetails.getEmail());
-                    userApp.setFullName(dsrDetails.getFullName());
-                    userApp.setPassword(passwordEncoder.encode(DEFAULT_USER_PIN));
-                    userApp.setPhoneNumber(dsrDetails.getPhoneNo());
-                    userApp.setAccountType(AccountType.DSR);
-                    userRepository.save(userApp);//save user to db
-                    //Add to role
-                    UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
-                    //
-                    userApp.setRoles(Collections.singleton(userRole));//set role to user
-                    userRepository.save(userApp);//save user to db
+                //Create login profile
+                UserAccount userApp = new UserAccount();
+                userApp.setStaffNo(dsrDetails.getStaffNo());
+                userApp.setEmail(dsrDetails.getEmail());
+                userApp.setFullName(dsrDetails.getFullName());
+                userApp.setPassword(passwordEncoder.encode(DEFAULT_USER_PIN));
+                userApp.setPhoneNumber(dsrDetails.getPhoneNo());
+                userApp.setAccountType(AccountType.DSR);
+                userRepository.save(userApp);//save user to db
+                //Add to role
+                UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+                //
+                userApp.setRoles(Collections.singleton(userRole));//set role to user
+                userRepository.save(userApp);//save user to db
 
-                    //Save DSR
-                    dSRAccountsRepository.save(dsrDetails);
+                //Save DSR
+                dSRAccountsRepository.save(dsrDetails);
 
-                    //Add to profile this profile
-                    ProfileUserEntity profileUser = new ProfileUserEntity();
-                    profileUser.setUserId(userApp.getId());
-                    profileUser.setProfileId(profileUser.getId());
-                    profilesAndUsersRepository.save(profileUser);
-
-                    //
-                    index++;
-                }
+                //Add to profile this profile
+                ProfileUserEntity profileUser = new ProfileUserEntity();
+                profileUser.setUserId(userApp.getId());
+                profileUser.setProfileId(profileUser.getId());
+                profilesAndUsersRepository.save(profileUser);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    protected void createTestRegionsAndTeams(){
+
+        try{
+            //
+            String regionName = "Nairobi";
+            String regionCode = "R001";
+
+            DSRRegionEntity region =  new DSRRegionEntity();
+            region.setCode(regionCode);
+            region.setName(regionName);
+            dsrRegionsRepository.save(region);
+
+
+            String teamName = "DFS KASARANI";
+            String teamCode = "6756";
+
+            DSRTeamEntity team = new DSRTeamEntity();
+            team.setName(teamName);
+            team.setRegionId(region.getId());
+            dsrTeamsRepository.save(team);
+        }catch (Exception ex){
+            //
+        }
     }
 }

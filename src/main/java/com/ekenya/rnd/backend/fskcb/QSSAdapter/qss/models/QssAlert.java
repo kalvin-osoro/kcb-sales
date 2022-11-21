@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class QssAlert extends SsNotification {
     private String id;
-    private String senderId;
+    private String origin;
     private String title;
     private String collapsedId;
     private String content;
@@ -19,7 +19,7 @@ public class QssAlert extends SsNotification {
 
     @Override
     public String getSenderId() {
-        return senderId;
+        return origin;
     }
 
     @Override

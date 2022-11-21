@@ -1,9 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
@@ -392,6 +394,114 @@ public class ExcelHelper {
                 //
                 if(result.getErrors().isEmpty()) {
                     result.getAccounts().add(dsrAccount);
+                }
+            }
+            //
+            workbook.close();
+            //
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse Excel file: " + e.getMessage());
+        }
+    }
+
+    public static RegionsExcelImportResult excelToDSRRegions(InputStream is){
+
+        final int REGION_CODE_COLUMN_INDEX = 1;
+
+        final int REGION_NAME_COLUMN_INDEX = 2;
+
+        final int GEO_JSON_BOUNDS_COLUMN_INDEX = 2;
+
+
+        try {
+            RegionsExcelImportResult result = new RegionsExcelImportResult();
+
+
+            Workbook workbook = new XSSFWorkbook(is);
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rows = sheet.iterator();
+
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+
+                // skip header
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
+
+                DSRRegionEntity regionEntity = new DSRRegionEntity();
+
+                //Staff No
+                try{
+                    Cell currentCell = currentRow.getCell(REGION_CODE_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String regionCode = currentCell.getStringCellValue();
+                    if(regionCode == null || regionCode.isEmpty() || regionCode.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Region Code' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(REGION_CODE_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        regionEntity.setCode(regionCode);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(REGION_CODE_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Name
+                try{
+
+                    Cell currentCell = currentRow.getCell(REGION_NAME_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String name = currentCell.getStringCellValue();
+                    if(name == null || name.isEmpty() || name.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Region Name' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(REGION_NAME_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        regionEntity.setName(name);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(REGION_NAME_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //Bounds
+                try{
+
+                    Cell currentCell = currentRow.getCell(GEO_JSON_BOUNDS_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String bounds = currentCell.getStringCellValue();
+                    if(bounds != null || !bounds.isEmpty() || !bounds.isBlank()){
+                        regionEntity.setName(bounds);
+                    }else{
+                        //Not specified..
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(REGION_NAME_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //
+                if(result.getErrors().isEmpty()) {
+                    result.getRegions().add(regionEntity);
                 }
             }
             //

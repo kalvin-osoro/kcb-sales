@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.xml.transform.Result;
+import java.text.DateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,8 @@ import java.util.stream.Collectors;
 @Validated
 @RequestMapping(path = "/api/v1/ch")
 public class AuthChannelController {
-
+    @Autowired
+    DateFormat dateFormat;
     @Autowired
     IAuthService authService;
     @Autowired
@@ -60,7 +62,13 @@ public class AuthChannelController {
                 //
                 if (resp.isSuccess()) {
                     //
-                    return ResponseEntity.ok(new AppResponse(1, resp, "Request processed successful"));
+                    ObjectNode node = mObjectMapper.createObjectNode();
+                    node.put("token",resp.getToken());
+                    node.put("type",resp.getType());
+                    node.put("expires_in",dateFormat.format(resp.getExpires()));
+                    node.putPOJO("profiles",resp.getProfiles());
+                    //
+                    return ResponseEntity.ok(new AppResponse(1, node, "Request processed successful"));
 
                 }else if(resp.getRemAttempts() >0){
                     //
@@ -108,7 +116,7 @@ public class AuthChannelController {
     }
 
     @PostMapping("/account-lookup")
-    @ApiOperation(value = "Account Lookup Api")
+    @ApiOperation(value = "Account Lookup Api, Registered = 0 - non_existing DSR Accounts, 2 - existing DSR Account who have never used the app, 1 - for existing DSR accounts who have been using the app")
     public ResponseEntity<?> lookupUser(@RequestBody LookupRequest model) {
 
         //

@@ -92,6 +92,7 @@ public class AuthService implements IAuthService{
 
             //Response
             LoginResponse response = new LoginResponse();
+            response.setSuccess(true);
             response.setToken(token);
             response.setExpires(Calendar.getInstance().getTime());
             response.setProfiles(roles);
@@ -163,7 +164,7 @@ public class AuthService implements IAuthService{
     public AccountLookupState accountExists(LookupRequest model) {
 
         try {
-            if(userRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            if(userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Account exists
                 return AccountLookupState.ACTIVE;
             }else if(dsrAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
@@ -432,7 +433,7 @@ public class AuthService implements IAuthService{
 
             return true;
         }catch (Exception ex){
-            log.error("Change pin/password attempt failed.", ex);
+            log.error("Change PIN/password attempt failed.", ex);
         }
         return false;
     }

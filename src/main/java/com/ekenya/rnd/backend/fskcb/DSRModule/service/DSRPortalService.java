@@ -1,41 +1,35 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
-import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.AuthCodeType;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.payload.request.DSRTeamRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.payload.response.DSRTeamResponse;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddRegionRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.UpdateRegionRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IZoneCoordinatesRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
-import com.ekenya.rnd.backend.fskcb.exception.MessageResponse;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.logging.Logger;
@@ -48,6 +42,8 @@ public class DSRPortalService implements IDSRPortalService {
     @Autowired
     private IDSRTeamsRepository dsrTeamsRepository;
 
+    @Autowired
+    private IDSRRegionsRepository dsrRegionsRepository;
     @Autowired
     private IDSRAccountsRepository dsrAccountsRepository;
 
@@ -69,11 +65,122 @@ public class DSRPortalService implements IDSRPortalService {
     private final static java.util.logging.Logger logger = Logger.getLogger(DSRPortalService.class.getName());
 
     @Override
-    public boolean addDSRTeam(DSRTeamRequest dsrTeamRequest) {
+    public boolean createRegion(AddRegionRequest model) {
+
+        try{
+
+            Optional<DSRRegionEntity> optionalDSRRegionEntity = dsrRegionsRepository.findByName(model.getName());
+
+            if(!optionalDSRRegionEntity.isPresent()){
+
+                DSRRegionEntity dsrRegionEntity = optionalDSRRegionEntity.get();
+
+                dsrRegionEntity.setName(model.getName());
+                dsrRegionEntity.setCode(model.getCode());
+                dsrRegionEntity.setGeoJsonBounds(model.getBounds());
+
+                dsrRegionsRepository.save(dsrRegionEntity);
+
+                return true;
+            }
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateRegion(UpdateRegionRequest model) {
+
+        try{
+
+            Optional<DSRRegionEntity> optionalDSRRegionEntity = dsrRegionsRepository.findById(model.getId());
+
+            if(optionalDSRRegionEntity.isPresent()){
+
+                DSRRegionEntity dsrRegionEntity = optionalDSRRegionEntity.get();
+
+                dsrRegionEntity.setName(model.getName());
+                dsrRegionEntity.setCode(model.getCode());
+
+                dsrRegionsRepository.save(dsrRegionEntity);
+
+                return true;
+            }
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return false;
+    }
+
+    @Override
+    public ObjectNode attemptImportRegions(MultipartFile importFile) {
+
+        try{
+
+            RegionsExcelImportResult results = ExcelHelper.excelToDSRRegions(importFile.getInputStream());
+
+            int imported = 0;
+            for (DSRRegionEntity region: results.getRegions()) {
+                //
+                if(!dsrRegionsRepository.findByName(region.getName()).isPresent()){
+
+                    //
+                    dsrRegionsRepository.save(region);
+                    //
+                    imported ++;
+                }else{
+                    results.getErrors().add(new ExcelImportError(0,0,"An DSR Region with Name '"+region.getName()+"' already exists"));
+                }
+            }
+            //
+            if(!results.getErrors().isEmpty()){
+                //
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("imported",imported);
+                node.putPOJO("import-errors",mObjectMapper.convertValue(results.getErrors(),ArrayNode.class));
+                //
+                return node;
+            }else{
+                //
+                return mObjectMapper.createObjectNode();
+            }
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayNode getAllRegions() {
+
+        try {
+            List<DSRRegionEntity> dsrRegionEntities = dsrRegionsRepository.findByStatus(Status.ACTIVE);
+            ArrayNode list = mObjectMapper.createArrayNode();
+            for (DSRRegionEntity entity : dsrRegionEntities){
+                //int teamMembersCount = dsrAccountsRepository.findAllByTeamId(entity.getId()).size();
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("id",entity.getId());
+                node.put("name",entity.getName());
+                node.put("status",entity.getStatus().equals(Status.ACTIVE)?"Active":"Inactive");
+                node.put("dateCreated",dateFormat.format(entity.getDateCreated()));
+                //node.put("members-count",teamMembersCount);
+                list.add(node);
+            }
+
+            return list;
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addDSRTeam(AddTeamRequest addTeamRequest) {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         try {
-            if(dsrTeamRequest == null) throw new RuntimeException("Bad request");
-            if (dsrTeamsRepository.existsByName(dsrTeamRequest.getTeamName())) {
+            if(addTeamRequest == null) throw new RuntimeException("Bad request");
+            if (dsrTeamsRepository.existsByName(addTeamRequest.getTeamName())) {
                 log.error("Error: DSR team is already taken!", "failed");
                 return false;
             }
@@ -84,15 +191,15 @@ public class DSRPortalService implements IDSRPortalService {
 
 
             DSRTeamEntity dsrTeam = new DSRTeamEntity();
-            dsrTeam.setName(dsrTeamRequest.getTeamName());
-            dsrTeam.setLocation(dsrTeamRequest.getTeamLocation());
+            dsrTeam.setName(addTeamRequest.getTeamName());
+            dsrTeam.setLocation(addTeamRequest.getTeamLocation());
             dsrTeam.setCreatedBy(userId);
             dsrTeam.setStatus(Status.ACTIVE);
             dsrTeam.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeamsRepository.save(dsrTeam);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR team "
-                    +dsrTeamRequest.getTeamName()+" successfully created");
+                    + addTeamRequest.getTeamName()+" successfully created");
             return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
@@ -102,27 +209,27 @@ public class DSRPortalService implements IDSRPortalService {
     }
 
     @Override
-    public boolean editDSRTeam(DSRTeamRequest dsrTeamRequest) {
+    public boolean editDSRTeam(AddTeamRequest addTeamRequest) {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
 
         try {
-            if (dsrTeamRequest == null)throw new RuntimeException("Bad request");
-            if(!Utility.validateStatus(dsrTeamRequest.getStatus()))
+            if (addTeamRequest == null)throw new RuntimeException("Bad request");
+            if(!Utility.validateStatus(addTeamRequest.getStatus()))
                 throw new RuntimeException("Status is invalid");
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             String userId = userDetails.getUsername();
             Optional<DSRTeamEntity> optionalDSRTeam =
-                    dsrTeamsRepository.findById(dsrTeamRequest.getId());
+                    dsrTeamsRepository.findById(addTeamRequest.getId());
             DSRTeamEntity dsrTeam = optionalDSRTeam.get();
-            dsrTeam.setStatus(dsrTeamRequest.getStatus());
-            dsrTeam.setName(dsrTeamRequest.getTeamName());
-            dsrTeam.setLocation(dsrTeamRequest.getTeamLocation());
+            dsrTeam.setStatus(addTeamRequest.getStatus());
+            dsrTeam.setName(addTeamRequest.getTeamName());
+            dsrTeam.setLocation(addTeamRequest.getTeamLocation());
             dsrTeam.setUpdatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeam.setUpdatedBy(userId);
             dsrTeamsRepository.save(dsrTeam);
             responseObject.put("status", "success");
             responseObject.put("message", "DSR team "
-                    +dsrTeamRequest.getTeamName()+" successfully updated");
+                    + addTeamRequest.getTeamName()+" successfully updated");
             return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
