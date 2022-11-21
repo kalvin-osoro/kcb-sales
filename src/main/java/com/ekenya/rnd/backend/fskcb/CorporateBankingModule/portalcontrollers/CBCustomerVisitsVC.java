@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class CBCustomerVisitsVC {
@@ -22,11 +24,7 @@ public class CBCustomerVisitsVC {
 
     @PostMapping("/cb-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody CBCustomerVisitsRequest model) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = cbService.scheduleCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -43,18 +41,19 @@ public class CBCustomerVisitsVC {
     }
 
     @PostMapping("/cb-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CBCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CBCustomerVisitsRequest model) {
+        boolean success = cbService.rescheduleCustomerVisit(model);
 
 
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            //successfull message
+            node.put("message","Visit Rescheduled Successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -67,11 +66,8 @@ public class CBCustomerVisitsVC {
 
     @PostMapping(value = "/cb-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?>list = cbService.getAllCustomerVisits();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class TreasuryDashboardsVC {
@@ -19,18 +21,17 @@ public class TreasuryDashboardsVC {
 
     @PostMapping(value = "/treasury-targets-summary")
     public ResponseEntity<?> getTargetsSummary(@RequestBody TreasurySummaryRequest filters) {
+        List<?> list = treasuryService.getTargetsSummary(filters);
+        boolean success = list != null;
 
-
-        ArrayNode resp = treasuryService.loadTargetsSummary(filters);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(resp != null){
+        if(success){
             //Object
-            //ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
@@ -40,19 +41,15 @@ public class TreasuryDashboardsVC {
 
     @PostMapping(value = "/treasury-leads-summary")
     public ResponseEntity<?> getLeadsSummary(@RequestBody TreasurySummaryRequest filters) {
-
-
-        //
-        ObjectNode resp = treasuryService.loadLeadsSummary(filters);
-
+        List<?> list = treasuryService.getLeadsSummary(filters);
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(resp != null){
+        if(success){
             //Object
-            //ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
@@ -66,12 +63,14 @@ public class TreasuryDashboardsVC {
 
         //
         ObjectNode resp = treasuryService.loadRequestsSummary(filters);
+        boolean success = resp != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(resp != null){
             //Object
-            //ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = objectMapper.createObjectNode();
+            node.setAll(resp);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));

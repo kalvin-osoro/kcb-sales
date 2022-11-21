@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalSer
 import com.ekenya.rnd.backend.fskcb.payload.ProductRequest;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
@@ -22,12 +23,8 @@ public class CBSetupVC {
     ICBPortalService acquiringService;
 
     @PostMapping("/cb-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest assetManagementRequest) {
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> createQuestionnaire(@RequestBody AcquiringAddQuestionnaireRequest model) {
+        boolean success = acquiringService.createQuestionnaire(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -47,15 +44,14 @@ public class CBSetupVC {
     public ResponseEntity<?> getAllQuestionnaires() {
 
         //
-        List<ObjectNode> list = null;//acquiringService.loadQuestionnaires();
-
+        List<?> questionnaires = acquiringService.getAllQuestionnaires();
+        boolean success = questionnaires != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null ){
+        if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(questionnaires));
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
