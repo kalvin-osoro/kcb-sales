@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class TreasuryTargetsVC {
@@ -19,13 +21,13 @@ public class TreasuryTargetsVC {
     ITreasuryPortalService portalService;
 
     @PostMapping("/treasury-create-target")
-    public ResponseEntity<?> createTarget(@RequestBody TreasuryAddTargetRequest request) {
+    public ResponseEntity<?> createTarget(@RequestBody TreasuryAddTargetRequest model) {
 
 
         //
 
         //
-        boolean success = portalService.createTarget(request);
+        boolean success = portalService.createTarget(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,17 +46,14 @@ public class TreasuryTargetsVC {
 
     @PostMapping(value = "/treasury-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
-
-        //
-
-        //TODO;
-        ArrayNode list = portalService.loadAllTargets();
-
+        List<?> list = portalService.getAllTargets();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null){
+        if(success){
             //Object
-            //ArrayNode node = objectMapper.createArrayNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
@@ -67,16 +66,16 @@ public class TreasuryTargetsVC {
 
 
     @PostMapping(value = "/treasury-get-agents-in-target")
-    public ResponseEntity<?> getDSRsInTarget(@RequestBody String targetId) {
+    public ResponseEntity<?> getDSRsInTarget(@RequestBody TreasuryDSRsInTargetRequest model) {
 
-        //
+        boolean success = portalService.getDSRsInTarget(model);
 
         //TODO;
-        ArrayNode list = portalService.getAgentsInTarget(targetId);
+//        ArrayNode list = portalService.getAgentsInTarget(targetId);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null){
+        if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);

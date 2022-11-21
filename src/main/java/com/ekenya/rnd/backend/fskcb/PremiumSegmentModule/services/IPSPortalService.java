@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -38,4 +39,8 @@ public interface IPSPortalService {
     boolean createTarget(PSAddTargetRequest model);
 
     List<ObjectNode> getAllTargets();
+
+    Object addConcession(PSConcessionRequest model);
+
+    List<ObjectNode> getAllConcessions();
 }

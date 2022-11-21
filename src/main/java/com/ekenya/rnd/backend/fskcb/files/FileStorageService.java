@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.logging.Logger;
 @Service
 public class FileStorageService implements IFileStorageService {
-    private String pathString = "C:\\Users\\dcharo\\Desktop\\fileUpload\\";
+    private String pathString = "/fileUpload";
     private final Path root = Paths.get(pathString);
     private Logger log = Logger.getLogger(IFileStorageService.class.getName());
-    private String uploadPath = "C:\\Users\\dcharo\\Desktop\\fileUpload\\";
+    private String uploadPath = "/fileUpload";
 
 
     @Override

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSAddConvenantRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
@@ -19,17 +20,15 @@ public class PSConcessionsVC {
     private IPSPortalService psPortalService;
 
     @PostMapping("/ps-add-concession")
-    public ResponseEntity<?> addConcession(@RequestBody PSAddConvenantRequest model) {
-
-//TODO: Implement this method
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> addConcession(@RequestBody PSConcessionRequest model) {
+        Object response = psPortalService.addConcession(model);
+        boolean success = response != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("concession").add(objectMapper.valueToTree(response));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
@@ -42,18 +41,14 @@ public class PSConcessionsVC {
 
     @PostMapping(value = "/ps-get-all-concessions")
     public ResponseEntity<?> getAllConcessions() {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?> response = psPortalService.getAllConcessions();
+        boolean success = response != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
-
+            node.addAll((ArrayNode) objectMapper.valueToTree(response));
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 

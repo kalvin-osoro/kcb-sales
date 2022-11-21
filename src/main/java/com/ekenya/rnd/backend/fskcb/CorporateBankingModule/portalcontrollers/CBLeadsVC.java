@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class CBLeadsVC {
@@ -19,13 +20,8 @@ public class CBLeadsVC {
     public ICBPortalService cbService;
     //Assign lead to a sales person
     @PostMapping("/cb-assign-lead")
-    public ResponseEntity<?> createCBAsset(@RequestBody CBAssignLeadRequest model) {
-
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false; //cbService.assigneLeadtoDSR(model);
-
+    public ResponseEntity<?> assignLead(@RequestBody CBAssignLeadRequest model) {
+        boolean success = cbService.assignLead(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -43,17 +39,15 @@ public class CBLeadsVC {
 
     //List all leads
     @PostMapping(value = "/cb-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody CBLeadsListRequest filters) {
-
-        //
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getAllLeads() {
+        List<?>list = cbService.getAllLeads();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

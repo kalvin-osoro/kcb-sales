@@ -1,5 +1,7 @@
 package com.ekenya.rnd.backend.fskcb;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers.AcquiringAssetVC;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.AcquiringPortalPortalService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -55,6 +58,7 @@ public class SpringBootKcbRestApiApplication   {
 //	}
 
 	public static void main(String[] args) {
+//		new File(AcquiringPortalPortalService.uploadDirectory).mkdir();
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 
 	}

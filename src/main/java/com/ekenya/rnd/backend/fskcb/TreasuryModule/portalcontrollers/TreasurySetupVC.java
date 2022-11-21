@@ -23,11 +23,11 @@ public class TreasurySetupVC {
     ITreasuryPortalService portalService;
 
     @PostMapping("/treasury-create-questionnaire")
-    public ResponseEntity<?> createQuestionnaire(@RequestBody TreasuryAddQuestionnaireRequest req) {
+    public ResponseEntity<?> createQuestionnaire(@RequestBody TreasuryAddQuestionnaireRequest model) {
 
 
         //TODO;
-        boolean success = portalService.createQuestionnaire(req);
+        boolean success = portalService.createQuestionnaire(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -46,18 +46,15 @@ public class TreasurySetupVC {
 
     @PostMapping(value = "/treasury-get-all-questionnaires")
     public ResponseEntity<?> getAllQuestionnaires() {
-
-        //
-        ArrayNode list = portalService.loadAllQuestionnaires();
-
+        List<?> list = portalService.getAllQuestionnaires();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null ){
+        if(success){
             //Object
-            //ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response

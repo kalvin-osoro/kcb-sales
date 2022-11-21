@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class CBCampaignsVC {
@@ -22,12 +24,7 @@ public class CBCampaignsVC {
 
     @PostMapping("/cb-create-campaign")
     public ResponseEntity<?> createCampaign(@RequestBody CBCampaignsRequest model) {
-
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success =cbService.createCampain(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -45,16 +42,14 @@ public class CBCampaignsVC {
 
     @PostMapping(value = "/cb-get-all-campaigns")
     public ResponseEntity<?> getAllCampaigns() {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?> campaigns = cbService.getAllCampaigns();
+        boolean success = campaigns != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(campaigns));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));

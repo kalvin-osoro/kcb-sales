@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +9,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1")
@@ -43,20 +44,19 @@ public class TreasuryLeadsVC {
 
     //List all leads
     @PostMapping(value = "/treasury-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody TreasuryLeadsListRequest filters) {
-
-        //
-        //
-        ArrayNode resp = portalService.loadAllLeads(filters);
-
+    public ResponseEntity<?> getAllLeads() {
+        List<?>list=portalService.getAllLeads();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(resp != null){
+        if(success){
             //Object
-            //ArrayNode node = objectMapper.createArrayNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response

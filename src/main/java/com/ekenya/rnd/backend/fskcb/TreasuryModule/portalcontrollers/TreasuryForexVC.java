@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class TreasuryForexVC {
@@ -21,19 +23,17 @@ public class TreasuryForexVC {
 
     @PostMapping(value = "/treasury-get-all-neg-reqs")
     public ResponseEntity<?> getAllNegotiationReqs() {
+        List<?>list = portalService.getAllNegotiationReqs();
+        boolean success = list != null;
 
-
-        //
-        ArrayNode resp = portalService.loadNegotiationRequests();
-
-        //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (resp != null) {
+        if (success) {
             //Object
-            //ArrayNode node = objectMapper.createArrayNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1, resp, "Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1, node, "Request Processed Successfully"));
         } else {
 
             //Response
@@ -43,11 +43,11 @@ public class TreasuryForexVC {
 
 
     @PostMapping("/treasury-approve-neg-req")
-    public ResponseEntity<?> approveNegotiationReq(@RequestBody TreasuryAppveNegRequest assetManagementRequest) {
+    public ResponseEntity<?> approveNegotiationReq(@RequestBody TreasuryAppveNegRequest model) {
 
 
         //
-        boolean success = portalService.approveNegotiationRequest();
+        boolean success = portalService.approveNegotiationRequest(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -66,19 +66,16 @@ public class TreasuryForexVC {
 
     @PostMapping(value = "/treasury-get-all-trade-reqs")
     public ResponseEntity<?> getAllTradeReqs() {
-
-
-        //
-        ArrayNode resp = portalService.loadTradeRequests();
-
+        List<?>list = portalService.getAllTradeReqs();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (resp != null) {
+        if (success) {
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
             //Object
-            //ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1, resp, "Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1, node, "Request Processed Successfully"));
         } else {
 
             //Response
@@ -88,12 +85,8 @@ public class TreasuryForexVC {
 
 
     @PostMapping("/treasury-approve-trade-req")
-    public ResponseEntity<?> approveTradeReq(@RequestBody TreasuryApproveTradeRequest assetManagementRequest) {
-
-
-        //
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> approveTradeReq(@RequestBody TreasuryApproveTradeRequest model) {
+        boolean success = portalService.approveTradeRequest(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if (success) {

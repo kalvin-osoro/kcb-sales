@@ -4,34 +4,34 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+
 public interface ITreasuryPortalService {
+    List<ObjectNode> getAllNegotiationReqs();
 
-    ArrayNode loadTargetsSummary(TreasurySummaryRequest model);
+    List<ObjectNode> getAllTradeReqs();
 
-    ObjectNode loadRequestsSummary(TreasurySummaryRequest model);
+    boolean approveTradeRequest(TreasuryApproveTradeRequest model);
 
-    ObjectNode loadLeadsSummary(TreasurySummaryRequest model);
-
-    ArrayNode loadNegotiationRequests();
-
-    boolean approveNegotiationRequest();
-
-    ArrayNode loadTradeRequests();
-
-    ArrayNode loadAllLeads(TreasuryLeadsListRequest model);
+    boolean approveNegotiationRequest(TreasuryAppveNegRequest model);
 
     boolean assignLead(TreasuryAssignLeadRequest model);
 
+    List<ObjectNode> getAllLeads();
 
     boolean createQuestionnaire(TreasuryAddQuestionnaireRequest model);
 
-    ArrayNode loadAllQuestionnaires();
+    List<ObjectNode> getAllQuestionnaires();
 
     boolean createTarget(TreasuryAddTargetRequest model);
 
-    ArrayNode loadAllTargets();
+    List<ObjectNode> getAllTargets();
 
-    ArrayNode getAgentsInTarget(String targetId);
+    boolean getDSRsInTarget(TreasuryDSRsInTargetRequest model);
 
-    ArrayNode attemptSyncTargetsWithCRM();
+    List<ObjectNode> getTargetsSummary(TreasurySummaryRequest filters);
+
+    List<ObjectNode> getLeadsSummary(TreasurySummaryRequest filters);
+
+    ObjectNode loadRequestsSummary(TreasurySummaryRequest filters);
 }
