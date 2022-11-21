@@ -668,10 +668,10 @@ public class QssClientManager implements QSSClientInterface {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-            Path path = Paths.get("logs");
+            Path path = Paths.get("logs/qss");
             Files.createDirectories(path);
             // This block configure the logger with handler and formatter
-            FileHandler mFileHandler = new FileHandler("logs/kcb-qss-manager-session" + sdf.format(Calendar.getInstance().getTime()) + ".log");
+            FileHandler mFileHandler = new FileHandler("logs/qss/kcb-qss-client-" + sdf.format(Calendar.getInstance().getTime()) + ".log");
             mLogger.addHandler(mFileHandler);
             // SimpleFormatter formatter = new SimpleFormatter();
             mFileHandler.setFormatter(new Formatter() {
