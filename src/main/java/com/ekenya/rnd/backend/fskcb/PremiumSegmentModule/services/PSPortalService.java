@@ -1,11 +1,17 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringQuestionnaireQuestionEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaCustomerVisitEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingFeedBackEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.*;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.repositories.*;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.PSConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.*;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -24,7 +30,6 @@ import java.util.List;
 public class PSPortalService implements IPSPortalService {
     private final PSQuestionnaireQuestionRepository psQuestionnaireQuestionRepository;
     private final PSBankingConvenantRepository psBankingConvenantRepository;
-    private final ConcessionRepository concessionRepository;
     private final PSLeadRepository psLeadRepository;
     private final PSTargetRepository psTargetRepository;
     private  final PSFeedBackRepository psFeedBackRepository;
@@ -386,53 +391,6 @@ public class PSPortalService implements IPSPortalService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while loading targets", e);
-        }
-        return null;
-    }
-
-    @Override
-    public Object addConcession(PSConcessionRequest model) {
-        try {
-            if (model == null) {
-                return false;
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            ConcessionEntity psConcessionEntity = new ConcessionEntity();
-            psConcessionEntity.setCustomerName(model.getCustomerName());
-            psConcessionEntity.setSubmissionRate(model.getSubmissionRate());
-            psConcessionEntity.setSubmittedBy(model.getSubmittedBy());
-            psConcessionEntity.setStatus(Status.ACTIVE);
-            //TODO: set Revenue Line Implementation
-
-            psConcessionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            //save
-            concessionRepository.save(psConcessionEntity);
-            return true;
-        } catch (Exception e) {
-            log.error("Error occurred while creating concession", e);
-        }
-        return false;
-    }
-
-    @Override
-    public List<ObjectNode> getAllConcessions() {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (ConcessionEntity psConcessionEntity : concessionRepository.findAll()) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("id", psConcessionEntity.getId());
-                node.put("customerName", psConcessionEntity.getCustomerName());
-                node.put("submissionRate", psConcessionEntity.getSubmissionRate());
-                node.put("submittedBy", psConcessionEntity.getSubmittedBy());
-                node.put("status", psConcessionEntity.getStatus().name());
-                node.put("createdOn", psConcessionEntity.getCreatedOn().toString());
-                //add to list
-                list.add(node);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading concessions", e);
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.Justification;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.RevenueLine;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSJustificationEntity;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSRevenueLineEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +29,9 @@ public class CBConcessionEntity {
     private String submissionRate;
     private String submittedBy;
     @Embedded
-    RevenueLine revenueLines;
+    PSRevenueLineEntity PSRevenueLinesEntity;
     @Embedded
-    Justification justifications;
+    PSJustificationEntity justifications;
     private Date createdOn;
     private Status status;
 

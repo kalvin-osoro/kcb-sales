@@ -10,7 +10,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -20,7 +19,7 @@ import java.util.List;
 @Table(name = "dbo_concession")
 @DynamicInsert
 @DynamicUpdate
-public class ConcessionEntity {
+public class PSConcessionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,9 +27,9 @@ public class ConcessionEntity {
     private String submissionRate;
     private String submittedBy;
     @Embedded
-    RevenueLine revenueLines;
+    PSRevenueLineEntity PSRevenueLinesEntity;
     @Embedded
-    Justification justifications;
+    PSJustificationEntity justifications;
     private Date createdOn;
     private Status status;
 

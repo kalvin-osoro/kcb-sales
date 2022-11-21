@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity;
+package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class RevenueLine {
+public class CBRevenueLineEntity {
     private String SSRrate;
     private String recommendedRate;
     private Integer baseAmount;

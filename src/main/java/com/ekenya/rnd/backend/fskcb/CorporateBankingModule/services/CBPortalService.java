@@ -1,33 +1,20 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaCustomerVisitEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaQuestionnaireQuestionEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingFeedBackEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionEntity;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSBankingConvenantEntity;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
-import com.ekenya.rnd.backend.fskcb.entity.CustomerAppointments;
-import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor

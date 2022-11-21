@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class Justification {
+public class PSJustificationEntity {
     private String justification;
     private String monitoringMechanism;
     private String stakeholder;
