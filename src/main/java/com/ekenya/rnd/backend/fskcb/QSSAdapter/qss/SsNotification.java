@@ -12,6 +12,7 @@ import java.util.Date;
 public abstract class SsNotification implements Serializable {
 
     public abstract String getId();
+    public abstract String getSenderId();
 
     public abstract String getTitle();
 

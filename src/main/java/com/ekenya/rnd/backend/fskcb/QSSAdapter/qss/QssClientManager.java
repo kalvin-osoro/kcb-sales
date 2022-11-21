@@ -547,7 +547,7 @@ public class QssClientManager implements QSSClientInterface {
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<SsNotification> subscribeForNotifications() {
+    public io.reactivex.rxjava3.core.Observable<? extends SsNotification> subscribeForNotifications() {
         return qssNotificationsObserver;
     }
     @Override

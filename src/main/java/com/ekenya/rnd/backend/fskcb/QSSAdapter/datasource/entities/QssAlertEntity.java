@@ -21,7 +21,9 @@ public class QssAlertEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String receiverId;
+    private String senderId; //For incoming alerts
+
+    private String receiverId; // for outgoing alerts
 
     private String category;
 

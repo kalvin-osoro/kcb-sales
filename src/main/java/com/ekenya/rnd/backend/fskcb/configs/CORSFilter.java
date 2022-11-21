@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.configs;
+package com.ekenya.rnd.backend.fskcb.configs;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

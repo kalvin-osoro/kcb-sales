@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -39,6 +40,9 @@ public class DSRAccountEntity {
     @Column(name="staff_no")
     private String staffNo;
 
+    @Column(name="sales_code")
+    private String salesCode;
+
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
@@ -67,7 +71,7 @@ public class DSRAccountEntity {
     private String createdBy;
 
     @Column(name="created_on")
-    private Date createdOn;
+    private Date createdOn = Calendar.getInstance().getTime();
 
     @Column(name="updated_on")
     private Date updatedOn;
@@ -75,5 +79,14 @@ public class DSRAccountEntity {
     @Column(name="updated_by")
     private String updatedBy;
 
+    @Column(name="expires_on")
+    private Date expiryDate;
 
+    @Column(name="locked")
+    private Boolean locked;
+
+    @Column(name="date_unlocked")
+    private Date dateLocked;
+    @Column(name="date_locked")
+    private Date dateUnlocked;
 }

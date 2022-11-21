@@ -1,5 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
@@ -17,19 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ExcelHelper {
-    private static final int STAFF_NO_COLUMN_INDEX = 1;
-
-    private static final int FULL_NAME_COLUMN_INDEX = 2;
-    private static final int EMAIL_COLUMN_INDEX = 3;
-    //private final static int ACCOUNT_TYPE_COLUMN_INDEX = 3;
-    private final static int PHONE_NUMBER_COLUMN_INDEX = 4;
     @Autowired
     static PasswordEncoder passwordEncoder;
     @Autowired
     static RoleRepository roleRepository;
+    @Autowired
+    static IDSRTeamsRepository dsrTeamsRepository;
     public static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String SHEET = "Users";
     public static boolean hasExcelFormat(MultipartFile file) {
@@ -39,9 +40,13 @@ public class ExcelHelper {
 
     public static UsersExcelImportResult excelToUserAccounts(InputStream is) {
 
-//
-//
-//
+
+        final int STAFF_NO_COLUMN_INDEX = 1;
+
+        final int FULL_NAME_COLUMN_INDEX = 2;
+        final int EMAIL_COLUMN_INDEX = 3;
+        final int PHONE_NUMBER_COLUMN_INDEX = 4;
+        
         try {
             UsersExcelImportResult result = new UsersExcelImportResult();
 
@@ -61,7 +66,7 @@ public class ExcelHelper {
                     continue;
                 }
 
-                UserAccount userAccount = new UserAccount();
+                UserAccount dsrAccount = new UserAccount();
 
                 //Staff No
                 try{
@@ -75,7 +80,7 @@ public class ExcelHelper {
                         //
                         result.getErrors().add(importError);
                     }else{
-                        userAccount.setStaffNo(staffNo);
+                        dsrAccount.setStaffNo(staffNo);
                     }
                 }catch (Exception ex){
                     ExcelImportError importError = new ExcelImportError();
@@ -99,7 +104,7 @@ public class ExcelHelper {
                         //
                         result.getErrors().add(importError);
                     }else{
-                        userAccount.setFullName(name);
+                        dsrAccount.setFullName(name);
                     }
                 }catch (Exception ex){
                     ExcelImportError importError = new ExcelImportError();
@@ -129,7 +134,7 @@ public class ExcelHelper {
                         //
                         result.getErrors().add(importError);
                     }else{
-                        userAccount.setPhoneNumber(phoneNo);
+                        dsrAccount.setPhoneNumber(phoneNo);
                     }
                 }catch (Exception ex){
                     ExcelImportError importError = new ExcelImportError();
@@ -152,7 +157,7 @@ public class ExcelHelper {
                         //
                         result.getErrors().add(importError);
                     }else{
-                        userAccount.setEmail(email);
+                        dsrAccount.setEmail(email);
                     }
                 }catch (Exception ex){
                     ExcelImportError importError = new ExcelImportError();
@@ -164,7 +169,229 @@ public class ExcelHelper {
                 }
                 //
                 if(result.getErrors().isEmpty()) {
-                    result.getAccounts().add(userAccount);
+                    result.getAccounts().add(dsrAccount);
+                }
+            }
+            //
+            workbook.close();
+            //
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse Excel file: " + e.getMessage());
+        }
+    }
+
+
+    public static DSRsExcelImportResult excelToDSRAccounts(InputStream is) {
+
+
+        final int STAFF_NO_COLUMN_INDEX = 1;
+
+        final int FULL_NAME_COLUMN_INDEX = 2;
+        final int EMAIL_COLUMN_INDEX = 3;
+        final int PHONE_NUMBER_COLUMN_INDEX = 4;
+        final int SALES_CODE_COLUMN_INDEX = 5;
+        final int TEAM_COLUMN_INDEX = 6;
+        final int ACCOUNT_EXPIRY_COLUMN_INDEX = 7;
+        
+        try {
+            DSRsExcelImportResult result = new DSRsExcelImportResult();
+
+
+            Workbook workbook = new XSSFWorkbook(is);
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rows = sheet.iterator();
+
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+
+                // skip header
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
+
+                DSRAccountEntity dsrAccount = new DSRAccountEntity();
+
+                //Staff No
+                try{
+                    Cell currentCell = currentRow.getCell(STAFF_NO_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String staffNo = currentCell.getStringCellValue();
+                    if(staffNo == null || staffNo.isEmpty() || staffNo.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Staff No.' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(STAFF_NO_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        dsrAccount.setStaffNo(staffNo);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(STAFF_NO_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Full Name
+                try{
+
+                    Cell currentCell = currentRow.getCell(FULL_NAME_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String name = currentCell.getStringCellValue();
+                    if(name == null || name.isEmpty() || name.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Full Name' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(FULL_NAME_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        dsrAccount.setFullName(name);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(FULL_NAME_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Phone Number
+                try{
+                    Cell currentCell = currentRow.getCell(PHONE_NUMBER_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String phoneNo = currentCell.getStringCellValue();
+                    if(phoneNo == null || phoneNo.isEmpty() || phoneNo.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Phone Number' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(PHONE_NUMBER_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else if(!phoneNo.startsWith("254")){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Phone Number' should start with '254XXX..'. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(PHONE_NUMBER_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        dsrAccount.setPhoneNo(phoneNo);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(PHONE_NUMBER_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Email
+                try{
+                    Cell currentCell = currentRow.getCell(EMAIL_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String email = currentCell.getStringCellValue();
+                    if(email == null || email.isEmpty() || email.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Email' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(EMAIL_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        dsrAccount.setEmail(email);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(EMAIL_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //Team
+                try{
+                    Cell currentCell = currentRow.getCell(TEAM_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String team = currentCell.getStringCellValue();
+                    if(team == null || team.isEmpty() || team.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Team' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(TEAM_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        Optional<DSRTeamEntity> teamEntity = dsrTeamsRepository.findByName(team);
+                        if(teamEntity.isPresent()){
+                            //
+                            dsrAccount.setTeamId(teamEntity.get().getId());
+                        }else{
+                            //Create a new team or report error
+                            ExcelImportError importError = new ExcelImportError();
+                            importError.setError("No existing team with name '"+team+"'");
+                            importError.setRow(rowNumber);
+                            importError.setColumn(TEAM_COLUMN_INDEX);
+                            //
+                            result.getErrors().add(importError);
+                        }
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(TEAM_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //Sales Code
+                try{
+                    Cell currentCell = currentRow.getCell(SALES_CODE_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String email = currentCell.getStringCellValue();
+                    if(email == null || email.isEmpty() || email.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Sales Code' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(SALES_CODE_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        dsrAccount.setSalesCode(email);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(SALES_CODE_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Account Expiry
+                try{
+                    Cell currentCell = currentRow.getCell(ACCOUNT_EXPIRY_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String expiry = currentCell.getStringCellValue();
+                    if(expiry != null || !expiry.isEmpty() || !expiry.isBlank()) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                        dsrAccount.setExpiryDate(dateFormat.parse(expiry));
+                    }else{
+                        //Not set
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(ACCOUNT_EXPIRY_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //
+                if(result.getErrors().isEmpty()) {
+                    result.getAccounts().add(dsrAccount);
                 }
             }
             //

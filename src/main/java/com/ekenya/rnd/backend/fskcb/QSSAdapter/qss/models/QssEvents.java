@@ -12,6 +12,10 @@ public class QssEvents {
     public static final String Payload = "OnData";
 
 
+    public static final String AlertRead = "alert_read";
+    public static final String AlertDelivered = "alert_delivered";
+    public static final String PayloadDelivered = "data_delivered";
+
     //Group Management Events
     public static final String UserGroups = "UserGroups";
     public static final String NewGroup = "NewGroup";

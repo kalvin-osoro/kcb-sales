@@ -163,10 +163,6 @@ public class AuthService implements IAuthService{
         //
         try{
 
-
-
-
-
             //
             if(smsService.sendSecurityCode(model.getStaffNo(),AuthCodeType.DEVICE_VERIFICATION)){
                 //

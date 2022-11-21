@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.QSSAdapter.services;
 
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.datasource.entities.QssAlertDirection;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.datasource.entities.QssAlertEntity;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.datasource.entities.QssAlertStatus;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.datasource.repositories.QssAlertsRepository;
@@ -7,6 +8,7 @@ import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.QssClientManager;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.SsData;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.SsNotification;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssAlert;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssEvents;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.google.gson.JsonObject;
@@ -27,8 +29,6 @@ import java.util.*;
 @Service
 public class QssService implements IQssService{
 
-    private String QSS_EVENT_ALERT_READ = "read";
-    private String QSS_EVENT_ALERT_DELIVERED = "delivered";
     @Autowired
     QssAlertsRepository qssAlertsRepository;
 
@@ -67,7 +67,17 @@ public class QssService implements IQssService{
         qssClientManager.subscribeForNotifications().subscribe(new Consumer<SsNotification>() {
             @Override
             public void accept(SsNotification ssNotification) throws Throwable {
-
+                //
+                QssAlertEntity alertEntity = new QssAlertEntity();
+                alertEntity.setContent(ssNotification.getContent());
+                alertEntity.setTitle(ssNotification.getTitle());
+                alertEntity.setCategory(ssNotification.getCollapseId());
+                alertEntity.setType(QssAlertDirection.INCOMING);
+                alertEntity.setSenderId(ssNotification.getSenderId());
+                alertEntity.setRefCode(ssNotification.getId());
+                alertEntity.setTimeDelivered(Calendar.getInstance().getTime());
+                //
+                qssAlertsRepository.save(alertEntity);
             }
         });
         //
@@ -190,7 +200,7 @@ public class QssService implements IQssService{
 
     private void updateAlertStatus(JsonObject data){
 
-        if(data.get("event").getAsString().equalsIgnoreCase(QSS_EVENT_ALERT_READ)){
+        if(data.get("event").getAsString().equalsIgnoreCase(QssEvents.AlertRead)){
             String refCode = data.get("nid").getAsString();
             //
             Optional<QssAlertEntity> alert = qssAlertsRepository.findByRefCode(refCode);
@@ -206,7 +216,7 @@ public class QssService implements IQssService{
                 }
                 qssAlertsRepository.save(alert.get());
             }
-        }else if(data.get("event").getAsString().equalsIgnoreCase(QSS_EVENT_ALERT_DELIVERED)){
+        }else if(data.get("event").getAsString().equalsIgnoreCase(QssEvents.AlertDelivered)){
             String refCode = data.get("nid").getAsString();
             //
             Optional<QssAlertEntity> alert = qssAlertsRepository.findByRefCode(refCode);
