@@ -6,6 +6,8 @@ RUN mvn clean install -Dmaven.test.skip=true
 
 FROM adoptopenjdk/openjdk11:alpine-jre
 RUN mkdir /app
+RUN mkdir /app/logs
+RUN chmod -R a+rw /app/logs
 WORKDIR /app
 COPY  --from=stage1 /app/target/spring-boot-kcb-rest-api-0.0.1-SNAPSHOT.jar /app/app.jar
 EXPOSE 8080
