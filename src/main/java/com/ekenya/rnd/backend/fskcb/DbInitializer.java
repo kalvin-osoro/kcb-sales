@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -513,19 +514,24 @@ public class DbInitializer {
             String regionName = "Nairobi";
             String regionCode = "R001";
 
-            DSRRegionEntity region =  new DSRRegionEntity();
-            region.setCode(regionCode);
-            region.setName(regionName);
-            dsrRegionsRepository.save(region);
-
-
+            Optional<DSRRegionEntity> optionalDSRRegion = dsrRegionsRepository.findByName(regionName);
+            if(!optionalDSRRegion.isPresent()) {
+                DSRRegionEntity region = new DSRRegionEntity();
+                region.setCode(regionCode);
+                region.setName(regionName);
+                dsrRegionsRepository.save(region);
+                //
+                optionalDSRRegion = dsrRegionsRepository.findByName(regionName);
+            }
             String teamName = "DFS KASARANI";
             String teamCode = "6756";
 
-            DSRTeamEntity team = new DSRTeamEntity();
-            team.setName(teamName);
-            team.setRegionId(region.getId());
-            dsrTeamsRepository.save(team);
+            if(!dsrTeamsRepository.findByName(teamName).isPresent()){
+                DSRTeamEntity team = new DSRTeamEntity();
+                team.setName(teamName);
+                team.setRegionId(optionalDSRRegion.get().getId());
+                dsrTeamsRepository.save(team);
+            }
         }catch (Exception ex){
             //
         }

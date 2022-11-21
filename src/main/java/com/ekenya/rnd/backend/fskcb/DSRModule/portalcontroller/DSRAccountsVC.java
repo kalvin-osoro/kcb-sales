@@ -2,7 +2,6 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRAccountsRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportDSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +44,7 @@ public class DSRAccountsVC {
     public ResponseEntity<?> getAllAccounts() {
 
         //INSIDE SERVICE
-        ArrayNode list = dsrPortalService.getAllDSRs();
+        ArrayNode list = dsrPortalService.getAllDSRAccounts();
 
         //Response
         if(list != null){

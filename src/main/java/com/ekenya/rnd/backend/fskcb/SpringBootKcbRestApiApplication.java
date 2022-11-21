@@ -44,7 +44,7 @@ public class SpringBootKcbRestApiApplication   {
 	//
 	@Bean
 	public DateFormat simpleDateFormat() {
-		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	}
 	@Bean
 	public ObjectMapper objectMapper() {

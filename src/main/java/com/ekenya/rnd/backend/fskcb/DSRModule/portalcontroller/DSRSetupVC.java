@@ -10,9 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "*")
 @Api(value = "DSR Rest Api")
-@RestController()
-
-@RequestMapping
+@RestController
+@RequestMapping(path = "/api/v1")
 public class DSRSetupVC {
     private final IDSRPortalService dsrService;
 

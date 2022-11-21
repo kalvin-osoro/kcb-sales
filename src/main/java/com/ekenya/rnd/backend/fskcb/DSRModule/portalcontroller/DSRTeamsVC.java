@@ -3,71 +3,73 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportTeamsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ImportTeamsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRPortalService;
+import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1")
 public class DSRTeamsVC {
-    //TODO: implement the reports controller for all required dfs reports
+    //
+    @Autowired
+    IDSRPortalService dsrPortalService;
+
+    @Autowired
+    ObjectMapper mObjectMapper;
+
     @PostMapping("/dsr-create-team")
-    public ResponseEntity<?> createTeam(@RequestBody AddTeamRequest leadRequest ) {
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+    public ResponseEntity<?> createTeam(@RequestBody AddTeamRequest request ) {
+        //INSIDE SERVICE
+        boolean success = dsrPortalService.addDSRTeam(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping(value = "/dsr-get-all-teams")
     public ResponseEntity<?> getAllTeams() {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ArrayNode list = dsrPortalService.getAllDSRTeams();
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-team-details")
-    public ResponseEntity<?> getTeamDetails(@RequestBody ImportTeamsRequest leadRequest ) {
+    public ResponseEntity<?> getTeamDetails(@RequestBody long teamId ) {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ObjectNode resp = dsrPortalService.loadTeamDetails(teamId);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp != null){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     @PostMapping("/dsr-update-team-members")
@@ -90,9 +92,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-disable-team")
-    public ResponseEntity<?> disableTeam(@RequestBody int id ) {
+    public ResponseEntity<?> disableTeam(@RequestBody long teamId) {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = dsrPortalService.attemptDeactivateTeam(teamId);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -109,9 +111,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-enable-team")
-    public ResponseEntity<?> enableTeam(@RequestBody int id ) {
+    public ResponseEntity<?> enableTeam(@RequestBody long teamId ) {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = dsrPortalService.attemptActivateTeam(teamId);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

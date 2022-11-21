@@ -358,7 +358,90 @@ public class DSRPortalService implements IDSRPortalService {
     }
 
     @Override
-    public ArrayNode getAllDSRs() {
+    public ObjectNode loadTeamDetails(long teamId) {
+
+        try{
+
+            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(teamId);
+
+            if(optionalTeam.isPresent()){
+
+                DSRTeamEntity account = optionalTeam.get();
+
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("id",account.getId());
+                node.put("name",account.getName());
+                node.put("loc",account.getLocation());
+
+                DSRRegionEntity regionEntity = dsrRegionsRepository.getById(account.getRegionId());
+                node.put("region",regionEntity.getName());
+                node.put("bounds", regionEntity.getGeoJsonBounds());
+                node.put("status",regionEntity.getStatus().toString());
+                node.put("dateCreated",dateFormat.format(regionEntity.getDateCreated()));
+
+                return node;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean attemptActivateTeam(long teamId) {
+
+        try{
+
+            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(teamId);
+
+            if(optionalTeam.isPresent()){
+
+                DSRTeamEntity account = optionalTeam.get();
+
+                if(account.getStatus() != Status.ACTIVE) {
+                    account.setStatus(Status.ACTIVE);
+                    account.setUpdatedOn(Calendar.getInstance().getTime());
+
+                    dsrTeamsRepository.save(account);
+
+                    return true;
+                }
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean attemptDeactivateTeam(long teamId) {
+
+        try{
+
+            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(teamId);
+
+            if(optionalTeam.isPresent()){
+
+                DSRTeamEntity account = optionalTeam.get();
+
+                if(account.getStatus() != Status.INACTIVE) {
+                    account.setStatus(Status.INACTIVE);
+                    account.setUpdatedOn(Calendar.getInstance().getTime());
+
+                    dsrTeamsRepository.save(account);
+
+                    return true;
+                }
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+
+        return false;
+    }
+
+    @Override
+    public ArrayNode getAllDSRAccounts() {
 
 
         try{

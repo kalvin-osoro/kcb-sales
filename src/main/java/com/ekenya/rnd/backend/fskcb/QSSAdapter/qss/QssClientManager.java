@@ -47,16 +47,15 @@ public class QssClientManager implements QSSClientInterface {
     }
 
     //
-    private String mServiceHost = "https://devops.ekenya.co.ke:8084";
-    //private String mServiceHost = "http://10.211.55.5:5000";
+    //private String mServiceHost = "https://devops.ekenya.co.ke:8084";
+    private String mServiceHost = "http://10.211.55.5:5000";
     private String serviceEndpoint = "/delta";
 
     //Client Settings
     private String qssUserId = "KCB_SALES_BACKEND";
     private String qssUserName = "KCB Sales Backend";
-    private String qssClientId = "762M5SB4GPW000SDFHW";
-    private String qssClientSecret = "1DV6SGZW0UIO02ADHE78ASDAEAWEYADU78534AG";
-
+    private String qssClientId = "3szgpupeqUCKJXdRQzoXQ";//"762M5SB4GPW000SDFHW";
+    private String qssClientSecret = "77lsHJP2pxVJZpXBsLWDnfRFnzvmDiTdhbxf8gzD6kvo3WQCKJW3Dnn";//"1DV6SGZW0UIO02ADHE78ASDAEAWEYADU78534AG";
 
     IQssService qssService;
     private Logger mLogger = Logger.getLogger(QssClientManager.class.getSimpleName());
@@ -242,7 +241,9 @@ public class QssClientManager implements QSSClientInterface {
                             // TODO Auto-generated method stub
                             connectionStateObserver.onNext(HubConnectionState.DISCONNECTED);
                             // Try start again
+                            mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
                             init().doOnError(error -> {
+                                mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
                                 init().subscribe();
                             }).subscribe();
                         }
@@ -563,10 +564,14 @@ public class QssClientManager implements QSSClientInterface {
                     return;
                 }
 
+                JsonObject data = new JsonObject();
+                data.addProperty("content",content);
+                data.addProperty("category",category);
+                data.addProperty("title",title);
                 // Continue ..
 
                 try {
-                    hubConnection.invoke(String.class,"notify",recId, content, category)
+                    hubConnection.invoke(String.class,"notify","",recId, data.toString())
                             .subscribe(new BiConsumer<String, Throwable>() {
                         @Override
                         public void accept(String s, Throwable throwable) throws Throwable {
@@ -576,9 +581,10 @@ public class QssClientManager implements QSSClientInterface {
                                 mLogger.log(Level.INFO, "QSS: Pushing Alert Success, "+s);
                             }else{
 
-                                emitter.onSuccess(s);
+                                mLogger.log(Level.INFO, "QSS: Pushing Alert FAILED, ");
+                                //mLogger.log(Level.SEVERE, "Pushing Alert Failed : " + throwable.getMessage(), throwable);
 
-                                mLogger.log(Level.SEVERE, "Pushing Alert Failed : " + throwable.getMessage(), throwable);
+                                emitter.onError(throwable);
                             }
                         }
                     });

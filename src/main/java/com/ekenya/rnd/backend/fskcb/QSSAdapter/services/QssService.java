@@ -165,6 +165,8 @@ public class QssService implements IQssService{
                             }
                         });
             }
+            //Sent..
+            return true;
             //
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
@@ -219,6 +221,10 @@ public class QssService implements IQssService{
         }else if(data.get("event").getAsString().equalsIgnoreCase(QssEvents.AlertDelivered)){
             String refCode = data.get("nid").getAsString();
             //
+            for (QssAlertEntity e:qssAlertsRepository.findAll()
+                 ) {
+                log.info(e.getTitle(),e.getRefCode());
+            }
             Optional<QssAlertEntity> alert = qssAlertsRepository.findByRefCode(refCode);
             //
             if(alert.isPresent()){

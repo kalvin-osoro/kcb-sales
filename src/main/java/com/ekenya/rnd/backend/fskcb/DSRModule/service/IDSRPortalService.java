@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IDSRPortalService {
+
     boolean createRegion(AddRegionRequest model);
     boolean updateRegion(UpdateRegionRequest model);
     ObjectNode attemptImportRegions(MultipartFile importFile);
@@ -21,7 +22,11 @@ public interface IDSRPortalService {
     ArrayNode getTeamMembersByTeamId(long id);
     boolean deleteDSRTeam(long id);
     boolean addDSR(AddDSRAccountRequest dsrRequest);
-    ArrayNode getAllDSRs();
+    ObjectNode loadTeamDetails(long teamId);
+    boolean attemptActivateTeam(long teamId);
+    boolean attemptDeactivateTeam(long teamId);
+
+    ArrayNode getAllDSRAccounts();
     boolean deleteDSRById(long id);
 //    ResponseEntity<?> editDSRById(DSRRequest dsrRequest, HttpServletRequest httpServletRequest);
     ObjectNode getDSRProfile(String staffNo);
