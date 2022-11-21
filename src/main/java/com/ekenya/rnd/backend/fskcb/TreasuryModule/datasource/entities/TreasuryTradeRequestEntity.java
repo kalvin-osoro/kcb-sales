@@ -7,10 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -22,6 +19,8 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 public class TreasuryTradeRequestEntity {
+    @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Long id;
     private String customerName;
     private String customerID;
