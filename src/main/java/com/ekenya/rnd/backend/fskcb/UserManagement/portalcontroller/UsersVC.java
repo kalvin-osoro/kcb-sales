@@ -71,7 +71,6 @@ public class UsersVC {
         //TODO; INSIDE SERVICE
         List<?> list = usersService.loadAllUsers();
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(list != null){
             //Object
             //ArrayNode node = objectMapper.createArrayNode();
@@ -81,7 +80,7 @@ public class UsersVC {
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
