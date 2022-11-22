@@ -221,9 +221,15 @@ public class QssClientManager implements QSSClientInterface {
                         public void onError(Throwable ex) {
                             //
                             connectionStateObserver.onNext(HubConnectionState.DISCONNECTED);
-                            mLogger.log(Level.SEVERE, "Hub Start Error => " + ex.getMessage());
+                            mLogger.log(Level.SEVERE, "Hub Start FAILED => " + ex.getMessage());
                             //
-                            emitter.onError(ex);
+                            //emitter.onError(ex);
+
+                            mLogger.log(Level.SEVERE, "Attempting restart .. ");
+                            init().doOnError(error -> {
+                                mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
+                                init().subscribe();
+                            }).subscribe();
                         }
 
                         @Override
