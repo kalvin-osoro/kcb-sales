@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.*;
@@ -59,12 +60,11 @@ public class DSRAccountEntity {
 
     @Column(name="national_id")
     private String idNumber;
+    //many to one with acquiring target
+    @ManyToOne
+    @JoinColumn(name="acquiring_target_id")
+    private AcquiringTargetEntity acquiringTargetEntity;
 
-//    @Column(name="system_user_id")
-//    private Long systemUserId;
-
-//    @ManyToOne
-//    private DSRTeamEntity dsrTeam;
     @Column(name="team_id")
     private Long teamId;
 

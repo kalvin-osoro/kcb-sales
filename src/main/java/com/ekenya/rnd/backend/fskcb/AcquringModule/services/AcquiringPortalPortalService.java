@@ -87,7 +87,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
                 node.put("source", target.getTargetSource());
                 node.put("startDate", target.getStartDate().toString());
                 node.put("endDate", target.getEndDate().toString());
-                node.put("type", target.getAquiringTargetType().toString());
+                node.put("type", target.getAcquiringTargetType().toString());
                 targets.add(node);
             }
             return targets;
@@ -108,7 +108,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             AcquiringTargetEntity acquiringTargetEntity = new AcquiringTargetEntity();
             acquiringTargetEntity.setTargetName(acquiringAddTargetRequest.getTargetName());
             acquiringTargetEntity.setTargetSource(acquiringAddTargetRequest.getTargetSource());
-            acquiringTargetEntity.setAquiringTargetType(acquiringAddTargetRequest.getAquiringTargetType());
+            acquiringTargetEntity.setAcquiringTargetType(acquiringAddTargetRequest.getAquiringTargetType());
             acquiringTargetEntity.setTargetDesc(acquiringAddTargetRequest.getTargetDesc());
             acquiringTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
             acquiringTargetEntity.setTargetValue(acquiringAddTargetRequest.getTargetValue());
@@ -160,6 +160,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
                 assetFilesEntity.setFilePath(filePath);
                 acquiringAssetFileRepository.save(assetFilesEntity);
             });
+            return true;
 
         } catch (JsonMappingException e) {
             //return ResponseEntity.badRequest().body("Invalid asset details");
@@ -511,7 +512,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
     }
 
     @Override
-    public List<?> getTargetsSummary(AcquringSummaryRequest filters) {
+    public List<ObjectNode> getTargetsSummary(AcquringSummaryRequest filters) {
 try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();

@@ -29,5 +29,6 @@ public interface IAcquiringLeadsRepository extends JpaRepository<AcquiringLeadEn
     @Query(value = "SELECT count(*) FROM dbo_aqc_leads where created_on >= current_date at time zone 'UTC' - interval '7 days' AND priority = 'COLD'", nativeQuery = true)
     int countAllLeadsCreatedLast7DaysCold();
 
-
+    @Query(value = "SELECT * FROM dbo_aqc_leads where assigned = true", nativeQuery = true)
+    AcquiringLeadEntity[] fetchAllAssignedLeads();
 }

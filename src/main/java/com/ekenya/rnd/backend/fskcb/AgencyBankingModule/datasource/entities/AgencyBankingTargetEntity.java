@@ -1,8 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AquiringTargetType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
