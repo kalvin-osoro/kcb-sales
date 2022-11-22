@@ -371,14 +371,14 @@ public class DSRPortalService implements IDSRPortalService {
 
             if(optionalTeam.isPresent()){
 
-                DSRTeamEntity account = optionalTeam.get();
+                DSRTeamEntity team = optionalTeam.get();
 
                 ObjectNode node = mObjectMapper.createObjectNode();
-                node.put("id",account.getId());
-                node.put("name",account.getName());
-                node.put("loc",account.getLocation());
+                node.put("id",team.getId());
+                node.put("name",team.getName());
+                node.put("loc",team.getLocation());
 
-                DSRRegionEntity regionEntity = dsrRegionsRepository.getById(account.getRegionId());
+                DSRRegionEntity regionEntity = dsrRegionsRepository.getById(team.getRegionId());
                 node.put("region",regionEntity.getName());
                 node.put("bounds", regionEntity.getGeoJsonBounds());
                 node.put("status",regionEntity.getStatus().toString());

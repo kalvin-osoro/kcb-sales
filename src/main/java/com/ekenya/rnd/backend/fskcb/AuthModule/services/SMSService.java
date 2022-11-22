@@ -76,7 +76,8 @@ public class SMSService implements ISmsService{
             }
             int responseCode = smsResponse.get("ResultCode").getAsInt();
             if (responseCode != 0) {
-                throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+                log.error("Send CODE failed. => "+smsResponse.get("ResultDesc").getAsString());
+                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
             }
 
             return code;

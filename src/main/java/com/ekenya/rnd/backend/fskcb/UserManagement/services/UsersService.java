@@ -130,7 +130,7 @@ public class UsersService implements IUsersService {
                 account.setEmail(model.getEmail());
                 //
                 account.setPassword(passwordEncoder.encode(password));
-                userRepository.save(account);//save user to db
+                //userRepository.save(account);//save user to db
                 //
 
                 //CAN ACCESS PORTAL
@@ -141,8 +141,10 @@ public class UsersService implements IUsersService {
                 //
                 if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                     //
-                    return true;
+                    //return true;
                 }
+                //
+                return true;
             }
 
         }catch (Exception ex){

@@ -209,32 +209,38 @@ public class AuthService implements IAuthService{
 
         try{
             //
-            DSRAccountEntity userAccount = dsrAccountsRepository.findByStaffNo(model.getStaffNo()).get();
+            Optional<DSRAccountEntity> optionalDSRAccount = dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo());
 
-            Optional<SecurityAuthCodeEntity> code = securityAuthCodesRepository.findAllByCode(model.getCode());
-            if(code.isPresent() && code.get().getUserId() == userAccount.getId() && !code.get().isExpired() ){
-                //
-                LocalDateTime dateTime = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
-                        ZoneId.systemDefault());
-                //
-                dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
-                //
-                if(!dateTime.isAfter(LocalDateTime.now())){
-                    //Add Login Account
-                    AddUserRequest addUserRequest = new AddUserRequest();
-                    addUserRequest.setEmail(userAccount.getEmail());
-                    addUserRequest.setFullName(userAccount.getFullName());
-                    addUserRequest.setPhoneNo(userAccount.getPhoneNo());
+            if(optionalDSRAccount.isPresent()) {
+
+                DSRAccountEntity dsrAccount = optionalDSRAccount.get();
+
+                Optional<SecurityAuthCodeEntity> code = securityAuthCodesRepository.findAllByCode(model.getCode());
+                //Check if code exist...
+                if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().isExpired()) {
                     //
-                    if(usersService.attemptCreateUser(addUserRequest)) {
-                        //All is well,
-                        return true;
-                    }else{
-                        log.error("Create User Account Failed");
+                    LocalDateTime dateTime = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
+                            ZoneId.systemDefault());
+                    //
+                    dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
+                    //
+                    if (!dateTime.isBefore(LocalDateTime.now()) && !userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
+                        //Add Login Account
+                        AddUserRequest addUserRequest = new AddUserRequest();
+                        addUserRequest.setEmail(dsrAccount.getEmail());
+                        addUserRequest.setFullName(dsrAccount.getFullName());
+                        addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
+                        //
+                        if (usersService.attemptCreateUser(addUserRequest)) {
+                            //All is well,
+                            return true;
+                        } else {
+                            log.error("Create User Account Failed");
+                        }
+                    } else {
+                        //
+                        log.error("Device verification code is expired or user with staffNo exists ..");
                     }
-                }else{
-                    //
-                    log.error("Device verification code is expired.");
                 }
             }
         }catch (Exception ex){
