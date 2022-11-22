@@ -11,4 +11,6 @@ public interface IDSRTeamsRepository extends JpaRepository<DSRTeamEntity, Long> 
     List<DSRTeamEntity> findByStatus(Status status);
     Boolean existsByName(String name);
     Optional<DSRTeamEntity> findByName(String name);
+
+    List<DSRTeamEntity> findAllByRegionId(long id);
 }

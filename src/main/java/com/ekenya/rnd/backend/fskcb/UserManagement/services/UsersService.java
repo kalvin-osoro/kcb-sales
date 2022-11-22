@@ -113,7 +113,7 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public boolean attemptCreateUser(AddUserRequest model) {
+    public boolean attemptCreateUser(AddUserRequest model, boolean verified) {
 
 
         try{
@@ -128,6 +128,8 @@ public class UsersService implements IUsersService {
                 account.setAccountType(AccountType.ADMIN);
                 account.setFullName(model.getFullName());
                 account.setEmail(model.getEmail());
+                account.setStaffNo(model.getStaffNo());
+                account.setIsVerified(verified);
                 //
                 account.setPassword(passwordEncoder.encode(password));
                 //userRepository.save(account);//save user to db

@@ -36,7 +36,7 @@ public class UsersVC {
     @PostMapping("/users-create-user")
     public ResponseEntity<?> createUser(@RequestBody AddUserRequest request ) {
         //TODO; INSIDE SERVICE
-        boolean success = usersService.attemptCreateUser(request);
+        boolean success = usersService.attemptCreateUser(request, false);
         if(success){
             //Object
             ObjectNode node = mObjectMapper.createObjectNode();

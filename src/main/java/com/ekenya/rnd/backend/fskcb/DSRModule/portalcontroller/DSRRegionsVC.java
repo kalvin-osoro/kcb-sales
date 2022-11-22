@@ -21,7 +21,7 @@ public class DSRRegionsVC {
 
     @Autowired
     IDSRPortalService dsrPortalService;
-    @PostMapping("/dsr-create-regions")
+    @PostMapping("/dsr-create-region")
     public ResponseEntity<?> createRegion(@RequestBody AddRegionRequest request ) {
 
         //INSIDE SERVICE

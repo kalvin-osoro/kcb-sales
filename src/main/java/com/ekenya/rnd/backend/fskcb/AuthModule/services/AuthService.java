@@ -225,13 +225,19 @@ public class AuthService implements IAuthService{
                     dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
                     //
                     if (!dateTime.isBefore(LocalDateTime.now()) && !userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
-                        //Add Login Account
+
+                        dsrAccount.setPhoneNoVerified(true);
+
+                        dsrAccountsRepository.save(dsrAccount);
+
+                        //Create Login Account..
                         AddUserRequest addUserRequest = new AddUserRequest();
                         addUserRequest.setEmail(dsrAccount.getEmail());
                         addUserRequest.setFullName(dsrAccount.getFullName());
                         addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
+                        addUserRequest.setStaffNo(dsrAccount.getStaffNo());
                         //
-                        if (usersService.attemptCreateUser(addUserRequest)) {
+                        if (usersService.attemptCreateUser(addUserRequest,true)) {
                             //All is well,
                             return true;
                         } else {

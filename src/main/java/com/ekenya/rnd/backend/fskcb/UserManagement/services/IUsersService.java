@@ -21,7 +21,7 @@ public interface IUsersService {
 
     UserAccount findByStaffNo(String staffNo);
 
-    boolean attemptCreateUser(AddUserRequest model);
+    boolean attemptCreateUser(AddUserRequest model, boolean verified);
     ObjectNode attemptImportUsers(MultipartFile importFile);
 
     List<ObjectNode> loadAllUsers();
