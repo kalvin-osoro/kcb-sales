@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.JsonLatLng;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
@@ -23,6 +24,7 @@ import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -168,8 +170,15 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("name",entity.getName());
                 node.put("status",entity.getStatus().equals(Status.ACTIVE)?"Active":"Inactive");
                 node.put("dateCreated",dateFormat.format(entity.getDateCreated()));
-                node.put("bounds",entity.getGeoJsonBounds());
-                //node.putPOJO("bounds",mObjectMapper.convertValue(entity.getGeoJsonBounds(),ArrayNode.class));
+                //node.put("bounds",entity.getGeoJsonBounds());
+
+                if(entity.getGeoJsonBounds() != null) {
+                    TypeFactory typeFactory = mObjectMapper.getTypeFactory();
+                    node.putPOJO("bounds", mObjectMapper.readValue(entity.getGeoJsonBounds(),
+                            typeFactory.constructCollectionType(List.class, JsonLatLng.class)));
+                }else{
+                    node.putPOJO("bounds",mObjectMapper.createArrayNode());
+                }
                 //
                 List<DSRTeamEntity> teams = dsrTeamsRepository.findAllByRegionId(entity.getId());
                 int dsrCount = 0;

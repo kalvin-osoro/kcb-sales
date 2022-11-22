@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -48,7 +49,16 @@ public class SpringBootKcbRestApiApplication   {
 	}
 	@Bean
 	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
+
+		//
+		mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+				.withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+				.withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+				.withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+				.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+		//
+		return mapper;
 	}
 	@Bean
 	public ModelMapper modelMapper() {
