@@ -453,7 +453,7 @@ public class DSRPortalService implements IDSRPortalService {
 
             ArrayNode list = mObjectMapper.createArrayNode();
 
-            for (DSRAccountEntity entity: dsrAccountsRepository.findByStatus(Status.ACTIVE)) {
+            for (DSRAccountEntity entity: dsrAccountsRepository.findAll()) {
                 //
                 ObjectNode node = mObjectMapper.createObjectNode();
                 node.put("id",entity.getId());
@@ -461,10 +461,13 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("email",entity.getEmail());
                 node.put("phone",entity.getPhoneNo());
                 node.put("staffNo",entity.getStaffNo());
+                node.put("status",entity.getStatus().toString());
                 node.put("salesCode",entity.getSalesCode());
 
+                //
                 list.add(node);
             }
+            return list;
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }
@@ -474,7 +477,7 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Override
     public boolean deleteDSRById(long id) {
-        LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
+
         try{
             Optional<DSRAccountEntity> optionalDSRAccountEntity = dsrAccountsRepository.findById(id);
             DSRAccountEntity dsrDetails = optionalDSRAccountEntity.get();

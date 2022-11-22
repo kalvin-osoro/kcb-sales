@@ -19,7 +19,8 @@ import java.util.Set;
 @Builder
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "dbo_dsr_accounts")
+@Table(name = "dbo_dsr_accounts",uniqueConstraints = {@UniqueConstraint(columnNames = {"staff_no"}),
+        @UniqueConstraint(columnNames = {"email"})})
 public class DSRAccountEntity {
 
     @Id
@@ -29,7 +30,7 @@ public class DSRAccountEntity {
     private String phoneNo;
 
     @Column(name="phone_verified")
-    private boolean phoneNoVerified;
+    private Boolean phoneNoVerified = false;
 
     @Column(name="email")
     private String email;
