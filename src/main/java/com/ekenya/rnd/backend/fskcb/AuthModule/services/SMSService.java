@@ -3,6 +3,8 @@ package com.ekenya.rnd.backend.fskcb.AuthModule.services;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.AuthCodeType;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityAuthCodeEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityAuthCodesRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import com.google.gson.JsonObject;
@@ -46,16 +48,19 @@ public class SMSService implements ISmsService{
     ISecurityAuthCodesRepository securityAuthCodesRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    IDSRAccountsRepository dsrAccountsRepository;
     private final static Logger logger = Logger.getLogger(SMSService.class.getName());
 
     @Override
     @Transactional
-    public boolean sendSecurityCode(String staffNo, AuthCodeType type) {
+    public String sendSecurityCode(String staffNo, AuthCodeType type) {
 
         //
         try {
             //
-            UserAccount account = userRepository.findByStaffNo(staffNo).get();
+            DSRAccountEntity account = dsrAccountsRepository.findByStaffNo(staffNo).get();
             String code = createAndSaveCode(account.getStaffNo(),account.getId(),type);
             String message;
             //
@@ -65,7 +70,7 @@ public class SMSService implements ISmsService{
                 message = "Hello " + staffNo + ", use this as your PIN to login " + code ;
             }
             //
-            JsonObject smsResponse = attemptSendSMS(message, account.getPhoneNumber());
+            JsonObject smsResponse = attemptSendSMS(message, account.getPhoneNo());
             if (smsResponse == null) {
                 throw new RuntimeException("Unable to send sms");
             }
@@ -74,11 +79,11 @@ public class SMSService implements ISmsService{
                 throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
             }
 
-            return true;
+            return code;
         } catch (Exception e) {
             logger.log(Level.ALL,e.getMessage(),e);
         }
-        return false;
+        return null;
     }
 
     @Override

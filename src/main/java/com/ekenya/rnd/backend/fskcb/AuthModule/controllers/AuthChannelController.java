@@ -134,18 +134,18 @@ public class AuthChannelController {
     public ResponseEntity<?> sendPhoneVerificationCode(@RequestBody SendVerificationCodeRequest model) {
 
         //
-        boolean status = authService.sendVerificationCode(model);
+        String code = authService.sendVerificationCode(model);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(status){
+        if(code != null){
             //Response
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
+            node.put("code",code);
             //
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request processed successfully"));
         }
         //Response
         //
-        return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
     }
     @PostMapping("/validate-device-verification-code")
     @ApiOperation(value = "validate-device-verification-code")
