@@ -13,4 +13,5 @@ public class AddDSRAccountRequest {
     private Long teamId;
     private String email;
     private Date expiry;
+    private String gender;
 }

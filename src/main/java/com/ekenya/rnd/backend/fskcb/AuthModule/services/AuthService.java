@@ -167,7 +167,7 @@ public class AuthService implements IAuthService{
             if(userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Account exists
                 return AccountLookupState.ACTIVE;
-            }else if(dsrAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            }else if(dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Not Active
                 return AccountLookupState.NOT_ACTIVATED;
             }

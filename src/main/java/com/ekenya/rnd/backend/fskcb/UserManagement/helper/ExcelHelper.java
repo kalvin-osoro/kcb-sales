@@ -194,7 +194,8 @@ public class ExcelHelper {
         final int PHONE_NUMBER_COLUMN_INDEX = 4;
         final int SALES_CODE_COLUMN_INDEX = 5;
         final int TEAM_COLUMN_INDEX = 6;
-        final int ACCOUNT_EXPIRY_COLUMN_INDEX = 7;
+        final int GENDER_COLUMN_INDEX = 7;
+        final int ACCOUNT_EXPIRY_COLUMN_INDEX = 8;
         
         try {
             DSRsExcelImportResult result = new DSRsExcelImportResult();
@@ -369,6 +370,29 @@ public class ExcelHelper {
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
                     importError.setColumn(SALES_CODE_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+
+                //Sales Code
+                try{
+                    Cell currentCell = currentRow.getCell(GENDER_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String gender = currentCell.getStringCellValue();
+                    if(gender == null || gender.isEmpty() || gender.isBlank()){
+                        ExcelImportError importError = new ExcelImportError();
+                        importError.setError("Required Field 'Gender' is missing. Record Skipped.");
+                        importError.setRow(rowNumber);
+                        importError.setColumn(GENDER_COLUMN_INDEX);
+                        //
+                        result.getErrors().add(importError);
+                    }else{
+                        dsrAccount.setGender(gender);
+                    }
+                }catch (Exception ex){
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(GENDER_COLUMN_INDEX);
                     //
                     result.getErrors().add(importError);
                 }

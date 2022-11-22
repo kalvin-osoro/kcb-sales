@@ -119,7 +119,7 @@ public class AuthChannelController {
             //Response
             ObjectNode node = objectMapper.createObjectNode();
             //
-            node.put("registered",status.ordinal());
+            node.put("registered",status.getState());
             //
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request processed successfully"));
         }
