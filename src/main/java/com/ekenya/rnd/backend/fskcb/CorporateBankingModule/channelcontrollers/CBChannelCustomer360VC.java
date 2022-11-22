@@ -1,11 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
-import io.swagger.annotations.Api;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,11 +25,11 @@ public class CBChannelCustomer360VC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1, node, "Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -50,11 +48,11 @@ public class CBChannelCustomer360VC {
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new AppResponse(1, node, "Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 }

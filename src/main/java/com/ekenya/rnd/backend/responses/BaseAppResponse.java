@@ -5,21 +5,21 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.LinkedHashMap;
 
-public class AppResponse {
+public class BaseAppResponse {
     private int status = 0;
     private String message;
     private Object data;
 
-    public AppResponse(){}
+    public BaseAppResponse(){}
 
-    public AppResponse(int status, Object data, String message){
+    public BaseAppResponse(int status, Object data, String message){
         this.status = status;
         this.data = data;
         this.message = message;
     }
 
     public static ResponseEntity<?> build(LinkedHashMap<String, Object> responseObject) {
-        return ResponseEntity.ok(new AppResponse((int) responseObject.get("status"), responseObject.get("data"), (String) responseObject.get("message")));
+        return ResponseEntity.ok(new BaseAppResponse((int) responseObject.get("status"), responseObject.get("data"), (String) responseObject.get("message")));
     }
 
     public int getStatus() {

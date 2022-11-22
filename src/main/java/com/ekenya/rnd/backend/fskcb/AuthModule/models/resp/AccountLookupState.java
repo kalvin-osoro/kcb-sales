@@ -2,9 +2,10 @@ package com.ekenya.rnd.backend.fskcb.AuthModule.models.resp;
 
 public enum AccountLookupState
 {
-    NOT_ACTIVATED(2),
+
+    NOT_FOUND(0),
     ACTIVE(1),
-    NOT_FOUND(0);
+    NOT_ACTIVATED(2);
 
     private int state;
 

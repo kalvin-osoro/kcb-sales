@@ -6,7 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.LoginRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,9 +31,9 @@ public class AuthPortalController {
         ObjectMapper objectMapper = new ObjectMapper();
         if(resp != null){
 
-            return ResponseEntity.ok(new AppResponse(1,resp,"User login successful"));
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"User login successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"User login failed"));
+        return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"User login failed"));
 
     }
 
@@ -47,9 +47,9 @@ public class AuthPortalController {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //
-            return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request Failed"));
+        return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request Failed"));
 
     }
 
@@ -63,9 +63,9 @@ public class AuthPortalController {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //
-            return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request Failed"));
+        return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request Failed"));
 
     }
 
@@ -79,9 +79,9 @@ public class AuthPortalController {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //
-            return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
         }
-        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request Failed"));
+        return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request Failed"));
 
     }
 }

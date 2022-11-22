@@ -7,13 +7,16 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurity
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -58,6 +61,8 @@ public class AuthService implements IAuthService{
     @Autowired
     ISmsService smsService;
 
+    @Autowired
+    IUsersService usersService;
     @Autowired
     ISecurityQuestionAnswersRepo securityQuestionAnswersRepo;
     @Autowired
@@ -167,7 +172,7 @@ public class AuthService implements IAuthService{
             if(userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Account exists
                 return AccountLookupState.ACTIVE;
-            }else if(dsrAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            }else if(dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Not Active
                 return AccountLookupState.NOT_ACTIVATED;
             }
@@ -181,20 +186,21 @@ public class AuthService implements IAuthService{
     }
 
     @Override
-    public boolean sendVerificationCode(SendVerificationCodeRequest model) {
+    public String sendVerificationCode(SendVerificationCodeRequest model) {
         //
         try{
 
+            String code = smsService.sendSecurityCode(model.getStaffNo(),AuthCodeType.DEVICE_VERIFICATION);
             //
-            if(smsService.sendSecurityCode(model.getStaffNo(),AuthCodeType.DEVICE_VERIFICATION)){
+            if(code != null){
                 //
-                return true;
+                return code;
             }
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
         }
 
-        return false;
+        return null;
     }
 
     @Override
@@ -203,18 +209,44 @@ public class AuthService implements IAuthService{
 
         try{
             //
-            UserAccount userAccount = userRepository.findByStaffNo(model.getStaffNo()).get();
+            Optional<DSRAccountEntity> optionalDSRAccount = dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo());
 
-            Optional<SecurityAuthCodeEntity> code = securityAuthCodesRepository.findAllByCode(model.getCode());
-            if(code.isPresent() && code.get().getUserId() == userAccount.getId() && !code.get().isExpired() ){
-                //
-                LocalDateTime dateTime = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
-                        ZoneId.systemDefault());
-                //
-                dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
-                //
-                if(!dateTime.isAfter(LocalDateTime.now())){
-                    return true;
+            if(optionalDSRAccount.isPresent()) {
+
+                DSRAccountEntity dsrAccount = optionalDSRAccount.get();
+
+                Optional<SecurityAuthCodeEntity> code = securityAuthCodesRepository.findAllByCode(model.getCode());
+                //Check if code exist...
+                if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().isExpired()) {
+                    //
+                    LocalDateTime dateTime = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
+                            ZoneId.systemDefault());
+                    //
+                    dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
+                    //
+                    if (!dateTime.isBefore(LocalDateTime.now()) && !userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
+
+                        dsrAccount.setPhoneNoVerified(true);
+
+                        dsrAccountsRepository.save(dsrAccount);
+
+                        //Create Login Account..
+                        AddUserRequest addUserRequest = new AddUserRequest();
+                        addUserRequest.setEmail(dsrAccount.getEmail());
+                        addUserRequest.setFullName(dsrAccount.getFullName());
+                        addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
+                        addUserRequest.setStaffNo(dsrAccount.getStaffNo());
+                        //
+                        if (usersService.attemptCreateUser(addUserRequest,true)) {
+                            //All is well,
+                            return true;
+                        } else {
+                            log.error("Create User Account Failed");
+                        }
+                    } else {
+                        //
+                        log.error("Device verification code is expired or user with staffNo exists ..");
+                    }
                 }
             }
         }catch (Exception ex){
@@ -327,7 +359,8 @@ public class AuthService implements IAuthService{
                 }
             }
             //
-            if(!smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN)){
+            String code = smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN);
+            if(code != null){
                 valid = false;
             }else {
                 //
@@ -404,8 +437,9 @@ public class AuthService implements IAuthService{
 
             UserAccount account = userRepository.findByStaffNo(model.getStaffNo()).get();
 
+            String pin = smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN);
             //Send PIN
-            if(smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN)){
+            if(pin != null){
                 //Update flag
                 account.setShouldSetPIN(true);
                 //

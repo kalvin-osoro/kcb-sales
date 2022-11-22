@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -73,12 +74,13 @@ public class DSRPortalService implements IDSRPortalService {
 
             if(!optionalDSRRegionEntity.isPresent()){
 
-                DSRRegionEntity dsrRegionEntity = optionalDSRRegionEntity.get();
+                DSRRegionEntity dsrRegionEntity = new DSRRegionEntity();
 
                 dsrRegionEntity.setName(model.getName());
                 dsrRegionEntity.setCode(model.getCode());
-                dsrRegionEntity.setGeoJsonBounds(model.getBounds());
-
+                if(model.getBounds() != null) {
+                    dsrRegionEntity.setGeoJsonBounds(mObjectMapper.writeValueAsString(model.getBounds()));
+                }
                 dsrRegionsRepository.save(dsrRegionEntity);
 
                 return true;
@@ -102,7 +104,9 @@ public class DSRPortalService implements IDSRPortalService {
 
                 dsrRegionEntity.setName(model.getName());
                 dsrRegionEntity.setCode(model.getCode());
-
+                if(model.getBounds() != null) {
+                    dsrRegionEntity.setGeoJsonBounds(mObjectMapper.convertValue(model.getBounds(), String.class));
+                }
                 dsrRegionsRepository.save(dsrRegionEntity);
 
                 return true;
@@ -164,7 +168,19 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("name",entity.getName());
                 node.put("status",entity.getStatus().equals(Status.ACTIVE)?"Active":"Inactive");
                 node.put("dateCreated",dateFormat.format(entity.getDateCreated()));
-                //node.put("members-count",teamMembersCount);
+                node.put("bounds",entity.getGeoJsonBounds());
+                //node.putPOJO("bounds",mObjectMapper.convertValue(entity.getGeoJsonBounds(),ArrayNode.class));
+                //
+                List<DSRTeamEntity> teams = dsrTeamsRepository.findAllByRegionId(entity.getId());
+                int dsrCount = 0;
+                for (DSRTeamEntity team: teams) {
+                    dsrCount += dsrAccountsRepository.findAllByTeamId(team.getId()).size();
+                }
+
+                //
+                node.put("teams",teams.size());
+                //
+                node.put("dsr-count",dsrCount);
                 list.add(node);
             }
 
@@ -177,7 +193,7 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Override
     public boolean addDSRTeam(AddTeamRequest addTeamRequest) {
-        LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
+
         try {
             if(addTeamRequest == null) throw new RuntimeException("Bad request");
             if (dsrTeamsRepository.existsByName(addTeamRequest.getTeamName())) {
@@ -197,9 +213,9 @@ public class DSRPortalService implements IDSRPortalService {
             dsrTeam.setStatus(Status.ACTIVE);
             dsrTeam.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeamsRepository.save(dsrTeam);
-            responseObject.put("status", "success");
-            responseObject.put("message", "DSR team "
-                    + addTeamRequest.getTeamName()+" successfully created");
+//            responseObject.put("status", "success");
+//            responseObject.put("message", "DSR team "
+//                    + addTeamRequest.getTeamName()+" successfully created");
             return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
@@ -210,7 +226,7 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Override
     public boolean editDSRTeam(AddTeamRequest addTeamRequest) {
-        LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
+//        LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
 
         try {
             if (addTeamRequest == null)throw new RuntimeException("Bad request");
@@ -227,9 +243,9 @@ public class DSRPortalService implements IDSRPortalService {
             dsrTeam.setUpdatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeam.setUpdatedBy(userId);
             dsrTeamsRepository.save(dsrTeam);
-            responseObject.put("status", "success");
-            responseObject.put("message", "DSR team "
-                    + addTeamRequest.getTeamName()+" successfully updated");
+//            responseObject.put("status", "success");
+//            responseObject.put("message", "DSR team "
+//                    + addTeamRequest.getTeamName()+" successfully updated");
             return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
@@ -249,7 +265,11 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("name",entity.getName());
                 node.put("loc",entity.getLocation());
                 node.put("status",entity.getStatus().equals(Status.ACTIVE)?"Active":"Inactive");
-                node.put("dateCreated",dateFormat.format(entity.getCreatedOn()));
+                if(entity.getCreatedOn() != null) {
+                    node.put("dateCreated", dateFormat.format(entity.getCreatedOn()));
+                }else{
+                    node.put("dateCreated","");
+                }
                 node.put("members-count",teamMembersCount);
                 dsrTeamResponseList.add(node);
             }
@@ -320,13 +340,17 @@ public class DSRPortalService implements IDSRPortalService {
             if (dsrRequest == null)
                 throw new Exception("Bad request");
 
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            if (userDetails == null)throw new RuntimeException("Service error");
-            String createdBy = userDetails.getUsername();
+//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+//            if (userDetails == null)throw new RuntimeException("Service error");
+//            String createdBy = userDetails.getUsername();
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String createdBy = authentication.getName();
 
             DSRTeamEntity optionalDSRTeam =
                     dsrTeamsRepository.findById(dsrRequest.getTeamId()).orElse(null);
-            if(optionalDSRTeam != null){
+            if(optionalDSRTeam != null &&
+                    !dsrAccountsRepository.findByStaffNo(dsrRequest.getStaffNo()).isPresent()){
                 //
                 DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
                         .email(dsrRequest.getEmail())
@@ -348,7 +372,7 @@ public class DSRPortalService implements IDSRPortalService {
 
                 return true;
             }
-            //Team not found
+            //Team not found or dsr already exists
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }
@@ -366,14 +390,14 @@ public class DSRPortalService implements IDSRPortalService {
 
             if(optionalTeam.isPresent()){
 
-                DSRTeamEntity account = optionalTeam.get();
+                DSRTeamEntity team = optionalTeam.get();
 
                 ObjectNode node = mObjectMapper.createObjectNode();
-                node.put("id",account.getId());
-                node.put("name",account.getName());
-                node.put("loc",account.getLocation());
+                node.put("id",team.getId());
+                node.put("name",team.getName());
+                node.put("loc",team.getLocation());
 
-                DSRRegionEntity regionEntity = dsrRegionsRepository.getById(account.getRegionId());
+                DSRRegionEntity regionEntity = dsrRegionsRepository.getById(team.getRegionId());
                 node.put("region",regionEntity.getName());
                 node.put("bounds", regionEntity.getGeoJsonBounds());
                 node.put("status",regionEntity.getStatus().toString());
@@ -448,7 +472,7 @@ public class DSRPortalService implements IDSRPortalService {
 
             ArrayNode list = mObjectMapper.createArrayNode();
 
-            for (DSRAccountEntity entity: dsrAccountsRepository.findByStatus(Status.ACTIVE)) {
+            for (DSRAccountEntity entity: dsrAccountsRepository.findAll()) {
                 //
                 ObjectNode node = mObjectMapper.createObjectNode();
                 node.put("id",entity.getId());
@@ -456,10 +480,13 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("email",entity.getEmail());
                 node.put("phone",entity.getPhoneNo());
                 node.put("staffNo",entity.getStaffNo());
+                node.put("status",entity.getStatus().toString());
                 node.put("salesCode",entity.getSalesCode());
 
+                //
                 list.add(node);
             }
+            return list;
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }
@@ -469,7 +496,7 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Override
     public boolean deleteDSRById(long id) {
-        LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
+
         try{
             Optional<DSRAccountEntity> optionalDSRAccountEntity = dsrAccountsRepository.findById(id);
             DSRAccountEntity dsrDetails = optionalDSRAccountEntity.get();

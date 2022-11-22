@@ -1,9 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSChannelService;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +33,11 @@ public class TreasuryChannelTargetsVC {
         if(resp != null){
             //Object
 
-            return ResponseEntity.ok(new AppResponse(1,resp,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

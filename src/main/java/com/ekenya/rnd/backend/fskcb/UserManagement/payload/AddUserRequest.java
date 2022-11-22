@@ -20,16 +20,16 @@ public class AddUserRequest {
     @ApiModelProperty(value = "User's staff No", required = true)
     private String staffNo;
 
-    @ApiModelProperty(value = "Email")
+    @ApiModelProperty(value = "Phone Number")
     @NotNull
     private String phoneNo;
 
     @ApiModelProperty(value = "Email")
     @Email
     private String email;
-
-    @ApiModelProperty(value = "Password")
-    @NotNull
-    private String password;
+//
+//    @ApiModelProperty(value = "Password")
+//    @NotNull
+//    private String password;
 
 }

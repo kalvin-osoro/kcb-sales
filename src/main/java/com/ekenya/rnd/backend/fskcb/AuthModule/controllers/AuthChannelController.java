@@ -5,30 +5,22 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
-import com.ekenya.rnd.backend.responses.AppResponse;
+import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.xml.transform.Result;
 import java.text.DateFormat;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Auth Controller for Field Agent Rest Api")
@@ -68,18 +60,18 @@ public class AuthChannelController {
                     node.put("expires_in",dateFormat.format(resp.getExpires()));
                     node.putPOJO("profiles",resp.getProfiles());
                     //
-                    return ResponseEntity.ok(new AppResponse(1, node, "Request processed successful"));
+                    return ResponseEntity.ok(new BaseAppResponse(1, node, "Request processed successful"));
 
                 }else if(resp.getRemAttempts() >0){
                     //
-                    return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Login Failed. \nYou "+resp.getRemAttempts()+" remaining attempt(s)"));
+                    return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Login Failed. \nYou "+resp.getRemAttempts()+" remaining attempt(s)"));
 
                 }
             }
         }
 
         //
-        return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 
     }
 
@@ -92,9 +84,9 @@ public class AuthChannelController {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
 
-            return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"User PIN created successful"));
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"User PIN created successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 
     }
 
@@ -109,9 +101,9 @@ public class AuthChannelController {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //
-            return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"User PIN changed successful"));
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"User PIN changed successful"));
         }
-        return ResponseEntity.ok(new AppResponse(1,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 
     }
 
@@ -127,13 +119,13 @@ public class AuthChannelController {
             //Response
             ObjectNode node = objectMapper.createObjectNode();
             //
-            node.put("registered",status.ordinal());
+            node.put("registered",status.getState());
             //
-            return ResponseEntity.ok(new AppResponse(1,node,"Request processed successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request processed successfully"));
         }
         //Response
         //
-        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
     }
 
 
@@ -142,18 +134,18 @@ public class AuthChannelController {
     public ResponseEntity<?> sendPhoneVerificationCode(@RequestBody SendVerificationCodeRequest model) {
 
         //
-        boolean status = authService.sendVerificationCode(model);
+        String code = authService.sendVerificationCode(model);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(status){
+        if(code != null){
             //Response
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
+            node.put("code",code);
             //
-            return ResponseEntity.ok(new AppResponse(1,node,"Request processed successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request processed successfully"));
         }
         //Response
         //
-        return ResponseEntity.ok(new AppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
     }
     @PostMapping("/validate-device-verification-code")
     @ApiOperation(value = "validate-device-verification-code")
@@ -168,7 +160,7 @@ public class AuthChannelController {
         //
         node.put("valid",valid ? 1 : 0);
         //
-        return ResponseEntity.ok(new AppResponse(1,node,"Request processed successfully"));
+        return ResponseEntity.ok(new BaseAppResponse(1,node,"Request processed successfully"));
 
     }
     @PostMapping("/get-security-questions")
@@ -182,9 +174,9 @@ public class AuthChannelController {
         if(list != null){
             //Response
             //
-            return ResponseEntity.ok(new AppResponse(1,list,"Request processed successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request processed successfully"));
         }
-        return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
 
     }
     @PostMapping("/set-security-questions")
@@ -197,10 +189,10 @@ public class AuthChannelController {
 
         if(success){
             //
-            return ResponseEntity.ok(new AppResponse(1,mObjectMapper.createObjectNode(),"Request processed successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,mObjectMapper.createObjectNode(),"Request processed successfully"));
         }
         //
-        return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
     }
     @PostMapping("/get-user-security-questions")
     @ApiOperation(value = "Get Security questions")
@@ -212,9 +204,9 @@ public class AuthChannelController {
         if(list != null){
             //Response
             //
-            return ResponseEntity.ok(new AppResponse(1,list,"Request processed successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request processed successfully"));
         }
-        return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
 
     }
     @PostMapping("/validate-security-questions")
@@ -226,9 +218,9 @@ public class AuthChannelController {
 
         if(success){
             //
-            return ResponseEntity.ok(new AppResponse(1,mObjectMapper.createObjectNode(),"Request processed successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,mObjectMapper.createObjectNode(),"Request processed successfully"));
         }
         //
-        return ResponseEntity.ok(new AppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
     }
 }

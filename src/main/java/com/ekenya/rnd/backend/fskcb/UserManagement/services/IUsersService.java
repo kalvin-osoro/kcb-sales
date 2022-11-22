@@ -1,10 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdatePasswordRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -24,7 +21,7 @@ public interface IUsersService {
 
     UserAccount findByStaffNo(String staffNo);
 
-    boolean attemptCreateUser(AddUserRequest model);
+    boolean attemptCreateUser(AddUserRequest model, boolean verified);
     ObjectNode attemptImportUsers(MultipartFile importFile);
 
     List<ObjectNode> loadAllUsers();
@@ -43,5 +40,7 @@ public interface IUsersService {
 
     ArrayNode loadUserAuditTrail(Long userId);
 
+    boolean attemptCreateSecurityQuestion(AddSecurityQnRequest model);
 
+    List<ObjectNode> loadAllSecurityQuestions();
 }

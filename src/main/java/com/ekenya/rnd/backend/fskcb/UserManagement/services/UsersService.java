@@ -2,6 +2,10 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.AdminModule.datasource.entities.UserAuditTrailEntity;
 import com.ekenya.rnd.backend.fskcb.AdminModule.datasource.repositories.IUserAuditTrailRepo;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecQuestionOptionEntity;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionEntity;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionType;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.ISmsService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
@@ -12,10 +16,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserR
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdatePasswordRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.ekenya.rnd.backend.fskcb.exception.UserNotFoundException;
 import com.ekenya.rnd.backend.utils.Status;
@@ -61,6 +62,8 @@ public class UsersService implements IUsersService {
     @Autowired
     IUserAuditTrailRepo userAuditTrailRepository;
 
+    @Autowired
+    ISecurityQuestionsRepo securityQuestionsRepo;
     private ObjectMapper mObjectMapper = new ObjectMapper();
 
     public boolean updateResetPasswordToken(String token, String email) throws UserNotFoundException {
@@ -110,7 +113,7 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public boolean attemptCreateUser(AddUserRequest model) {
+    public boolean attemptCreateUser(AddUserRequest model, boolean verified) {
 
 
         try{
@@ -125,9 +128,11 @@ public class UsersService implements IUsersService {
                 account.setAccountType(AccountType.ADMIN);
                 account.setFullName(model.getFullName());
                 account.setEmail(model.getEmail());
+                account.setStaffNo(model.getStaffNo());
+                account.setIsVerified(verified);
                 //
                 account.setPassword(passwordEncoder.encode(password));
-                userRepository.save(account);//save user to db
+                //userRepository.save(account);//save user to db
                 //
 
                 //CAN ACCESS PORTAL
@@ -138,8 +143,10 @@ public class UsersService implements IUsersService {
                 //
                 if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                     //
-                    return true;
+                    //return true;
                 }
+                //
+                return true;
             }
 
         }catch (Exception ex){
@@ -507,6 +514,93 @@ public class UsersService implements IUsersService {
             log.error(e.getMessage(),e);
         }
 
+        return null;
+    }
+
+    @Override
+    public boolean attemptCreateSecurityQuestion(AddSecurityQnRequest model) {
+
+        try{
+
+            if(!securityQuestionsRepo.findByTitle(model.getTitle()).isPresent()){
+
+                SecurityQuestionEntity qn = new SecurityQuestionEntity();
+                qn.setStatus(Status.ACTIVE);
+                qn.setTitle(model.getTitle());
+                if(model.getType().equalsIgnoreCase(SecurityQuestionType.YES_NO.toString())) {
+                    qn.setType(SecurityQuestionType.YES_NO);
+                }else if(model.getType().equalsIgnoreCase(SecurityQuestionType.SELECT_OPTIONS.toString())) {
+                    //
+                    qn.setType(SecurityQuestionType.SELECT_OPTIONS);
+                    //
+                    if(model.getChoices()!=null && !model.getChoices().isEmpty()){
+                        List<SecQuestionOptionEntity> optionEntities = new ArrayList<>();
+                        for (String e: model.getChoices()) {
+                            SecQuestionOptionEntity option = new SecQuestionOptionEntity();
+                            option.setTitle(e);
+                            optionEntities.add(option);
+                        }
+                        qn.setOptions(optionEntities);
+                    }
+                }else if(model.getType().equalsIgnoreCase(SecurityQuestionType.MULTI_LINE.toString())) {
+                    qn.setType(SecurityQuestionType.MULTI_LINE);
+                }else if(model.getType().equalsIgnoreCase(SecurityQuestionType.NUMERICAL.toString())) {
+                    qn.setType(SecurityQuestionType.NUMERICAL);
+                }else{
+                    qn.setType(SecurityQuestionType.ONE_LINE);
+                }
+
+                //
+                securityQuestionsRepo.save(qn);
+            }
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> loadAllSecurityQuestions() {
+
+        try{
+            List<ObjectNode> list = new ArrayList<>();
+            for(SecurityQuestionEntity qn : securityQuestionsRepo.findAll()){
+                ObjectNode node = mObjectMapper.createObjectNode();
+
+                node.put("id",qn.getId());
+                node.put("title",qn.getTitle());
+                node.put("type",qn.getType().toString());
+
+                if(!qn.getOptions().isEmpty()) {
+                    ArrayNode options = mObjectMapper.createArrayNode();
+                    for (SecQuestionOptionEntity opt:
+                         qn.getOptions()) {
+
+                        ObjectNode option = mObjectMapper.createObjectNode();
+                        option.put("title",opt.getTitle());
+                        option.put("id",opt.getId());
+                        options.add(option);
+                    }
+                    node.putPOJO("options", options);
+                }
+                try {
+                    if(qn.getDateCreated() != null) {
+                        node.put("dateCreated", dateFormat.format(qn.getDateCreated()));
+                    }else{
+                        node.put("dateCreated", "");
+                    }
+                }catch (Exception ex){
+                    log.error(ex.getMessage(),ex);
+                    node.put("dateCreated", "");
+                }
+                //
+                list.add(node);
+            }
+            return list;
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
         return null;
     }
 

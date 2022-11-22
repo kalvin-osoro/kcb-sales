@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface ISecurityQuestionsRepo extends JpaRepository<SecurityQuestionEntity, Long> {
 
+    Optional<SecurityQuestionEntity> findByTitle(String title);
     Optional<SecurityQuestionEntity> findByIdAndStatus(Long id, Status status);
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 @Getter
@@ -36,7 +37,7 @@ public class DSRTeamEntity {
     private Status status= Status.ACTIVE;
 
     @Column(name="created_on")
-    private Date createdOn;
+    private Date createdOn = Calendar.getInstance().getTime();
 
     @Column(name="updated_on")
     private Date updatedOn;

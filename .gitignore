@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ##
-
+logs/
 *.yml
 
 ### IntelliJ IDEA ###

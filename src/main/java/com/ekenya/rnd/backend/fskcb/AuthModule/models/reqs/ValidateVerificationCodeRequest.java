@@ -6,5 +6,6 @@ import lombok.Data;
 public class ValidateVerificationCodeRequest {
 
     private String staffNo;
+    private String phoneNo;
     private String code;
 }

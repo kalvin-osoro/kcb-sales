@@ -15,7 +15,7 @@ public interface IAuthService {
 
     AccountLookupState accountExists(LookupRequest model);
 
-    boolean sendVerificationCode(SendVerificationCodeRequest model);
+    String sendVerificationCode(SendVerificationCodeRequest model);
 
     boolean validateVerificationCode(ValidateVerificationCodeRequest model);
     List<ObjectNode> loadSecurityQuestions();

@@ -1,6 +1,0 @@
-INFO > 11-20-2022 12:31:50 || QssClientManager$1.subscribe() : QSS: Init Hub Connection Service, URL = https://devops.ekenya.co.ke:8084/delta?uid=KCB_SALES_BACKEND
-INFO > 11-20-2022 12:31:50 || QssClientManager$1.subscribe() : QSS: Init Hub Connection Service, URL = https://devops.ekenya.co.ke:8084/delta?uid=KCB_SALES_BACKEND
-INFO > 11-20-2022 12:31:53 || QssClientManager$1.subscribe() : QSS: Start Hub Connection Exit.. 
-INFO > 11-20-2022 12:31:53 || QssClientManager$1.subscribe() : QSS: Start Hub Connection Exit.. 
-SEVERE > 11-20-2022 12:32:11 || QssClientManager$1$1.onError() : Hub Start Error => There was an error starting the WebSocket transport.
-SEVERE > 11-20-2022 12:32:11 || QssClientManager$1$1.onError() : Hub Start Error => There was an error starting the WebSocket transport.

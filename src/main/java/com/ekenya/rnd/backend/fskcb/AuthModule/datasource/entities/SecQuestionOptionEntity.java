@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dbo_qn_options")
+@Table(name = "dbo_qns_options")
 public class SecQuestionOptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

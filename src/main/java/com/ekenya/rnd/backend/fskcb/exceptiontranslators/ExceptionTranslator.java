@@ -1,12 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.exceptiontranslators;
 
-import com.ekenya.rnd.backend.responses.AppResponse;
 import com.ekenya.rnd.backend.responses.RequestValidationError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
