@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IAcquiringPortalService {
@@ -56,7 +57,7 @@ public interface IAcquiringPortalService {
 
     ObjectNode getMerchantById(AcquiringMerchantDetailsRequest acquiringMerchantDetailsRequest);
 
-    List<?> getTargetsSummary(AcquringSummaryRequest filters);
+    List<ObjectNode> getTargetsSummary(AcquringSummaryRequest filters);
 
     List<?> getLeadsSummary(AcquringSummaryRequest filters);
 

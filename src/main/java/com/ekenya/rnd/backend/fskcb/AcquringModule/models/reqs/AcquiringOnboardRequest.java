@@ -1,29 +1,22 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.MerchantType;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SettlmentType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Entity
-@Table(name = "dbo_aqc_onboarding")
-@DynamicUpdate
-@DynamicInsert
-public class AcquiringOnboardEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@AllArgsConstructor
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AcquiringOnboardRequest {
     private String merchantName;
-    @Enumerated(EnumType.STRING)
     private MerchantType merchantType;
     private String businessType;
     private String tradingName;
@@ -33,9 +26,7 @@ public class AcquiringOnboardEntity {
     private String region;
     private  String merchantIdNumber;
     private String merchantEmail;
-    @Column(name="merchant_phone_number")
     private String merchantPhone;
-    @Column(name = "merchant_dob")
     private String merchantDob;
     private String merchantPbox;
     private String merchantPostalCode;
@@ -58,25 +49,18 @@ public class AcquiringOnboardEntity {
     private String accountName;
     private String accountNumber;
     private String branchName;
-    @Enumerated(EnumType.STRING)
     private SettlmentType settlmentType;
     //next of kin details
     private String nextOfKinFullName;
     private String nextOfKinIdNumber;
     private String nextOfKinPhoneNumber;
 
-    @Column(name="town")
     private String town;
-    @Column(name="street_name")
     private String streetName;
-    @Column(name="building_name")
     private String buildingName;
-    @Column(name="room_number")
     private String roomNumber;
     private String county;
     private String city;
     private String nearbyLandMark;
-    @Enumerated(EnumType.STRING)
     private OnboardingStatus status;
-
 }

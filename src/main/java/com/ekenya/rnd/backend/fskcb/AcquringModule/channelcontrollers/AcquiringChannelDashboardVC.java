@@ -2,16 +2,19 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.responses.AppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class AcquiringChannelDashboardVC {
-
+    @Autowired
+   private IAcquiringChannelService acquiringService;
 
     @PostMapping("/acquiring-summary")
     public ResponseEntity<?> getSummary() {

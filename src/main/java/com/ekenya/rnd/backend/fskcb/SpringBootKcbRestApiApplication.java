@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -13,6 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,6 +63,7 @@ public class SpringBootKcbRestApiApplication   {
 //	}
 
 	public static void main(String[] args) {
+		new File(FileStorageService.uploadPath).mkdir();
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 
 	}

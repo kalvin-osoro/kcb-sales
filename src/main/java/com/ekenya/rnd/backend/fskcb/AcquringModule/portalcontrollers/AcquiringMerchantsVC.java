@@ -20,7 +20,7 @@ public class AcquiringMerchantsVC {
     @PostMapping("/acquiring-get-merchant-by-id")
     public ResponseEntity<?> getMerchantById(@RequestBody AcquiringMerchantDetailsRequest acquiringMerchantDetailsRequest) {
         Object merchant = acquiringService.getMerchantById(acquiringMerchantDetailsRequest);
-        boolean success = merchant  == null;
+        boolean success = merchant  != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
