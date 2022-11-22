@@ -33,13 +33,13 @@ public class SMSService implements ISmsService{
     //
     @Value("ECLECTICS")
     private String SMS_SENDER_ID;
-    @Value("5165")
+    @Value("5094")
     private String client_id;
     @Value("https://testgateway.ekenya.co.ke:8443/ServiceLayer/pgsms/send")
     private String SMS_GATEWAY_URL;
-    @Value("fieldagent")
+    @Value("janty")
     private String SMS_USER_NAME;
-    @Value("a7d11f3c635c69ca81d8bd5da9f4e7e97ceb2aa296bc6061e5f477db9d6b8b1b2d08ccdb701e94d9f0f097fbd0d43fac1b67218c427abadf2e6221bd74c3e301")
+    @Value("b0c95e2144bdd4c86b94501a814f9bbd9d025651d8497df04b7b7f318fe5172088c491906756a67727f6ea964e9caf1c034bf9bb267b821e6b43cb3dcc569d0f")
     private String SMS_PASSWORD;
     @Value("30")
     private String otpExpiresIn;
@@ -65,7 +65,7 @@ public class SMSService implements ISmsService{
             String message;
             //
             if(type == AuthCodeType.DEVICE_VERIFICATION) {
-                message = "Hello " + staffNo + ", your phone number verification code is " + code + "\nThe will automatically pick it up";
+                message = "Hello " + staffNo + ", your phone number verification code is " + code + "\nThe Field Sales App will automatically pick it up";
             }else{
                 message = "Hello " + staffNo + ", use this as your PIN to login " + code ;
             }
@@ -76,7 +76,7 @@ public class SMSService implements ISmsService{
             }
             int responseCode = smsResponse.get("ResultCode").getAsInt();
             if (responseCode != 0) {
-                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+                throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
             }
 
             return code;
@@ -107,18 +107,22 @@ public class SMSService implements ISmsService{
 ////        String url = environment.getProperty("sms_gateway.url");
 //        String client_id=
 //        String username =
+        long seed = System.currentTimeMillis();
+        Random random = new Random(seed);
+        int max = 99999999, min = 10000000;
 //        String password =
         JsonObject jsonObjectBody = new JsonObject();
         jsonObjectBody.addProperty("to", phoneNo);
         jsonObjectBody.addProperty("message", message);
         jsonObjectBody.addProperty("from", SMS_SENDER_ID);
-        jsonObjectBody.addProperty("transactionID", "ZHD839278X@");
+        jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
         jsonObjectBody.addProperty("clientid", client_id);
         jsonObjectBody.addProperty("username", SMS_USER_NAME);
         jsonObjectBody.addProperty("password", SMS_PASSWORD);
         logger.info("Message body is: " + jsonObjectBody);
         HttpEntity<String> entity = new HttpEntity<>(jsonObjectBody.toString(), headers);
         ResponseEntity<String> responseEntity = null;
+
         try {
             logger.info("Sending sms");
             responseEntity = restTemplate.postForEntity(SMS_GATEWAY_URL,
