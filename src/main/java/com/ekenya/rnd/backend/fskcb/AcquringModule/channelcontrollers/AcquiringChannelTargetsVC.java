@@ -35,8 +35,8 @@ public class AcquiringChannelTargetsVC {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(targets));
+           ArrayNode node = objectMapper.createArrayNode();
+           node.addAll((List)targets);
             return ResponseEntity.ok(new AppResponse(1,node,"Request Processed Successfully"));
         }else{
 
