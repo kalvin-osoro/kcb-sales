@@ -10,7 +10,6 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadR
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -282,10 +281,6 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 asset.put("merchantIdNumber", acquiringOnboardEntity.getMerchantIdNumber());
                 asset.put("businessName", acquiringOnboardEntity.getBusinessName());
                 asset.put("businessEmail", acquiringOnboardEntity.getBusinessEmail());
-                ObjectNode coordinates = mapper.createObjectNode();
-                coordinates.put("latitude", acquiringOnboardEntity.getLatitude());
-                coordinates.put("longitude", acquiringOnboardEntity.getLongitude());
-                asset.set("coordinates", coordinates);
 
                 list.add(asset);
             }
@@ -306,8 +301,71 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
     @Override
     public List<ObjectNode> getTargetsSummary() {
+        //{
+        //    "onboarding":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "visits":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "leads":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "campaigns":{
+        //        "achieved":67,
+        //        "target":100
+        //    },
+        //    "cur-comission":56000,
+        //    "prev-comission":45000
+        //}
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllOnboardingTarget()) {
 
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
+                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
+                list.add(asset);
+            }
+            //targetValue and targetAchieved for Target type is VISITS
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllVisitsTarget()) {
 
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
+                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
+                list.add(asset);
+            }
+            //targetValue and targetAchieved for Target type is LEADS
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllLeadsTarget()) {
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
+                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
+                list.add(asset);
+            }
+            //targetValue and targetAchieved for Target type is CAMPAIGNS
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllCampaignsTarget()) {
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
+                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
+                list.add(asset);
+            }
+            //current commission  hard coded for now
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("cur-comission", 56000);
+            asset.put("prev-comission", 45000);
+            list.add(asset);
+
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while getting targets summary", e);
+        }
         return null;
     }
 }

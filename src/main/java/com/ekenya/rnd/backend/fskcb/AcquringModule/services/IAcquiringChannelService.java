@@ -27,7 +27,7 @@ public interface IAcquiringChannelService {
 
     Object updateLead(AcquiringAddLeadRequest model);
 
-    Object searchCustomers(String merchanName, String merchantPhone);
+    Object searchCustomers(String merchantName,String merchantPhone);
 
     List<ObjectNode> getNearbyCustomers(AcquiringNearbyCustomersRequest model);
 
