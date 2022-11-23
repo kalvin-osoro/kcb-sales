@@ -9,4 +9,4 @@ buildJar:
   stage: build-deploy
   image: docker:20.10.21
   script:
-    - docker build . -t kcb-ses-poc-be:v1.0.0
+    - docker build -f build.Dockerfile . -t kcb-ses-poc-be:v1.0.0
