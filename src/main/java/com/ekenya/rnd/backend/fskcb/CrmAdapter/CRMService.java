@@ -4,8 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 @Service
 public class CRMService implements ICRMService {
@@ -30,11 +31,14 @@ public class CRMService implements ICRMService {
 
     public static String accessToken ;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = Logger.getLogger(getClass().getName());
+    @Autowired
+    FileHandler mLogsFileHandler;
     @PostConstruct
     void processToken(){
         System.out.println("generating crm token");
         accessToken = generateOauth2Token();
+        log.addHandler(mLogsFileHandler);
     }
     @Override
     public String generateOauth2Token() {

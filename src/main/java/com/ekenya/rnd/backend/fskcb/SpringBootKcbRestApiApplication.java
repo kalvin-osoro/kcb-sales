@@ -35,9 +35,6 @@ import java.util.logging.LogRecord;
 public class SpringBootKcbRestApiApplication   {
 	@Resource
 	public Environment environment;
-
-
-
 	@Bean
 	public DateTimeFormatter dateFormatter() {
 		return DateTimeFormatter.ISO_DATE_TIME;

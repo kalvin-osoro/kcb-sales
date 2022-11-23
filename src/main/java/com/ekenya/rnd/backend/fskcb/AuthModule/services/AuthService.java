@@ -20,7 +20,6 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,10 +34,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class AuthService implements IAuthService{
     @Autowired
     ObjectMapper mObjectMapper;
@@ -68,6 +69,9 @@ public class AuthService implements IAuthService{
     @Autowired
     ISecurityQuestionsRepo securityQuestionsRepo;
 
+    private java.util.logging.Logger mLogger = Logger.getLogger(getClass().getName());
+    @Autowired
+    FileHandler mLogFileHandler;
     @Override
     public LoginResponse attemptLogin(LoginRequest model) {
 
@@ -129,7 +133,7 @@ public class AuthService implements IAuthService{
             //
         }catch (Exception ex){
             //
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
 
         return null;
@@ -160,7 +164,7 @@ public class AuthService implements IAuthService{
 
             return true;
         }catch (Exception ex){
-            log.error("Change pin/password attempt failed.", ex);
+            mLogger.log(Level.SEVERE,"Change pin/password attempt failed.", ex);
         }
         return false;
     }
@@ -179,7 +183,7 @@ public class AuthService implements IAuthService{
             //Not found
             return AccountLookupState.NOT_FOUND;
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
 
         return null;
@@ -197,7 +201,7 @@ public class AuthService implements IAuthService{
                 return code;
             }
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
 
         return null;
@@ -209,22 +213,28 @@ public class AuthService implements IAuthService{
 
         try{
             //
-            Optional<DSRAccountEntity> optionalDSRAccount = dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo());
+            Optional<DSRAccountEntity> optionalDSRAccount =
+                    dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo());
 
             if(optionalDSRAccount.isPresent()) {
 
                 DSRAccountEntity dsrAccount = optionalDSRAccount.get();
 
                 Optional<SecurityAuthCodeEntity> code = securityAuthCodesRepository.findAllByCode(model.getCode());
+                //
+                mLogger.log(Level.INFO,"Validating token "+code);
                 //Check if code exist...
                 if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().isExpired()) {
                     //
-                    LocalDateTime dateTime = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
+                    LocalDateTime tokenIssued = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
                             ZoneId.systemDefault());
                     //
-                    dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
+                    LocalDateTime tokenExpiryTime = tokenIssued.plusMinutes(code.get().getExpiresInMinutes());
                     //
-                    if (!dateTime.isBefore(LocalDateTime.now())) {
+                    mLogger.log(Level.INFO,"Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
+
+                    //
+                    if (tokenExpiryTime.isAfter(LocalDateTime.now())) {
 
                         //
                         code.get().setExpired(true);
@@ -247,7 +257,7 @@ public class AuthService implements IAuthService{
                                 //All is well,
                                 return true;
                             } else {
-                                log.error("Create User Account Failed");
+                                mLogger.log(Level.SEVERE,"Create User Account Failed");
                             }
                         }else{
                             //All is well,
@@ -255,12 +265,12 @@ public class AuthService implements IAuthService{
                         }
                     } else {
                         //
-                        log.error("Device verification code is expired or user with staffNo exists ..");
+                        mLogger.log(Level.SEVERE,"Device verification code is expired or user with staffNo exists ..");
                     }
                 }
             }
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
         return false;
     }
@@ -285,7 +295,7 @@ public class AuthService implements IAuthService{
             }
             return list;
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
         return null;
     }
@@ -314,7 +324,7 @@ public class AuthService implements IAuthService{
             }
             return list;
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
         return null;
     }
@@ -345,7 +355,7 @@ public class AuthService implements IAuthService{
             }
             return  true;
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
 
         return false;
@@ -379,7 +389,7 @@ public class AuthService implements IAuthService{
                 userRepository.save(account);//save user to db
             }
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
 
         return valid;
@@ -406,7 +416,7 @@ public class AuthService implements IAuthService{
                 //User not found ..
             }
         }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
         return false;
     }
@@ -435,7 +445,7 @@ public class AuthService implements IAuthService{
 
             return true;
         }catch (Exception ex){
-            log.error("Change pin/password attempt failed.", ex);
+            mLogger.log(Level.SEVERE,"Change pin/password attempt failed.", ex);
         }
         return false;
     }
@@ -459,7 +469,7 @@ public class AuthService implements IAuthService{
             }
 
         }catch (Exception ex){
-            log.error("PIN reset attempt failed.", ex);
+            mLogger.log(Level.SEVERE,"PIN reset attempt failed.", ex);
         }
         return false;
     }
@@ -477,7 +487,7 @@ public class AuthService implements IAuthService{
 
             return true;
         }catch (Exception ex){
-            log.error("Change PIN/password attempt failed.", ex);
+            mLogger.log(Level.SEVERE,"Change PIN/password attempt failed.", ex);
         }
         return false;
     }

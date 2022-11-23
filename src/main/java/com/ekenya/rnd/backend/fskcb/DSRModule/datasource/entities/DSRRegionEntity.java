@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.utils.Status;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -25,6 +26,7 @@ public class DSRRegionEntity {
 
     private String name;
     private String code;
+    @Lob
     private String geoJsonBounds;
 
     private Date dateCreated = Calendar.getInstance().getTime();
