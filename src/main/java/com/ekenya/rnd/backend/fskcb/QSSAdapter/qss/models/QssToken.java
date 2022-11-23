@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.QSSAdapter.models;
+package com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models;
 
 import com.google.gson.annotations.SerializedName;
 

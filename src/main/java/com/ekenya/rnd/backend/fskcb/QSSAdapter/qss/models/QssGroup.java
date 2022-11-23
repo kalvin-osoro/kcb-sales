@@ -1,6 +1,5 @@
-package com.ekenya.rnd.backend.fskcb.QSSAdapter.models;
+package com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models;
 
-import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
@@ -17,10 +16,10 @@ public class QssGroup implements Comparable<QssGroup> {
     @SerializedName("admin")
     private int owner;
     @SerializedName("members")
-    private List<? extends com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser> users;
+    private List<? extends QssUser> users;
     private Date dateAdded = Calendar.getInstance().getTime();
 
-    public QssGroup(String id, String name, String photo, List<? extends com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser> users) {
+    public QssGroup(String id, String name, String photo, List<? extends QssUser> users) {
 
         this.id = id;
         this.name = name;
@@ -61,7 +60,7 @@ public class QssGroup implements Comparable<QssGroup> {
         return dateAdded;
     }
 
-    public List<? extends com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser> getMembers() {
+    public List<? extends QssUser> getMembers() {
         return users;
     }
 
