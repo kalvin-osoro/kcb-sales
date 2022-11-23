@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,8 @@ public class CBBankingConvenantEntity {
     private Integer intervalForCheck;
     private Long dsrId;
     @Enumerated(EnumType.STRING)
-    private ConcessionStatus status;
+    private Status status;
+
     private Date createdOn;
     private String alertMessage;
     private Integer alertBeforeExpiry;

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,4 +22,22 @@ public class CBCustomerVisitsRequest {
     private String visitDate;
     private Status status;
     private Zone zone;
+    //call details
+    private String typeOfVisit;
+    private String channel;
+    private String productOffered;
+    private String opportunities;
+    private String remarks;
+    private boolean staffOfOtherDepartmentPresent;
+    private String timeSpent;
+    private Date nextVisitDate;
+    private String productInvolvement;
+    private String cashManagement;
+    private String tradeRepresentation;
+    private String custodyRepresentation;
+    private String snrCallRep;
+    private String CVPRep;
+    private String bancaRep;
+    private String treasuryRep;
+    private String periodic;
 }

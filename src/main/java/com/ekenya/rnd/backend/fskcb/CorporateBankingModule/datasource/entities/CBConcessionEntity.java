@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSJustificationEntity;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSRevenueLineEntity;
 import com.ekenya.rnd.backend.utils.Status;
@@ -26,13 +27,19 @@ public class CBConcessionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String customerName;
+    private String referenceNumber;
+    private String customerAccountNumber;
     private String submissionRate;
     private String submittedBy;
+    private String startDate;
+    private String endDate;
     @Embedded
     PSRevenueLineEntity PSRevenueLinesEntity;
     @Embedded
     PSJustificationEntity justifications;
     private Date createdOn;
     private Status status;
+    @Enumerated(EnumType.STRING)
+    private ConcessionStatus concessionStatus;
 
 }

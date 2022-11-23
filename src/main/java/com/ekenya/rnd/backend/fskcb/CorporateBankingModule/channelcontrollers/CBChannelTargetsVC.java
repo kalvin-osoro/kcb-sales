@@ -1,9 +1,13 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.CBChannelService;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +15,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class CBChannelTargetsVC {
 
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    ICBChannelService cbChannelService;
     @PostMapping("/cb-get-targets-summary")
     public ResponseEntity<?> getTargetsSummary() {
+        ArrayList<?> targets = cbChannelService.getTargetsSummary();
+        boolean success = targets != null;
 
         //Resp =>
         //{
@@ -40,15 +48,13 @@ public class CBChannelTargetsVC {
         //    "prev-comission":45000
         //}
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayList) targets);
+
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
