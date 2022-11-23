@@ -29,9 +29,11 @@ public class AcquiringCustomerVisitEntity {
     private String dsrName;
     private String merchantName;
     private String reasonForVisit;
+    private String actionPlan;
+    private String highlights;
     private String visitDate;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status=Status.ACTIVE;
 //    private Zone zone;
     private Date createdOn;
     private Date updatedOn;

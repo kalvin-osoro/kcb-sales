@@ -62,7 +62,7 @@ public class AcquiringChannelOnboardingVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) merchantObject);
+            node.addAll((List)merchantObject);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

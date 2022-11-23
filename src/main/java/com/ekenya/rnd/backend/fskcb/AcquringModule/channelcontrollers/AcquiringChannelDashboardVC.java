@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class AcquiringChannelDashboardVC {
@@ -95,9 +97,9 @@ public class AcquiringChannelDashboardVC {
 
 
     @PostMapping("/acquiring-search-customers")
-    public ResponseEntity<?> searchCustomers(@RequestParam String merchantName, @RequestParam String merchantPhone) {
-        Object obj = acquiringService.searchCustomers(merchantName, merchantPhone);
-        boolean success = obj != null;
+    public ResponseEntity<?> searchCustomers(@RequestParam String keyword) {
+        List<?>searchCustomers = acquiringService.searchCustomers(keyword);
+        boolean success = searchCustomers != null;
 
         //Resp =>
         //{
@@ -119,8 +121,8 @@ public class AcquiringChannelDashboardVC {
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-            node.putArray("customers").addAll((ArrayNode) obj);
+            ArrayNode node =objectMapper.createArrayNode();
+            node.addAll((List)searchCustomers);
 
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

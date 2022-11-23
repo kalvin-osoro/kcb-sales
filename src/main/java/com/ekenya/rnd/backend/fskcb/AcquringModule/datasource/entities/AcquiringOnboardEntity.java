@@ -50,9 +50,9 @@ public class AcquiringOnboardEntity {
     private String outletPhoneNo;
     private String businessEmail;
     private String businessKRAPin;
-    private boolean wantVoomaTillNumber;
-    private boolean wantVoomaPaybillNumber;
-    private boolean exchangeForeign;
+    private boolean wantVoomaTillNumber=false;
+    private boolean wantVoomaPaybillNumber=false;
+    private boolean exchangeForeign=false;
     //payment details
     private String bank;
     private String accountName;

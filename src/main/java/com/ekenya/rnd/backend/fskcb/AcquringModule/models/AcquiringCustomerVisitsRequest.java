@@ -14,12 +14,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AcquiringCustomerVisitsRequest {
+    private Long id;
     private  Long dsrId;
     private String dsrName;
     private String merchantName;
     private String reasonForVisit;
     private String visitDate;
-    @Enumerated(EnumType.STRING)
+    private String actionPlan;
+    private String highlights;
     private Status status;
     //    private Zone zone;
     private Date createdOn;

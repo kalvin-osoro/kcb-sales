@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AcquiringNearbyCustomersRequest {
 
-    private double lat;
-    private double lng;
-    private double zoom;
+    private double latitude;
+    private double longitude;
+//    private double zoom;
+    private double radius;
 }

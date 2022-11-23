@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
@@ -27,9 +28,19 @@ public interface IAcquiringChannelService {
 
     Object updateLead(AcquiringAddLeadRequest model);
 
-    Object searchCustomers(String merchantName,String merchantPhone);
+    List<ObjectNode> searchCustomers(String query);
 
     List<ObjectNode> getNearbyCustomers(AcquiringNearbyCustomersRequest model);
 
     List<ObjectNode> getTargetsSummary();
+
+    boolean createCustomerVisit(AcquiringCustomerVisitsRequest model);
+
+    boolean updateCustomerVisit(AcquiringCustomerVisitsRequest model);
+
+    List<?> getAllCustomerVisitsByDSR(int dsrId);
+
+    boolean assignAssetToMerchant(Long assetId, Long agentId);
+
+    List<ObjectNode> getAllAgentsAssets(Long agentId);
 }
