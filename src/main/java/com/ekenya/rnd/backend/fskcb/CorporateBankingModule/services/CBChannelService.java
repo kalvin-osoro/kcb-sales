@@ -1,30 +1,40 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringLeadEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBConcessionEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBCustomerVisitEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBTargetEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.CBConcessionRepository;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.CBCustomerVisitRepository;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.CBTargetRepository;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.ICBLeadsRepository;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddLeadRequest;
-import com.ekenya.rnd.backend.fskcb.entity.CustomerAppointments;
-import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
-import com.ekenya.rnd.backend.utils.Status;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerVisitsRequest;
 import com.ekenya.rnd.backend.utils.Utility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
 
 @Service
+@RequiredArgsConstructor
 public class CBChannelService implements ICBChannelService {
     private final ICBLeadsRepository cbLeadsRepository;
+    private final CBConcessionRepository cbConcessionRepository;
+    private final CBCustomerVisitRepository cbCustomerVisitRepository;
+    private final CBTargetRepository cbTargetRepository;
+
+    private final double commission = Math.round(Math.random() * 1000000*1.35)/100.0;
+    private final double preCommission = Math.round(Math.random() * 1000000*1.35)/100.0;
 
     @Override
     public boolean createCBLead(CBAddLeadRequest model) {
@@ -36,6 +46,8 @@ public class CBChannelService implements ICBChannelService {
             cbLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
             cbLeadEntity.setTopic(model.getTopic());
             cbLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            cbLeadsRepository.save(cbLeadEntity);
+            return true;
 
         } catch (Exception e) {
             log.error("Error occurred while creating lead", e);
@@ -44,7 +56,176 @@ public class CBChannelService implements ICBChannelService {
     }
 
     @Override
-    public List<ObjectNode> getAllLeadsByDsrId(Long dsrId) {
+    public List<ObjectNode> getAllLeadsByDsrId(CBGetLeadsByDsrIdRequest model) {
+        //get all leads by dsr id
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBLeadEntity cbLeadEntity : cbLeadsRepository.findAllByDsrId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerId", cbLeadEntity.getCustomerId());
+                node.put("businessUnit", cbLeadEntity.getBusinessUnit());
+                node.put("leadStatus", String.valueOf(cbLeadEntity.getLeadStatus()));
+                node.put("topic", cbLeadEntity.getTopic());
+                node.put("priority", cbLeadEntity.getPriority().ordinal());
+                node.put("dsrId", cbLeadEntity.getDsrId());
+                //add to list
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean createCustomerVisit(CBCustomerVisitsRequest request) {
+        //create customer visit
+        try {
+            if (request == null) {
+                return false;
+            }
+            CBCustomerVisitEntity cbCustomerVisitEntity = new CBCustomerVisitEntity();
+            cbCustomerVisitEntity.setTypeOfVisit(request.getTypeOfVisit());
+            cbCustomerVisitEntity.setChannel(request.getChannel());
+            cbCustomerVisitEntity.setCustomerName(request.getCustomerName());
+            cbCustomerVisitEntity.setProductOffered(request.getProductOffered());
+            cbCustomerVisitEntity.setOpportunities(request.getOpportunities());
+            cbCustomerVisitEntity.setRemarks(request.getRemarks());
+            cbCustomerVisitEntity.setStaffOfOtherDepartmentPresent(request.isStaffOfOtherDepartmentPresent());
+            cbCustomerVisitEntity.setTimeSpent(request.getTimeSpent());
+            cbCustomerVisitEntity.setNextVisitDate(request.getNextVisitDate());
+            cbCustomerVisitEntity.setProductInvolvement(request.getProductInvolvement());
+            cbCustomerVisitEntity.setCashManagement(request.getCashManagement());
+            cbCustomerVisitEntity.setTradeRepresentation(request.getTradeRepresentation());
+            cbCustomerVisitEntity.setCustodyRepresentation(request.getCustodyRepresentation());
+            cbCustomerVisitEntity.setSnrCallRep(request.getSnrCallRep());
+            cbCustomerVisitEntity.setCVPRep(request.getCVPRep());
+            cbCustomerVisitEntity.setBancaRep(request.getBancaRep());
+            cbCustomerVisitEntity.setTreasuryRep(request.getTreasuryRep());
+            cbCustomerVisitEntity.setPeriodic(request.getPeriodic());
+            cbCustomerVisitRepository.save(cbCustomerVisitEntity);
+            return true;
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating customer visit", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllCustomerVisitsByDSR(CBCustomerVisitsRequest model) {
+        //get all customer visits by dsr id
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBCustomerVisitEntity cbCustomerVisitEntity : cbCustomerVisitRepository.findAllByDsrId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                   node.put("customerName", cbCustomerVisitEntity.getCustomerName());
+                   node.put("typeOfVisit", cbCustomerVisitEntity.getTypeOfVisit());
+                   node.put("channel", cbCustomerVisitEntity.getChannel());
+                   node.put("productOffered", cbCustomerVisitEntity.getProductOffered());
+                   node.put("opportunities", cbCustomerVisitEntity.getOpportunities());
+                   node.put("remarks", cbCustomerVisitEntity.getRemarks());
+                   node.put("staffOfOtherDepartmentPresent", cbCustomerVisitEntity.isStaffOfOtherDepartmentPresent());
+                   node.put("timeSpent", cbCustomerVisitEntity.getTimeSpent());
+                   node.put("productInvolvement", cbCustomerVisitEntity.getProductInvolvement());
+                   node.put("cashManagement", cbCustomerVisitEntity.getCashManagement());
+                   node.put("tradeRepresentation", cbCustomerVisitEntity.getTradeRepresentation());
+                   node.put("custodyRepresentation", cbCustomerVisitEntity.getCustodyRepresentation());
+                   node.put("snrCallRep", cbCustomerVisitEntity.getSnrCallRep());
+                   node.put("cVPRep", cbCustomerVisitEntity.getCVPRep());
+                   node.put("bancaRep", cbCustomerVisitEntity.getBancaRep());
+                   node.put("treasuryRep", cbCustomerVisitEntity.getTreasuryRep());
+                   node.put("periodic", cbCustomerVisitEntity.getPeriodic());
+
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<ObjectNode> getTargetsSummary() {
+        try {
+            ArrayList<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBTargetEntity cbTargetEntity : cbTargetRepository.findAllByTargetType(TargetType.VISITS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode visitsNode = mapper.createObjectNode();
+                node.put("achieved", cbTargetEntity.getTargetAchievement());
+                node.put("target", cbTargetEntity.getTargetValue());
+                visitsNode.set("visits", node);
+                list.add(visitsNode);
+            }
+            //targetType =Leads
+            for (CBTargetEntity cbTargetEntity : cbTargetRepository.findAllByTargetType(TargetType.LEADS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode leadsNode = mapper.createObjectNode();
+                node.put("achieved", cbTargetEntity.getTargetAchievement());
+                node.put("target", cbTargetEntity.getTargetValue());
+                leadsNode.set("leads", node);
+                list.add(leadsNode);
+            }
+            //targetType =CAMPAIGNS
+            for (CBTargetEntity cbTargetEntity : cbTargetRepository.findAllByTargetType(TargetType.CAMPAINGS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode campaignsNode = mapper.createObjectNode();
+                node.put("achieved", cbTargetEntity.getTargetAchievement());
+                node.put("target", cbTargetEntity.getTargetValue());
+                campaignsNode.set("campaigns", node);
+                list.add(campaignsNode);
+            }
+            //targetType =ONBOARDING
+            for (CBTargetEntity cbTargetEntity : cbTargetRepository.findAllByTargetType(TargetType.ONBOARDING)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode onboardingNode = mapper.createObjectNode();
+                node.put("achieved", cbTargetEntity.getTargetAchievement());
+                node.put("target", cbTargetEntity.getTargetValue());
+                onboardingNode.set("onboarding", node);
+                list.add(onboardingNode);
+            }
+           //add to the list hard coded values for commission
+            ObjectNode node = mapper.createObjectNode();
+            ObjectNode commissionNode = mapper.createObjectNode();
+            node.put("current-commission", commission);
+            node.put("previous-commision", preCommission);
+            commissionNode.set("commission", node);
+            list.add(commissionNode);
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getAllCustomerConcessions(CBConcessionRequest model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBConcessionEntity cbCustomerConcessionEntity : cbConcessionRepository.findAllByCustomerAccountNumber(model.getCustomerAccountNumber())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", cbCustomerConcessionEntity.getCustomerName());
+                node.put("customerAccountNumber", cbCustomerConcessionEntity.getCustomerAccountNumber());
+                node.put("referenceNumber", cbCustomerConcessionEntity.getReferenceNumber());
+                node.put("concessionStatus", cbCustomerConcessionEntity.getConcessionStatus().ordinal());
+                node.put("expiryDate", cbCustomerConcessionEntity.getEndDate().toString());
+
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while Customer's concession", e);
+        }
         return null;
     }
 

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class CBChannelCustomerVisitsVC {
@@ -22,11 +24,7 @@ public class CBChannelCustomerVisitsVC {
 
     @PostMapping("/cb-create-customer-visit")
     public ResponseEntity<?> createCustomerVisit(@RequestBody CBCustomerVisitsRequest request) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = channelService.createCustomerVisit(request);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -65,17 +63,16 @@ public class CBChannelCustomerVisitsVC {
     }
 
     @PostMapping(value = "/cb-get-all-customer-visits")
-    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody int dsrId) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody CBCustomerVisitsRequest model) {
+        List<?> visits = channelService.getAllCustomerVisitsByDSR(model);
+        boolean success = visits != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)visits);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
