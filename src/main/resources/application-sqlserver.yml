@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://10.20.2.31:1433;databaseName=KCB_SALES_EFFECTIVE;encrypt=true;trustServerCertificate=true;
+    username: dcharo
+    password: Password1
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    hibernate:
+      globally_quoted_identifiers: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      database: MYSQL
+      ddl-auto: update
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.SQLServer2012Dialect
+          #            storage_engine: innodb
+          format_sql: true
