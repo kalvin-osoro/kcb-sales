@@ -19,7 +19,7 @@ import java.util.Set;
 @Where(clause = "deleted = false")
 @DynamicInsert
 @DynamicUpdate
-public class UserAccount {
+public class UserAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,7 +41,7 @@ public class UserAccount {
     @JoinTable(name = "dbo_user_roles",
             joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<UserRole> roles;
+    private Set<UserRoleEntity> roles;
     private  Boolean isVerified = Boolean.FALSE;
     private  Boolean shouldSetPIN = Boolean.TRUE;
     private  Boolean blocked = Boolean.FALSE;

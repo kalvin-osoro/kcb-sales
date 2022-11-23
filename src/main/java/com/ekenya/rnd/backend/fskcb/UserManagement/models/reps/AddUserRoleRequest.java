@@ -3,9 +3,9 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.models.reps;
 import lombok.Data;
 
 @Data
-public class UpdateUserProfileRequest {
+public class AddUserRoleRequest {
 
-    private String staffNo;
+    private String name;
 
-    private long[] profiles;
+    private String desc;
 }

@@ -5,7 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +45,7 @@ public class AuthChannelController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
         //Result result = loginRequest.validate();
 
-        UserAccount account = usersService.findByStaffNo(loginRequest.getStaffNo());
+        UserAccountEntity account = usersService.findByStaffNo(loginRequest.getStaffNo());
         if(account.getAccountType() == AccountType.DSR){
             //
             LoginResponse resp = authService.attemptLogin(loginRequest);

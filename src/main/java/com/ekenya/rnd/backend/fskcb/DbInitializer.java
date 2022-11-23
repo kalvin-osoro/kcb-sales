@@ -18,11 +18,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Random;
 
 @Slf4j
 @Configuration
@@ -93,7 +91,7 @@ public class DbInitializer {
             }
 
             //create new user object
-            UserAccount userApp = new UserAccount();
+            UserAccountEntity userApp = new UserAccountEntity();
             userApp.setStaffNo(adminUserName);
             userApp.setEmail(adminEmail);
             userApp.setFullName(adminName);
@@ -104,12 +102,12 @@ public class DbInitializer {
 
 
             //
-            UserRole userRole = roleRepository.findByName(SystemRoles.SYS_ADMIN).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.SYS_ADMIN).get();//get role from db
             userApp.setRoles(Collections.singleton(userRole));//set role to user
             userRepository.save(userApp);//save user to db
 
             //
-            for (UserProfile profile: profilesRepository.findAll()) {
+            for (UserProfileEntity profile: profilesRepository.findAll()) {
                 //Add user to profile
 
             }
@@ -127,7 +125,7 @@ public class DbInitializer {
         //SystemRoles.SYS_ADMIN
         if(!roleRepository.findByName(SystemRoles.SYS_ADMIN).isPresent()){
             //
-            UserRole role = new UserRole();
+            UserRoleEntity role = new UserRoleEntity();
             role.setName(SystemRoles.SYS_ADMIN);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
@@ -140,7 +138,7 @@ public class DbInitializer {
 
         if(!roleRepository.findByName(SystemRoles.ADMIN).isPresent()){
             //
-            UserRole role = new UserRole();
+            UserRoleEntity role = new UserRoleEntity();
             role.setName(SystemRoles.ADMIN);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
@@ -153,7 +151,7 @@ public class DbInitializer {
         //
         if(!roleRepository.findByName(SystemRoles.DSR).isPresent()){
             //
-            UserRole role = new UserRole();
+            UserRoleEntity role = new UserRoleEntity();
             role.setName(SystemRoles.DSR);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
@@ -167,7 +165,7 @@ public class DbInitializer {
         //
         if(!roleRepository.findByName(SystemRoles.USER).isPresent()){
             //
-            UserRole role = new UserRole();
+            UserRoleEntity role = new UserRoleEntity();
             role.setName(SystemRoles.USER);
             role.setCreatedOn(Calendar.getInstance().getTime());
             role.setType(RoleType.SYSTEM);
@@ -188,7 +186,7 @@ public class DbInitializer {
 
             String DSR_VOOMA_PROFILE_CODE = "dsrVooma";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(DSR_VOOMA_PROFILE_NAME);
             userProfile.setCode(DSR_VOOMA_PROFILE_CODE);
 
@@ -197,9 +195,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -213,7 +211,7 @@ public class DbInitializer {
 
             String DSR_AGENCY_PROFILE_CODE = "dsrAgency";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(DSR_AGENCY_PROFILE_NAME);
             userProfile.setCode(DSR_AGENCY_PROFILE_CODE);
 
@@ -222,9 +220,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -238,7 +236,7 @@ public class DbInitializer {
 
             String DSR_ACQUIRING_PROFILE_CODE = "dsrAcquiring";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(DSR_ACQUIRING_PROFILE_NAME);
             userProfile.setCode(DSR_ACQUIRING_PROFILE_CODE);
 
@@ -247,9 +245,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -263,7 +261,7 @@ public class DbInitializer {
 
             String PERSONAL_BANKING_PROFILE_CODE = "personalBanking";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(PERSONAL_BANKING_PROFILE_NAME);
             userProfile.setCode(PERSONAL_BANKING_PROFILE_CODE);
 
@@ -272,9 +270,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -288,7 +286,7 @@ public class DbInitializer {
 
             String RETAIL_BANKING_PROFILE_CODE = "retailBanking";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(RETAIL_BANKING_PROFILE_NAME);
             userProfile.setCode(RETAIL_BANKING_PROFILE_CODE);
 
@@ -297,9 +295,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -313,7 +311,7 @@ public class DbInitializer {
 
             String PREMIUM_BANKING_PROFILE_CODE = "premiumBanking";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(PREMIUM_BANKING_PROFILE_NAME);
             userProfile.setCode(PREMIUM_BANKING_PROFILE_CODE);
 
@@ -322,9 +320,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -339,7 +337,7 @@ public class DbInitializer {
 
             String COOPORATE_BANKING_PROFILE_CODE = "cooporateBanking";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(COOPORATE_BANKING_PROFILE_NAME);
             userProfile.setCode(COOPORATE_BANKING_PROFILE_CODE);
 
@@ -347,9 +345,9 @@ public class DbInitializer {
             profilesRepository.save(userProfile);
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -363,7 +361,7 @@ public class DbInitializer {
 
             String TREASURY_BANKING_PROFILE_CODE = "treasuryBanking";
             //
-            UserProfile userProfile = new UserProfile();
+            UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(TREASURY_BANKING_PROFILE_NAME);
             userProfile.setCode(TREASURY_BANKING_PROFILE_CODE);
 
@@ -372,9 +370,9 @@ public class DbInitializer {
 
 
             //map to role
-            UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
 
-            ProfileRoleEntity profileRole = new ProfileRoleEntity();
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
             profileRole.setRoleId(userRole.getId());
             //
@@ -478,7 +476,7 @@ public class DbInitializer {
                         .build();
 
                 //Create login profile
-                UserAccount userApp = new UserAccount();
+                UserAccountEntity userApp = new UserAccountEntity();
                 userApp.setStaffNo(dsrDetails.getStaffNo());
                 userApp.setEmail(dsrDetails.getEmail());
                 userApp.setFullName(dsrDetails.getFullName());
@@ -487,7 +485,7 @@ public class DbInitializer {
                 userApp.setAccountType(AccountType.DSR);
                 userRepository.save(userApp);//save user to db
                 //Add to role
-                UserRole userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+                UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
                 //
                 userApp.setRoles(Collections.singleton(userRole));//set role to user
                 userRepository.save(userApp);//save user to db
@@ -496,7 +494,7 @@ public class DbInitializer {
                 dSRAccountsRepository.save(dsrDetails);
 
                 //Add to profile this profile
-                ProfileUserEntity profileUser = new ProfileUserEntity();
+                ProfileAndUserEntity profileUser = new ProfileAndUserEntity();
                 profileUser.setUserId(userApp.getId());
                 profileUser.setProfileId(profileUser.getId());
                 profilesAndUsersRepository.save(profileUser);

@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.security;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfile;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfileEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String staffNo) throws UsernameNotFoundException {
-        UserAccount userAccount = userRepository.findByStaffNo(staffNo).orElseThrow(() ->
+        UserAccountEntity userAccount = userRepository.findByStaffNo(staffNo).orElseThrow(() ->
                 new UsernameNotFoundException("User not found with email : " + staffNo));
         return new User(userAccount.getStaffNo(), userAccount.getPassword(), getAuthorities(userAccount.getRoles()));
     }
@@ -44,11 +44,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 //                .collect(Collectors.toList());
 //    }
 
-    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<UserRole> roles) {
+    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<UserRoleEntity> roles) {
         final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        for (UserRole userRole : roles) {
+        for (UserRoleEntity userRole : roles) {
             authorities.add(new SimpleGrantedAuthority(userRole.getName()));
-            for (UserProfile userProfile : userRole.getUserProfiles()) {
+            for (UserProfileEntity userProfile : userRole.getUserProfiles()) {
                 authorities.add(new SimpleGrantedAuthority(userProfile.getName()));
             }
         }

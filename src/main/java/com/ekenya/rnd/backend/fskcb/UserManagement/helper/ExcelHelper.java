@@ -6,9 +6,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
@@ -68,7 +66,7 @@ public class ExcelHelper {
                     continue;
                 }
 
-                UserAccount dsrAccount = new UserAccount();
+                UserAccountEntity dsrAccount = new UserAccountEntity();
 
                 //Staff No
                 try{

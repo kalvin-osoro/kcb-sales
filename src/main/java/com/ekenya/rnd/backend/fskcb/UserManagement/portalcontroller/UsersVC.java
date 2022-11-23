@@ -3,7 +3,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfilesRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -160,7 +160,7 @@ public class UsersVC {
     }
 
     @PostMapping("/users-update-profiles")
-    public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserProfileRequest request ) {
+    public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserProfilesRequest request ) {
 
         //TODO; INSIDE SERVICE
         boolean success = usersService.updateUserProfiles(request);

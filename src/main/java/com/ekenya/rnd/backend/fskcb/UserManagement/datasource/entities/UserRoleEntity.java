@@ -20,7 +20,7 @@ import java.util.Set;
 @Where(clause = "deleted = false")
 @DynamicInsert
 @DynamicUpdate
-public class UserRole {
+public class UserRoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,5 +43,5 @@ public class UserRole {
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "profile_id", referencedColumnName = "id"))
-    private Set<UserProfile> userProfiles;
+    private Set<UserProfileEntity> userProfiles;
 }

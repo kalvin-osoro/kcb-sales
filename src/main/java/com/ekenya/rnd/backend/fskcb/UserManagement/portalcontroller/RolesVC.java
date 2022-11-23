@@ -1,14 +1,19 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserRoleRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignRoleToUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveUserFromRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserRoleRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IRolesService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +23,11 @@ import java.util.List;
 @Api(value = "Role Management")
 @RestController()
 @RequestMapping(path = "/api/v1")
-@PreAuthorize("hasAuthority('"+SystemRoles.ADMIN+"','"+SystemRoles.ADMIN+"')")
+@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class RolesVC {
+
+    @Autowired
+    ObjectMapper mObjectMapper;
     private final IRolesService roleService;
 
     private final IUsersService userService;
@@ -29,33 +37,45 @@ public class RolesVC {
         this.userService = userService;
     }
 
-//
-//    }
-@PostMapping("roles-findById/{id}")
-    @ResponseBody
-    public UserRole findById(@PathVariable Long id) {
-        return roleService.findById(id);
-    }
 
-    @PutMapping(value="/roles-update")
-    public ResponseEntity<?> update(UserRole role) {
-        roleService.add(role);
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+    @PostMapping("/roles-get-details")
+    public ResponseEntity<?> getUserRoleDetails(@RequestBody Long roleId) {
+
+        //INSIDE SERVICE
+        ObjectNode resp = roleService.getUserRoleDetails(roleId);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
+        if(resp != null){
+            //Object
+            ObjectNode node = mObjectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
+        }
+        //Response
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+
+    }
+
+    @PutMapping(value="/roles-update-role")
+    public ResponseEntity<?> updateRole(@RequestBody UpdateUserRoleRequest request) {
+
+        //INSIDE SERVICE
+        boolean success = roleService.updateUserRole(request);
+
+        //Response
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+        }
+
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+
     }
 
 
@@ -64,105 +84,118 @@ public class RolesVC {
     @PostMapping("/roles-get-all")
     public ResponseEntity<?> getAllRoles() {
 
-        List<?> list = roleService.getRoles();
+        ArrayNode list = roleService.loadAllRoles();
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(list != null){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     //assign role to user
     @ApiOperation(value = "Assign role to user")
-    @PostMapping("/roles-assign/{userId}/{roleId}")
-    public ResponseEntity<?> assignRoleToUser(@PathVariable Long userId,
-                                                        @PathVariable Long roleId){
-        boolean success = roleService.assignRole(userId,roleId);
+    @PostMapping("/roles-assign-to-user")
+    public ResponseEntity<?> assignRoleToUser(@RequestBody AssignRoleToUserRequest request){
+
+
+        boolean success = roleService.assignRole(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     //unassign role to user
     @ApiOperation(value = "Unassign role to user")
-    @DeleteMapping("/roles-unassign/{userId}/{roleId}")
-    public ResponseEntity<?> unassignRoleToUser(@PathVariable Long userId,
-                                                          @PathVariable Long roleId){
-        boolean success = roleService.unassignRole(userId, roleId);
+    @DeleteMapping("/roles-remove-user-from-role")
+    public ResponseEntity<?> unassignRoleToUser(@RequestBody RemoveUserFromRole request){
+
+        boolean success = roleService.unassignRole(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
     //delete role
     @ApiOperation(value = "Delete role")
-    @DeleteMapping("/roles-delete/{id}")
-    public ResponseEntity<?> deleteRole(@PathVariable Long id){
+    @DeleteMapping("/roles-delete-role")
+    public ResponseEntity<?> deleteRole(@RequestBody  Long roleId){
 
-        boolean success = roleService.drop(id);
+        boolean success = roleService.deleteUserRole(roleId);
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
     //add new role
-    @ApiOperation(value = "Add new role")
+    @ApiOperation(value = "Create a new custom role")
     @PostMapping("/roles-add-new")
-    public ResponseEntity<?> addNew(UserRole role) {
-        boolean success = roleService.add(role);
+    public ResponseEntity<?> addNew(@RequestBody AddUserRoleRequest request) {
+
+        boolean success = roleService.attemptCreateUserRole(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
+    // Get all roles
+    @ApiOperation(value = "Get all users in a role")
+    @PostMapping("/roles-get-users-in-role")
+    public ResponseEntity<?> getAllUsersInRole(@RequestBody long roleId) {
+
+        ArrayNode list = roleService.loadUserRoles(roleId);
+
+        //Response
+        if(list != null){
+            //Object
+
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 
 }

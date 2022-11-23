@@ -1,11 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.UserPDFExporter;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +31,7 @@ public class UserPDFVC {
         String headerValue = "attachment; filename=users_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
-        List<UserAccount> listUsers = service.listAll();
+        List<UserAccountEntity> listUsers = service.listAll();
 
         UserPDFExporter exporter = new UserPDFExporter(listUsers);
         exporter.export(response);

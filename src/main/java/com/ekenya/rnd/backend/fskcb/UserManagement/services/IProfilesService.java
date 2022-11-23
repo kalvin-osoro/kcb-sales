@@ -1,26 +1,29 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfile;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
-
-import java.util.List;
-import java.util.Set;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface IProfilesService {
 
-    List<UserProfile> getAllProfiles();
+    ArrayNode getAllProfiles();
 
-    boolean assignPrivilege(Long roleId, Long privilegeId);
+    boolean assignRolesToProfile(AssignProfileRolesRequest model);
 
-    boolean unassignPrivilege(Long roleId, Long privilegeId);
+    boolean removeRolesFromProfile(RemoveProfileRolesRequest model);
 
-    boolean add(UserProfile userProfile);
+    boolean attemptAddProfile(AddUserProfileRequest model);
 
-    Set<UserProfile> getRoleProfiles(UserRole userRole);
+    boolean attemptUpdateProfile(UpdateProfileRequest model);
 
-    List<UserProfile> getRoleNotProfile(Long roleId);
+    ArrayNode getRoleProfiles(long roleId);
+
+    ArrayNode getRoleNotProfile(Long roleId);
 
     boolean drop(long id);
 
-    UserProfile findById(long id);
+    ObjectNode getProfileDetails(long profileId);
+
+    ArrayNode loadUsersInProfile(long profileId);
+
 }

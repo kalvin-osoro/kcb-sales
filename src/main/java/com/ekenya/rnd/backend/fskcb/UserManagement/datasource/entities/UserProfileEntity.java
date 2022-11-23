@@ -19,7 +19,7 @@ import java.util.Date;
 @Where(clause = "deleted = false")
 @DynamicInsert
 @DynamicUpdate
-public class UserProfile {
+public class UserProfileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

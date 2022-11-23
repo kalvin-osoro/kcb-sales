@@ -1,8 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UsersListRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppDto;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppResponse;
@@ -19,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -51,9 +47,9 @@ public class ExcelService {
         Sort sort = model.sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(model.sortBy).ascending() : Sort.by(model.sortBy).descending();
         Pageable pageable = PageRequest.of(model.pageNo, model.pageSize, sort);
         //create a pageable instance
-        Page<UserAccount> user = userRepository.findAll(pageable);
+        Page<UserAccountEntity> user = userRepository.findAll(pageable);
         //get content from pageable instance
-        List<UserAccount> users = user.getContent();
+        List<UserAccountEntity> users = user.getContent();
         List<UserAppDto> content = users.stream().map(this::mapToDto).collect(Collectors.toList());
         UserAppResponse userAppResponse = new UserAppResponse();
         userAppResponse.setContent(content);
@@ -67,7 +63,7 @@ public class ExcelService {
     //update user
     public UserAppDto updateUser(UserAppDto userAppDto, Long id) {
         log.info("Updating user by id {}", id);
-        UserAccount userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        UserAccountEntity userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         userAccount.setFullName(userAppDto.getFirstName()+" "+userAppDto.getLastName());
         userAccount.setEmail(userAppDto.getEmail());
         userAccount.setPhoneNumber(userAppDto.getPhoneNumber());
@@ -76,13 +72,13 @@ public class ExcelService {
         return mapToDto(userAccount);
     }
 //test for pdf
-    public List<UserAccount> listAll() {
+    public List<UserAccountEntity> listAll() {
         return userRepository.findAll(Sort.by("email").ascending());
     }
 
     public UserAppDto getUserById(Long id) {
         log.info("Getting user by id {}", id);
-        UserAccount userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));//get user by id if exists
+        UserAccountEntity userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));//get user by id if exists
         return mapToDto(userAccount);//map user to dto
     }
     //delete user
@@ -98,8 +94,8 @@ public class ExcelService {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         LinkedHashMap<String, Object> responseParams = new LinkedHashMap<>();
         try {
-            Optional<UserAccount> systemUserOptional = userRepository.findById(id);
-            UserAccount systemUser = systemUserOptional.get();
+            Optional<UserAccountEntity> systemUserOptional = userRepository.findById(id);
+            UserAccountEntity systemUser = systemUserOptional.get();
             userRepository.save(systemUser);
             responseObject.put("status", "success");
             responseObject.put("message", "Agent "
@@ -112,7 +108,7 @@ public class ExcelService {
     }
 
 
-    private UserAppDto mapToDto(UserAccount userAccount) {
+    private UserAppDto mapToDto(UserAccountEntity userAccount) {
 
         return modelMapper.map(userAccount, UserAppDto.class);
 

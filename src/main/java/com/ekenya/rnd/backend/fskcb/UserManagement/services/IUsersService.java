@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -13,13 +13,13 @@ public interface IUsersService {
 
     boolean updateResetPasswordToken(String token, String email);
 
-    UserAccount getByResetPasswordToken(String token);
+    UserAccountEntity getByResetPasswordToken(String token);
 
     boolean attemptUpdatePassword(UpdatePasswordRequest model);
 
-    UserAccount findById(Long id);
+    UserAccountEntity findById(Long id);
 
-    UserAccount findByStaffNo(String staffNo);
+    UserAccountEntity findByStaffNo(String staffNo);
 
     boolean attemptCreateUser(AddUserRequest model, boolean verified);
     ObjectNode attemptImportUsers(MultipartFile importFile);
@@ -32,7 +32,7 @@ public interface IUsersService {
 
     boolean attemptResetPassword(ResetUserPasswordRequest model);
     boolean assignUserToProfiles(AssignUserProfileRequest model);
-    boolean updateUserProfiles(UpdateUserProfileRequest model);
+    boolean updateUserProfiles(UpdateUserProfilesRequest model);
 
     boolean attemptBlockUser(Long userId);
 

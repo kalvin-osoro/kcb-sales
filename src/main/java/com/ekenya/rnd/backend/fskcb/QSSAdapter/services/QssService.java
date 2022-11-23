@@ -7,10 +7,8 @@ import com.ekenya.rnd.backend.fskcb.QSSAdapter.datasource.repositories.QssAlerts
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.QssClientManager;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.SsData;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.SsNotification;
-import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssAlert;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssEvents;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.google.gson.JsonObject;
 import io.reactivex.rxjava3.functions.BiConsumer;
 import io.reactivex.rxjava3.functions.Consumer;

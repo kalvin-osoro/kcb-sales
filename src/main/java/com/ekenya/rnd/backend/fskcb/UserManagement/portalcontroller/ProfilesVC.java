@@ -1,17 +1,16 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignProfileRolesRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveProfileRolesRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.services.ProfilesService;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.IProfilesService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.RoleService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -22,106 +21,107 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 @Secured(SystemRoles.USER)
 public class ProfilesVC {
-    public final RoleService roleService;
-    public  final ProfilesService profilesService;
+    @Autowired
+    ObjectMapper mObjectMapper;
 
-    public ProfilesVC(RoleService roleService, ProfilesService profilesService) {
+    public final RoleService roleService;
+    public  final IProfilesService profilesService;
+
+    public ProfilesVC(RoleService roleService, IProfilesService profilesService) {
         this.roleService = roleService;
         this.profilesService = profilesService;
     }
 
+    @ApiOperation(value = "Create a new profile")
     @PostMapping("/users-create-profile")
-    public ResponseEntity<?> createProfile(@RequestBody AddUserProfileRequest leadRequest ) {
+    public ResponseEntity<?> createProfile(@RequestBody AddUserProfileRequest request ) {
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //INSIDE SERVICE
+        boolean success = profilesService.attemptAddProfile(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
+    @ApiOperation(value = "Get all profiles")
     @PostMapping(value = "/users-get-all-profiles")
     public ResponseEntity<?> getAllProfiles() {
 
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ArrayNode list = profilesService.getAllProfiles();
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
-//          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
 
+    @ApiOperation(value = "Update a profile")
     @PostMapping("/users-update-profile")
-    public ResponseEntity<?> updateProfile(@RequestBody UpdateUserProfileRequest leadRequest ) {
+    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequest request ) {
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = profilesService.attemptUpdateProfile(request);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
-
+    @ApiOperation(value = "Get profile details")
     @PostMapping("/users-get-profile-details")
-    public ResponseEntity<?> getProfileDetails(@RequestBody int id ) {
+    public ResponseEntity<?> getProfileDetails(@RequestBody long id ) {
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //INSIDE SERVICE
+        ObjectNode resp = profilesService.getProfileDetails(id);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(resp != null){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
+            ObjectNode node = mObjectMapper.createObjectNode();
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
 
+    @ApiOperation(value = "Assign roles to a profile")
     @PostMapping("/users-assign-profile-roles")
-    public ResponseEntity<?> assignProfileRoles(@RequestBody AssignProfileRolesRequest leadRequest ) {
+    public ResponseEntity<?> assignProfileRoles(@RequestBody AssignProfileRolesRequest request ) {
 
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = profilesService.assignRolesToProfile(request);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -138,12 +138,13 @@ public class ProfilesVC {
         }
     }
 
+    @ApiOperation(value = "Remove roles from a profile")
 
     @PostMapping("/users-remove-profile-roles")
-    public ResponseEntity<?> removeProfileRoles(@RequestBody RemoveProfileRolesRequest leadRequest ) {
+    public ResponseEntity<?> removeProfileRoles(@RequestBody RemoveProfileRolesRequest request ) {
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //INSIDE SERVICE
+        boolean success = profilesService.removeRolesFromProfile(request);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -161,24 +162,22 @@ public class ProfilesVC {
     }
 
 
+    @ApiOperation(value = "Get all users in a profile")
     @PostMapping("/users-profile-users")
-    public ResponseEntity<?> usersInProfile(@RequestBody int id) {
+    public ResponseEntity<?> usersInProfile(@RequestBody long profileId) {
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        //INSIDE SERVICE
+        ArrayNode list = profilesService.loadUsersInProfile(profileId);
 
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

@@ -10,7 +10,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
@@ -88,7 +88,7 @@ public class AuthService implements IAuthService{
             String username=userDetails.getUsername();
 
             //Update Login info ..
-            UserAccount account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = userRepository.findByStaffNo(username).get();
             account.setLastLogin(Calendar.getInstance().getTime());
             if(model.getLocation() != null) {
                 account.setLastCoords(model.getLocation().toString());
@@ -110,10 +110,10 @@ public class AuthService implements IAuthService{
             return response;
         }catch (AuthenticationException ex){
             //
-            Optional<UserAccount> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
             //Update ..
             if(optionalUserAccount.isPresent()){
-                UserAccount userAccount = optionalUserAccount.get();
+                UserAccountEntity userAccount = optionalUserAccount.get();
                 userAccount.setRemLoginAttempts(userAccount.getRemLoginAttempts() - 1);
                 //
                 if(userAccount.getRemLoginAttempts() <= 0){
@@ -157,7 +157,7 @@ public class AuthService implements IAuthService{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,model.getCurrentPIN()));
 
             //Update Login info ..
-            UserAccount account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = userRepository.findByStaffNo(username).get();
 
             account.setPassword(passwordEncoder.encode(model.getNewPIN()));
             userRepository.save(account);//save user to db
@@ -231,6 +231,7 @@ public class AuthService implements IAuthService{
                     //
                     LocalDateTime tokenExpiryTime = tokenIssued.plusMinutes(code.get().getExpiresInMinutes());
                     //
+                    System.out.println("Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
                     mLogger.log(Level.INFO,"Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
 
                     //
@@ -304,7 +305,7 @@ public class AuthService implements IAuthService{
     public List<ObjectNode> loadUserSecurityQuestions(String staffNo) {
 
         try{
-            UserAccount account = userRepository.findByStaffNo(staffNo).get();
+            UserAccountEntity account = userRepository.findByStaffNo(staffNo).get();
 
             List<ObjectNode> list = new ArrayList<>();
             for (SecurityQuestionAnswerEntity ans:
@@ -336,7 +337,7 @@ public class AuthService implements IAuthService{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             //
-            UserAccount account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = userRepository.findByStaffNo(username).get();
             //
             for (SecQnAnswerReq qna: model.getAnswers()) {
                 //
@@ -367,7 +368,7 @@ public class AuthService implements IAuthService{
         boolean valid = false;
 
         try{
-            UserAccount account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).get();
 
             //
             for (SecQnAnswerReq prob:  model.getAnswers()) {
@@ -399,11 +400,11 @@ public class AuthService implements IAuthService{
     public boolean attemptCreatePIN(CreatePINRequest model) {
 
         try{
-            Optional<UserAccount> optionalUserAccount = userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(),model.getPhoneNo());
+            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(),model.getPhoneNo());
 
             if(optionalUserAccount.isPresent()){
 
-                UserAccount account = optionalUserAccount.get();
+                UserAccountEntity account = optionalUserAccount.get();
                 if(account.getShouldSetPIN()){
                     //
                     account.setPassword(passwordEncoder.encode(model.getNewPIN()));
@@ -438,7 +439,7 @@ public class AuthService implements IAuthService{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,model.getCurrentPassword()));
 
             //Update Login info ..
-            UserAccount account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = userRepository.findByStaffNo(username).get();
 
             account.setPassword(passwordEncoder.encode(model.getNewPassword()));
             userRepository.save(account);//save user to db
@@ -455,7 +456,7 @@ public class AuthService implements IAuthService{
 
         try {
 
-            UserAccount account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).get();
 
             String pin = smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN);
             //Send PIN
@@ -479,7 +480,7 @@ public class AuthService implements IAuthService{
 
         try {
 
-            UserAccount account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).get();
 
             account.setPhoneNumber(model.getPhoneNo());
 

@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.helper;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.PdfPCell;
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class UserPDFExporter {
-    private List<UserAccount> listUsers;
+    private List<UserAccountEntity> listUsers;
 
-    public UserPDFExporter(List<UserAccount> listUsers) {
+    public UserPDFExporter(List<UserAccountEntity> listUsers) {
         this.listUsers = listUsers;
     }
 
@@ -47,7 +47,7 @@ public class UserPDFExporter {
     }
 
     private void writeTableData(PdfPTable table) {
-        for (UserAccount user : listUsers) {
+        for (UserAccountEntity user : listUsers) {
             table.addCell(String.valueOf(user.getId()));
             table.addCell(user.getEmail());
             table.addCell(user.getFullName());

@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.models;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import lombok.Data;
 

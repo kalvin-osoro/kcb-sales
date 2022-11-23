@@ -1,24 +1,27 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccount;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserRoleRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignRoleToUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveUserFromRole;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserRoleRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
-import java.util.Set;
 
 public interface IRolesService {
-    List<UserRole> getRoles();
-    boolean add(UserRole client);
+    ArrayNode loadAllRoles();
+    boolean attemptCreateUserRole(AddUserRoleRequest model);
 
-    UserRole findById(long id);
+    boolean updateUserRole(UpdateUserRoleRequest model);
+    ObjectNode getUserRoleDetails(long id);
 
-    boolean drop(long id);
+    boolean deleteUserRole(long id);
 
-    boolean assignRole(Long userId, Long roleId);
+    boolean assignRole(AssignRoleToUserRequest model);
 
-    boolean unassignRole(Long userId, Long roleId);
+    boolean unassignRole(RemoveUserFromRole model);
 
-    Set<UserRole> getUserRoles(UserAccount user);
+    ArrayNode loadUserRoles(Long userId);
+
+    ArrayNode getUserNotRoles(Long userId);
+
 }
