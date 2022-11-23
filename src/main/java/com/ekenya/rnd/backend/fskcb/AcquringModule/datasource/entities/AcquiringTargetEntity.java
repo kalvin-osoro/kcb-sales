@@ -41,7 +41,7 @@ public class AcquiringTargetEntity {
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;
-    @OneToMany(mappedBy = "acquiringTargetEntity", cascade = CascadeType.ALL)
-    private List<DSRAccountEntity> dsrAccountEntities;
+//    @OneToMany(mappedBy = "acquiringTargetEntity", cascade = CascadeType.ALL)
+//    private List<DSRAccountEntity> dsrAccountEntities;
 
 }

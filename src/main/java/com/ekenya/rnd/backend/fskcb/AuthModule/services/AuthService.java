@@ -224,24 +224,34 @@ public class AuthService implements IAuthService{
                     //
                     dateTime = dateTime.plusMinutes(code.get().getExpiresInMinutes());
                     //
-                    if (!dateTime.isBefore(LocalDateTime.now()) && !userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
+                    if (!dateTime.isBefore(LocalDateTime.now())) {
 
+                        //
+                        code.get().setExpired(true);
+                        securityAuthCodesRepository.save(code.get());
+                        //
                         dsrAccount.setPhoneNoVerified(true);
-
                         dsrAccountsRepository.save(dsrAccount);
 
-                        //Create Login Account..
-                        AddUserRequest addUserRequest = new AddUserRequest();
-                        addUserRequest.setEmail(dsrAccount.getEmail());
-                        addUserRequest.setFullName(dsrAccount.getFullName());
-                        addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
-                        addUserRequest.setStaffNo(dsrAccount.getStaffNo());
                         //
-                        if (usersService.attemptCreateUser(addUserRequest,true)) {
+                        if(!userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
+
+                            //Create Login Account..
+                            AddUserRequest addUserRequest = new AddUserRequest();
+                            addUserRequest.setEmail(dsrAccount.getEmail());
+                            addUserRequest.setFullName(dsrAccount.getFullName());
+                            addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
+                            addUserRequest.setStaffNo(dsrAccount.getStaffNo());
+                            //
+                            if (usersService.attemptCreateUser(addUserRequest, true)) {
+                                //All is well,
+                                return true;
+                            } else {
+                                log.error("Create User Account Failed");
+                            }
+                        }else{
                             //All is well,
                             return true;
-                        } else {
-                            log.error("Create User Account Failed");
                         }
                     } else {
                         //
