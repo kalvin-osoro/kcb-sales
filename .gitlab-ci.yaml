@@ -1,0 +1,12 @@
+image: docker:20.10.21
+stages:
+  - build-deploy
+
+before_script:
+    - docker --version
+
+buildJar:
+  stage: build-deploy
+  image: docker:20.10.21
+  script:
+    - docker build . -t kcb-ses-poc-be:docker-build
