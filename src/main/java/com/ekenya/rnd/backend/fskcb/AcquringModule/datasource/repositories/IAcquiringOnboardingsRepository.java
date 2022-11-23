@@ -13,6 +13,7 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
 
     @Query(value = "SELECT * FROM dbo_aqc_onboardings where created_on >= current_date at time zone 'UTC' - interval '7 days'", nativeQuery = true)
     AcquiringOnboardEntity[] fetchAllOnboardingCreatedLast7Days();
-    @Query(value = "SELECT * FROM dbo_aqc_onboardings where customer_name like %?1% or customer_phone_number like %?1%", nativeQuery = true)
-    AcquiringOnboardEntity[] searchCustomers(String merchantName,String merchantPhone);
+    @Query(value = "SELECT * FROM dbo_aqc_onboardings WHERE MATCH(merchant_name, business_name, nearly_land_mark) "
+            + "AGAINST (?1)", nativeQuery = true)
+    AcquiringOnboardEntity[] searchCustomers(String keyword);
 }

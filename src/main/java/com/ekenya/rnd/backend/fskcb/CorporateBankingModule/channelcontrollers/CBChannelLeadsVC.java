@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,17 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class CBChannelLeadsVC {
+    private ICBChannelService channelService;
 
     //Create new lead
     @PostMapping("/cb-create-lead")
-    public ResponseEntity<?> createCBAsset(@RequestBody CBAddLeadRequest request) {
-        //TODO;
-        boolean success = false;//acquiringService.assigneLeadtoDSR(model);
-
+    public ResponseEntity<?> createCBLead(@RequestBody CBAddLeadRequest model) {
+        boolean success = channelService.createCBLead(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -37,17 +39,15 @@ public class CBChannelLeadsVC {
         }
     }
     @PostMapping(value = "/cb-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody int dsrId) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getAllLeadsByDsrId(@RequestBody Long dsrId) {
+        List<?> leads = channelService.getAllLeadsByDsrId(dsrId);
+        boolean success = leads != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(leads));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

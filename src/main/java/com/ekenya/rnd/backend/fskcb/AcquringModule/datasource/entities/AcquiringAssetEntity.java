@@ -31,6 +31,7 @@ public class AcquiringAssetEntity {
    @OneToOne
     private AcqAsset assetType;
     private String serialNumber;
+    private Long agentId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dsr_id")
     private DSRAccountEntity dsrDetails;

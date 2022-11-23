@@ -22,6 +22,9 @@ public class CBLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String customerName;
+    private String remarks;
+    private String customerAccountNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;

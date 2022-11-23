@@ -47,8 +47,8 @@ public class QssClientManager implements QSSClientInterface {
     }
 
     //
-    private String mServiceHost = "https://devops.ekenya.co.ke:8084";
-    //private String mServiceHost = "http://10.211.55.5:5000";
+    //private String mServiceHost = "https://devops.ekenya.co.ke:8084";
+    private String mServiceHost = "http://10.211.55.5:5000";
     private String serviceEndpoint = "/delta";
 
     //Client Settings
@@ -221,15 +221,9 @@ public class QssClientManager implements QSSClientInterface {
                         public void onError(Throwable ex) {
                             //
                             connectionStateObserver.onNext(HubConnectionState.DISCONNECTED);
-                            mLogger.log(Level.SEVERE, "Hub Start FAILED => " + ex.getMessage());
+                            mLogger.log(Level.SEVERE, "Hub Start Error => " + ex.getMessage());
                             //
-                            //emitter.onError(ex);
-
-                            mLogger.log(Level.SEVERE, "Attempting restart .. ");
-                            init().doOnError(error -> {
-                                mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
-                                init().subscribe();
-                            }).subscribe();
+                            emitter.onError(ex);
                         }
 
                         @Override

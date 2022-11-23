@@ -1,10 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringOnboardingKYCRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringLeadsRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringOnboardingsRepository;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringTargetsRepository;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
@@ -20,6 +18,8 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,10 +32,16 @@ import java.util.List;
 public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
+    private final AcquiringAssetRepository acquiringAssetRepository;
     private final FileStorageService fileStorageService;
     private final IAcquiringTargetsRepository acquiringTargetsRepository;
 
     private final IAcquiringLeadsRepository acquiringLeadsRepository;
+    private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
+
+    private final int totalTransactions = Utility.generateRandomNumber(1000, 100000);
+
+
 
     @Override
     public JsonObject findCustomerByAccNo(String accNo) {
@@ -265,12 +271,12 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
     @Override
-    public Object searchCustomers(String merchantName,String merchantPhone) {
+    public List<ObjectNode> searchCustomers(String keyword) {
         //search customer by name or phone number from onboarding
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.searchCustomers(merchantName,merchantPhone)) {
+            for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.searchCustomers(keyword)) {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
@@ -365,6 +371,102 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
         } catch (Exception e) {
             log.error("Error occurred while getting targets summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean createCustomerVisit(AcquiringCustomerVisitsRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            AcquiringCustomerVisitEntity acquiringCustomerVisitsEntity = new AcquiringCustomerVisitEntity();
+            acquiringCustomerVisitsEntity.setReasonForVisit(model.getReasonForVisit());
+            acquiringCustomerVisitsEntity.setActionPlan(model.getActionPlan());
+            acquiringCustomerVisitsEntity.setHighlights(model.getHighlights());
+//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            String username = userDetails.getUsername();
+            acquiringCustomerVisitsEntity.setDsrName("test");
+            acquiringCustomerVisitsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save customer visit
+            acquiringCustomerVisitRepository.save(acquiringCustomerVisitsEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while creating customer visit", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCustomerVisit(AcquiringCustomerVisitsRequest model) {
+        //TODO update customer visit not implemented
+        return false;
+    }
+
+    @Override
+    public List<?> getAllCustomerVisitsByDSR(int dsrId) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringCustomerVisitEntity acquiringCustomerVisitEntity : acquiringCustomerVisitRepository.getAllCustomerVisitsByDSR(dsrId)) {
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", acquiringCustomerVisitEntity.getId());
+                asset.put("reasonForVisit", acquiringCustomerVisitEntity.getReasonForVisit());
+                asset.put("actionPlan", acquiringCustomerVisitEntity.getActionPlan());
+                asset.put("highlights", acquiringCustomerVisitEntity.getHighlights());
+                asset.put("dsrName", acquiringCustomerVisitEntity.getDsrName());
+                asset.put("createdOn", acquiringCustomerVisitEntity.getCreatedOn().toString());
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while getting all customer visits by DSR", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean assignAssetToMerchant(Long assetId, Long agentId) {
+        //assign asset to merchant
+        try {
+            if (assetId==null || agentId==null){
+                return false;
+            }
+            AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(assetId).get();
+            if (acquiringAssetEntity==null){
+                return false;
+            }
+            acquiringAssetEntity.setAgentId(agentId);
+            acquiringAssetRepository.save(acquiringAssetEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning asset to merchant", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllAgentsAssets(Long agentId) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringAssetEntity acquiringAssetEntity : acquiringAssetRepository.getAllAgentsAssets(agentId)) {
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", acquiringAssetEntity.getId());
+              asset.put("SerialNumber", acquiringAssetEntity.getSerialNumber());
+              asset.put("condition", acquiringAssetEntity.getAssetCondition().ordinal());
+              //hard code total transactions for now
+                asset.put("totalTransactions", totalTransactions);
+                list.add(asset);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while getting all agents assets", e);
         }
         return null;
     }

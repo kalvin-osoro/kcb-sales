@@ -67,7 +67,7 @@ public class AcquiringChannelLeadsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) leads);
+            node.addAll((List) leads);
 //          node.put("id",0);
 
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

@@ -112,4 +112,10 @@ return new Date();
         int randInt = rand.nextInt(10000);
         return randInt;
     }
+
+    public static int generateRandomNumber(int i, int i1) {
+        Random rand = new Random();
+        int randInt = rand.nextInt(i1);
+        return randInt;
+    }
 }
