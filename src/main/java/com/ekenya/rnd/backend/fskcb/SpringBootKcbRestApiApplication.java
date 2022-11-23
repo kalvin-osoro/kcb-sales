@@ -181,18 +181,18 @@ public class SpringBootKcbRestApiApplication   {
 		fileAppender.setAppend(true);
 
 //Filter out anything < WARN
-		ThresholdFilter warningFilter = new ThresholdFilter();
-		warningFilter.setLevel("WARN");
-		warningFilter.setContext(context);
-		warningFilter.start();
-		fileAppender.addFilter(warningFilter);
+//		ThresholdFilter warningFilter = new ThresholdFilter();
+//		warningFilter.setLevel("WARN");
+//		warningFilter.setContext(context);
+//		warningFilter.start();
+//		fileAppender.addFilter(warningFilter);
 
 //Filter out anything < DEBUG
-//		ThresholdFilter debugFilter = new ThresholdFilter();
-//		debugFilter.setLevel("DEBUG");
-//		debugFilter.setContext(context);
-//		debugFilter.start();
-//		fileAppender.addFilter(debugFilter);
+		ThresholdFilter debugFilter = new ThresholdFilter();
+		debugFilter.setLevel("DEBUG");
+		debugFilter.setContext(context);
+		debugFilter.start();
+		fileAppender.addFilter(debugFilter);
 
 //Message Encoder
 		PatternLayoutEncoder ple = new PatternLayoutEncoder();
