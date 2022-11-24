@@ -101,4 +101,21 @@ public class AuthPortalController {
         return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request Failed"));
 
     }
+
+
+
+    @PostMapping("/user-forgot-password")
+    @ApiOperation(value = "Send recovery password to email or password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest req){
+
+        boolean success = authService.attemptRecoverPassword(req);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request processed successful"));
+        }
+        return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request Failed"));
+
+    }
 }

@@ -9,5 +9,6 @@ public interface ISmsService {
 
     boolean sendPasswordEmail(String receiverEmail,String name,String password);
 
+    boolean sendPasswordSMS(String phoneNo,String userName,  String password);
 }
 

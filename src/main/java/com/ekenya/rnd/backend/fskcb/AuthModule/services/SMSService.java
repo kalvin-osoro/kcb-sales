@@ -87,6 +87,29 @@ public class SMSService implements ISmsService{
     }
 
     @Override
+    public boolean sendPasswordSMS(String phoneNo,String userName, String password) {
+
+        try{
+            //
+            String message = "Hello " + userName + ", use this as your Password to login : " + password +"\nRemember to change it after you signin";
+            //
+            JsonObject smsResponse = attemptSendSMS(message, phoneNo);
+            if (smsResponse == null) {
+                throw new RuntimeException("Unable to send sms");
+            }
+            int responseCode = smsResponse.get("ResultCode").getAsInt();
+            if (responseCode != 0) {
+                log.error("Send CODE failed. => "+smsResponse.get("ResultDesc").getAsString());
+                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+            }
+        } catch (Exception e) {
+            logger.log(Level.ALL,e.getMessage(),e);
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean sendPasswordEmail(String receiverEmail, String name, String password) {
 
         try{
