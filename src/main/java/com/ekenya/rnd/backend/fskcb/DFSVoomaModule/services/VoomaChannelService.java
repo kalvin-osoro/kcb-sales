@@ -361,6 +361,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(dfsVoomaAgentOnboardingEntity);
+            dfsVoomaAssetEntity.setAssigned(true);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
         } catch (Exception e) {

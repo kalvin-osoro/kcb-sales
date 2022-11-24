@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyChannelService;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,14 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AgencyChannelCustomerVisitsVC {
 
     @Autowired
-    IAgencyPortalService acquiringService;
+    IAgencyChannelService agencyChannelService;
     @PostMapping("/agency-create-customer-visit")
-    public ResponseEntity<?> createCustomerVisit(@RequestBody AgencyCustomerVisitsRequest request) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> createCustomerVisit(@RequestBody AgencyCustomerVisitsRequest model) {
+        boolean success = agencyChannelService.createCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
