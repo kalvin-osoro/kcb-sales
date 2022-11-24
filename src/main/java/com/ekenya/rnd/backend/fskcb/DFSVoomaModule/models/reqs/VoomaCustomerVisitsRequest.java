@@ -5,15 +5,27 @@ import com.ekenya.rnd.backend.utils.Status;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.Date;
+
 @Getter
 @Setter
 public class VoomaCustomerVisitsRequest {
-    private Long id;
-    private Long dsrId;
-    private String customerName;
+    @Id
+    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
+    private  Long id;
+    private  Long dsrId;
     private String dsrName;
+    private String merchantName;
+    private String customerName;
     private String reasonForVisit;
+    private String actionPlan;
+    private String highlights;
     private String visitDate;
     private Status status;
-    private Zone zone;
+    private Date createdOn;
+    private Date updatedOn;
 }

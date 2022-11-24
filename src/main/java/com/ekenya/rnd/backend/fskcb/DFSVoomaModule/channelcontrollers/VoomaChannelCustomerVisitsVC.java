@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class VoomaChannelCustomerVisitsVC {
@@ -21,12 +23,8 @@ public class VoomaChannelCustomerVisitsVC {
     IVoomaChannelService channelService;
 
     @PostMapping("/vooma-create-customer-visit")
-    public ResponseEntity<?> createCustomerVisit(@RequestBody VoomaCustomerVisitsRequest request) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> createCustomerVisit(@RequestBody VoomaCustomerVisitsRequest model) {
+        boolean success = channelService.createCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -45,10 +43,7 @@ public class VoomaChannelCustomerVisitsVC {
     @PostMapping("/vooma-update-customer-visit")
     public ResponseEntity<?> updateCustomerVisit(@RequestBody VoomaCustomerVisitsRequest request) {
 
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        boolean success = channelService.updateCustomerVisit(request);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -65,17 +60,15 @@ public class VoomaChannelCustomerVisitsVC {
     }
 
     @PostMapping(value = "/vooma-get-all-customer-visits")
-    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody VoomaCustomerVisitsRequest request) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody VoomaCustomerVisitsRequest model) {
+        List<?> customerVisits = channelService.getAllCustomerVisitsByDSR(model);
+        boolean success = customerVisits != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List) customerVisits);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

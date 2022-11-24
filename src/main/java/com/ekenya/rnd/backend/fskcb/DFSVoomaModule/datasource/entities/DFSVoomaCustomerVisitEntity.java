@@ -21,13 +21,18 @@ public class DFSVoomaCustomerVisitEntity {
     //dsr id from dsr table
     private  Long dsrId;
     private String dsrName;
-    private String customerName;
+    private String merchantName;
     private String reasonForVisit;
+    private String actionPlan;
+    private String highlights;
     private String visitDate;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status=Status.ACTIVE;
+    private String customerName;
     //    private Zone zone;
     private Date createdOn;
     private Date updatedOn;
     private boolean isCompleted=false;
+
+
 }
