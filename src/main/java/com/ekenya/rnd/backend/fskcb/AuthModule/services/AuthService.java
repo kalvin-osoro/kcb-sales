@@ -18,6 +18,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.utils.Status;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -587,6 +588,56 @@ public class AuthService implements IAuthService{
     }
 
     @Override
+    public boolean attemptRecoverPassword(ForgotPasswordRequest model) {
+
+        try {
+
+            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+
+            if(optionalUserAccount.isPresent()){
+
+                UserAccountEntity userAccount = optionalUserAccount.get();
+                String pass = Utility.generatePassword();
+                //Option 1 - Send via Email
+                if(model.getOption() == 1){
+                    //EMAIL
+                    if(smsService.sendPasswordEmail(userAccount.getEmail(),userAccount.getFullName(),pass)){
+
+                        //
+                        userAccount.setPassword(passwordEncoder.encode(pass));
+                        userAccount.setBlocked(false);
+                        userAccount.setLastModified(Calendar.getInstance().getTime());
+                        //
+                        userRepository.save(userAccount);//save user to db
+
+                    }else {
+                        //Failed;
+                    }
+                }else{
+                    //Option 0 - Send via SMS
+                    if(smsService.sendPasswordSMS(userAccount.getPhoneNumber(), userAccount.getFullName(), pass)){
+
+                        //
+                        userAccount.setPassword(passwordEncoder.encode(pass));
+                        userAccount.setBlocked(false);
+                        userAccount.setLastModified(Calendar.getInstance().getTime());
+                        //
+                        userRepository.save(userAccount);//save user to db
+
+                        return true;
+                    }else{
+                        //Failed..
+                    }
+                }
+
+            }
+        }catch (Exception ex){
+            mLogger.log(Level.SEVERE,"PIN reset attempt failed.", ex);
+        }
+        return false;
+    }
+
+    @Override
     public boolean resetDSRPIN(ResetDSRPINRequest model) {
 
         try {
@@ -598,6 +649,8 @@ public class AuthService implements IAuthService{
             if(pin != null){
                 //Update flag
                 account.setShouldSetPIN(true);
+                //
+                account.setPassword(passwordEncoder.encode(pin));
                 //
                 userRepository.save(account);//save user to db
 

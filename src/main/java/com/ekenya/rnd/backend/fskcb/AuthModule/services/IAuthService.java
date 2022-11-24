@@ -31,6 +31,8 @@ public interface IAuthService {
 
     boolean attemptChangePassword(ChangePasswordRequest model);
 
+    boolean attemptRecoverPassword(ForgotPasswordRequest model);
+
     boolean resetDSRPIN(ResetDSRPINRequest model);
 
     boolean changeDSRPhoneNo(ChangeDSRPhoneNoRequest model);
