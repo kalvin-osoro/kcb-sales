@@ -3,6 +3,9 @@ spring:
     url: jdbc:mysql://172.16.189.128:3306/kcb_fs_db?serverTimezone=UTC
     username: jpa_account
     password: Cvs@1234
+#    url: jdbc:mysql://10.20.2.51:3306/kcb_sales_effective?serverTimezone=EAT
+#    username: wgicheru
+#    password: 1QAZ2wsx3edc.
   data:
     jpa:
       repositories:

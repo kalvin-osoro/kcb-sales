@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -101,11 +102,11 @@ public class DSRAccountsVC {
     }
 
     @PostMapping("/dsr-get-details")
-    public ResponseEntity<?> getDSRDetails(@RequestBody String staffNo ) {
+    public ResponseEntity<?> getDSRDetails(@RequestBody DSRDetailsRequest request ) {
 
 
         //INSIDE SERVICE
-        ObjectNode info = dsrPortalService.getDSRProfile(staffNo);
+        ObjectNode info = dsrPortalService.getDSRProfile(request.getStaffNo());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -122,7 +123,7 @@ public class DSRAccountsVC {
 
 
     @PostMapping("/dsr-get-audit-trail")
-    public ResponseEntity<?> getDSRAuditTrail(@RequestBody int id ) {
+    public ResponseEntity<?> getDSRAuditTrail(@RequestBody DSRAuditTrailRequest request) {
 
 
         //INSIDE SERVICE
@@ -144,11 +145,11 @@ public class DSRAccountsVC {
     }
 
     @PostMapping("/dsr-unlock-user")
-    public ResponseEntity<?> unlockAccount(@RequestBody String staffNo ) {
+    public ResponseEntity<?> unlockAccount(@RequestBody UnlockDSRAccountRequest request ) {
 
 
         //INSIDE SERVICE
-        boolean success = dsrPortalService.unlockAccount(staffNo);
+        boolean success = dsrPortalService.unlockAccount(request.getStaffNo());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -168,11 +169,11 @@ public class DSRAccountsVC {
 
 
     @PostMapping("/dsr-lock-account")
-    public ResponseEntity<?> lockAccount(@RequestBody String staffNo ) {
+    public ResponseEntity<?> lockAccount(@RequestBody LockDSRAccountRequest request ) {
 
 
         //INSIDE SERVICE
-        boolean success = dsrPortalService.lockAccount(staffNo);
+        boolean success = dsrPortalService.lockAccount(request.getStaffNo());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -190,11 +191,11 @@ public class DSRAccountsVC {
     }
 
     @PostMapping("/dsr-reset-pin")
-    public ResponseEntity<?> resetPIN(@RequestBody String staffNo ) {
+    public ResponseEntity<?> resetPIN(@RequestBody ResetDSRPINRequest request ) {
 
 
         //INSIDE SERVICE
-        boolean success = dsrPortalService.resetPIN(staffNo);
+        boolean success = dsrPortalService.resetPIN(request.getStaffNo());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

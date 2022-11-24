@@ -181,18 +181,18 @@ public class SpringBootKcbRestApiApplication   {
 		fileAppender.setAppend(true);
 
 //Filter out anything < WARN
-//		ThresholdFilter warningFilter = new ThresholdFilter();
-//		warningFilter.setLevel("WARN");
-//		warningFilter.setContext(context);
-//		warningFilter.start();
-//		fileAppender.addFilter(warningFilter);
+		ThresholdFilter warningFilter = new ThresholdFilter();
+		warningFilter.setLevel("WARN");
+		warningFilter.setContext(context);
+		warningFilter.start();
+		fileAppender.addFilter(warningFilter);
 
 //Filter out anything < DEBUG
-		ThresholdFilter debugFilter = new ThresholdFilter();
-		debugFilter.setLevel("DEBUG");
-		debugFilter.setContext(context);
-		debugFilter.start();
-		fileAppender.addFilter(debugFilter);
+//		ThresholdFilter debugFilter = new ThresholdFilter();
+//		debugFilter.setLevel("DEBUG");
+//		debugFilter.setContext(context);
+//		debugFilter.start();
+//		fileAppender.addFilter(debugFilter);
 
 //Message Encoder
 		PatternLayoutEncoder ple = new PatternLayoutEncoder();
@@ -210,7 +210,7 @@ public class SpringBootKcbRestApiApplication   {
 		ch.qos.logback.classic.Logger root = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 		root.setLevel(Level.DEBUG);
 		root.addAppender(fileAppender);
-		root.setAdditive(false); /* set to true if root should log too */
+		root.setAdditive(true); /* set to true if root should log too */
 
 
 		String f = fileAppender.getFile();

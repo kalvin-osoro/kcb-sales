@@ -10,12 +10,11 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccoun
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddRegionRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.UpdateRegionRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IZoneCoordinatesRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
@@ -391,11 +390,11 @@ public class DSRPortalService implements IDSRPortalService {
     }
 
     @Override
-    public ObjectNode loadTeamDetails(long teamId) {
+    public ObjectNode loadTeamDetails(TeamDetailsRequest model) {
 
         try{
 
-            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(teamId);
+            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(model.getTeamId());
 
             if(optionalTeam.isPresent()){
 
@@ -470,6 +469,109 @@ public class DSRPortalService implements IDSRPortalService {
             log.error(e.getMessage(),e);
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean attemptAddTeamMember(AddTeamMemberRequest model) {
+
+        try{
+
+            Optional<DSRTeamEntity> optionalDSRTeam = dsrTeamsRepository.findById(model.getTeamId());
+            Optional<DSRAccountEntity> optionalDSRAccount = dsrAccountsRepository.findByStaffNo(model.getStaffNo());
+            if(optionalDSRTeam.isPresent() && optionalDSRAccount.isPresent()){
+
+                optionalDSRTeam.get().getMembers().add(optionalDSRAccount.get());
+                dsrTeamsRepository.save(optionalDSRTeam.get());
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean attemptRemoveTeamMember(RemoveTeamMemberRequest model) {
+
+        try {
+            DSRTeamEntity teamEntity = dsrTeamsRepository.findById(model.getTeamId()).orElse(null);
+
+            DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+
+            if (teamEntity != null && dsrAccount != null) {
+                //
+                Set<DSRAccountEntity> teamMembers = (Set<DSRAccountEntity>) teamEntity.getMembers();
+                teamMembers.removeIf(x -> Objects.equals(x.getId(), dsrAccount.getId()));
+                teamEntity.setMembers(teamMembers);
+                dsrTeamsRepository.save(teamEntity);
+                //
+
+                return true;
+            }
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean attemptUpdateTeamMembers(UpdateTeamMembersRequest model) {
+
+        try{
+
+            Optional<DSRTeamEntity> optionalDSRTeam = dsrTeamsRepository.findById(model.getTeamId());
+
+            if(optionalDSRTeam.isPresent()){
+
+
+
+                //
+                Set<DSRAccountEntity> teamMembers = (Set<DSRAccountEntity>) optionalDSRTeam.get().getMembers();
+
+                //Removal
+                for (DSRAccountEntity acc:  optionalDSRTeam.get().getMembers()) {
+                    //
+                    boolean found = false;
+                    for (long userId: model.getMembers()) {
+
+                        if(userId == acc.getId()){
+                            found = true;
+                            break;
+                        }
+                    }
+                    //Not found in new list
+                    if(!found){
+                        teamMembers.removeIf(x -> Objects.equals(x.getId(), acc.getId()));
+                    }
+                }
+
+                //Additions
+                for (long userId: model.getMembers()) {
+
+                    //
+                    boolean found = false;
+                    for (DSRAccountEntity acc:  optionalDSRTeam.get().getMembers()) {
+                        if (userId == acc.getId()) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    //Not found in existong list
+                    if(!found){
+                        Optional<DSRAccountEntity> optionalDSRAccount = dsrAccountsRepository.findById(userId);
+                        if(optionalDSRAccount.isPresent()){
+
+                            teamMembers.add(optionalDSRAccount.get());
+                        }
+                    }
+                }
+                //
+                optionalDSRTeam.get().setMembers(teamMembers);
+                dsrTeamsRepository.save(optionalDSRTeam.get());
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
         return false;
     }
 
@@ -592,8 +694,11 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("salesCode",entity.getSalesCode());
                 node.put("status",entity.getStatus().toString());
                 node.put("dateCreated",dateFormat.format(entity.getCreatedOn()));
-                node.put("expiry",dateFormat.format(entity.getExpiryDate()));
-
+                if(entity.getExpiryDate() != null) {
+                    node.put("expiry", dateFormat.format(entity.getExpiryDate()));
+                }else{
+                    node.put("expiry", "");
+                }
                 return node;
             }
 

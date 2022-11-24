@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface IAuthService {
 
-    LoginResponse attemptLogin(LoginRequest model);
+    LoginResponse attemptAdminLogin(PortalLoginRequest model);
+    LoginResponse attemptChannelLogin(ChannelLoginRequest model);
 
     boolean attemptChangePIN(ChangePINRequest model);
 

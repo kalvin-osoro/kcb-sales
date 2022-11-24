@@ -1,10 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignUserProfileRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.ResetUserPasswordRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserProfilesRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,9 +33,9 @@ public class UsersVC {
     IUsersService usersService;
 
     @PostMapping("/users-create-user")
-    public ResponseEntity<?> createUser(@RequestBody AddUserRequest request ) {
+    public ResponseEntity<?> createAdminUser(@RequestBody AddAdminUserRequest request ) {
         //TODO; INSIDE SERVICE
-        boolean success = usersService.attemptCreateUser(request, false);
+        boolean success = usersService.attemptCreateUser(request, AccountType.ADMIN, false);
         if(success){
             //Object
             ObjectNode node = mObjectMapper.createObjectNode();
@@ -51,7 +50,7 @@ public class UsersVC {
 
 
     @PostMapping("/users-import-users")
-    public ResponseEntity<?> importUsers(@RequestBody MultipartFile file ) {
+    public ResponseEntity<?> importAdminUsers(@RequestBody MultipartFile file ) {
         //T
         ObjectNode resp = usersService.attemptImportUsers(file);
         if(resp != null){
@@ -65,7 +64,7 @@ public class UsersVC {
         }
     }
     @PostMapping(value = "/users-get-all-users")
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<?> getAllAdminUsers() {
 
 
         //TODO; INSIDE SERVICE
@@ -85,8 +84,8 @@ public class UsersVC {
     }
 
     @PostMapping("/users-sync-crm")
-    public ResponseEntity<?> syncWithCRM() {
-        //TODO; INSIDE SERVICE
+    public ResponseEntity<?> syncAdminsWithCRM() {
+        //INSIDE SERVICE
         boolean success = usersService.syncUsersWithCRM();
 
         //Response
@@ -104,9 +103,9 @@ public class UsersVC {
     }
 
     @PostMapping("/users-get-details")
-    public ResponseEntity<?> getUserById(long id) {
+    public ResponseEntity<?> getAdminUserDetails(@RequestBody AdminUserDetailsRequest request) {
         //TODO; INSIDE SERVICE
-        ObjectNode node = usersService.loadUserDetails(id);
+        ObjectNode node = usersService.loadUserDetails(request.getUserId());
 
         //Response
         if(node != null){
@@ -120,7 +119,7 @@ public class UsersVC {
     }
 
     @PostMapping("/users-reset-password")
-    public ResponseEntity<?> resetUserPassword(@RequestBody ResetUserPasswordRequest request ) {
+    public ResponseEntity<?> resetUserAdminPassword(@RequestBody ResetUserPasswordRequest request ) {
 
         //TODO; INSIDE SERVICE
         boolean success = usersService.attemptResetPassword(request);
@@ -179,10 +178,10 @@ public class UsersVC {
         }
     }
     @PostMapping("/users-block-user")
-    public ResponseEntity<?> blockUser(@RequestBody long id ) {
+    public ResponseEntity<?> blockUser(@RequestBody BlockAdminUserRequest request) {
 
         //
-        boolean success = usersService.attemptBlockUser(id);
+        boolean success = usersService.attemptBlockUser(request.getUserId());
 
         //Response
         if(success){
@@ -199,10 +198,10 @@ public class UsersVC {
     }
 
     @PostMapping("/users-unblock-user")
-    public ResponseEntity<?> unblockUser(@RequestBody long id ) {
+    public ResponseEntity<?> unblockUser(@RequestBody UnblockAdminUserRequest request) {
 
         //
-        boolean success = usersService.attemptUnblockUser(id);
+        boolean success = usersService.attemptUnblockUser(request.getUserId());
 
         //Response
         if(success){
@@ -219,10 +218,10 @@ public class UsersVC {
     }
 
     @PostMapping("/users-get-audit-trail")
-    public ResponseEntity<?> userAuditTrail(@RequestBody long id) {
+    public ResponseEntity<?> userAuditTrail(@RequestBody AdminUserAuditTrailRequest request) {
 
-        //TODO; INSIDE SERVICE
-        ArrayNode resp = usersService.loadUserAuditTrail(id);
+        //INSIDE SERVICE
+        ArrayNode resp = usersService.loadUserAuditTrail(request.getUserId());
 
         //Response
         if(resp != null){

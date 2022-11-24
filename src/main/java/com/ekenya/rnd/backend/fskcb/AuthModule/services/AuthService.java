@@ -9,18 +9,20 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +43,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthService implements IAuthService{
+
+    @Value("${app.jwt-expiration-milliseconds}")
+    private int JWT_EXPIRY_IN_MILLISECONDS = 30 * 60 * 1000;
     @Autowired
     ObjectMapper mObjectMapper;
     @Autowired
@@ -73,12 +78,48 @@ public class AuthService implements IAuthService{
     @Autowired
     FileHandler mLogFileHandler;
     @Override
-    public LoginResponse attemptLogin(LoginRequest model) {
+    public LoginResponse attemptChannelLogin(ChannelLoginRequest model) {
 
         try{
 
+            LoginResponse response = new LoginResponse();
+
+
+            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+            if(account == null){
+                response.setSuccess(false);
+                response.setErrorMessage("Account NOT Found in the system.");
+                return response;
+            }else if(account.getAccountType() != AccountType.DSR){
+                response.setSuccess(false);
+                response.setErrorMessage("Account NOT allowed to use this channel");
+                return response;
+            }else if(account.getBlocked() || account.getRemLoginAttempts() <=0){
+                response.setSuccess(false);
+                response.setRemAttempts(account.getRemLoginAttempts());
+                response.setErrorMessage("Account is Blocked.");
+                return response;
+            }else {
+                //Check expiry ..
+                DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+                if(dsrAccount != null && dsrAccount.getExpiryDate() != null){
+                    //
+                    LocalDateTime accountExpiry = LocalDateTime.ofInstant(dsrAccount.getExpiryDate().toInstant(),
+                            ZoneId.systemDefault());
+                    //
+                    if(accountExpiry.isAfter(LocalDateTime.now())){
+                        response.setSuccess(false);
+                        response.setRemAttempts(account.getRemLoginAttempts());
+                        response.setErrorMessage("Account Access as Expired.");
+                        response.setExpired(true);
+                        return response;
+                    }
+                }
+            }
+
+            //Continue ..
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(model.getStaffNo(),
-                    model.getPassword()));
+                    model.getPin()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             //get token from token provider
             String token= tokenProvider.generateToken(authentication);
@@ -88,7 +129,6 @@ public class AuthService implements IAuthService{
             String username=userDetails.getUsername();
 
             //Update Login info ..
-            UserAccountEntity account = userRepository.findByStaffNo(username).get();
             account.setLastLogin(Calendar.getInstance().getTime());
             if(model.getLocation() != null) {
                 account.setLastCoords(model.getLocation().toString());
@@ -100,10 +140,89 @@ public class AuthService implements IAuthService{
 
 
             //Response
-            LoginResponse response = new LoginResponse();
             response.setSuccess(true);
             response.setToken(token);
-            response.setExpires(Calendar.getInstance().getTime());
+            response.setIssued(Calendar.getInstance().getTime());
+            response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
+            response.setProfiles(roles);
+            response.setType("Bearer");
+            //
+            return response;
+        }catch (AuthenticationException ex){
+            //
+            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+            //Update ..
+            if(optionalUserAccount.isPresent()){
+                UserAccountEntity userAccount = optionalUserAccount.get();
+                userAccount.setRemLoginAttempts(userAccount.getRemLoginAttempts() - 1);
+                //
+                if(userAccount.getRemLoginAttempts() <= 0){
+                    userAccount.setBlocked(true);
+                    userAccount.setDateBlocked(Calendar.getInstance().getTime());
+                }
+                //
+                userRepository.save(userAccount);
+                //
+                LoginResponse response = new LoginResponse();
+                response.setSuccess(false);
+                response.setRemAttempts(userAccount.getRemLoginAttempts());
+                //
+                return response;
+            }
+
+            //
+        }catch (Exception ex){
+            //
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
+        }
+
+        return null;
+    }
+
+
+    public LoginResponse attemptAdminLogin(PortalLoginRequest model) {
+
+        try{
+
+            LoginResponse response = new LoginResponse();
+
+
+            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+            if(account == null){
+                response.setSuccess(false);
+                response.setErrorMessage("Account NOT Found in the system.");
+                return response;
+            }else if(account.getBlocked() || account.getRemLoginAttempts() <=0){
+                response.setSuccess(false);
+                response.setRemAttempts(account.getRemLoginAttempts());
+                response.setErrorMessage("Account is Blocked.");
+                return response;
+            }
+
+            //Continue ..
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(model.getStaffNo(),
+                    model.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            //get token from token provider
+            String token= tokenProvider.generateToken(authentication);
+
+            //get user details from authentication
+            UserDetails userDetails=(UserDetails)authentication.getPrincipal();
+            String username=userDetails.getUsername();
+
+            //Update Login info ..
+            account.setLastLogin(Calendar.getInstance().getTime());
+            userRepository.save(account);
+
+            //get user roles
+            List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
+
+
+            //Response
+            response.setSuccess(true);
+            response.setToken(token);
+            response.setIssued(Calendar.getInstance().getTime());
+            response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
             response.setProfiles(roles);
             response.setType("Bearer");
             //
@@ -224,15 +343,13 @@ public class AuthService implements IAuthService{
                 //
                 mLogger.log(Level.INFO,"Validating token "+code);
                 //Check if code exist...
-                if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().isExpired()) {
+                if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().getExpired()) {
                     //
                     LocalDateTime tokenIssued = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
                             ZoneId.systemDefault());
                     //
                     LocalDateTime tokenExpiryTime = tokenIssued.plusMinutes(code.get().getExpiresInMinutes());
                     //
-                    System.out.println("Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
-                    mLogger.log(Level.INFO,"Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
 
                     //
                     if (tokenExpiryTime.isAfter(LocalDateTime.now())) {
@@ -248,19 +365,20 @@ public class AuthService implements IAuthService{
                         if(!userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
 
                             //Create Login Account..
-                            AddUserRequest addUserRequest = new AddUserRequest();
+                            AddAdminUserRequest addUserRequest = new AddAdminUserRequest();
                             addUserRequest.setEmail(dsrAccount.getEmail());
                             addUserRequest.setFullName(dsrAccount.getFullName());
                             addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
                             addUserRequest.setStaffNo(dsrAccount.getStaffNo());
                             //
-                            if (usersService.attemptCreateUser(addUserRequest, true)) {
+                            if (usersService.attemptCreateUser(addUserRequest, AccountType.DSR,true)) {
                                 //All is well,
                                 return true;
                             } else {
                                 mLogger.log(Level.SEVERE,"Create User Account Failed");
                             }
                         }else{
+                            mLogger.log(Level.WARNING,"Create User Account Failed. User already exist");
                             //All is well,
                             return true;
                         }
@@ -405,14 +523,14 @@ public class AuthService implements IAuthService{
             if(optionalUserAccount.isPresent()){
 
                 UserAccountEntity account = optionalUserAccount.get();
-                if(account.getShouldSetPIN()){
+                //if(account.getShouldSetPIN()){
                     //
                     account.setPassword(passwordEncoder.encode(model.getNewPIN()));
                     account.setShouldSetPIN(false);
                     account.setLastModified(Calendar.getInstance().getTime());
                     userRepository.save(account);//save user to db
                     return true;
-                }
+               // }
             }else{
                 //User not found ..
             }

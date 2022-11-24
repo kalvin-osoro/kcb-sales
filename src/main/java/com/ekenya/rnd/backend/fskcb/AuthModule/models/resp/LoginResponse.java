@@ -12,7 +12,10 @@ public class LoginResponse {
     private int remAttempts = 3;
     private String token;
     private String type;
-    private Date expires;
+    private Date issued;
+    private int expiresInMinutes = 30;
     private List<String> profiles;
 
+    private String errorMessage;
+    private boolean expired = false;
 }

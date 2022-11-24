@@ -24,13 +24,17 @@ public class UserAccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String password;
-    @Column(name="staff_no")
+    @Column(name="staff_no", nullable = false)
     private String staffNo;
+    @Column(nullable=false)
     private String email;
+    @Column(nullable=false)
     private String fullName;
+    @Column(nullable=false)
     private String phoneNumber;
     private Boolean deleted = Boolean.FALSE;
-    @Column(name="acc_type")
+    @Column(name="acc_type", nullable = false)
+    //@Enumerated(EnumType.STRING)
     private AccountType accountType;
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
@@ -46,8 +50,8 @@ public class UserAccountEntity {
     private  Boolean shouldSetPIN = Boolean.TRUE;
     private  Boolean blocked = Boolean.FALSE;
 
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
+    @Column(name="status", nullable = false)
+    //@Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
     public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;

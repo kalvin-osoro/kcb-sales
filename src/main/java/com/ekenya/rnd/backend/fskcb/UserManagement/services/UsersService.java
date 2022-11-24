@@ -17,7 +17,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.exception.UserNotFoundException;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -112,7 +112,7 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public boolean attemptCreateUser(AddUserRequest model, boolean verified) {
+    public boolean attemptCreateUser(AddAdminUserRequest model, AccountType type, boolean verified) {
 
 
         try{
@@ -124,7 +124,7 @@ public class UsersService implements IUsersService {
                 //
                 UserAccountEntity account = new UserAccountEntity();
                 account.setPhoneNumber(model.getPhoneNo());
-                account.setAccountType(AccountType.ADMIN);
+                account.setAccountType(type);
                 account.setFullName(model.getFullName());
                 account.setEmail(model.getEmail());
                 account.setStaffNo(model.getStaffNo());
@@ -134,15 +134,22 @@ public class UsersService implements IUsersService {
                 //userRepository.save(account);//save user to db
                 //
 
-                //CAN ACCESS PORTAL
-                UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
-                account.setRoles(Collections.singleton(userRole));//set role to user
-                userRepository.save(account);//save user to db
+                if(type == AccountType.ADMIN) {
+                    //CAN ACCESS PORTAL
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
+                    userRepository.save(account);//save user to db
 
-                //
-                if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                     //
-                    //return true;
+                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
+                        //
+                        //return true;
+                    }
+                }else{
+                    //DSR Account..
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
+                    userRepository.save(account);//save user to db
                 }
                 //
                 return true;

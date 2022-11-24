@@ -303,4 +303,41 @@ userProfile.setInfo(model.getDesc());
         }
         return null;
     }
+
+    @Override
+    public ArrayNode loadRolesInProfile(long profileId) {
+        try{
+
+            ArrayNode list = mObjectMapper.createArrayNode();
+
+            Optional<UserProfileEntity> optionalUserProfile = userProfilesRepository.findById(profileId);
+
+            //
+            if(optionalUserProfile.isPresent()){
+
+                for (ProfileAndRoleEntity profileRole:
+                        profilesAndRolesRepository.findAllByProfileIdAndStatus(profileId, Status.ACTIVE)) {
+
+                    //
+                    Optional<UserRoleEntity> role = roleRepository.findById(profileRole.getRoleId());
+                    //
+                    if(role.isPresent()){
+                        //
+                        ObjectNode node = mObjectMapper.createObjectNode();
+                        node.put("name",role.get().getName());
+                        node.put("id",role.get().getId());
+                        node.put("desc",role.get().getInfo());
+                        node.put("type",role.get().getType().toString());
+                        //
+                        list.add(node);
+                    }
+                }
+            }
+
+            return list;
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return null;
+    }
 }

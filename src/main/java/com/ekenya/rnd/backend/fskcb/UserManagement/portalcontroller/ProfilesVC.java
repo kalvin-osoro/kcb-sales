@@ -96,10 +96,10 @@ public class ProfilesVC {
 
     @ApiOperation(value = "Get profile details")
     @PostMapping("/users-get-profile-details")
-    public ResponseEntity<?> getProfileDetails(@RequestBody long id ) {
+    public ResponseEntity<?> getProfileDetails(@RequestBody ProfileDetailsRequest request ) {
 
         //INSIDE SERVICE
-        ObjectNode resp = profilesService.getProfileDetails(id);
+        ObjectNode resp = profilesService.getProfileDetails(request.getProfileId());
 
         //Response
         if(resp != null){
@@ -164,10 +164,30 @@ public class ProfilesVC {
 
     @ApiOperation(value = "Get all users in a profile")
     @PostMapping("/users-profile-users")
-    public ResponseEntity<?> usersInProfile(@RequestBody long profileId) {
+    public ResponseEntity<?> usersInProfile(@RequestBody UsersInProfileRequest request) {
 
         //INSIDE SERVICE
-        ArrayNode list = profilesService.loadUsersInProfile(profileId);
+        ArrayNode list = profilesService.loadUsersInProfile(request.getProfileId());
+
+        //Response
+        if(list != null){
+            //Object
+
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+
+    @ApiOperation(value = "Get all users in a profile")
+    @PostMapping("/users-profile-roles")
+    public ResponseEntity<?> getProfileRoles(@RequestBody ProfileRolesRequest request) {
+
+        //INSIDE SERVICE
+        ArrayNode list = profilesService.loadRolesInProfile(request.getProfileId());
 
         //Response
         if(list != null){

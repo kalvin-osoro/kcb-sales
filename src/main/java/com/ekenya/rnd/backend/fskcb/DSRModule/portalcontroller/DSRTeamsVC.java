@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportTeamsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +40,7 @@ public class DSRTeamsVC {
     }
     @PostMapping(value = "/dsr-get-all-teams")
     public ResponseEntity<?> getAllTeams() {
-        //TODO; INSIDE SERVICE
+        //INSIDE SERVICE
         ArrayNode list = dsrPortalService.getAllDSRTeams();
         //Response
         if(list != null){
@@ -55,9 +54,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-team-details")
-    public ResponseEntity<?> getTeamDetails(@RequestBody long teamId ) {
+    public ResponseEntity<?> getTeamDetails(@RequestBody TeamDetailsRequest request ) {
         //TODO; INSIDE SERVICE
-        ObjectNode resp = dsrPortalService.loadTeamDetails(teamId);
+        ObjectNode resp = dsrPortalService.loadTeamDetails(request);
 
         //Response
         if(resp != null){
@@ -71,9 +70,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-update-team-members")
-    public ResponseEntity<?> updateTeamMembers(@RequestBody ExportTeamsRequest leadRequest ) {
+    public ResponseEntity<?> updateTeamMembers(@RequestBody UpdateTeamMembersRequest request ) {
         //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        boolean success = dsrPortalService.attemptUpdateTeamMembers(request);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -90,9 +89,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-disable-team")
-    public ResponseEntity<?> disableTeam(@RequestBody long teamId) {
+    public ResponseEntity<?> disableTeam(@RequestBody DisableTeamRequest request) {
         //TODO; INSIDE SERVICE
-        boolean success = dsrPortalService.attemptDeactivateTeam(teamId);
+        boolean success = dsrPortalService.attemptDeactivateTeam(request.getTeamId());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -109,9 +108,49 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-enable-team")
-    public ResponseEntity<?> enableTeam(@RequestBody long teamId ) {
+    public ResponseEntity<?> enableTeam(@RequestBody EnableTeamRequest request ) {
         //TODO; INSIDE SERVICE
-        boolean success = dsrPortalService.attemptActivateTeam(teamId);
+        boolean success = dsrPortalService.attemptActivateTeam(request.getTeamId());
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+
+    @PostMapping("/dsr-add-team-member")
+    public ResponseEntity<?> addTeamMember(@RequestBody AddTeamMemberRequest request) {
+        //TODO; INSIDE SERVICE
+        boolean success = dsrPortalService.attemptAddTeamMember(request);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/dsr-remove-team-member")
+    public ResponseEntity<?> removeTeamMember(@RequestBody RemoveTeamMemberRequest request ) {
+        //TODO; INSIDE SERVICE
+        boolean success = dsrPortalService.attemptRemoveTeamMember(request);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
