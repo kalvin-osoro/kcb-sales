@@ -17,4 +17,5 @@ public class LoginResponse {
     private List<String> profiles;
 
     private String errorMessage;
+    private boolean expired = false;
 }

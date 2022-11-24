@@ -99,6 +99,22 @@ public class AuthService implements IAuthService{
                 response.setRemAttempts(account.getRemLoginAttempts());
                 response.setErrorMessage("Account is Blocked.");
                 return response;
+            }else {
+                //Check expiry ..
+                DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+                if(dsrAccount != null && dsrAccount.getExpiryDate() != null){
+                    //
+                    LocalDateTime accountExpiry = LocalDateTime.ofInstant(dsrAccount.getExpiryDate().toInstant(),
+                            ZoneId.systemDefault());
+                    //
+                    if(accountExpiry.isAfter(LocalDateTime.now())){
+                        response.setSuccess(false);
+                        response.setRemAttempts(account.getRemLoginAttempts());
+                        response.setErrorMessage("Account Access as Expired.");
+                        response.setExpired(true);
+                        return response;
+                    }
+                }
             }
 
             //Continue ..
@@ -334,8 +350,6 @@ public class AuthService implements IAuthService{
                     //
                     LocalDateTime tokenExpiryTime = tokenIssued.plusMinutes(code.get().getExpiresInMinutes());
                     //
-                    System.out.println("Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
-                    mLogger.log(Level.INFO,"Token found'\n Issued =>  "+tokenIssued+", \nExpires => "+tokenExpiryTime+", \nNow => "+LocalDateTime.now());
 
                     //
                     if (tokenExpiryTime.isAfter(LocalDateTime.now())) {
@@ -509,14 +523,14 @@ public class AuthService implements IAuthService{
             if(optionalUserAccount.isPresent()){
 
                 UserAccountEntity account = optionalUserAccount.get();
-                if(account.getShouldSetPIN()){
+                //if(account.getShouldSetPIN()){
                     //
                     account.setPassword(passwordEncoder.encode(model.getNewPIN()));
                     account.setShouldSetPIN(false);
                     account.setLastModified(Calendar.getInstance().getTime());
                     userRepository.save(account);//save user to db
                     return true;
-                }
+               // }
             }else{
                 //User not found ..
             }

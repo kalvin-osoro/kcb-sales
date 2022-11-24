@@ -134,15 +134,22 @@ public class UsersService implements IUsersService {
                 //userRepository.save(account);//save user to db
                 //
 
-                //CAN ACCESS PORTAL
-                UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
-                account.setRoles(Collections.singleton(userRole));//set role to user
-                userRepository.save(account);//save user to db
+                if(type == AccountType.ADMIN) {
+                    //CAN ACCESS PORTAL
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
+                    userRepository.save(account);//save user to db
 
-                //
-                if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                     //
-                    //return true;
+                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
+                        //
+                        //return true;
+                    }
+                }else{
+                    //DSR Account..
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
+                    userRepository.save(account);//save user to db
                 }
                 //
                 return true;

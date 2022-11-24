@@ -694,8 +694,11 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("salesCode",entity.getSalesCode());
                 node.put("status",entity.getStatus().toString());
                 node.put("dateCreated",dateFormat.format(entity.getCreatedOn()));
-                node.put("expiry",dateFormat.format(entity.getExpiryDate()));
-
+                if(entity.getExpiryDate() != null) {
+                    node.put("expiry", dateFormat.format(entity.getExpiryDate()));
+                }else{
+                    node.put("expiry", "");
+                }
                 return node;
             }
 

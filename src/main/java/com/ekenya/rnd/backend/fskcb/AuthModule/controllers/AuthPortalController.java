@@ -41,7 +41,7 @@ public class AuthPortalController {
                 node.put("token",resp.getToken());
                 node.put("type",resp.getType());
                 node.put("issued",dateFormat.format(resp.getIssued()));
-                node.put("expires_in",dateFormat.format(resp.getExpiresInMinutes()));
+                node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());
                 //
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"User login successful"));
