@@ -186,8 +186,8 @@ public class RoleService implements IRolesService {
     }
 
     public boolean unassignRole(RemoveUserFromRole model){
-        UserAccountEntity user = userRepository.findById(model.getUserId()).orElse(null);
         try {
+            UserAccountEntity user = userRepository.findById(model.getUserId()).orElse(null);
 
             UserRoleEntity role = roleRepository.findById(model.getRoleId()).orElse(null);
 

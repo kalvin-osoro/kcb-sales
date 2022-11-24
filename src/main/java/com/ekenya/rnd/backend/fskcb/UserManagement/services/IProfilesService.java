@@ -26,4 +26,6 @@ public interface IProfilesService {
 
     ArrayNode loadUsersInProfile(long profileId);
 
+
+    ArrayNode loadRolesInProfile(long profileId);
 }

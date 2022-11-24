@@ -1,9 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddRegionRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.UpdateRegionRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddTeamRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +22,11 @@ public interface IDSRPortalService {
     ObjectNode loadTeamDetails(long teamId);
     boolean attemptActivateTeam(long teamId);
     boolean attemptDeactivateTeam(long teamId);
+
+    boolean attemptAddTeamMember(AddTeamMemberRequest model);
+    boolean attemptRemoveTeamMember(RemoveTeamMemberRequest model);
+
+    boolean attemptUpdateTeamMembers(UpdateTeamMembersRequest model);
 
     ArrayNode getAllDSRAccounts();
     boolean deleteDSRById(long id);

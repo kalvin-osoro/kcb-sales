@@ -26,29 +26,28 @@ public class DSRAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="phone_no")
+    @Column(name="phone_no",nullable = false)
     private String phoneNo;
 
     @Column(name="phone_verified")
     private Boolean phoneNoVerified = false;
 
-    @Column(name="email")
+    @Column(name="email", nullable = false)
     private String email;
 
 //    @Column(name="username")
 //    private String username;
 
-    @Column(name="staff_no")
+    @Column(name="staff_no",nullable = false)
     private String staffNo;
 
     @Column(name="sales_code")
     private String salesCode;
 
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
+    @Column(name="status",nullable = false)
     private Status status= Status.ACTIVE;
 
-    @Column(name="full_name")
+    @Column(name="full_name",nullable = false)
     private String fullName;
 
     @Column(name="location")
@@ -65,13 +64,13 @@ public class DSRAccountEntity {
 
 //    @ManyToOne
 //    private DSRTeamEntity dsrTeam;
-    @Column(name="team_id")
+    @Column(name="team_id",nullable = false)
     private Long teamId;
 
     @Column(name="created_by")
     private String createdBy;
 
-    @Column(name="created_on")
+    @Column(name="created_on",nullable = false)
     private Date createdOn = Calendar.getInstance().getTime();
 
     @Column(name="updated_on")

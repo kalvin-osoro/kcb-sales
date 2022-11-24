@@ -150,6 +150,11 @@ public class SMSService implements ISmsService{
                     .length())));
         }
         //
+        for (SecurityAuthCodeEntity code : securityAuthCodesRepository.findAllByUserId(uid)){
+            if(code.getType() == type && !code.getExpired()){
+                code.setExpired(true);
+            }
+        }
         //
         SecurityAuthCodeEntity securityAuthCode = new SecurityAuthCodeEntity();
         securityAuthCode.setCode(sb.toString());
@@ -157,12 +162,6 @@ public class SMSService implements ISmsService{
         securityAuthCode.setType(AuthCodeType.DEVICE_VERIFICATION);
         securityAuthCode.setDateIssued(Calendar.getInstance().getTime());
         securityAuthCode.setExpiresInMinutes(30);
-        //
-        for (SecurityAuthCodeEntity code : securityAuthCodesRepository.findAllByUserId(uid)){
-            if(code.getType() == securityAuthCode.getType()){
-                code.setExpired(true);
-            }
-        }
         //
         securityAuthCodesRepository.save(securityAuthCode);
 

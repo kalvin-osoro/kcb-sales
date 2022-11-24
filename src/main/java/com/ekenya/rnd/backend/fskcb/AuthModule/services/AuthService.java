@@ -224,7 +224,7 @@ public class AuthService implements IAuthService{
                 //
                 mLogger.log(Level.INFO,"Validating token "+code);
                 //Check if code exist...
-                if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().isExpired()) {
+                if (code.isPresent() && code.get().getUserId() == dsrAccount.getId() && !code.get().getExpired()) {
                     //
                     LocalDateTime tokenIssued = LocalDateTime.ofInstant(code.get().getDateIssued().toInstant(),
                             ZoneId.systemDefault());

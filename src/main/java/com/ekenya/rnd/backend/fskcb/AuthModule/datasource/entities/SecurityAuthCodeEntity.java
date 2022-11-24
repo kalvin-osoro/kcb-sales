@@ -19,16 +19,16 @@ public class SecurityAuthCodeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable=false)
     private Long userId;
-
+    @Column(nullable=false)
     private String code;
-
+    @Column(nullable=false)
     private Date dateIssued;
-
-    private int expiresInMinutes;
-
+    @Column(nullable=false)
+    private Integer expiresInMinutes = 10;
+    @Column(nullable=false)
     private AuthCodeType type;
-
-    private boolean expired;
+    @Column(nullable=false)
+    private Boolean expired = false;
 }

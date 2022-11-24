@@ -461,19 +461,18 @@ public class DbInitializer {
             if(!dSRAccountsRepository.findByStaffNo(staffNo).isPresent()) {
 
                 //Capture info
-                DSRAccountEntity dsrDetails = DSRAccountEntity.builder()
-                        .email(email)
-                        .staffNo(staffNo)
-                        .phoneNo("254734406645")
-                        .status(Status.ACTIVE)
-                        .fullName("TEST DSR")
-                        .location(team.getLocation())
-                        .gender("other")
-                        .idNumber("")
-                        .teamId(team.getId())
-                        .createdBy("0")
-                        .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
-                        .build();
+                DSRAccountEntity dsrDetails = new DSRAccountEntity();
+                dsrDetails.setEmail(email);
+                dsrDetails.setStaffNo(staffNo);
+                dsrDetails.setPhoneNo("254734406645");
+                dsrDetails.setStatus(Status.ACTIVE);
+                dsrDetails.setFullName("TEST DSR");
+                dsrDetails.setLocation(team.getLocation());
+                dsrDetails.setGender("other");
+                dsrDetails.setIdNumber("");
+                dsrDetails.setTeamId(team.getId());
+                dsrDetails.setCreatedBy("0");
+                dsrDetails.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
 
                 //Create login profile
                 UserAccountEntity userApp = new UserAccountEntity();

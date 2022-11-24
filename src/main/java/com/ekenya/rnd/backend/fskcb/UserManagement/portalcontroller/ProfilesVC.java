@@ -180,4 +180,24 @@ public class ProfilesVC {
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+
+    @ApiOperation(value = "Get all users in a profile")
+    @PostMapping("/users-profile-roles")
+    public ResponseEntity<?> getProfileRoles(@RequestBody long profileId) {
+
+        //INSIDE SERVICE
+        ArrayNode list = profilesService.loadRolesInProfile(profileId);
+
+        //Response
+        if(list != null){
+            //Object
+
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 }
