@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -28,6 +29,8 @@ public class DFSVoomaLeadEntity {
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
+    private String customerName;
+    private String customerAccountNumber;
     private Long dsrId;
     private String dsrName;
     @Enumerated(EnumType.STRING)
@@ -35,4 +38,5 @@ public class DFSVoomaLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private Date createdOn;
 }

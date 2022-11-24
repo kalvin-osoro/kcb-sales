@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -9,26 +10,69 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch/")
-public class VoomaChannelOnboardingVC {
+public class  VoomaChannelOnboardingVC {
 
     @Autowired
-    IVoomaChannelService voomaService;
+    IVoomaChannelService voomaChannelService;
 
     //Channel request
-    @PostMapping("/vooma-onboard-customer")
-    public ResponseEntity<?> onboardNewCustomer(@RequestBody VoomaCustomerOnboardingRequest assetManagementRequest) {
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+    @PostMapping("/vooma-onboard-merchant")
+    public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
+                                                @RequestParam("frontID") MultipartFile frontID,
+                                                @RequestParam("backID") MultipartFile backID,
+                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+                                                @RequestParam("certificateOFGoodConduct") MultipartFile certificateOFGoodConduct,
+                                                @RequestParam("businessLicense") MultipartFile businessLicense,
+                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
+                                                @RequestParam("customerPhoto") MultipartFile customerPhoto,
+                                                @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
+                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
+                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+        Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,certificateOFGoodConduct,
+                businessLicense,shopPhoto,
+                customerPhoto,companyRegistrationDoc,
+                signatureDoc,businessPermitDoc);
+        boolean success = merchantObj != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.put("message","Merchant Onboarded Successfully");
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/vooma-onboard-agent")
+    public ResponseEntity<?> onboardNewAgent(@RequestParam("agentDetails") String agentDetails,
+                                             @RequestParam("frontID") MultipartFile frontID,
+                                             @RequestParam("backID") MultipartFile backID,
+                                             @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+                                             @RequestParam("businessCertificateOfRegistration") MultipartFile businessCertificateOfRegistration,
+                                             @RequestParam("shopPhoto") MultipartFile shopPhoto,
+                                             @RequestParam("signatureDoc") MultipartFile signatureDoc,
+                                             @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+        Object agentObj=voomaChannelService.onboardNewAgent(agentDetails,frontID,backID,kraPinCertificate,businessCertificateOfRegistration,
+                shopPhoto,signatureDoc,businessPermitDoc);
+        boolean success = agentObj != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("message","Agent Onboarded Successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

@@ -275,7 +275,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("id", dfsVoomaTargetEntity.getId());
                 objectNode.put("targetName", dfsVoomaTargetEntity.getTargetName());
                 objectNode.put("targetSource", dfsVoomaTargetEntity.getTargetSource());
-                objectNode.put("agencyTargetType", dfsVoomaTargetEntity.getAquiringTargetType().ordinal());
+                objectNode.put("agencyTargetType", dfsVoomaTargetEntity.getTargetType().ordinal());
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
@@ -295,7 +295,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             DFSVoomaTargetEntity dfsVoomaTargetEntity = new DFSVoomaTargetEntity();
             dfsVoomaTargetEntity.setTargetName(voomaAddTargetRequest.getTargetName());
             dfsVoomaTargetEntity.setTargetSource(voomaAddTargetRequest.getTargetSource());
-            dfsVoomaTargetEntity.setAquiringTargetType(voomaAddTargetRequest.getAgencyTargetType());
+            dfsVoomaTargetEntity.getTargetType().ordinal();
             dfsVoomaTargetEntity.setTargetDesc(voomaAddTargetRequest.getTargetDesc());
             dfsVoomaTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
             dfsVoomaTargetEntity.setTargetValue(voomaAddTargetRequest.getTargetValue());

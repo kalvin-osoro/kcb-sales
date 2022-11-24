@@ -65,7 +65,7 @@ public class VoomaChannelCustomerVisitsVC {
     }
 
     @PostMapping(value = "/vooma-get-all-customer-visits")
-    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody int dsrId) {
+    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody VoomaCustomerVisitsRequest request) {
 
 
         //TODO; INSIDE SERVICE
