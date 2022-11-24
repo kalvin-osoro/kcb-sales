@@ -18,5 +18,5 @@ public class DFSVoomaAddTargetRequest {
 //    private String endDate;
     private String targetName;
     private Date createdOn;
-    private TargetType agencyTargetType;
+    private TargetType targetType;
 }

@@ -34,7 +34,6 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final ModelMapper modelMapper;
-    private final AcqAssetRepository acqAssetRepository;
     private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
     private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
@@ -137,11 +136,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
             AcquiringAddAssetRequest acquiringAddAssetRequest =
                     mapper.readValue(assetDetails, AcquiringAddAssetRequest.class);
-
-            Optional<AcqAsset> optionalAsset = acqAssetRepository.findById(acquiringAddAssetRequest.getDeviceId());
-
             AcquiringAssetEntity acquiringAssetEntity = new AcquiringAssetEntity();
-            acquiringAssetEntity.setAssetType(optionalAsset.get());
             //
             acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
             //
@@ -153,7 +148,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             List<String> filePathList = new ArrayList<>();
             //save files
             filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
-            //
+            //save file paths to db
             filePathList.forEach(filePath -> {
                 AcquiringAssetFilesEntity assetFilesEntity = new AcquiringAssetFilesEntity();
                 assetFilesEntity.setAcquiringAssetEntity(savedAsset);
