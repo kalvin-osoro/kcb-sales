@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringCustomerVisitEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardingKYCentity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
@@ -38,6 +39,7 @@ public class VoomaChannelService implements IVoomaChannelService {
 
     @Autowired
     IFileStorageService fileStorageService;
+    private  final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     private  final DFSVoomaLeadRepository dfsVoomaLeadRepository;
     private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
     private final DFSVoomaOnboardingKYRepository dfsVoomaOnboardingKYRepository;
@@ -410,6 +412,61 @@ public class VoomaChannelService implements IVoomaChannelService {
             log.error("Error occurred while recollecting asset", e);
         }
         return false;
+    }
+
+    @Override
+    public boolean createCustomerVisit(VoomaCustomerVisitsRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
+            dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
+            dfsVoomaCustomerVisitEntity.setActionPlan(model.getActionPlan());
+            dfsVoomaCustomerVisitEntity.setHighlights(model.getHighlights());
+//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            String username = userDetails.getUsername();
+            dfsVoomaCustomerVisitEntity.setDsrName("test");
+            dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save customer visit
+            dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while creating customer visit", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCustomerVisit(VoomaCustomerVisitsRequest request) {
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllCustomerVisitsByDSR(VoomaCustomerVisitsRequest model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<DFSVoomaCustomerVisitEntity> dfsVoomaCustomerVisitEntityList = dfsVoomaCustomerVisitRepository.findAllByDsrId(model.getDsrId());
+            List<ObjectNode> objectNodeList = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper();
+            dfsVoomaCustomerVisitEntityList.forEach(dfsVoomaCustomerVisitEntity -> {
+                ObjectNode objectNode = objectMapper.createObjectNode();
+                objectNode.put("visitId", dfsVoomaCustomerVisitEntity.getId());
+                objectNode.put("reasonForVisit", dfsVoomaCustomerVisitEntity.getReasonForVisit());
+                objectNode.put("actionPlan", dfsVoomaCustomerVisitEntity.getActionPlan());
+                objectNode.put("highlights", dfsVoomaCustomerVisitEntity.getHighlights());
+                objectNode.put("dsrName", dfsVoomaCustomerVisitEntity.getDsrName());
+                objectNode.put("customerName",dfsVoomaCustomerVisitEntity.getCustomerName());
+                objectNode.put("createdOn", dfsVoomaCustomerVisitEntity.getCreatedOn().toString());
+                objectNodeList.add(objectNode);
+            });
+            return objectNodeList;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all customer visits by DSR", e);
+        }
+        return null;
     }
 
 }
