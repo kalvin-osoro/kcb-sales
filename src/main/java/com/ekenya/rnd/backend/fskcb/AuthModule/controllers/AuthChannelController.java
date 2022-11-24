@@ -4,8 +4,6 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,34 +40,34 @@ public class AuthChannelController {
     @PostMapping("/login")
     @Validated
     @ApiOperation(value = "Login Api")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody ChannelLoginRequest request){
         //Result result = loginRequest.validate();
 
-        UserAccountEntity account = usersService.findByStaffNo(loginRequest.getStaffNo());
-        if(account.getAccountType() == AccountType.DSR){
+//
+        LoginResponse resp = authService.attemptChannelLogin(request);
+        //
+        if(resp != null) {
             //
-            LoginResponse resp = authService.attemptLogin(loginRequest);
-            //
-            if(resp != null) {
+            if (resp.isSuccess()) {
                 //
-                if (resp.isSuccess()) {
-                    //
-                    ObjectNode node = mObjectMapper.createObjectNode();
-                    node.put("token",resp.getToken());
-                    node.put("type",resp.getType());
-                    node.put("expires_in",dateFormat.format(resp.getExpires()));
-                    node.putPOJO("profiles",resp.getProfiles());
-                    //
-                    return ResponseEntity.ok(new BaseAppResponse(1, node, "Request processed successful"));
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("token",resp.getToken());
+                node.put("type",resp.getType());
+                node.put("issued",dateFormat.format(resp.getIssued()));
+                node.put("expires_in",dateFormat.format(resp.getExpiresInMinutes()));
+                node.putPOJO("profiles",resp.getProfiles());
+                //
+                return ResponseEntity.ok(new BaseAppResponse(1, node, "Request processed successful"));
 
-                }else if(resp.getRemAttempts() >0){
-                    //
-                    return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Login Failed. \nYou "+resp.getRemAttempts()+" remaining attempt(s)"));
+            }else if(resp.getErrorMessage() != null){
 
-                }
+                return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),resp.getErrorMessage()));
+            }else if(resp.getRemAttempts() >0){
+                //
+                return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Login Failed. \r\nYou "+resp.getRemAttempts()+" remaining attempt(s)"));
+
             }
         }
-
         //
         return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 

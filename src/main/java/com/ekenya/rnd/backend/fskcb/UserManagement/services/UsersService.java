@@ -17,7 +17,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.exception.UserNotFoundException;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -112,7 +112,7 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public boolean attemptCreateUser(AddUserRequest model, boolean verified) {
+    public boolean attemptCreateUser(AddAdminUserRequest model, AccountType type, boolean verified) {
 
 
         try{
@@ -124,7 +124,7 @@ public class UsersService implements IUsersService {
                 //
                 UserAccountEntity account = new UserAccountEntity();
                 account.setPhoneNumber(model.getPhoneNo());
-                account.setAccountType(AccountType.ADMIN);
+                account.setAccountType(type);
                 account.setFullName(model.getFullName());
                 account.setEmail(model.getEmail());
                 account.setStaffNo(model.getStaffNo());

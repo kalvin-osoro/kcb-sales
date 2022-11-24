@@ -5,18 +5,17 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
-import javax.xml.transform.Result;
 
 @Data
 @Validated
-public class LoginRequest {
+public class ChannelLoginRequest {
     @ApiModelProperty(value = "Login staff no")
     @NotNull
     private String staffNo;
-    @ApiModelProperty(value = "Login password")
+    @ApiModelProperty(value = "Login PIN (4 digits)")
     @NotNull
-    private String password;
-    @ApiModelProperty(value = "User Locations {'lat':x.xxx,'lng':y.yyyy}")
+    private String pin;
+    @ApiModelProperty(value = "User Locations. E.G => {'lat':x.xxx,'lng':y.yyyy}")
     @NotNull
     private JsonLatLng location;
 

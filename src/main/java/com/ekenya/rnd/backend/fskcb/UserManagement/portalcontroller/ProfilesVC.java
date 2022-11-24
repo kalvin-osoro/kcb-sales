@@ -96,10 +96,10 @@ public class ProfilesVC {
 
     @ApiOperation(value = "Get profile details")
     @PostMapping("/users-get-profile-details")
-    public ResponseEntity<?> getProfileDetails(@RequestBody long id ) {
+    public ResponseEntity<?> getProfileDetails(@RequestBody ProfileDetailsRequest request ) {
 
         //INSIDE SERVICE
-        ObjectNode resp = profilesService.getProfileDetails(id);
+        ObjectNode resp = profilesService.getProfileDetails(request.getProfileId());
 
         //Response
         if(resp != null){
@@ -164,10 +164,10 @@ public class ProfilesVC {
 
     @ApiOperation(value = "Get all users in a profile")
     @PostMapping("/users-profile-users")
-    public ResponseEntity<?> usersInProfile(@RequestBody long profileId) {
+    public ResponseEntity<?> usersInProfile(@RequestBody UsersInProfileRequest request) {
 
         //INSIDE SERVICE
-        ArrayNode list = profilesService.loadUsersInProfile(profileId);
+        ArrayNode list = profilesService.loadUsersInProfile(request.getProfileId());
 
         //Response
         if(list != null){
@@ -184,10 +184,10 @@ public class ProfilesVC {
 
     @ApiOperation(value = "Get all users in a profile")
     @PostMapping("/users-profile-roles")
-    public ResponseEntity<?> getProfileRoles(@RequestBody long profileId) {
+    public ResponseEntity<?> getProfileRoles(@RequestBody ProfileRolesRequest request) {
 
         //INSIDE SERVICE
-        ArrayNode list = profilesService.loadRolesInProfile(profileId);
+        ArrayNode list = profilesService.loadRolesInProfile(request.getProfileId());
 
         //Response
         if(list != null){

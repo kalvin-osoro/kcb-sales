@@ -54,9 +54,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-team-details")
-    public ResponseEntity<?> getTeamDetails(@RequestBody Long teamId ) {
+    public ResponseEntity<?> getTeamDetails(@RequestBody TeamDetailsRequest request ) {
         //TODO; INSIDE SERVICE
-        ObjectNode resp = dsrPortalService.loadTeamDetails(teamId);
+        ObjectNode resp = dsrPortalService.loadTeamDetails(request);
 
         //Response
         if(resp != null){
@@ -89,9 +89,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-disable-team")
-    public ResponseEntity<?> disableTeam(@RequestBody long teamId) {
+    public ResponseEntity<?> disableTeam(@RequestBody DisableTeamRequest request) {
         //TODO; INSIDE SERVICE
-        boolean success = dsrPortalService.attemptDeactivateTeam(teamId);
+        boolean success = dsrPortalService.attemptDeactivateTeam(request.getTeamId());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -108,9 +108,9 @@ public class DSRTeamsVC {
         }
     }
     @PostMapping("/dsr-enable-team")
-    public ResponseEntity<?> enableTeam(@RequestBody long teamId ) {
+    public ResponseEntity<?> enableTeam(@RequestBody EnableTeamRequest request ) {
         //TODO; INSIDE SERVICE
-        boolean success = dsrPortalService.attemptActivateTeam(teamId);
+        boolean success = dsrPortalService.attemptActivateTeam(request.getTeamId());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

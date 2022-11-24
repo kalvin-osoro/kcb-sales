@@ -390,11 +390,11 @@ public class DSRPortalService implements IDSRPortalService {
     }
 
     @Override
-    public ObjectNode loadTeamDetails(long teamId) {
+    public ObjectNode loadTeamDetails(TeamDetailsRequest model) {
 
         try{
 
-            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(teamId);
+            Optional<DSRTeamEntity> optionalTeam = dsrTeamsRepository.findById(model.getTeamId());
 
             if(optionalTeam.isPresent()){
 

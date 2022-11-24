@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Validated
 @ApiModel(description = "Sign up requirements")
-public class AddUserRequest {
+public class AddAdminUserRequest {
     @NotNull
     @ApiModelProperty(value = "User's full name", required = true)
     private String fullName;

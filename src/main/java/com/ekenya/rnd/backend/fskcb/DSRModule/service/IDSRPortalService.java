@@ -19,7 +19,7 @@ public interface IDSRPortalService {
     ArrayNode getTeamMembersByTeamId(long id);
     boolean deleteDSRTeam(long id);
     boolean addDSR(AddDSRAccountRequest dsrRequest);
-    ObjectNode loadTeamDetails(long teamId);
+    ObjectNode loadTeamDetails(TeamDetailsRequest model);
     boolean attemptActivateTeam(long teamId);
     boolean attemptDeactivateTeam(long teamId);
 

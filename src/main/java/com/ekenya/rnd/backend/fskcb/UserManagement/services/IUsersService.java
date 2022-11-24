@@ -1,8 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
-import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddUserRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public interface IUsersService {
 
     UserAccountEntity findByStaffNo(String staffNo);
 
-    boolean attemptCreateUser(AddUserRequest model, boolean verified);
+    boolean attemptCreateUser(AddAdminUserRequest model, AccountType type, boolean verified);
     ObjectNode attemptImportUsers(MultipartFile importFile);
 
     List<ObjectNode> loadAllUsers();

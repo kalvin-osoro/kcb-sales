@@ -1,18 +1,18 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
-import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ChangeDSRPhoneNoRequest;
-import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ChangePasswordRequest;
-import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.LoginRequest;
-import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
+import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.DateFormat;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Auth Controller for Field Agent Rest Api")
@@ -21,19 +21,36 @@ import org.springframework.web.bind.annotation.*;
 public class AuthPortalController {
     @Autowired
     private IAuthService authService;
+    @Autowired
+    DateFormat dateFormat;
 
+    @Autowired
+    ObjectMapper mObjectMapper;
 
     @PostMapping("/signin")
     @ApiOperation(value = "Login Api")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
-        LoginResponse resp = authService.attemptLogin(loginRequest);
+    public ResponseEntity<?> loginUser(@RequestBody PortalLoginRequest request){
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(resp != null){
+        LoginResponse resp = authService.attemptAdminLogin(request);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,resp,"User login successful"));
+        if(resp != null) {
+            //
+            if(resp.isSuccess()){
+
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("token",resp.getToken());
+                node.put("type",resp.getType());
+                node.put("issued",dateFormat.format(resp.getIssued()));
+                node.put("expires_in",dateFormat.format(resp.getExpiresInMinutes()));
+                node.putPOJO("profiles",resp.getProfiles());
+                //
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"User login successful"));
+            }else if(resp.getErrorMessage() != null){
+
+                return ResponseEntity.ok(new BaseAppResponse(1,mObjectMapper.createObjectNode(),resp.getErrorMessage()));
+            }
         }
-        return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"User login failed"));
+        return ResponseEntity.ok(new BaseAppResponse(1,mObjectMapper.createObjectNode(),"User login failed"));
 
     }
 

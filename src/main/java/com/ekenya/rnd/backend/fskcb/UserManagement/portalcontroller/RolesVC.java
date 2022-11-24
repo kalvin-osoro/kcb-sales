@@ -1,10 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserRoleRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignRoleToUserRequest;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveUserFromRole;
-import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UpdateUserRoleRequest;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IRolesService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -39,10 +36,10 @@ public class RolesVC {
 
 
     @PostMapping("/roles-get-details")
-    public ResponseEntity<?> getUserRoleDetails(@RequestBody Long roleId) {
+    public ResponseEntity<?> getUserRoleDetails(@RequestBody RoleDetailsRequest request) {
 
         //INSIDE SERVICE
-        ObjectNode resp = roleService.getUserRoleDetails(roleId);
+        ObjectNode resp = roleService.getUserRoleDetails(request.getRoleId());
 
         //Response
         if(resp != null){
@@ -141,9 +138,9 @@ public class RolesVC {
     //delete role
     @ApiOperation(value = "Delete role")
     @DeleteMapping("/roles-delete-role")
-    public ResponseEntity<?> deleteRole(@RequestBody  Long roleId){
+    public ResponseEntity<?> deleteRole(@RequestBody  DeleteRoleRequest request){
 
-        boolean success = roleService.deleteUserRole(roleId);
+        boolean success = roleService.deleteUserRole(request.getRoleId());
         //Response
         if(success){
             //Object
@@ -182,9 +179,9 @@ public class RolesVC {
     // Get all roles
     @ApiOperation(value = "Get all users in a role")
     @PostMapping("/roles-get-users-in-role")
-    public ResponseEntity<?> getAllUsersInRole(@RequestBody long roleId) {
+    public ResponseEntity<?> getAllUsersInRole(@RequestBody UsersInRoleRequest request) {
 
-        ArrayNode list = roleService.loadUserRoles(roleId);
+        ArrayNode list = roleService.loadUserRoles(request.getRoleId());
 
         //Response
         if(list != null){
