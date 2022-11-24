@@ -9,9 +9,8 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
@@ -20,6 +19,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,6 +62,10 @@ public class AuthService implements IAuthService{
     IDSRAccountsRepository dsrAccountsRepository;
     @Autowired
     ISecurityAuthCodesRepository securityAuthCodesRepository;
+
+    @Autowired
+    ProfilesAndUsersRepository profilesAndUsersRepository;
+
     @Autowired
     private JwtTokenProvider tokenProvider;
     @Autowired
@@ -136,15 +140,28 @@ public class AuthService implements IAuthService{
             userRepository.save(account);
 
             //get user roles
-            List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
+            //List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
 
+            ArrayNode profiles = mObjectMapper.createArrayNode();
+
+            for (ProfileAndUserEntity userAndProfile:
+                    profilesAndUsersRepository.findAllByUserId(account.getId())) {
+                UserProfileEntity userProfile = userProfilesRepository.findById(userAndProfile.getProfileId()).orElse(null);
+                //
+                if(userAndProfile != null) {
+                    ObjectNode node = mObjectMapper.createObjectNode();
+                    node.put("name",userProfile.getName());
+                    node.put("code",userProfile.getCode());
+                    profiles.add(node);
+                }
+            }
 
             //Response
             response.setSuccess(true);
             response.setToken(token);
             response.setIssued(Calendar.getInstance().getTime());
             response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
-            response.setProfiles(roles);
+            response.setProfiles(profiles);
             response.setType("Bearer");
             //
             return response;
@@ -223,7 +240,7 @@ public class AuthService implements IAuthService{
             response.setToken(token);
             response.setIssued(Calendar.getInstance().getTime());
             response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
-            response.setProfiles(roles);
+            response.setRoles(roles);
             response.setType("Bearer");
             //
             return response;
