@@ -9,6 +9,9 @@ import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.SsData;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.SsNotification;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssEvents;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.qss.models.QssUser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import io.reactivex.rxjava3.functions.BiConsumer;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -26,6 +29,9 @@ import java.util.*;
 @Slf4j
 @Service
 public class QssService implements IQssService{
+
+    @Autowired
+    ObjectMapper mObjectMapper;
 
     @Autowired
     QssAlertsRepository qssAlertsRepository;
@@ -170,6 +176,50 @@ public class QssService implements IQssService{
             log.error(ex.getMessage(),ex);
         }
         return false;
+    }
+
+    @Override
+    public ArrayNode loadAllStoredAlerts() {
+
+        try{
+
+            ArrayNode list = mObjectMapper.createArrayNode();
+
+            for (QssAlertEntity alertEntity: qssAlertsRepository.findAll()) {
+                //
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("kind",alertEntity.getType().toString());
+                node.put("title",alertEntity.getTitle());
+                node.put("body",alertEntity.getContent());
+                node.put("category",alertEntity.getCategory());
+                node.put("sender",alertEntity.getSenderId());
+                //
+                node.put("QSSID",alertEntity.getRefCode());
+                node.put("receiver",alertEntity.getReceiverId());
+                //
+                if(alertEntity.getTimeDelivered() != null){
+                    node.put("delivered", 1);
+                    node.put("date-delivered", dateFormat.format(alertEntity.getTimeDelivered()));
+                }else {
+                    node.put("delivered", 0);
+                    node.put("date-delivered", "");
+                }
+                //
+                if(alertEntity.getTimeRead() != null){
+                    node.put("read", 1);
+                    node.put("date-read", dateFormat.format(alertEntity.getTimeRead()));
+                }else {
+                    node.put("read", 0);
+                    node.put("date-read", "");
+                }
+                //
+                list.add(node);
+            }
+            return list;
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return null;
     }
 
 

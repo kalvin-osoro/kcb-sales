@@ -45,6 +45,7 @@ public class DSRAccountEntity {
     private String salesCode;
 
     @Column(name="status",nullable = false)
+    //@Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
 
     @Column(name="full_name",nullable = false)

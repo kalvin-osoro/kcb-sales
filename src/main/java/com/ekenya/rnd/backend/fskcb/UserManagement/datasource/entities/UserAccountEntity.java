@@ -34,6 +34,7 @@ public class UserAccountEntity {
     private String phoneNumber;
     private Boolean deleted = Boolean.FALSE;
     @Column(name="acc_type", nullable = false)
+    //@Enumerated(EnumType.STRING)
     private AccountType accountType;
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
@@ -50,6 +51,7 @@ public class UserAccountEntity {
     private  Boolean blocked = Boolean.FALSE;
 
     @Column(name="status", nullable = false)
+    //@Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
     public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;

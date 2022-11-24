@@ -81,7 +81,7 @@ public class SMSService implements ISmsService{
 
             return code;
         } catch (Exception e) {
-            logger.log(Level.ALL,e.getMessage(),e);
+            logger.log(Level.SEVERE,e.getMessage(),e);
         }
         return null;
     }

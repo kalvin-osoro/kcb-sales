@@ -261,6 +261,7 @@ public class AuthService implements IAuthService{
                                 mLogger.log(Level.SEVERE,"Create User Account Failed");
                             }
                         }else{
+                            mLogger.log(Level.WARNING,"Create User Account Failed. User already exist");
                             //All is well,
                             return true;
                         }
