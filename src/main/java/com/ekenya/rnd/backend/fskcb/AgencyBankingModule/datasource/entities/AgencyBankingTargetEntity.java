@@ -34,7 +34,7 @@ public class AgencyBankingTargetEntity {
 
     private String endDate;
     @Enumerated(EnumType.STRING)
-    private TargetType aquiringTargetType;
+    private TargetType targetType;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;

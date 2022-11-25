@@ -38,7 +38,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             for (AgencyBankingVisitEntity agencyBankingVisitEntity : agencyBankingVisitRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", agencyBankingVisitEntity.getId());
-                node.put("merchantName", agencyBankingVisitEntity.getMerchantName());
+                node.put("merchantName", agencyBankingVisitEntity.getAgentName());
                 node.put("dsrName", agencyBankingVisitEntity.getDsrName());
                 node.put("reasonForVisit", agencyBankingVisitEntity.getReasonForVisit());
                 node.put("visitDate", agencyBankingVisitEntity.getVisitDate());
@@ -59,7 +59,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             AgencyBankingVisitEntity agencyBankingVisitEntity = new AgencyBankingVisitEntity();
-            agencyBankingVisitEntity.setMerchantName(agencyCustomerVisitsRequest.getMerchantName());
+            agencyBankingVisitEntity.setAgentName(agencyCustomerVisitsRequest.getAgentName());
             agencyBankingVisitEntity.setVisitDate(agencyCustomerVisitsRequest.getVisitDate());
             agencyBankingVisitEntity.setReasonForVisit(agencyCustomerVisitsRequest.getReasonForVisit());
             agencyBankingVisitEntity.setStatus(Status.ACTIVE);
@@ -211,7 +211,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             AgencyBankingTargetEntity agencyBankingTargetEntity = new AgencyBankingTargetEntity();
             agencyBankingTargetEntity.setTargetName(agencyAddTargetRequest.getTargetName());
             agencyBankingTargetEntity.setTargetSource(agencyAddTargetRequest.getTargetSource());
-            agencyBankingTargetEntity.setAquiringTargetType(agencyAddTargetRequest.getAgencyTargetType());
+            agencyBankingTargetEntity.setTargetType(agencyAddTargetRequest.getAgencyTargetType());
             agencyBankingTargetEntity.setTargetDesc(agencyAddTargetRequest.getTargetDesc());
             agencyBankingTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
             agencyBankingTargetEntity.setTargetValue(agencyAddTargetRequest.getTargetValue());
@@ -237,7 +237,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 node.put("id", agencyBankingTargetEntity.getId());
                 node.put("targetName", agencyBankingTargetEntity.getTargetName());
                 node.put("targetSource", agencyBankingTargetEntity.getTargetSource());
-                node.put("agencyTargetType", agencyBankingTargetEntity.getAquiringTargetType().ordinal());
+                node.put("agencyTargetType", agencyBankingTargetEntity.getTargetType().ordinal());
                 node.put("targetDesc", agencyBankingTargetEntity.getTargetDesc());
                 node.put("targetStatus", agencyBankingTargetEntity.getTargetStatus().name());
                 node.put("targetValue", agencyBankingTargetEntity.getTargetValue());

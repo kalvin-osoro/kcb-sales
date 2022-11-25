@@ -26,7 +26,7 @@ public class AgencyBankingVisitEntity {
     //dsr id from dsr table
     private  Long dsrId;
     private String dsrName;
-    private String merchantName;
+    private String agentName;
     private String reasonForVisit;
     private String visitDate;
     @Enumerated(EnumType.STRING)
@@ -35,4 +35,19 @@ public class AgencyBankingVisitEntity {
     private Date createdOn;
     private Date updatedOn;
     private boolean isCompleted=false;
+    //yes or no question
+    private String IsAgentOutletsBranded;
+    private String IsOutletHaveCorrectTarrif;
+    private String IsTransactionRecorded;
+    private String IsAgentCollectCashDepositAndPostLater;
+    private String IsAgentHaveEnoughFloat;
+    private String IsAgentActive;
+    private String IsAgentInvolveInIllegalActivities;
+    private String IsAgentHaveCopyOfAgentBulk;
+    private String IsAgentChargeCustomerForUpfront;
+    private String IsAgentMaintainedRecordsOfAccOpened;
+    private String IsAgentTrainedKYC;
+    private String IsAgentUsedManualReceipt;
+    private String reconcilleFloatAccStatement;
+    private String IsAgentDealWithForexExchange;
 }

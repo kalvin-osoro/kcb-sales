@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs;
+package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgencyAssignAssetRequest {
-    private Long assetId;
-    private Long customerId;
+public class PBCustomerVisitsBYDSRRequest {
+    private Long dsrId;
 }

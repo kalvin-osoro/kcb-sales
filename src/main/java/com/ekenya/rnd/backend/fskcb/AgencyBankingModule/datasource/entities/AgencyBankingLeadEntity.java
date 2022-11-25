@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -24,7 +25,10 @@ public class AgencyBankingLeadEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private  Integer customerId;
+    private String customerName;
     private String businessUnit;
+    private String customerAccountNumber;
+    private Date createdOn;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;

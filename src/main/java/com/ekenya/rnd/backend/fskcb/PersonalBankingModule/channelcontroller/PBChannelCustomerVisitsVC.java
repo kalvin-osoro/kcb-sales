@@ -1,7 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.channelcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsBYDSRRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -13,20 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class PBChannelCustomerVisitsVC {
 
     @Autowired
-    IVoomaChannelService channelService;
+    IPSChannelService channelService;
 
     @PostMapping("/pb-create-customer-visit")
-    public ResponseEntity<?> createCustomerVisit(@RequestBody PBCustomerVisitsRequest request) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> createCustomerVisit(@RequestBody PBCustomerVisitsRequest model) {
+        boolean success = channelService.createCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -65,17 +65,15 @@ public class PBChannelCustomerVisitsVC {
     }
 
     @PostMapping(value = "/pb-get-all-customer-visits")
-    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody int dsrId) {
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    public ResponseEntity<?> getAllCustomerVisitsByDSR(@RequestBody PBCustomerVisitsBYDSRRequest model) {
+        List<?> customerVisits = channelService.getAllCustomerVisitsByDSR(model);
+        boolean success = customerVisits != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)customerVisits);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

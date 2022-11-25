@@ -1,28 +1,21 @@
-package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "dbo_pb_onboarding")
-@DynamicUpdate
-@DynamicInsert
-public class PSBankingOnboardingEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PSBankingOnboardingRequest {
     private String customerTitle;
     private String surname;
     private String otherNames;
@@ -96,5 +89,4 @@ public class PSBankingOnboardingEntity {
     private String KCBcreditCardType;
     private String isCustomerWantToRegisterInternetBanking;
     private String receiveTransactionAuthorizationVia;
-
 }

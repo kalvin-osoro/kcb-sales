@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgencyAssignAssetRequest {
-    private Long assetId;
-    private Long customerId;
+
+public class AgencyAllDSROnboardingsRequest {
+    private Long dsrId;
 }

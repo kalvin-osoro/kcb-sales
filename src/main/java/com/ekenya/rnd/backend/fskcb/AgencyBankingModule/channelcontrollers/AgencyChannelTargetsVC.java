@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -11,13 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class AgencyChannelTargetsVC {
 
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    IAgencyChannelService agencyChannelService;
     @PostMapping("/agency-get-targets-summary")
     public ResponseEntity<?> getTargetsSummary() {
 
@@ -43,9 +46,8 @@ public class AgencyChannelTargetsVC {
         //    "prev-comission":45000
         //}
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        ArrayList<?> targets = agencyChannelService.getTargetsSummary();
+        boolean success = targets != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
