@@ -105,7 +105,7 @@ public class AuthPortalController {
 
 
     @PostMapping("/user-forgot-password")
-    @ApiOperation(value = "Send recovery password to email or password")
+    @ApiOperation(value = "Send recovery password to email or phone no.")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest req){
 
         boolean success = authService.attemptRecoverPassword(req);

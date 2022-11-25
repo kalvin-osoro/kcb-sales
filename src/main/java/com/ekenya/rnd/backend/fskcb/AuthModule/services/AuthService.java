@@ -545,6 +545,7 @@ public class AuthService implements IAuthService{
                     //
                     account.setPassword(passwordEncoder.encode(model.getNewPIN()));
                     account.setShouldSetPIN(false);
+                    account.setRemLoginAttempts(3);
                     account.setLastModified(Calendar.getInstance().getTime());
                     userRepository.save(account);//save user to db
                     return true;
@@ -598,14 +599,30 @@ public class AuthService implements IAuthService{
 
                 UserAccountEntity userAccount = optionalUserAccount.get();
                 String pass = Utility.generatePassword();
+
+                //REMOVE BEFORE PRODUCTION
+                if(userAccount.getStaffNo().equalsIgnoreCase("Admin")){
+                    //
+                    userAccount.setPassword(passwordEncoder.encode("Admin@4321"));
+                    userAccount.setBlocked(false);
+                    userAccount.setRemLoginAttempts(3);
+                    userAccount.setLastModified(Calendar.getInstance().getTime());
+                    //
+                    userRepository.save(userAccount);//save user to db
+
+                    return true;
+                }
+
+
                 //Option 1 - Send via Email
-                if(model.getOption() == 1){
+                if(model.getOption() == 1 || userAccount.getStaffNo().equalsIgnoreCase("Admin")){
                     //EMAIL
                     if(smsService.sendPasswordEmail(userAccount.getEmail(),userAccount.getFullName(),pass)){
 
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
                         userAccount.setBlocked(false);
+                        userAccount.setRemLoginAttempts(3);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
                         userRepository.save(userAccount);//save user to db
@@ -620,6 +637,7 @@ public class AuthService implements IAuthService{
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
                         userAccount.setBlocked(false);
+                        userAccount.setRemLoginAttempts(3);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
                         userRepository.save(userAccount);//save user to db

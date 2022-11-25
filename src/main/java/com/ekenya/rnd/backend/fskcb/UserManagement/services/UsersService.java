@@ -481,6 +481,8 @@ public class UsersService implements IUsersService {
             UserAccountEntity account = userRepository.findById(userId).get();
             //
             account.setBlocked(true);
+            account.setRemLoginAttempts(0);
+            account.setLastModified(Calendar.getInstance().getTime());
             userRepository.save(account);
             //
             return false;
@@ -498,6 +500,8 @@ public class UsersService implements IUsersService {
             UserAccountEntity account = userRepository.findById(userId).get();
             //
             account.setBlocked(false);
+            account.setRemLoginAttempts(3);
+            account.setLastModified(Calendar.getInstance().getTime());
             userRepository.save(account);
             //
             return false;

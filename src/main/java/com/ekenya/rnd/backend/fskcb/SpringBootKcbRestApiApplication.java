@@ -7,8 +7,12 @@ import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
+import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
+import ch.qos.logback.core.rolling.helper.FileNamePattern;
 import ch.qos.logback.core.util.FileSize;
+import ch.qos.logback.core.util.StatusPrinter;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,17 +69,22 @@ public class SpringBootKcbRestApiApplication   {
 		return new ModelMapper();
 	}
 //
-//	@Bean
-//	public ExcelService excelService() {
-//		return new ExcelService();
-//	}
+
+	private FileHandler mFileHandler;
 
 	public static void main(String[] args) {
+		//
 		new File(FileStorageService.uploadPath).mkdir();
+		//
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 
 	}
 
+	@PostConstruct
+	public void init(){
+		//
+		prepareLogger();
+	}
 
 //	@Bean
 //	CommandLineRunner init(RoleRepository roleRepository) {
@@ -90,8 +99,15 @@ public class SpringBootKcbRestApiApplication   {
 //		};
 //	}
 
-
 	@Bean
+	public FileHandler getLogsFileHandler() {
+		//
+		if(mFileHandler == null){
+			prepareLogger();
+		}
+		return mFileHandler;
+	}
+
 	public FileHandler prepareLogger() {
 
 		try {
@@ -102,7 +118,7 @@ public class SpringBootKcbRestApiApplication   {
 			Path path = Paths.get("logs/kcb-sales-backend");
 			Files.createDirectories(path);
 			// This block configure the logger with handler and formatter
-			FileHandler mFileHandler = new FileHandler("logs/kcb-sales-backend/kcb-sales-log-file-" + sdf.format(Calendar.getInstance().getTime()) + ".log");
+			mFileHandler = new FileHandler("logs/kcb-sales-backend/kcb-sales-log-file-" + sdf.format(Calendar.getInstance().getTime()) + ".log");
 			//mLogger.addHandler(mFileHandler);
 			// SimpleFormatter formatter = new SimpleFormatter();
 			mFileHandler.setFormatter(new Formatter() {
@@ -136,8 +152,11 @@ public class SpringBootKcbRestApiApplication   {
 //		SLF4JBridgeHandler.removeHandlersForRootLogger();
 //		SLF4JBridgeHandler.install();
 
+		final String LOG_DIR = filePath.toAbsolutePath().toString();
+
 //Obtain an instance of LoggerContext
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+		context.stop();
 
 		PatternLayoutEncoder logEncoder = new PatternLayoutEncoder();
 		logEncoder.setContext(context);
@@ -150,49 +169,42 @@ public class SpringBootKcbRestApiApplication   {
 		logConsoleAppender.setEncoder(logEncoder);
 		logConsoleAppender.start();
 
-//Create a new RollingFileAppender policy
-//		ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy policy = new SizeAndTimeBasedRollingPolicy();
-//		policy.setMaxFileSize(new FileSize(1048576L * 5));//5MBs
-//		policy.setFileNamePattern("logs/archived/app.%d{yyyy-MM-dd}.log");
-//		policy.setTotalSizeCap(new FileSize(1073741824L * 1));//1GB
-//		policy.setMaxHistory(60);
-//		policy.start();
-
-
-		ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy policy = new ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy();
-		policy.setMaxFileSize(new FileSize(1048576L * 5));//5MBs
-		policy.start();
 
 
 //Create a new FileAppender
-//		ch.qos.logback.core.rolling.RollingFileAppender<ILoggingEvent> fileAppender = new ch.qos.logback.core.rolling.RollingFileAppender<ILoggingEvent>();
-//		fileAppender.setName("APP-FILE-LOGGER");
-//		//fileAppender.setRollingPolicy(policy);
-//		fileAppender.setTriggeringPolicy(policy);
-//		fileAppender.setFile(filePath.toAbsolutePath().toString()+"/logback-app.log");
-//		fileAppender.setContext(context);
-//		fileAppender.setAppend(true);
-
-
-		FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
-		fileAppender.setName("APP-FILE-LOGGER");
-		fileAppender.setFile(filePath.toAbsolutePath().toString()+"/logback-app.log");
+		ch.qos.logback.core.rolling.RollingFileAppender<ILoggingEvent> fileAppender = new ch.qos.logback.core.rolling.RollingFileAppender<ILoggingEvent>();
+		//fileAppender.setName("APP-FILE-LOGGER");
+		fileAppender.setFile(LOG_DIR+"/logback-app.log");
 		fileAppender.setContext(context);
 		fileAppender.setAppend(true);
 
+
+		//FileNamePattern pattern = new FileNamePattern("%d{yyyy-MM-dd}.log",context);
+
+//Create a new RollingFileAppender policy
+		ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy policy = new SizeAndTimeBasedRollingPolicy();
+		policy.setMaxFileSize(new FileSize(1048576L * 5));//5MBs
+		policy.setFileNamePattern(LOG_DIR+"/logback-app.%d{yyyy-MM-dd HH}.%i.log");
+		policy.setTotalSizeCap(new FileSize(1073741824L * 1));//1GB
+		policy.setMaxHistory(60);
+		policy.setParent(fileAppender);
+		policy.setContext(context);
+		policy.start();
+
+
 //Filter out anything < WARN
-		ThresholdFilter warningFilter = new ThresholdFilter();
-		warningFilter.setLevel("WARN");
-		warningFilter.setContext(context);
-		warningFilter.start();
-		fileAppender.addFilter(warningFilter);
+//		ThresholdFilter warningFilter = new ThresholdFilter();
+//		warningFilter.setLevel("WARN");
+//		warningFilter.setContext(context);
+//		warningFilter.start();
+//		fileAppender.addFilter(warningFilter);
 
 //Filter out anything < DEBUG
-//		ThresholdFilter debugFilter = new ThresholdFilter();
-//		debugFilter.setLevel("DEBUG");
-//		debugFilter.setContext(context);
-//		debugFilter.start();
-//		fileAppender.addFilter(debugFilter);
+		ThresholdFilter debugFilter = new ThresholdFilter();
+		debugFilter.setLevel("DEBUG");
+		debugFilter.setContext(context);
+		debugFilter.start();
+		fileAppender.addFilter(debugFilter);
 
 //Message Encoder
 		PatternLayoutEncoder ple = new PatternLayoutEncoder();
@@ -202,19 +214,85 @@ public class SpringBootKcbRestApiApplication   {
 		fileAppender.setEncoder(ple);
 
 		//
-		fileAppender.setImmediateFlush(true);
 		fileAppender.start();
-
 
 //Get ROOT logger, and add appender to it
 		ch.qos.logback.classic.Logger root = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 		root.setLevel(Level.DEBUG);
 		root.addAppender(fileAppender);
-		root.setAdditive(true); /* set to true if root should log too */
+		root.setAdditive(false); /* set to true if root should log too */
+
+		StatusPrinter.print(context);
+	}
+
+	private void setupLogbackAppender1(Path path){
+		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+		context.stop();
+
+		final String LOG_DIR = path.toAbsolutePath().toString();
 
 
-		String f = fileAppender.getFile();
-		System.out.println("Appender file => "+fileAppender.getFile());
+		PatternLayoutEncoder logEncoder = new PatternLayoutEncoder();
+		logEncoder.setContext(context);
+		logEncoder.setPattern("%-12date{YYYY-MM-dd HH:mm:ss.SSS} %-5level - %msg%n");
+		logEncoder.start();
+
+		ConsoleAppender logConsoleAppender = new ConsoleAppender();
+		logConsoleAppender.setContext(context);
+		logConsoleAppender.setName("Console");
+		logConsoleAppender.setEncoder(logEncoder);
+		logConsoleAppender.start();
+
+
+		RollingFileAppender<ILoggingEvent> rollingFileAppender = new RollingFileAppender<ILoggingEvent>();
+		rollingFileAppender.setAppend(true);
+		rollingFileAppender.setContext(context);
+
+		// OPTIONAL: Set an active log file (separate from the rollover files).
+		// If rollingPolicy.fileNamePattern already set, you don't need this.
+		rollingFileAppender.setFile(LOG_DIR + "/logback-app.log");
+
+		ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy policy = new SizeAndTimeBasedRollingPolicy();
+		policy.setMaxFileSize(new FileSize(1048576L * 5));//5MBs
+		policy.setFileNamePattern(LOG_DIR+"/logback-app.%d{yyyy-MM-dd HH}.%i.log");
+		policy.setTotalSizeCap(new FileSize(1073741824L * 1));//1GB
+		policy.setMaxHistory(60);
+		policy.setParent(rollingFileAppender);
+		policy.setContext(context);
+		policy.start();
+
+//		TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<ILoggingEvent>();
+//		rollingPolicy.setFileNamePattern(LOG_DIR + "/log.%d.txt");
+//		rollingPolicy.setMaxHistory(7);
+//		rollingPolicy.setParent(rollingFileAppender);  // parent and context required!
+//		rollingPolicy.setContext(context);
+//		rollingPolicy.start();
+
+		rollingFileAppender.setRollingPolicy(policy);
+
+		//Filter out anything < DEBUG
+		ThresholdFilter debugFilter = new ThresholdFilter();
+		debugFilter.setLevel("DEBUG");
+		debugFilter.setContext(context);
+		debugFilter.start();
+		rollingFileAppender.addFilter(debugFilter);
+
+		PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+		encoder.setPattern("%date %level [%thread] %logger{10} [%file:%line] %msg%n ");;
+		encoder.setContext(context);
+		encoder.start();
+
+		rollingFileAppender.setEncoder(encoder);
+		rollingFileAppender.start();
+
+		// add the newly created appenders to the root logger;
+		// qualify Logger to disambiguate from org.slf4j.Logger
+		ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+		root.setLevel(Level.TRACE);
+		root.addAppender(rollingFileAppender);
+
+		// print any status messages (warnings, etc) encountered in logback config
+		StatusPrinter.print(context);
 	}
 }
 

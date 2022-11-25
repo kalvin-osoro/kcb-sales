@@ -86,7 +86,7 @@ public class DbInitializer {
         try{
             //check if user already exists by username or email
             if(userRepository.existsByEmail(adminEmail)){
-                log.warn("Admin user already exists, skiping ..");
+                log.warn("Admin user already exists, skipping ..");
                 return;
             }
 
