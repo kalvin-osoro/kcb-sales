@@ -80,8 +80,6 @@ public class AuthService implements IAuthService{
     ISecurityQuestionsRepo securityQuestionsRepo;
 
     private java.util.logging.Logger mLogger = Logger.getLogger(getClass().getName());
-    @Autowired
-    FileHandler mLogFileHandler;
     @Override
     public LoginResponse attemptChannelLogin(ChannelLoginRequest model) {
 
@@ -474,23 +472,64 @@ public class AuthService implements IAuthService{
             String username = authentication.getName();
             //
             UserAccountEntity account = userRepository.findByStaffNo(username).get();
-            //
-            for (SecQnAnswerReq qna: model.getAnswers()) {
+
+            if(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty()) {
                 //
-                SecurityQuestionEntity qn = securityQuestionsRepo.findByIdAndStatus(qna.getQnId(), Status.ACTIVE).get();
-                //
-                SecurityQuestionAnswerEntity ans =  new SecurityQuestionAnswerEntity();
-                ans.setAnswer(qna.getAnswer());
-                ans.setQuestionId(qn.getId());
-                ans.setUserId(account.getId());
+                for (SecQnAnswerReq qna : model.getAnswers()) {
+                    //
+                    SecurityQuestionEntity qn = securityQuestionsRepo.findByIdAndStatus(qna.getQnId(), Status.ACTIVE).get();
+                    //
+                    SecurityQuestionAnswerEntity ans = new SecurityQuestionAnswerEntity();
+                    ans.setAnswer(qna.getAnswer());
+                    ans.setQuestionId(qn.getId());
+                    ans.setUserId(account.getId());
 //                if(qn.getType() == SecurityQuestionType.SELECT_OPTIONS){
 //                    //
 //                    ans.s
 //                }
 
+                    securityQuestionAnswersRepo.save(ans);
+                }
+                return true;
+            }else{
+                mLogger.log(Level.INFO,"User "+username+" has already set security questions. Use the update option");
+            }
+        }catch (Exception ex){
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public boolean updateSecurityQuestions(UpdateSecurityQnsRequest model) {
+
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            //
+            UserAccountEntity account = userRepository.findByStaffNo(username).get();
+
+            if(!securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty()) {
+                //Delete all..
+                securityQuestionAnswersRepo.deleteAll(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE));
+            }
+            //
+            for (SecQnAnswerReq qna : model.getAnswers()) {
+                //
+                SecurityQuestionEntity qn = securityQuestionsRepo.findByIdAndStatus(qna.getQnId(), Status.ACTIVE).get();
+                //
+                SecurityQuestionAnswerEntity ans = new SecurityQuestionAnswerEntity();
+                ans.setAnswer(qna.getAnswer());
+                ans.setQuestionId(qn.getId());
+                ans.setUserId(account.getId());
+
+                //
                 securityQuestionAnswersRepo.save(ans);
             }
-            return  true;
+
+            return true;
         }catch (Exception ex){
             mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }

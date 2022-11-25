@@ -32,13 +32,10 @@ public class CRMService implements ICRMService {
     public static String accessToken ;
 
     private Logger log = Logger.getLogger(getClass().getName());
-    @Autowired
-    FileHandler mLogsFileHandler;
     @PostConstruct
     void processToken(){
         System.out.println("generating crm token");
         accessToken = generateOauth2Token();
-        log.addHandler(mLogsFileHandler);
     }
     @Override
     public String generateOauth2Token() {

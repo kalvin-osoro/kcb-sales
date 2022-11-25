@@ -178,7 +178,7 @@ public class AuthChannelController {
 
     }
     @PostMapping("/set-security-questions")
-    @ApiOperation(value = "")
+    @ApiOperation(value = "Set User Security Questions")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> setSecurityQuestions(@RequestBody SetSecurityQnsRequest model) {
 
@@ -192,12 +192,27 @@ public class AuthChannelController {
         //
         return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
     }
-    @PostMapping("/get-user-security-questions")
-    @ApiOperation(value = "Get Security questions")
-    public ResponseEntity<?> getUserSecurityQuestions(@RequestBody String staffNo) {
+    @PostMapping("/update-security-questions")
+    @ApiOperation(value = "Update User security Questions")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> updateSecurityQuestions(@RequestBody UpdateSecurityQnsRequest model) {
 
         //
-        List<?> list = authService.loadUserSecurityQuestions(staffNo);
+        boolean success = authService.updateSecurityQuestions(model);
+
+        if(success){
+            //
+            return ResponseEntity.ok(new BaseAppResponse(1,mObjectMapper.createObjectNode(),"Request processed successfully"));
+        }
+        //
+        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+    }
+    @PostMapping("/get-user-security-questions")
+    @ApiOperation(value = "Get Security questions")
+    public ResponseEntity<?> getUserSecurityQuestions(@RequestBody UserSecurityQuestionsRequest request) {
+
+        //
+        List<?> list = authService.loadUserSecurityQuestions(request.getStaffNo());
 
         if(list != null){
             //Response
