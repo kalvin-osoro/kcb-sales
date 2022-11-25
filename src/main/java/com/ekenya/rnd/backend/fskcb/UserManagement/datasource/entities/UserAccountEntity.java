@@ -48,6 +48,7 @@ public class UserAccountEntity {
     private Set<UserRoleEntity> roles;
     private  Boolean isVerified = Boolean.FALSE;
     private  Boolean shouldSetPIN = Boolean.TRUE;
+    private  Boolean shouldChangePIN = Boolean.FALSE;
     private  Boolean blocked = Boolean.FALSE;
 
     @Column(name="status", nullable = false)
@@ -58,7 +59,7 @@ public class UserAccountEntity {
     }
 
     @Column(name="login_attempts")
-    private int remLoginAttempts = 3;
+    private int remLoginAttempts = 4;
     @Column(name="date_blocked")
     private Date dateBlocked;
     @Column(name="last_modified")

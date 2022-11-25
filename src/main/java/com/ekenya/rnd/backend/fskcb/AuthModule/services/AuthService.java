@@ -47,6 +47,7 @@ public class AuthService implements IAuthService{
 
     @Value("${app.jwt-expiration-milliseconds}")
     private int JWT_EXPIRY_IN_MILLISECONDS = 30 * 60 * 1000;
+    public static int MAX_PIN_LOGIN_ATTEMPTS = 4;
     @Autowired
     ObjectMapper mObjectMapper;
     @Autowired
@@ -162,6 +163,9 @@ public class AuthService implements IAuthService{
             response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
             response.setProfiles(profiles);
             response.setType("Bearer");
+            //
+            response.setShouldSetSecQns(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty());
+            response.setShouldChangePin(account.getShouldChangePIN());
             //
             return response;
         }catch (AuthenticationException ex){
@@ -584,7 +588,7 @@ public class AuthService implements IAuthService{
                     //
                     account.setPassword(passwordEncoder.encode(model.getNewPIN()));
                     account.setShouldSetPIN(false);
-                    account.setRemLoginAttempts(3);
+                    account.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                     account.setLastModified(Calendar.getInstance().getTime());
                     userRepository.save(account);//save user to db
                     return true;
@@ -644,7 +648,7 @@ public class AuthService implements IAuthService{
                     //
                     userAccount.setPassword(passwordEncoder.encode("Admin@4321"));
                     userAccount.setBlocked(false);
-                    userAccount.setRemLoginAttempts(3);
+                    userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                     userAccount.setLastModified(Calendar.getInstance().getTime());
                     //
                     userRepository.save(userAccount);//save user to db
@@ -661,7 +665,7 @@ public class AuthService implements IAuthService{
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
                         userAccount.setBlocked(false);
-                        userAccount.setRemLoginAttempts(3);
+                        userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
                         userRepository.save(userAccount);//save user to db
@@ -676,7 +680,7 @@ public class AuthService implements IAuthService{
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
                         userAccount.setBlocked(false);
-                        userAccount.setRemLoginAttempts(3);
+                        userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
                         userRepository.save(userAccount);//save user to db
