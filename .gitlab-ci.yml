@@ -1,12 +1,20 @@
 image: docker:20.10.21
 stages:
-  - build-deploy
+  - build
+  - deploy
 
 before_script:
     - docker --version
 
-buildJar:
-  stage: build-deploy
+buildContainer:
+  stage: build
   image: docker:20.10.21
   script:
     - docker build -f build.Dockerfile . -t kcb-ses-poc-be:v1.0.0
+
+runUpdatedBuild:
+  stage: deploy
+  image: ansible:v1.0.0
+  script:
+    - ansible --version
+    - ansible-playbook --version
