@@ -27,15 +27,6 @@ public class PBApprovecustomerOnboarindRequest {
     private String customerPostalCode;
     private Long dsrId;
     private Date createdOn;
-    private String latitude;
-    private String longitude;
     private String businessName;
-    @Column(name="town")
-    private String town;
-    @Column(name="street_name")
-    private String streetName;
-    @Column(name="building_name")
-    private String buildingName;
-    @Column(name="room_number")
-    private String roomNumber;
+
 }

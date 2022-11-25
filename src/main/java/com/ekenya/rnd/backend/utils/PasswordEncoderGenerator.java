@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.utils;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordEncoderGenerator {

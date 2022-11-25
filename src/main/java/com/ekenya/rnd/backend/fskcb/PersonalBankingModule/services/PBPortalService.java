@@ -315,8 +315,6 @@ public class PBPortalService implements IPBPortalService {
                     asset.put("onboarding-status", psBankingOnboardingEntity.getStatus().ordinal());
                     asset.put("agent Id", psBankingOnboardingEntity.getDsrId());
                     asset.put("date_onboarded", psBankingOnboardingEntity.getCreatedOn().getTime());
-                    asset.put("latitude", psBankingOnboardingEntity.getLatitude());
-                    asset.put("longitude", psBankingOnboardingEntity.getLongitude());
                     list.add(asset);
                 }
                 return list;

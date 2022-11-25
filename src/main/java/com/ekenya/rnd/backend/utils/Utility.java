@@ -118,4 +118,9 @@ return new Date();
         int randInt = rand.nextInt(i1);
         return randInt;
     }
+
+    public static String generateRandomPassword() {
+        String password = RandomStringUtils.random(8, true, true);
+        return password;
+    }
 }
