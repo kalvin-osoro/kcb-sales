@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.GetALLDSRMerchantOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +21,8 @@ public class VoomaOnboardingVC {
 
     //List all onboarded merchants
     @PostMapping(value = "/vooma-get-all-onboarded-merchant")
-    public ResponseEntity<?> getAllMerchantOnboardings() {
-        List<?> list = voomaService.loadAllOnboardedMerchants();
+    public ResponseEntity<?> getAllMerchantOnboardings(GetALLDSRMerchantOnboardingRequest model) {
+        List<?> list = voomaService.loadAllOnboardedMerchants(model);
         boolean success = list != null;
 
 
@@ -29,7 +30,7 @@ public class VoomaOnboardingVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+            node.addAll((List)list);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

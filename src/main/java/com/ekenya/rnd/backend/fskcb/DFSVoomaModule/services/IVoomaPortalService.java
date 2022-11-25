@@ -30,7 +30,7 @@ public interface IVoomaPortalService {
 
     boolean createQuestionnaire(VoomaAddQuestionnaireRequest voomaAddQuestionnaireRequest);
 
-    List<ObjectNode> loadAllOnboardedMerchants();
+    List<ObjectNode> loadAllOnboardedMerchants(GetALLDSRMerchantOnboardingRequest model);
 
     boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest);
 

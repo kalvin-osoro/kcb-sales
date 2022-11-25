@@ -205,11 +205,14 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> loadAllOnboardedMerchants() {
+    public List<ObjectNode> loadAllOnboardedMerchants(GetALLDSRMerchantOnboardingRequest model) {
         try {
+            if (model == null) {
+                return null;
+            }
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAll()) {
+            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findByDsrId(model.getDsrId())) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", dfsVoomaOnboardEntity.getId());
                 objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
