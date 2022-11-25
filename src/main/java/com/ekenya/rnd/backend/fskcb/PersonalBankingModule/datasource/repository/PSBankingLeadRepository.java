@@ -23,4 +23,6 @@ public interface PSBankingLeadRepository extends JpaRepository<PSBankingLeadEnti
     int countAllLeadsCreatedLast7DaysWarm();
     @Query(value = "SELECT count(*) FROM psbanking_leads where created_on >= current_date at time zone 'UTC' - interval '7 days' AND priority = 'COLD'", nativeQuery = true)
     int countAllLeadsCreatedLast7DaysCold();
+    @Query(value = "SELECT * FROM psbanking_leads where dsr_id = ?1", nativeQuery = true)
+    PSBankingLeadEntity[] findAllByDsrId(Long dsrId);
 }

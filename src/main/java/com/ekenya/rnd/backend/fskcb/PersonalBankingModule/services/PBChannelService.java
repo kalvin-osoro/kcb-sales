@@ -4,14 +4,23 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardingKYCentity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingFileEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingLeadRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingOnboardingFileRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingOnboardingRepossitory;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingTargetRepository;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBDSROnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PSBankingOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.PersonalAccountTypeRequest;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +41,9 @@ public class PBChannelService implements IPBChannelService {
     private final PSBankingOnboardingFileRepository psBankingOnboardingFileRepository;
     private final PSBankingOnboardingRepossitory psBankingOnboardingRepossitory;
     private final FileStorageService fileStorageService;
+    private final PSBankingLeadRepository psBankingLeadRepository;
+
+    private final PSBankingTargetRepository psBankingTargetRepository;
 
 
     @Override
@@ -163,6 +175,103 @@ public class PBChannelService implements IPBChannelService {
             return allOnboardings;
         } catch (Exception e) {
             log.error("Error occurred while getting all onboarding requests by dsr", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<ObjectNode> getTargetsSummary() {
+        try {
+            ArrayList<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (PSBankingTargetEntity psBankingTargetEntity : psBankingTargetRepository.findAllByTargetType(TargetType.VISITS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode visitsNode = mapper.createObjectNode();
+                node.put("achieved", psBankingTargetEntity.getTargetAchievement());
+                node.put("target", psBankingTargetEntity.getTargetValue());
+                visitsNode.set("visits", node);
+                list.add(visitsNode);
+            }
+            //targetType =Leads
+            for (PSBankingTargetEntity psBankingTargetEntity : psBankingTargetRepository.findAllByTargetType(TargetType.LEADS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode leadsNode = mapper.createObjectNode();
+                node.put("achieved", psBankingTargetEntity.getTargetAchievement());
+                node.put("target", psBankingTargetEntity.getTargetValue());
+                leadsNode.set("leads", node);
+                list.add(leadsNode);
+            }
+            //targetType =CAMPAIGNS
+            for (PSBankingTargetEntity psBankingTargetEntity : psBankingTargetRepository.findAllByTargetType(TargetType.CAMPAINGS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode campaignsNode = mapper.createObjectNode();
+                node.put("achieved", psBankingTargetEntity.getTargetAchievement());
+                node.put("target", psBankingTargetEntity.getTargetValue());
+                campaignsNode.set("campaigns", node);
+                list.add(campaignsNode);
+            }
+            //targetType =ONBOARDING
+            for (PSBankingTargetEntity psBankingTargetEntity : psBankingTargetRepository.findAllByTargetType(TargetType.ONBOARDING)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode onboardingNode = mapper.createObjectNode();
+                node.put("achieved", psBankingTargetEntity.getTargetAchievement());
+                node.put("target", psBankingTargetEntity.getTargetValue());
+                onboardingNode.set("onboarding", node);
+                list.add(onboardingNode);
+            }
+            //add to the list hard coded values for commission
+            ObjectNode node = mapper.createObjectNode();
+            ObjectNode commissionNode = mapper.createObjectNode();
+            node.put("current-commission", 0);
+            node.put("previous-commision", 0);
+            commissionNode.set("commission", node);
+            list.add(commissionNode);
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public boolean createLead(PBAddLeadRequest request) {
+        try {
+            PSBankingLeadEntity psBankingLeadEntity = new PSBankingLeadEntity();
+            psBankingLeadEntity.setCustomerName(request.getCustomerName());
+            psBankingLeadEntity.setBusinessUnit(request.getBusinessUnit());
+            psBankingLeadEntity.setPriority(request.getPriority());
+            psBankingLeadEntity.setCustomerAccountNumber(request.getCustomerAccountNumber());
+            psBankingLeadEntity.setTopic(request.getTopic());
+            psBankingLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            psBankingLeadRepository.save(psBankingLeadEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating lead", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllLeadsByDsrId(PBAddLeadRequest model) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (PSBankingLeadEntity psBankingLeadEntity : psBankingLeadRepository.findAllByDsrId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerId", psBankingLeadEntity.getCustomerId());
+                node.put("businessUnit", psBankingLeadEntity.getBusinessUnit());
+                node.put("leadStatus", String.valueOf(psBankingLeadEntity.getLeadStatus()));
+                node.put("topic", psBankingLeadEntity.getTopic());
+                node.put("priority", psBankingLeadEntity.getPriority().ordinal());
+                node.put("dsrId", psBankingLeadEntity.getDsrId());
+                //add to list
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
         }
         return null;
     }

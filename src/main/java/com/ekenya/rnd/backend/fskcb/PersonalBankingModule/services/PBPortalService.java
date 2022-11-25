@@ -85,7 +85,7 @@ public class PBPortalService implements IPBPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             PSBankingVisitEntity psBankingVisitEntity = new PSBankingVisitEntity();
-            psBankingVisitEntity.setMerchantName(model.getMerchantName());
+            psBankingVisitEntity.setCustomerName(model.getCustomerName());
             psBankingVisitEntity.setVisitDate(model.getVisitDate());
             psBankingVisitEntity.setReasonForVisit(model.getReasonForVisit());
             psBankingVisitEntity.setStatus(Status.ACTIVE);
@@ -127,7 +127,7 @@ public class PBPortalService implements IPBPortalService {
             for (PSBankingVisitEntity psBankingVisitEntity : psBankingCustomerVisitRepository.findAll()) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", psBankingVisitEntity.getId());
-                objectNode.put("customerName", psBankingVisitEntity.getMerchantName());
+                objectNode.put("customerName", psBankingVisitEntity.getCustomerName());
                 objectNode.put("visitDate", psBankingVisitEntity.getVisitDate());
                 objectNode.put("reasonForVisit", psBankingVisitEntity.getReasonForVisit());
                 objectNode.put("dsrName", psBankingVisitEntity.getDsrName());
@@ -337,7 +337,7 @@ public class PBPortalService implements IPBPortalService {
                 for (PSBankingVisitEntity psBankingVisitEntity : psBankingCustomerVisitRepository.fetchAllVisitsCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
                     asset.put("id", psBankingVisitEntity.getId());
-                    asset.put("customerName", psBankingVisitEntity.getMerchantName());
+                    asset.put("customerName", psBankingVisitEntity.getCustomerName());
                     asset.put("visitDate", psBankingVisitEntity.getVisitDate());
                     asset.put("reasonForVisit", psBankingVisitEntity.getReasonForVisit());
                     asset.put("dsrName", psBankingVisitEntity.getDsrName());

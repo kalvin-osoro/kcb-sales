@@ -28,6 +28,8 @@ public class PSBankingLeadEntity {
     private LeadStatus leadStatus;
     private boolean assigned=false;
     private String startDate;
+    private String customerAccountNumber;
+    private String customerName;
     private String endDate;
     private Date createdOn;
 }

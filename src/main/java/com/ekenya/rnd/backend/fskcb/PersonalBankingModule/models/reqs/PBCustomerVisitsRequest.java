@@ -16,11 +16,16 @@ public class PBCustomerVisitsRequest {
     private Long id;
     private  Long dsrId;
     private String dsrName;
-    private String merchantName;
+    private String customerName;
     private String reasonForVisit;
     private String visitDate;
     private Status status;
     //    private Zone zone;
     private Date createdOn;
     private Date updatedOn;
+
+    private String typeOfVisit;
+    private String channelUsed;
+    private String actionplan;
+    private String highlightOfVisit;
 }

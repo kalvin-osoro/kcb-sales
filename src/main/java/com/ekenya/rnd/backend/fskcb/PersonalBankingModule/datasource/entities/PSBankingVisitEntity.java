@@ -25,7 +25,7 @@ public class PSBankingVisitEntity {
     //dsr id from dsr table
     private  Long dsrId;
     private String dsrName;
-    private String merchantName;
+    private String customerName;
     private String reasonForVisit;
     private String visitDate;
     @Enumerated(EnumType.STRING)
@@ -34,4 +34,9 @@ public class PSBankingVisitEntity {
     private Date createdOn;
     private Date updatedOn;
     private boolean isCompleted=false;
+
+    private String typeOfVisit;
+    private String channelUsed;
+    private String actionplan;
+    private String highlightOfVisit;
 }
