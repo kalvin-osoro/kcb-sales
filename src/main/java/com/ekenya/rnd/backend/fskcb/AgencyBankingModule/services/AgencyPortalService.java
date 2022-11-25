@@ -38,7 +38,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             for (AgencyBankingVisitEntity agencyBankingVisitEntity : agencyBankingVisitRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", agencyBankingVisitEntity.getId());
-                node.put("merchantName", agencyBankingVisitEntity.getMerchantName());
+                node.put("merchantName", agencyBankingVisitEntity.getAgentName());
                 node.put("dsrName", agencyBankingVisitEntity.getDsrName());
                 node.put("reasonForVisit", agencyBankingVisitEntity.getReasonForVisit());
                 node.put("visitDate", agencyBankingVisitEntity.getVisitDate());
@@ -59,7 +59,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             AgencyBankingVisitEntity agencyBankingVisitEntity = new AgencyBankingVisitEntity();
-            agencyBankingVisitEntity.setMerchantName(agencyCustomerVisitsRequest.getMerchantName());
+            agencyBankingVisitEntity.setAgentName(agencyCustomerVisitsRequest.getAgentName());
             agencyBankingVisitEntity.setVisitDate(agencyCustomerVisitsRequest.getVisitDate());
             agencyBankingVisitEntity.setReasonForVisit(agencyCustomerVisitsRequest.getReasonForVisit());
             agencyBankingVisitEntity.setStatus(Status.ACTIVE);

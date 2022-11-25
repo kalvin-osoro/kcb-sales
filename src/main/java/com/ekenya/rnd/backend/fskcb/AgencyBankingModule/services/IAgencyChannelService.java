@@ -1,10 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAddLeadRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAssignAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCollectAssetRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,5 +21,10 @@ public interface IAgencyChannelService {
 
     ArrayList<ObjectNode> getTargetsSummary();
 
-    boolean createCustomerVisit(AgencyCustomerVisitsRequest model);
+
+    Object onboardNewCustomer(String agentDetails, MultipartFile frontID, MultipartFile backID, MultipartFile kraPinCertificate, MultipartFile certificateOFGoodConduct, MultipartFile businessLicense, MultipartFile shopPhoto, MultipartFile financialStatement, MultipartFile cv, MultipartFile customerPhoto, MultipartFile companyRegistrationDoc, MultipartFile signatureDoc, MultipartFile passportPhoto1, MultipartFile passportPhoto2, MultipartFile acceptanceLetter, MultipartFile crbReport, MultipartFile businessPermitDoc);
+
+    List<ObjectNode> getAllOnboardingsByDsr(AgencyAllDSROnboardingsRequest model);
+
+    Object createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto);
 }
