@@ -3,9 +3,6 @@ stages:
   - build
   - deploy
 
-before_script:
-    - docker --version
-
 buildContainer:
   stage: build
   image: docker:20.10.21
