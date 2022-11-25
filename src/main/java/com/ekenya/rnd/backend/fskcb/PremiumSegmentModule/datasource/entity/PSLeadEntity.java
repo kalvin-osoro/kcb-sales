@@ -36,5 +36,7 @@ public class PSLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private String customerAccountNumber;
+    private String customerName;
     private Date createdOn;
 }

@@ -91,7 +91,7 @@ public class PSPortalService implements IPSPortalService {
     @Override
     public boolean assignLead(PSAddLeadRequest model) {
         try {
-            PSLeadEntity psLeadEntity = psLeadRepository.findById(model.getLeadId()).orElse(null);
+            PSLeadEntity psLeadEntity = psLeadRepository.findById(model.getDsrId()).orElse(null);
             psLeadEntity.setDsrId(model.getDsrId());
             //set start date from input
             psLeadEntity.setStartDate(model.getStartDate());

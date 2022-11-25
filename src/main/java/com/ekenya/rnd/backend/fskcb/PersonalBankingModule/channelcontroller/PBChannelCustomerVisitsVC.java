@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.channelcontroller;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsBYDSRRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBChannelService;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,7 @@ import java.util.List;
 public class PBChannelCustomerVisitsVC {
 
     @Autowired
-    IPSChannelService channelService;
+    IPBChannelService channelService;
 
     @PostMapping("/pb-create-customer-visit")
     public ResponseEntity<?> createCustomerVisit(@RequestBody PBCustomerVisitsRequest model) {

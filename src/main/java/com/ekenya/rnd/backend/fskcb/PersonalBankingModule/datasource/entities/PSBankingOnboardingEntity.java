@@ -63,7 +63,7 @@ public class PSBankingOnboardingEntity {
     private String termOfEmployment;
     private String expiryOfContract;
     private String estimatedMonthlyIncome;
-    private String isCustomerReceiveFundInForeignCurrency;
+//    private String isCustomerReceiveFundInForeignCurrency;
     private String sourceOfFunds;
     private String country;
 
@@ -84,7 +84,7 @@ public class PSBankingOnboardingEntity {
     private String isCustomerWantChequeBook;
     private String isCustomerWantToReceiveStatements;
     private String cycleOfStatements;
-    private String sendVia;
+//    private String sendVia;
     private String isCustomerWantToUseMobileBanking;
     private String mobileBankingPhoneNumber;
     private String isCustomerMakeForeignExchangeWithBusiness;
@@ -94,7 +94,7 @@ public class PSBankingOnboardingEntity {
     private String allDebit;
     private String isCustomerWantToGetCreditCard;
     private String KCBcreditCardType;
-    private String isCustomerWantToRegisterInternetBanking;
-    private String receiveTransactionAuthorizationVia;
+//    private String isCustomerWantToRegisterInternetBanking;
+//    private String receiveTransactionAuthorizationVia;
 
 }

@@ -7,17 +7,9 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.Agen
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingFileEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingLeadRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingOnboardingFileRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingOnboardingRepossitory;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingTargetRepository;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAddLeadRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBDSROnboardingRequest;
-import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PSBankingOnboardingRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.PersonalAccountTypeRequest;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -82,7 +74,7 @@ public class PBChannelService implements IPBChannelService {
             psBankingOnboardingEntity.setTermOfEmployment(psBankingOnboardingRequest.getTermOfEmployment());
             psBankingOnboardingEntity.setExpiryOfContract(psBankingOnboardingRequest.getExpiryOfContract());
             psBankingOnboardingEntity.setEstimatedMonthlyIncome(psBankingOnboardingRequest.getEstimatedMonthlyIncome());
-            psBankingOnboardingEntity.setIsCustomerReceiveFundInForeignCurrency(psBankingOnboardingRequest.getIsCustomerReceiveFundInForeignCurrency());
+//            psBankingOnboardingEntity.setIsCustomerReceiveFundInForeignCurrency(psBankingOnboardingRequest.getIsCustomerReceiveFundInForeignCurrency());
             psBankingOnboardingEntity.setPreferredCurrency(psBankingOnboardingRequest.getPreferredCurrency());
             psBankingOnboardingEntity.setSourceOfFunds(psBankingOnboardingRequest.getSourceOfFunds());
             psBankingOnboardingEntity.setCountry(psBankingOnboardingRequest.getCountry());
@@ -100,7 +92,7 @@ public class PBChannelService implements IPBChannelService {
             psBankingOnboardingEntity.setIsCustomerWantChequeBook(psBankingOnboardingRequest.getIsCustomerWantChequeBook());
             psBankingOnboardingEntity.setIsCustomerWantToReceiveStatements(psBankingOnboardingRequest.getIsCustomerWantToReceiveStatements());
             psBankingOnboardingEntity.setCycleOfStatements(psBankingOnboardingRequest.getCycleOfStatements());
-            psBankingOnboardingEntity.setSendVia(psBankingOnboardingRequest.getSendVia());
+//            psBankingOnboardingEntity.setSendVia(psBankingOnboardingRequest.getSendVia());
             psBankingOnboardingEntity.setIsCustomerWantToUseMobileBanking(psBankingOnboardingRequest.getIsCustomerWantToUseMobileBanking());
             psBankingOnboardingEntity.setIsCustomerMakeForeignExchangeWithBusiness(psBankingOnboardingRequest.getIsCustomerMakeForeignExchangeWithBusiness());
             psBankingOnboardingEntity.setIsCustomerwantToReceiveSMSAlerts(psBankingOnboardingRequest.getIsCustomerwantToReceiveSMSAlerts());
@@ -109,8 +101,8 @@ public class PBChannelService implements IPBChannelService {
             psBankingOnboardingEntity.setAllDebit(psBankingOnboardingRequest.getAllDebit());
             psBankingOnboardingEntity.setIsCustomerWantToGetCreditCard(psBankingOnboardingRequest.getIsCustomerWantToGetCreditCard());
             psBankingOnboardingEntity.setKCBcreditCardType(psBankingOnboardingRequest.getKCBcreditCardType());
-            psBankingOnboardingEntity.setIsCustomerWantToRegisterInternetBanking(psBankingOnboardingRequest.getIsCustomerWantToRegisterInternetBanking());
-            psBankingOnboardingEntity.setReceiveTransactionAuthorizationVia(psBankingOnboardingRequest.getReceiveTransactionAuthorizationVia());
+//            psBankingOnboardingEntity.setIsCustomerWantToRegisterInternetBanking(psBankingOnboardingRequest.getIsCustomerWantToRegisterInternetBanking());
+//            psBankingOnboardingEntity.setReceiveTransactionAuthorizationVia(psBankingOnboardingRequest.getReceiveTransactionAuthorizationVia());
             PSBankingOnboardingEntity savedCustomerDetails = psBankingOnboardingRepossitory.save(psBankingOnboardingEntity);
             if (savedCustomerDetails == null) throw new RuntimeException("Failed to save customer details");
             //save file
@@ -272,6 +264,59 @@ public class PBChannelService implements IPBChannelService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while loading questionnaires", e);
+        }
+        return null;
+    }
+    private final PSBankingCustomerVisitRepository psBankingCustomerVisitRepository;
+
+    @Override
+    public boolean createCustomerVisit(PBCustomerVisitsRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            PSBankingVisitEntity psBankingVisitEntity = new PSBankingVisitEntity();
+            psBankingVisitEntity.setReasonForVisit(model.getReasonForVisit());
+            psBankingVisitEntity.setTypeOfVisit(model.getTypeOfVisit());
+            psBankingVisitEntity.setChannelUsed(model.getChannelUsed());
+            psBankingVisitEntity.setActionplan(model.getActionplan());
+            psBankingVisitEntity.setHighlightOfVisit(model.getHighlightOfVisit());
+//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            String username = userDetails.getUsername();
+            psBankingVisitEntity.setDsrName("test");
+            psBankingVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save customer visit
+            psBankingCustomerVisitRepository.save(psBankingVisitEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while creating customer visit", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllCustomerVisitsByDSR(PBCustomerVisitsBYDSRRequest model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<PSBankingVisitEntity> psBankingVisitEntities = psBankingCustomerVisitRepository.findAllByDsrId(model.getDsrId());
+            List<ObjectNode> objectNodeList = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper();
+            psBankingVisitEntities.forEach(psBankingVisitEntity -> {
+                ObjectNode objectNode = objectMapper.createObjectNode();
+                objectNode.put("visitId", psBankingVisitEntity.getId());
+                objectNode.put("reasonForVisit", psBankingVisitEntity.getReasonForVisit());
+                objectNode.put("actionPlan", psBankingVisitEntity.getActionplan());
+                objectNode.put("highlights", psBankingVisitEntity.getHighlightOfVisit());
+                objectNode.put("dsrName", psBankingVisitEntity.getDsrName());
+                objectNode.put("customerName",psBankingVisitEntity.getCustomerName());
+                objectNode.put("createdOn", psBankingVisitEntity.getCreatedOn().toString());
+                objectNodeList.add(objectNode);
+            });
+            return objectNodeList;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all customer visits by DSR", e);
         }
         return null;
     }

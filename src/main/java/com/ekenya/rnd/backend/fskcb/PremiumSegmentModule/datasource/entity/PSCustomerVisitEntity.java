@@ -35,4 +35,21 @@ public class PSCustomerVisitEntity {
     private Date createdOn;
     private Date updatedOn;
     private boolean isCompleted=false;
+    private String typeOfVisit;
+    private String channel;
+    private String productOffered;
+    private String opportunityDiscussed;
+    private String remarks;
+    private String staffFromOtherDept;
+    private String timeTaken;
+    private String dateOfAnotherVisit;
+    private String productInvolvement;
+    private String cashManagementRep;
+    private String tradeRep;
+    private String custodyRep;
+    private String snrCallRep;
+    private String cvpRep;
+    private String bancaRep;
+    private String treasuryRep;
+    private String periodicRep;
 }
