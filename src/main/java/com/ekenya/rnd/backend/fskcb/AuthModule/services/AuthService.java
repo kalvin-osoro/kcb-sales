@@ -47,6 +47,7 @@ public class AuthService implements IAuthService{
 
     @Value("${app.jwt-expiration-milliseconds}")
     private int JWT_EXPIRY_IN_MILLISECONDS = 30 * 60 * 1000;
+    public static int MAX_PIN_LOGIN_ATTEMPTS = 4;
     @Autowired
     ObjectMapper mObjectMapper;
     @Autowired
@@ -80,8 +81,6 @@ public class AuthService implements IAuthService{
     ISecurityQuestionsRepo securityQuestionsRepo;
 
     private java.util.logging.Logger mLogger = Logger.getLogger(getClass().getName());
-    @Autowired
-    FileHandler mLogFileHandler;
     @Override
     public LoginResponse attemptChannelLogin(ChannelLoginRequest model) {
 
@@ -164,6 +163,9 @@ public class AuthService implements IAuthService{
             response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
             response.setProfiles(profiles);
             response.setType("Bearer");
+            //
+            response.setShouldSetSecQns(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty());
+            response.setShouldChangePin(account.getShouldChangePIN());
             //
             return response;
         }catch (AuthenticationException ex){
@@ -474,23 +476,64 @@ public class AuthService implements IAuthService{
             String username = authentication.getName();
             //
             UserAccountEntity account = userRepository.findByStaffNo(username).get();
-            //
-            for (SecQnAnswerReq qna: model.getAnswers()) {
+
+            if(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty()) {
                 //
-                SecurityQuestionEntity qn = securityQuestionsRepo.findByIdAndStatus(qna.getQnId(), Status.ACTIVE).get();
-                //
-                SecurityQuestionAnswerEntity ans =  new SecurityQuestionAnswerEntity();
-                ans.setAnswer(qna.getAnswer());
-                ans.setQuestionId(qn.getId());
-                ans.setUserId(account.getId());
+                for (SecQnAnswerReq qna : model.getAnswers()) {
+                    //
+                    SecurityQuestionEntity qn = securityQuestionsRepo.findByIdAndStatus(qna.getQnId(), Status.ACTIVE).get();
+                    //
+                    SecurityQuestionAnswerEntity ans = new SecurityQuestionAnswerEntity();
+                    ans.setAnswer(qna.getAnswer());
+                    ans.setQuestionId(qn.getId());
+                    ans.setUserId(account.getId());
 //                if(qn.getType() == SecurityQuestionType.SELECT_OPTIONS){
 //                    //
 //                    ans.s
 //                }
 
+                    securityQuestionAnswersRepo.save(ans);
+                }
+                return true;
+            }else{
+                mLogger.log(Level.INFO,"User "+username+" has already set security questions. Use the update option");
+            }
+        }catch (Exception ex){
+            mLogger.log(Level.SEVERE,ex.getMessage(),ex);
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public boolean updateSecurityQuestions(UpdateSecurityQnsRequest model) {
+
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            //
+            UserAccountEntity account = userRepository.findByStaffNo(username).get();
+
+            if(!securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty()) {
+                //Delete all..
+                securityQuestionAnswersRepo.deleteAll(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE));
+            }
+            //
+            for (SecQnAnswerReq qna : model.getAnswers()) {
+                //
+                SecurityQuestionEntity qn = securityQuestionsRepo.findByIdAndStatus(qna.getQnId(), Status.ACTIVE).get();
+                //
+                SecurityQuestionAnswerEntity ans = new SecurityQuestionAnswerEntity();
+                ans.setAnswer(qna.getAnswer());
+                ans.setQuestionId(qn.getId());
+                ans.setUserId(account.getId());
+
+                //
                 securityQuestionAnswersRepo.save(ans);
             }
-            return  true;
+
+            return true;
         }catch (Exception ex){
             mLogger.log(Level.SEVERE,ex.getMessage(),ex);
         }
@@ -545,6 +588,7 @@ public class AuthService implements IAuthService{
                     //
                     account.setPassword(passwordEncoder.encode(model.getNewPIN()));
                     account.setShouldSetPIN(false);
+                    account.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                     account.setLastModified(Calendar.getInstance().getTime());
                     userRepository.save(account);//save user to db
                     return true;
@@ -598,14 +642,30 @@ public class AuthService implements IAuthService{
 
                 UserAccountEntity userAccount = optionalUserAccount.get();
                 String pass = Utility.generatePassword();
+
+                //REMOVE BEFORE PRODUCTION
+                if(userAccount.getStaffNo().equalsIgnoreCase("Admin")){
+                    //
+                    userAccount.setPassword(passwordEncoder.encode("Admin@4321"));
+                    userAccount.setBlocked(false);
+                    userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
+                    userAccount.setLastModified(Calendar.getInstance().getTime());
+                    //
+                    userRepository.save(userAccount);//save user to db
+
+                    return true;
+                }
+
+
                 //Option 1 - Send via Email
-                if(model.getOption() == 1){
+                if(model.getOption() == 1 || userAccount.getStaffNo().equalsIgnoreCase("Admin")){
                     //EMAIL
                     if(smsService.sendPasswordEmail(userAccount.getEmail(),userAccount.getFullName(),pass)){
 
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
                         userAccount.setBlocked(false);
+                        userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
                         userRepository.save(userAccount);//save user to db
@@ -620,6 +680,7 @@ public class AuthService implements IAuthService{
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
                         userAccount.setBlocked(false);
+                        userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
                         userRepository.save(userAccount);//save user to db

@@ -10,6 +10,8 @@ import java.util.List;
 @Data
 public class LoginResponse {
 
+    private boolean shouldSetSecQns = true;
+    private boolean shouldChangePin = false;
     private boolean success = false;
     private int remAttempts = 3;
     private String token;

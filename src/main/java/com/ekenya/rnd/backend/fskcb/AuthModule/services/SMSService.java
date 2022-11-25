@@ -102,6 +102,7 @@ public class SMSService implements ISmsService{
                 log.error("Send CODE failed. => "+smsResponse.get("ResultDesc").getAsString());
                 //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
             }
+            return true;
         } catch (Exception e) {
             logger.log(Level.ALL,e.getMessage(),e);
         }

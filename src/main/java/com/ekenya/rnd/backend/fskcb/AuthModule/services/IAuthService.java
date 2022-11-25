@@ -25,6 +25,7 @@ public interface IAuthService {
 
     boolean setSecurityQuestions(SetSecurityQnsRequest model);
 
+    boolean updateSecurityQuestions(UpdateSecurityQnsRequest model);
     boolean validateSecurityQuestions(ValidateSecurityQnsRequest model);
 
     boolean attemptCreatePIN(CreatePINRequest model);
