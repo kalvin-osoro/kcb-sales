@@ -14,7 +14,7 @@ buildContainer:
 
 runUpdatedBuild:
   stage: deploy
-  image: cytopia/ansible:2.8-awsk8s-manifest-linux-arm64
+  image: codeyourinfra/myansible:latest
   script:
     - ansible --version
     - ansible-playbook --version
