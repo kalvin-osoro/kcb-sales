@@ -11,7 +11,8 @@ buildContainer:
 
 runUpdatedBuild:
   stage: deploy
-  image: codeyourinfra/myansible:latest
+  #image: codeyourinfra/myansible:latest
+  image: lusengeri/my-ansible:latest
   script:
     - ansible --version
     - ansible-playbook --version
