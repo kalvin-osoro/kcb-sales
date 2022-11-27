@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.utils;
 
 
+import com.ekenya.rnd.backend.fskcb.uploaFileUtil.IUploadFileUtile;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -122,5 +123,19 @@ return new Date();
     public static String generateRandomPassword() {
         String password = RandomStringUtils.random(8, true, true);
         return password;
+    }
+    //generateSubDirectory("onboard");
+    public static String generateSubDirectory(String directory) {
+        String subDirectory = IUploadFileUtile.uploadDirectory + "/" + RandomStringUtils.random(10, true, true);
+        return subDirectory;
+    }
+
+    public static String getFileExtension(String originalFilename) {
+        String extension = "";
+        int i = originalFilename.lastIndexOf('.');
+        if (i > 0) {
+            extension = originalFilename.substring(i+1);
+        }
+        return extension;
     }
 }
