@@ -218,7 +218,7 @@ public class UsersService implements IUsersService {
 
         try{
             List<ObjectNode> list = new ArrayList<>();
-            for(UserAccountEntity account : userRepository.findAll()){
+            for(UserAccountEntity account : userRepository.findAllByAccountTypeAndStatus(AccountType.ADMIN,Status.ACTIVE)){
                 ObjectNode node = mObjectMapper.createObjectNode();
 
                 node.put("id",account.getId());

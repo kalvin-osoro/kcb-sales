@@ -68,6 +68,9 @@ public class DSRAccountEntity {
     @Column(name="team_id",nullable = false)
     private Long teamId;
 
+    @Column(name="branch_id",nullable = true)
+    private Long branchId;
+
     @Column(name="created_by")
     private String createdBy;
 

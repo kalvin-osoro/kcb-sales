@@ -558,9 +558,9 @@ public class AuthService implements IAuthService{
                     valid = ans.get().getAnswer().equalsIgnoreCase(prob.getAnswer());
                 }
             }
-            //
+            //Send SMS
             String code = smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN);
-            if(code != null){
+            if(code == null){
                 valid = false;
             }else {
                 //

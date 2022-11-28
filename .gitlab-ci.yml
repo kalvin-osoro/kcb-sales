@@ -16,3 +16,4 @@ runUpdatedBuild:
   script:
     - ansible --version
     - ansible-playbook --version
+    - ansible-playbook test_env_playbook.yml -i 10.20.2.12, -u manzagi --private-key /id_rsa
