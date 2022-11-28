@@ -1,8 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.AdminModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AdminModule.AddBranchRequest;
-import com.ekenya.rnd.backend.fskcb.AdminModule.datasource.entities.BranchEntity;
-import com.ekenya.rnd.backend.fskcb.AdminModule.datasource.repositories.IBranchesRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.BranchEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IBranchesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
-import java.util.List;
 
 @Slf4j
 @Service

@@ -1,20 +1,16 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.BranchEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.JsonLatLng;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IZoneCoordinatesRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
@@ -48,7 +44,8 @@ public class DSRPortalService implements IDSRPortalService {
     private IDSRRegionsRepository dsrRegionsRepository;
     @Autowired
     private IDSRAccountsRepository dsrAccountsRepository;
-
+    @Autowired
+    IBranchesRepository branchesRepository;
     @Autowired
     IAuthService authService;
 
@@ -556,7 +553,7 @@ public class DSRPortalService implements IDSRPortalService {
                             break;
                         }
                     }
-                    //Not found in existong list
+                    //Not found in existing list
                     if(!found){
                         Optional<DSRAccountEntity> optionalDSRAccount = dsrAccountsRepository.findById(userId);
                         if(optionalDSRAccount.isPresent()){
@@ -578,7 +575,6 @@ public class DSRPortalService implements IDSRPortalService {
     @Override
     public ArrayNode getAllDSRAccounts() {
 
-
         try{
 
             ArrayNode list = mObjectMapper.createArrayNode();
@@ -593,7 +589,27 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("staffNo",entity.getStaffNo());
                 node.put("status",entity.getStatus().toString());
                 node.put("salesCode",entity.getSalesCode());
-
+                //
+                Optional<DSRTeamEntity> optionalDSRTeam = dsrTeamsRepository.findById(entity.getTeamId());
+                if(optionalDSRTeam.isPresent()){
+                    node.put("teamName",optionalDSRTeam.get().getName());
+                    node.put("teamLoc",optionalDSRTeam.get().getLocation());
+                }else{
+                    node.put("teamName","");
+                    node.put("teamLoc","");
+                }
+                //
+                if(entity.getBranchId() != null) {
+                    BranchEntity branchEntity = branchesRepository.findById(entity.getBranchId()).orElse(null);
+                    if(branchEntity!=null){
+                        node.put("branchName",branchEntity.getName());
+                    }else{
+                        node.put("branchName","");
+                    }
+                }else{
+                    //
+                    node.put("branchName","");
+                }
                 //
                 list.add(node);
             }

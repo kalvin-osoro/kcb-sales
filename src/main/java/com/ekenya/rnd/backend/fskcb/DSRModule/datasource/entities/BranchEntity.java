@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.AdminModule.datasource.entities;
+package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
 import com.ekenya.rnd.backend.utils.Status;
 import io.swagger.annotations.ApiModel;
