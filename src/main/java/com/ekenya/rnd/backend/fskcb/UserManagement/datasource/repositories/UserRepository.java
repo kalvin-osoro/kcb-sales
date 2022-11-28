@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserAccountEntity, Long> {
     //retrieve user by email
-    List<UserAccountEntity> findAllByTypeAndStatus(AccountType type, Status status);
+    List<UserAccountEntity> findAllByAccountTypeAndStatus(AccountType type, Status status);
     Optional<UserAccountEntity> findByStaffNoAndPhoneNumber(String staffNo, String phoneNo);
     Optional<UserAccountEntity> findByEmail(String email);
     Optional<UserAccountEntity> findByStaffNo(String name);
