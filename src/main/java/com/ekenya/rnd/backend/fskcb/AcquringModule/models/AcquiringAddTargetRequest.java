@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.models;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AquiringTargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,5 @@ public class AcquiringAddTargetRequest {
     private String targetName;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
-    private AquiringTargetType aquiringTargetType;
+    private TargetType targetType;
 }

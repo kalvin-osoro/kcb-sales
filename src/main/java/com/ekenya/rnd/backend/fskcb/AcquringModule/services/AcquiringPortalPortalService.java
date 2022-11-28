@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -86,7 +87,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
                 node.put("source", target.getTargetSource());
                 node.put("startDate", target.getStartDate().toString());
                 node.put("endDate", target.getEndDate().toString());
-                node.put("type", target.getAcquiringTargetType().toString());
+                node.put("type", target.getTargetType().toString());
                 targets.add(node);
             }
             return targets;
@@ -107,7 +108,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             AcquiringTargetEntity acquiringTargetEntity = new AcquiringTargetEntity();
             acquiringTargetEntity.setTargetName(acquiringAddTargetRequest.getTargetName());
             acquiringTargetEntity.setTargetSource(acquiringAddTargetRequest.getTargetSource());
-            acquiringTargetEntity.setAcquiringTargetType(acquiringAddTargetRequest.getAquiringTargetType());
+            acquiringTargetEntity.setTargetType(acquiringAddTargetRequest.getTargetType());
             acquiringTargetEntity.setTargetDesc(acquiringAddTargetRequest.getTargetDesc());
             acquiringTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
             acquiringTargetEntity.setTargetValue(acquiringAddTargetRequest.getTargetValue());
@@ -618,6 +619,9 @@ try {
         }
         return null;
     }
+
+
+
 
 }
 

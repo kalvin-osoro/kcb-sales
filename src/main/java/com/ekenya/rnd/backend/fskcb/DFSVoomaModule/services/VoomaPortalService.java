@@ -1,9 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringCustomerVisitEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringLeadEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
@@ -205,11 +202,14 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> loadAllOnboardedMerchants() {
+    public List<ObjectNode> loadAllOnboardedMerchants(GetALLDSRMerchantOnboardingRequest model) {
         try {
+            if (model == null) {
+                return null;
+            }
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAll()) {
+            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findByDsrId(model.getDsrId())) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", dfsVoomaOnboardEntity.getId());
                 objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
@@ -292,18 +292,26 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Override
     public boolean createVoomaTarget(DFSVoomaAddTargetRequest voomaAddTargetRequest) {
         try {
+            if (voomaAddTargetRequest == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
             DFSVoomaTargetEntity dfsVoomaTargetEntity = new DFSVoomaTargetEntity();
             dfsVoomaTargetEntity.setTargetName(voomaAddTargetRequest.getTargetName());
             dfsVoomaTargetEntity.setTargetSource(voomaAddTargetRequest.getTargetSource());
-            dfsVoomaTargetEntity.getTargetType().ordinal();
+            dfsVoomaTargetEntity.setTargetType(voomaAddTargetRequest.getTargetType());
             dfsVoomaTargetEntity.setTargetDesc(voomaAddTargetRequest.getTargetDesc());
             dfsVoomaTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
             dfsVoomaTargetEntity.setTargetValue(voomaAddTargetRequest.getTargetValue());
             dfsVoomaTargetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
             dfsVoomaTargetRepository.save(dfsVoomaTargetEntity);
             return true;
+
+            //save
         } catch (Exception e) {
-            log.error("Error occurred while creating vooma target", e);
+            log.error("Error while adding new target", e);
         }
         return false;
     }

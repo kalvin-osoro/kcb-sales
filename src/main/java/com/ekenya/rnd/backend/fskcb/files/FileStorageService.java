@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.logging.Logger;
 @Service
 public class FileStorageService implements IFileStorageService {
-    public static String pathString = System.getProperty("user.dir") + "/src/main/webapp/imagedata";
+    //working directory folder called "uploads"
 
-    private final Path root = Paths.get(pathString);
+    public static String pathString ="/upload";
+    public static String uploadDirectory = System.getProperty("user.dir") + "/upload";
+    private final Path root = Paths.get(pathString);//
     private Logger log = Logger.getLogger(IFileStorageService.class.getName());
-    public static String uploadPath = System.getProperty("user.dir") + "/src/main/webapp/imagedata";
+    public static String uploadPath = "/upload";
 
 
     @Override
@@ -58,30 +60,39 @@ public class FileStorageService implements IFileStorageService {
         return null;
     }
 
-    @Override
-    public List<String> multipleFilesWithDifferentParams(MultipartFile file1, MultipartFile file2, MultipartFile file3) {
-        try {
-            saveFileWithSpecificFileName("file1.PNG", file1);
-            saveFileWithSpecificFileName("file2.PNG", file2);
-            saveFileWithSpecificFileName("file3.PNG", file3);
-        } catch (Exception e) {
-            log.info("Error in method " + e.getMessage());
-        }
-        return null;
-    }
+//    @Override
+//    public List<String> multipleFilesWithDifferentParams(MultipartFile file1, MultipartFile file2, MultipartFile file3) {
+//        try {
+//            saveFileWithSpecificFileName("file1.PNG", file1);
+//            saveFileWithSpecificFileName("file2.PNG", file2);
+//            saveFileWithSpecificFileName("file3.PNG", file3);
+//        } catch (Exception e) {
+//            log.info("Error in method " + e.getMessage());
+//        }
+//        return null;
+//    }
 
     @Override
-    public String saveFileWithSpecificFileName(String fileName, MultipartFile file) {
+    public String saveFileWithSpecificFileName(String fileName, MultipartFile file,String folderName) {
         try {
-            fileName = new File(pathString + fileName).getName();
-            file.transferTo(new File(fileName));
-            log.info("Path is " + fileName);
-            return fileName;
-        } catch (Exception e) {
-            log.info("Could not store the file. Error in saveFileWithSpecificFileName: "
-                    + e.getMessage());
-            return "";
+            File dir = new File(uploadDirectory);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File subDir = new File(uploadDirectory + "/" + folderName);
+            if (!subDir.exists()) {
+                subDir.mkdirs();
+            }
+            File serverFile = new File(subDir.getAbsolutePath() + "/" + fileName);
+            file.transferTo(serverFile);
+            return serverFile.getAbsolutePath();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
+
+
+
     }
 
     @Override

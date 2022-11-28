@@ -11,7 +11,9 @@ buildContainer:
 
 runUpdatedBuild:
   stage: deploy
-  image: codeyourinfra/myansible:latest
+  #image: codeyourinfra/myansible:latest
+  image: lusengeri/my-ansible:latest
   script:
     - ansible --version
     - ansible-playbook --version
+    - ansible-playbook test_env_playbook.yml -i 10.20.2.12, -u manzagi --private-key /id_rsa

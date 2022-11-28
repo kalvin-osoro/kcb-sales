@@ -18,7 +18,7 @@ import java.util.List;
 public class VoomaTargetsVC {
 
     @Autowired
-    IVoomaPortalService voomaService;
+    private IVoomaPortalService voomaService;
 
     @PostMapping("/vooma-create-target")
     public ResponseEntity<?> createVoomaTarget(@RequestBody DFSVoomaAddTargetRequest voomaAddTargetRequest) {

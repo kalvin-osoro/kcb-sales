@@ -8,7 +8,11 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadR
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -17,6 +21,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.geolatte.geom.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.WKTReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +34,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ekenya.rnd.backend.utils.Utility.isPointInPolygon;
 
 @Service
 @Slf4j
@@ -35,6 +46,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final FileStorageService fileStorageService;
     private final IAcquiringTargetsRepository acquiringTargetsRepository;
+    private final IDSRRegionsRepository dsrRegionsRepository;
 
     private final IAcquiringLeadsRepository acquiringLeadsRepository;
     private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
@@ -92,37 +104,38 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             //save merchant details
             AcquiringOnboardEntity merchDtls = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
             //documents upload
+            String folderName = "acquiringOnboarding";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + merchDtls.getId() + ".PNG", frontID);
+                    "frontID_" + merchDtls.getId() + ".PNG", frontID, folderName);
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + merchDtls.getId() + ".PNG", backID);
+                    "backID_" + merchDtls.getId() + ".PNG", backID, folderName);
 
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate);
+                    "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate, folderName);
 
             String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
-                    "certificateOFGoodConduct_" + merchDtls.getId() + ".PNG", certificateOFGoodConduct);
+                    "certificateOFGoodConduct_" + merchDtls.getId() + ".PNG", certificateOFGoodConduct, folderName);
 
             String businessLicensePath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessLicense_" + merchDtls.getId() + ".PNG", businessLicense);
+                    "businessLicense_" + merchDtls.getId() + ".PNG", businessLicense, folderName);
 
 
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + merchDtls.getId() + ".PNG", shopPhoto);
+                    "shopPhoto_" + merchDtls.getId() + ".PNG", shopPhoto, folderName);
 
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + merchDtls.getId() + ".PNG", customerPhoto);
+                    "customerPhoto_" + merchDtls.getId() + ".PNG", customerPhoto, folderName);
 
 
             String companyRegistrationDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "companyRegistrationDoc_" + merchDtls.getId() + ".PNG", companyRegistrationDoc);
+                    "companyRegistrationDoc_" + merchDtls.getId() + ".PNG", companyRegistrationDoc, folderName);
 
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc);
+                    "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc, folderName);
 
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc);
+                    "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc, folderName);
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
@@ -300,10 +313,52 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
     @Override
     public List<ObjectNode> getNearbyCustomers(AcquiringNearbyCustomersRequest model) {
-
+//        try {
+//            double longitude = model.getLongitude();
+//           double latitude = model.getLatitude();
+//            Coordinate coordinate = new Coordinate(longitude, latitude);
+//            List<ObjectNode> list = new ArrayList<>();
+//             ObjectMapper mapper = new ObjectMapper();
+//             for(DSRRegionEntity acquiringDSRRegionEntity : dsrRegionsRepository.findAll()){
+//                 ObjectNode asset = mapper.createObjectNode();
+//                 asset.put("id", acquiringDSRRegionEntity.getId());
+//                 asset.put("name", acquiringDSRRegionEntity.getName());
+//                    asset.put("bounds", acquiringDSRRegionEntity.getGeoJsonBounds());
+//                    //convert bounds to  coordinate
+//                    GeometryFactory geometryFactory = new GeometryFactory();
+//                    WKTReader reader = new WKTReader(geometryFactory);
+//                    Geometry geometry = reader.read(acquiringDSRRegionEntity.getGeoJsonBounds());
+//                 System.out.println("bounds: "+acquiringDSRRegionEntity.getGeoJsonBounds());
+//                 list.add(asset);
+//                 //check if login user latitute and longitude is inside any region bounds
+//                 if(isPointInPolygon(geometry.getCoordinate(),coordinate)){
+//                     System.out.println("inside a region");
+//                     //get all merchant in that region within 5km radius and get region name
+//                        for(AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.getNearbyCustomers(coordinate,acquiringDSRRegionEntity.getName())) {
+//                            ObjectNode asset1 = mapper.createObjectNode();
+//                            asset1.put("id", acquiringOnboardEntity.getId());
+//                            asset1.put("businessType", acquiringOnboardEntity.getBusinessType());
+//                            asset1.put("merchantName", acquiringOnboardEntity.getMerchantName());
+//                            asset1.put("merchantEmail", acquiringOnboardEntity.getMerchantEmail());
+//                            asset1.put("merchantPhone", acquiringOnboardEntity.getMerchantPhone());
+//                            asset1.put("merchantIdNumber", acquiringOnboardEntity.getMerchantIdNumber());
+//                            asset1.put("businessName", acquiringOnboardEntity.getBusinessName());
+//                            asset1.put("businessEmail", acquiringOnboardEntity.getBusinessEmail());
+//                            asset1.put("region", acquiringDSRRegionEntity.getName());
+//                            list.add(asset1);
+//                        }
+//                        return list;
+//                 }
+//                 return null;
+//             }
+//        } catch (Exception e) {
+//            log.error("Error occurred while getting nearby customers", e);
+//        }
 
         return null;
     }
+
+
 
     @Override
     public List<ObjectNode> getTargetsSummary() {
@@ -330,50 +385,56 @@ public class AcquiringChannelService implements IAcquiringChannelService {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllOnboardingTarget()) {
 
-                ObjectNode asset = mapper.createObjectNode();
-                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
-                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
-                list.add(asset);
+                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.VISITS)) {
+                    ObjectNode node = mapper.createObjectNode();
+                    ObjectNode visitsNode = mapper.createObjectNode();
+                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                    node.put("target", acquiringTargetEntity.getTargetValue());
+                    visitsNode.set("visits", node);
+                    list.add(visitsNode);
+                }
+                //targetType =Leads
+                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.LEADS)) {
+                    ObjectNode node = mapper.createObjectNode();
+                    ObjectNode leadsNode = mapper.createObjectNode();
+                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                    node.put("target", acquiringTargetEntity.getTargetValue());
+                    leadsNode.set("leads", node);
+                    list.add(leadsNode);
+                }
+                //targetType =CAMPAIGNS
+                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.CAMPAINGS)) {
+                    ObjectNode node = mapper.createObjectNode();
+                    ObjectNode campaignsNode = mapper.createObjectNode();
+                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                    node.put("target", acquiringTargetEntity.getTargetValue());
+                    campaignsNode.set("campaigns", node);
+                    list.add(campaignsNode);
+                }
+                //targetType =ONBOARDING
+                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.ONBOARDING)) {
+                    ObjectNode node = mapper.createObjectNode();
+                    ObjectNode onboardingNode = mapper.createObjectNode();
+                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                    node.put("target", acquiringTargetEntity.getTargetValue());
+                    onboardingNode.set("onboarding", node);
+                    list.add(onboardingNode);
+                }
+                //add to the list hard coded values for commission
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode commissionNode = mapper.createObjectNode();
+                node.put("current-commission", 0);
+                node.put("previous-commision", 0);
+                commissionNode.set("commission", node);
+                list.add(commissionNode);
+                return list;
+            } catch (Exception e) {
+                log.error("Error occurred while loading questionnaires", e);
             }
-            //targetValue and targetAchieved for Target type is VISITS
-            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllVisitsTarget()) {
-
-                ObjectNode asset = mapper.createObjectNode();
-                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
-                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
-                list.add(asset);
-            }
-            //targetValue and targetAchieved for Target type is LEADS
-            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllLeadsTarget()) {
-
-                ObjectNode asset = mapper.createObjectNode();
-                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
-                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
-                list.add(asset);
-            }
-            //targetValue and targetAchieved for Target type is CAMPAIGNS
-            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.fetchAllCampaignsTarget()) {
-
-                ObjectNode asset = mapper.createObjectNode();
-                asset.put("targetValue", acquiringTargetEntity.getTargetValue());
-                asset.put("targetAchieved", acquiringTargetEntity.getTargetAchievement());
-                list.add(asset);
-            }
-            //current commission  hard coded for now
-            ObjectNode asset = mapper.createObjectNode();
-            asset.put("cur-comission", 56000);
-            asset.put("prev-comission", 45000);
-            list.add(asset);
-
-            return list;
-
-        } catch (Exception e) {
-            log.error("Error occurred while getting targets summary", e);
+            return null;
         }
-        return null;
-    }
+
 
     @Override
     public boolean createCustomerVisit(AcquiringCustomerVisitsRequest model) {

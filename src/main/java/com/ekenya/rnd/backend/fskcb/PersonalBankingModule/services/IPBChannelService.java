@@ -1,6 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsBYDSRRequest;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBDSROnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.payload.PersonalAccountTypeRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -26,6 +28,9 @@ public interface IPBChannelService {
     boolean createLead(PBAddLeadRequest request);
 
     List<ObjectNode> getAllLeadsByDsrId(PBAddLeadRequest model);
+    boolean createCustomerVisit(PBCustomerVisitsRequest model);
+
+    List<ObjectNode> getAllCustomerVisitsByDSR(PBCustomerVisitsBYDSRRequest model);
 
 
 //    ResponseEntity<?> getAllAccountTypes();

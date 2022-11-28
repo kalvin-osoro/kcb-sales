@@ -74,8 +74,6 @@ public class SpringBootKcbRestApiApplication   {
 
 	public static void main(String[] args) {
 		//
-		new File(FileStorageService.uploadPath).mkdir();
-		//
 		prepareLogger();
 		//
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);

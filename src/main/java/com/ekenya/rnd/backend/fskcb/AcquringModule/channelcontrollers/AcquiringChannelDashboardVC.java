@@ -51,6 +51,8 @@ public class AcquiringChannelDashboardVC {
 
     @PostMapping("/acquiring-get-nearby-customers")
     public ResponseEntity<?> getNearbyCustomers(@RequestBody AcquiringNearbyCustomersRequest request) {
+        List<?> customers = acquiringService.getNearbyCustomers(request);
+        boolean success = customers != null;
 
         //Resp =>
         //{
@@ -76,9 +78,6 @@ public class AcquiringChannelDashboardVC {
         //        }]
         //    }
         //}
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
