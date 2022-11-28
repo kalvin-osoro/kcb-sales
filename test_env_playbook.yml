@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  tasks:
+    - name: start new version of container
+      ansible.builtin.shell: |
+        docker-compose up -d
+      args:
+        chdir: /home/manzagi/kcb-ses-poc
