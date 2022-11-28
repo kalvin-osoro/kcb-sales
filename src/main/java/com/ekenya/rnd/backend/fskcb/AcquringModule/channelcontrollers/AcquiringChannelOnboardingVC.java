@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringCustomerOnboardingRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -34,7 +35,7 @@ public class AcquiringChannelOnboardingVC {
                                                 @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
                                                 @RequestParam("signatureDoc") MultipartFile signatureDoc,
                                                 @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
-        Object merchantObject= acquiringChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,certificateOFGoodConduct,businessLicense,shopPhoto,customerPhoto,companyRegistrationDoc,signatureDoc,businessPermitDoc);
+        Object merchantObject= acquiringChannelService.onboardNewMerchant(merchDetails, frontID,backID,kraPinCertificate,certificateOFGoodConduct,businessLicense,shopPhoto,customerPhoto,companyRegistrationDoc,signatureDoc,businessPermitDoc);
         boolean success = merchantObject!=null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

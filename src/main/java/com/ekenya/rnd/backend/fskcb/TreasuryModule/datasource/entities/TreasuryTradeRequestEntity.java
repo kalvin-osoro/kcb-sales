@@ -28,12 +28,22 @@ public class TreasuryTradeRequestEntity {
     private Double amount;
     private String currency;
     @Enumerated(EnumType.STRING)
-    private TreasuryPriority priority;  //enum
+    private TreasuryPriority treasuryPriority;  //enum
     private String salesCode;
     @Enumerated(EnumType.STRING)
     private TreasuryStatus status;  //enum
     private String dateBooked;
+    private Long dsrId;
     private String remarks;
     private Date createdOn;
     private boolean isApproved=false;
+    private String methodOfTransaction;
+    private String branchName;
+    private String natureOfTheBusiness;
+    private String customerSegment;
+    private String monthlyTurnover;
+    private String dealingFrequency;
+    private String period;
+    @Enumerated(EnumType.STRING)
+    private CustomerType customerType;
 }

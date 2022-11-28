@@ -50,7 +50,7 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 node.put("customerID", treasuryTradeRequestEntity.getCustomerID());
                 node.put("Amount", treasuryTradeRequestEntity.getAmount());
                 node.put("currency", treasuryTradeRequestEntity.getCurrency());
-                node.put("priority", treasuryTradeRequestEntity.getPriority().toString());
+                node.put("priority", treasuryTradeRequestEntity.getTreasuryPriority().ordinal());
                 node.put("salesCode", treasuryTradeRequestEntity.getSalesCode());
                 node.put("status", treasuryTradeRequestEntity.getStatus().toString());
                 node.put("dateBooked", treasuryTradeRequestEntity.getDateBooked());

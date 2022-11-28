@@ -5,43 +5,42 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+
 public interface ITreasuryChannelService {
 
-    ObjectNode targetsSummary();
 
     boolean attemptCreateLead(TreasuryAddLeadRequest model);
 
-    ArrayNode loadDSRLeads(String dsrId);
+    List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model);
+
+    ArrayNode getForexRates();
 
     ArrayNode loadForexCounterRates();
 
-    ArrayNode loadForexNegotiatedRates();
-
     boolean attemptCreateTradeRequest(TreasuryTradeRequest model);
 
-    ArrayNode loadDSRTradeRequests();
+    List<ObjectNode> loadAllDSRTradeReqs(TreasuryGetDSRTradeRequest model);
 
-
-    boolean attemptCreateNegotiationRequest(TreasuryNegRequest model);
-
+    boolean attemptCreateNegotiationRequest(TreasuryNegRequest request);
 
     ArrayNode loadDSRNegotiationRequests();
 
+    ObjectNode targetsSummary();
 
-    ObjectNode searchCustomer(String searchQuery);
+    boolean attemptScheduleCustomerVisit(TreasuryCustomerVisitsRequest request);
 
-    ObjectNode getNearbyCustomers(AcquiringNearbyCustomersRequest model);
-
-    ObjectNode loadSummary();
-
-    boolean attemptScheduleCustomerVisit(TreasuryCustomerVisitsRequest model);
-
-    boolean attemptRescheduleCustomerVisit(TreasuryCustomerVisitsRequest model);
-
+    boolean attemptRescheduleCustomerVisit(TreasuryCustomerVisitsRequest request);
 
     ArrayNode loadCustomerVisits();
 
+    ArrayNode loadCustomerVisitQuestionnaireResponses(TreasuryCustomerCallReportRequest request);
 
-    ArrayNode loadCustomerVisitQuestionnaireResponses(TreasuryCustomerVisitQuestionnaireRequest model);
+    ObjectNode searchCustomer(String query);
 
+    ObjectNode getNearbyCustomers(AcquiringNearbyCustomersRequest request);
+
+    ObjectNode loadSummary();
+
+    boolean createCallReport(TreasuryCustomerCallReportRequest model);
 }

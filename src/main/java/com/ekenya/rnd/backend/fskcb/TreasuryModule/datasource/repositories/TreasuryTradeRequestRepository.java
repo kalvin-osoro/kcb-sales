@@ -19,4 +19,9 @@ public interface TreasuryTradeRequestRepository extends JpaRepository<TreasuryTr
     int countAllRequestsCreatedLast7DaysMedium();
 @Query(value = "SELECT count(*) FROM dbo_treasury_trade_request where created_on >= current_date at time zone 'UTC' - interval '7 days' AND priority = 'LOW'", nativeQuery = true)
     int countAllRequestsCreatedLast7DaysLow();
+
+    @Query(value = "SELECT * FROM dbo_treasury_trade_request where dsr_id = ?1", nativeQuery = true)
+    TreasuryTradeRequestEntity[] findAllByDsrId(Long dsrId);
+
+
 }

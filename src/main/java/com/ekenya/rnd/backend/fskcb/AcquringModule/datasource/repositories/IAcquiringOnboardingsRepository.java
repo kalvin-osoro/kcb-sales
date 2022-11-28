@@ -17,6 +17,6 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
     @Query(value = "SELECT * FROM dbo_aqc_onboardings WHERE MATCH(merchant_name, business_name, nearly_land_mark) "
             + "AGAINST (?1)", nativeQuery = true)
     AcquiringOnboardEntity[] searchCustomers(String keyword);
-//    @Query(value = "SELECT * FROM dbo_aqc_onboardings WHERE ST_DWithin(geom, ST_GeomFromText('POINT(?1 ?2)', 4326), ?3)", nativeQuery = true)
-//    AcquiringOnboardEntity[] getNearbyCustomers(Coordinate coordinate, String name);
+    //find all customers within a region name
+//    AcquiringOnboardEntity[] findAllMechart(String name);
 }

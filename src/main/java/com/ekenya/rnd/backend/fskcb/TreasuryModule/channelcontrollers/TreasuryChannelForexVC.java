@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryNegRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class TreasuryChannelForexVC {
@@ -24,16 +27,17 @@ public class TreasuryChannelForexVC {
     @PostMapping("/treasury-get-forex-rates")
     public ResponseEntity<?> getForexCounterRates() {
 
-        ArrayNode forexList = channelService.loadForexCounterRates();
+        ArrayNode rates = channelService.getForexRates();
+
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(forexList != null){
+        if(rates != null){
             //Object
             //ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,forexList,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,rates,"Request Processed Successfully"));
         }else{
 
             //Response
@@ -61,11 +65,11 @@ public class TreasuryChannelForexVC {
     }
 
     @PostMapping("/treasury-create-trade-req")
-    public ResponseEntity<?> createTradeReq(@RequestBody TreasuryTradeRequest request) {
+    public ResponseEntity<?> createTradeReq(@RequestBody TreasuryTradeRequest model) {
 
 
         //TODO; INSIDE SERVICE
-        boolean success = channelService.attemptCreateTradeRequest(request);
+        boolean success = channelService.attemptCreateTradeRequest(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -82,20 +86,18 @@ public class TreasuryChannelForexVC {
         }
     }
     @PostMapping(value = "/treasury-get-all-trade-reqs")
-    public ResponseEntity<?> getAllDSRTradeReqs(@RequestBody String dsrId) {
-
-
-        //TODO; INSIDE SERVICE
-        ArrayNode list = channelService.loadDSRLeads(dsrId);
-
+    public ResponseEntity<?> getAllDSRTradeReqs(@RequestBody TreasuryGetDSRTradeRequest model) {
+        List<?> tradeReqs = channelService.loadAllDSRTradeReqs(model);
+        boolean success = tradeReqs != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (list != null) {
+        if (success) {
             //Object
-            //ArrayNode node = objectMapper.createArrayNode();
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)tradeReqs);
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1, list, "Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {
 
             //Response
