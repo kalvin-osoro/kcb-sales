@@ -18,7 +18,7 @@ import java.util.List;
 public class AcquiringTargetsVC {
 
     @Autowired
-    IAcquiringPortalService acquiringService;
+    private IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-create-target")
     public ResponseEntity<?> createAcquiringTarget(@RequestBody AcquiringAddTargetRequest acquiringAddTargetRequest) {
@@ -41,7 +41,7 @@ public class AcquiringTargetsVC {
     @PostMapping(value = "/acquiring-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
         List<?> acquiringTargetsResponse = acquiringService.loadTargets();
-        boolean success = acquiringTargetsResponse == null;// acquiringTargetsResponse.size() > 0;
+        boolean success = acquiringTargetsResponse != null;// acquiringTargetsResponse.size() > 0;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

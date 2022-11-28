@@ -15,8 +15,6 @@ import ch.qos.logback.core.util.FileSize;
 import ch.qos.logback.core.util.StatusPrinter;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
-import com.ekenya.rnd.backend.fskcb.uploaFileUtil.IUploadFileUtile;
-import com.ekenya.rnd.backend.fskcb.uploaFileUtil.UploadfileUtilServe;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

@@ -11,6 +11,6 @@ public class AcquiringNearbyCustomersRequest {
 
     private double latitude;
     private double longitude;
-//    private double zoom;
+    private double zoom;
     private double radius;
 }

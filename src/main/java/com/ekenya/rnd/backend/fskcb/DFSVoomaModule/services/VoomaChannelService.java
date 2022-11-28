@@ -1,48 +1,26 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringCustomerVisitEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardingKYCentity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.entity.*;
-import com.ekenya.rnd.backend.fskcb.payload.*;
-import com.ekenya.rnd.backend.fskcb.uploaFileUtil.IUploadFileUtile;
-import com.ekenya.rnd.backend.fskcb.uploaFileUtil.UploadfileUtilServe;
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
-
-import static com.ekenya.rnd.backend.utils.Utility.generateSubDirectory;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class VoomaChannelService implements IVoomaChannelService {
-    private final UploadfileUtilServe uploadfileUtilServe;
 
     private  final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     private  final DFSVoomaLeadRepository dfsVoomaLeadRepository;
@@ -52,6 +30,8 @@ public class VoomaChannelService implements IVoomaChannelService {
     private final DFSVoomaAgentOnboardingRepository dfsVoomaAgentOnboardingRepositor;
     private final DFSVoomaAgentOnboardingKYCRepository dfsVoomaAgentOnboardingKYCRepository;
     private final DFSVoomaAssetRepository dfsVoomaAssetRepository;
+    
+    private final FileStorageService fileStorageService;
 
     private final int totalTransaction = (int) (Math.random() * 1000000);
 
@@ -195,38 +175,39 @@ public class VoomaChannelService implements IVoomaChannelService {
             //save merchant details
             DFSVoomaOnboardEntity merchDtls = dfsVoomaOnboardRepository.save(dfsVoomaOnboardEntity);
             //subdirectory name generateSubDirectory
-            String subFolderName = "voomaOnboardMerchant";
+            String subFolderName = "voomaOnboardingMerchant";
 
-            String frontIDPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+
+            String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
                     "frontID_" + merchDtls.getId() + ".PNG", frontID,subFolderName);
 
-            String backIDPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String backIDPath = fileStorageService.saveFileWithSpecificFileName(
                     "backID_" + merchDtls.getId() + ".PNG", backID,subFolderName);
 
-            String kraPinCertificatePath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
                     "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate,subFolderName);
 
-            String certificateOFGoodConductPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
                     "certificateOFGoodConduct_" + merchDtls.getId() + ".PNG", certificateOFGoodConduct,subFolderName);
 
-            String businessLicensePath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String businessLicensePath = fileStorageService.saveFileWithSpecificFileName(
                     "businessLicense_" + merchDtls.getId() + ".PNG", businessLicense,subFolderName);
 
 
-            String shopPhotoPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
                     "shopPhoto_" + merchDtls.getId() + ".PNG", shopPhoto,subFolderName);
 
-            String customerPhotoPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
                     "customerPhoto_" + merchDtls.getId() + ".PNG", customerPhoto,subFolderName);
 
 
-            String companyRegistrationDocPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String companyRegistrationDocPath = fileStorageService.saveFileWithSpecificFileName(
                     "companyRegistrationDoc_" + merchDtls.getId() + ".PNG", companyRegistrationDoc,subFolderName);
 
-            String signatureDocPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
                     "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc,subFolderName);
 
-            String businessPermitDocPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
                     "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc,subFolderName);
             //save paths to db
             ArrayList<String> filePathList = new ArrayList<>();
@@ -298,19 +279,19 @@ public class VoomaChannelService implements IVoomaChannelService {
             DFSVoomaAgentOnboardingEntity agentData = dfsVoomaAgentOnboardingRepositor.save(dfsVoomaAgentOnboardEntity);
             //save files to server
             String subFolderName = "voomaAgentOnboarding";
-            String frontIDPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
                     "frontID_" + agentData.getId() + ".PNG", frontID,subFolderName);
-            String backIDPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String backIDPath = fileStorageService.saveFileWithSpecificFileName(
                     "backID_" + agentData.getId() + ".PNG", backID,subFolderName);
-            String kraPinCertificatePath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
                     "kraPinCertificate_" + agentData.getId() + ".PNG", kraPinCertificate,subFolderName);
-            String businessCertificateOfRegistrationPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String businessCertificateOfRegistrationPath = fileStorageService.saveFileWithSpecificFileName(
                     "businessCertificateOfRegistration_" + agentData.getId() + ".PNG", businessCertificateOfRegistration,subFolderName);
-            String shopPhotoPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
                     "shopPhoto_" + agentData.getId() + ".PNG", shopPhoto,subFolderName);
-            String signatureDocPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
                     "signatureDoc_" + agentData.getId() + ".PNG", signatureDoc,subFolderName);
-            String businessPermitDocPath = uploadfileUtilServe.saveFileWithSpecificFileName1(
+            String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
                     "businessPermitDoc_" + agentData.getId() + ".PNG", businessPermitDoc,subFolderName);
             //save file paths to db
             ArrayList<String> filePathList = new ArrayList<>();

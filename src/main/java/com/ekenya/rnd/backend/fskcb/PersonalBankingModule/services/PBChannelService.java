@@ -106,19 +106,21 @@ public class PBChannelService implements IPBChannelService {
             PSBankingOnboardingEntity savedCustomerDetails = psBankingOnboardingRepossitory.save(psBankingOnboardingEntity);
             if (savedCustomerDetails == null) throw new RuntimeException("Failed to save customer details");
             //save file
+//            String folderName = "customerDetails" + File.separator + savedCustomerDetails.getId();
+            String folderName = "personalBanking";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + savedCustomerDetails.getId() + ".PNG", frontID);
+                    "frontID_" + savedCustomerDetails.getId() + ".PNG", frontID, folderName);
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID);
+                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID, folderName);
             String kraPath = fileStorageService.saveFileWithSpecificFileName(
-                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin);
+                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin, folderName);
             String signaturePath = fileStorageService.saveFileWithSpecificFileName(
-                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature);
+                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature, folderName);
             String crbReportPath = fileStorageService.saveFileWithSpecificFileName(
-                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport);
+                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport, folderName);
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto);
+                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto, folderName);
 
             //save file path
             ArrayList<String> filePathList = new ArrayList<>();

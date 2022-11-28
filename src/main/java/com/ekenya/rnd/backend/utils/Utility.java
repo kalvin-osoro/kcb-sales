@@ -1,12 +1,9 @@
 package com.ekenya.rnd.backend.utils;
 
 
-import com.ekenya.rnd.backend.fskcb.uploaFileUtil.IUploadFileUtile;
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.LinearRing;
-import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,9 +89,9 @@ return new Date();
     }
 
     //fuction to check weather a point is inside a polygon or not
-    public static boolean isPointInPolygon(Coordinate[] coordinates, Coordinate point) {
+    public static boolean isPointInPolygon(Coordinate coordinates, Coordinate point) {
         GeometryFactory geometryFactory = new GeometryFactory();//create a geometry factory
-        LinearRing linearRing = geometryFactory.createLinearRing(coordinates);//create a linear ring
+        LinearRing linearRing = geometryFactory.createLinearRing((CoordinateSequence) coordinates);//create a linear ring
         Polygon polygon = geometryFactory.createPolygon(linearRing, null);//create a polygon
         return polygon.contains(geometryFactory.createPoint(point));//
     }
@@ -126,7 +123,7 @@ return new Date();
     }
     //generateSubDirectory("onboard");
     public static String generateSubDirectory(String directory) {
-        String subDirectory = IUploadFileUtile.uploadDirectory + "/" + RandomStringUtils.random(10, true, true);
+        String subDirectory = FileStorageService.uploadDirectory + "/" + RandomStringUtils.random(10, true, true);
         return subDirectory;
     }
 

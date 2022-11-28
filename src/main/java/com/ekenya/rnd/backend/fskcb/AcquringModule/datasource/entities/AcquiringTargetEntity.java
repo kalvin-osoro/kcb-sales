@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,7 @@ public class AcquiringTargetEntity {
     private Date startDate;
     private String endDate;
     @Enumerated(EnumType.STRING)
-    private AquiringTargetType acquiringTargetType;
+    private TargetType targetType;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;

@@ -10,7 +10,7 @@ public interface IFileStorageService {
 
     List<String>multipleFiles(MultipartFile[] files);
     public Resource load(String filename);
-    List<String>multipleFilesWithDifferentParams(MultipartFile file1, MultipartFile file2, MultipartFile file3);
-    String saveFileWithSpecificFileName(String fileName, MultipartFile file);
+//    List<String>multipleFilesWithDifferentParams(MultipartFile file1, MultipartFile file2, MultipartFile file3);
+    String saveFileWithSpecificFileName(String fileName, MultipartFile file,String folderName);
     List<String>saveMultipleFileWithSpecificFileName(String module, MultipartFile[] files);
 }

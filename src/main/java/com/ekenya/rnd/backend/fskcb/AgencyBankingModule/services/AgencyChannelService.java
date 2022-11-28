@@ -258,40 +258,41 @@ public class AgencyChannelService implements IAgencyChannelService {
             AgencyOnboardingEntity agentInfo = agencyOnboardingRepository.save(agencyOnboardingEntity);
 
             //upload documents
+            String folderName = "onboarding_" + agentInfo.getId();
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + agentInfo.getId() + ".PNG", frontID);
+                    "frontID_" + agentInfo.getId() + ".PNG", frontID,folderName );
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + agentInfo.getId() + ".PNG", backID);
+                    "backID_" + agentInfo.getId() + ".PNG", backID,folderName );
 
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + agentInfo.getId() + ".PNG", kraPinCertificate);
+                    "kraPinCertificate_" + agentInfo.getId() + ".PNG", kraPinCertificate,folderName );
             String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
-                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct);
+                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct,folderName );
             String businessLicensePath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessLicense_" + agentInfo.getId() + ".PNG", businessLicense);
+                    "businessLicense_" + agentInfo.getId() + ".PNG", businessLicense,folderName );
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto);
+                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto,folderName );
             String financialStatementPath = fileStorageService.saveFileWithSpecificFileName(
-                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement);
+                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement,folderName );
             String cvPath = fileStorageService.saveFileWithSpecificFileName(
-                    "cv_" + agentInfo.getId() + ".PNG", cv);
+                    "cv_" + agentInfo.getId() + ".PNG", cv,folderName );
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto);
+                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto,folderName );
             String companyRegistrationDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "companyRegistrationDoc_" + agentInfo.getId() + ".PNG", companyRegistrationDoc);
+                    "companyRegistrationDoc_" + agentInfo.getId() + ".PNG", companyRegistrationDoc,folderName );
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDoc_" + agentInfo.getId() + ".PNG", signatureDoc);
+                    "signatureDoc_" + agentInfo.getId() + ".PNG", signatureDoc,folderName );
             String passportPhoto1Path = fileStorageService.saveFileWithSpecificFileName(
-                    "passportPhoto1_" + agentInfo.getId() + ".PNG", passportPhoto1);
+                    "passportPhoto1_" + agentInfo.getId() + ".PNG", passportPhoto1,folderName );
             String passportPhoto2Path = fileStorageService.saveFileWithSpecificFileName(
-                    "passportPhoto2_" + agentInfo.getId() + ".PNG", passportPhoto2);
+                    "passportPhoto2_" + agentInfo.getId() + ".PNG", passportPhoto2,folderName );
             String acceptanceLetterPath = fileStorageService.saveFileWithSpecificFileName(
-                    "acceptanceLetter_" + agentInfo.getId() + ".PNG", acceptanceLetter);
+                    "acceptanceLetter_" + agentInfo.getId() + ".PNG", acceptanceLetter,folderName );
             String crbReportPath = fileStorageService.saveFileWithSpecificFileName(
-                    "crbReport_" + agentInfo.getId() + ".PNG", crbReport);
+                    "crbReport_" + agentInfo.getId() + ".PNG", crbReport,folderName );
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + agentInfo.getId() + ".PNG", businessPermitDoc);
+                    "businessPermitDoc_" + agentInfo.getId() + ".PNG", businessPermitDoc,folderName );
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
@@ -380,12 +381,13 @@ public class AgencyChannelService implements IAgencyChannelService {
             //save
             AgencyBankingVisitEntity visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
             //uplaod files
+            String folderName = "agencyBankingVisit_" + visitInfo.getId();
             String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto);
+                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto,folderName );
             String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto);
+                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto,folderName );
             String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto);
+                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,folderName );
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(premiseInsidePhotoPath);

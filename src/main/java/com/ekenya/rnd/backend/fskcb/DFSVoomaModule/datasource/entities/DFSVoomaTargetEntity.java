@@ -4,6 +4,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetSta
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "dfs_vooma_targets")
+@DynamicUpdate
+@DynamicInsert
 public class DFSVoomaTargetEntity {
     @Id
     @GeneratedValue(
