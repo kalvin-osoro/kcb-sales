@@ -7,15 +7,20 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringPrincipalInfoRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
@@ -32,6 +37,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,17 +56,16 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     private final IDSRRegionsRepository dsrRegionsRepository;
 
     private final IAcquiringLeadsRepository acquiringLeadsRepository;
+    private final AcquiringPrincipalInfoRepository acquiringPrincipalInfoRepository;
     private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
 
     private final int totalTransactions = Utility.generateRandomNumber(1000, 100000);
-
 
 
     @Override
     public JsonObject findCustomerByAccNo(String accNo) {
         return null;
     }
-
 
 
     @Override
@@ -244,7 +250,6 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
 
-
     @Override
     public List<ObjectNode> getTargetsSummary() {
         //{
@@ -271,60 +276,60 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
 
-                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.VISITS)) {
-                    ObjectNode node = mapper.createObjectNode();
-                    ObjectNode visitsNode = mapper.createObjectNode();
-                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
-                    node.put("target", acquiringTargetEntity.getTargetValue());
-                    visitsNode.set("visits", node);
-                    list.add(visitsNode);
-                }
-                //targetType =Leads
-                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.LEADS)) {
-                    ObjectNode node = mapper.createObjectNode();
-                    ObjectNode leadsNode = mapper.createObjectNode();
-                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
-                    node.put("target", acquiringTargetEntity.getTargetValue());
-                    leadsNode.set("leads", node);
-                    list.add(leadsNode);
-                }
-                //targetType =CAMPAIGNS
-                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.CAMPAINGS)) {
-                    ObjectNode node = mapper.createObjectNode();
-                    ObjectNode campaignsNode = mapper.createObjectNode();
-                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
-                    node.put("target", acquiringTargetEntity.getTargetValue());
-                    campaignsNode.set("campaigns", node);
-                    list.add(campaignsNode);
-                }
-                //targetType =ONBOARDING
-                for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.ONBOARDING)) {
-                    ObjectNode node = mapper.createObjectNode();
-                    ObjectNode onboardingNode = mapper.createObjectNode();
-                    node.put("achieved", acquiringTargetEntity.getTargetAchievement());
-                    node.put("target", acquiringTargetEntity.getTargetValue());
-                    onboardingNode.set("onboarding", node);
-                    list.add(onboardingNode);
-                }
-                //add to the list hard coded values for commission
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.VISITS)) {
                 ObjectNode node = mapper.createObjectNode();
-                ObjectNode commissionNode = mapper.createObjectNode();
-                node.put("current-commission", 0);
-                node.put("previous-commision", 0);
-                commissionNode.set("commission", node);
-                list.add(commissionNode);
-                return list;
-            } catch (Exception e) {
-                log.error("Error occurred while loading questionnaires", e);
+                ObjectNode visitsNode = mapper.createObjectNode();
+                node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                node.put("target", acquiringTargetEntity.getTargetValue());
+                visitsNode.set("visits", node);
+                list.add(visitsNode);
             }
-            return null;
+            //targetType =Leads
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.LEADS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode leadsNode = mapper.createObjectNode();
+                node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                node.put("target", acquiringTargetEntity.getTargetValue());
+                leadsNode.set("leads", node);
+                list.add(leadsNode);
+            }
+            //targetType =CAMPAIGNS
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.CAMPAINGS)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode campaignsNode = mapper.createObjectNode();
+                node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                node.put("target", acquiringTargetEntity.getTargetValue());
+                campaignsNode.set("campaigns", node);
+                list.add(campaignsNode);
+            }
+            //targetType =ONBOARDING
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.ONBOARDING)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode onboardingNode = mapper.createObjectNode();
+                node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                node.put("target", acquiringTargetEntity.getTargetValue());
+                onboardingNode.set("onboarding", node);
+                list.add(onboardingNode);
+            }
+            //add to the list hard coded values for commission
+            ObjectNode node = mapper.createObjectNode();
+            ObjectNode commissionNode = mapper.createObjectNode();
+            node.put("current-commission", 0);
+            node.put("previous-commision", 0);
+            commissionNode.set("commission", node);
+            list.add(commissionNode);
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
         }
+        return null;
+    }
 
 
     @Override
     public boolean createCustomerVisit(AcquiringCustomerVisitsRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return false;
             }
             AcquiringCustomerVisitEntity acquiringCustomerVisitsEntity = new AcquiringCustomerVisitEntity();
@@ -378,11 +383,11 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     public boolean assignAssetToMerchant(Long assetId, Long agentId) {
         //assign asset to merchant
         try {
-            if (assetId==null || agentId==null){
+            if (assetId == null || agentId == null) {
                 return false;
             }
             AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(assetId).get();
-            if (acquiringAssetEntity==null){
+            if (acquiringAssetEntity == null) {
                 return false;
             }
             acquiringAssetEntity.setAgentId(agentId);
@@ -403,9 +408,9 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringAssetEntity.getId());
-              asset.put("SerialNumber", acquiringAssetEntity.getSerialNumber());
-              asset.put("condition", acquiringAssetEntity.getAssetCondition().ordinal());
-              //hard code total transactions for now
+                asset.put("SerialNumber", acquiringAssetEntity.getSerialNumber());
+                asset.put("condition", acquiringAssetEntity.getAssetCondition().ordinal());
+                //hard code total transactions for now
                 asset.put("totalTransactions", totalTransactions);
                 list.add(asset);
             }
@@ -418,7 +423,61 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
     @Override
-    public Object onboardNewMerchant(String merchDetails, MultipartFile signatureDoc, MultipartFile signatureDoc1) {
+    public Object onboardNewMerchant(String merchDetails, MultipartFile[] signatureDoc) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringOnboardRequest acquiringOnboardRequest = mapper.readValue(
+                    merchDetails, AcquiringOnboardRequest.class);
+            if (acquiringOnboardRequest == null) throw new RuntimeException("Bad request");
+            AcquiringOnboardEntity acquiringOnboardEntity = new AcquiringOnboardEntity();
+            acquiringOnboardEntity.setBusinessName(acquiringOnboardRequest.getBusinessName());
+            acquiringOnboardEntity.setClientLegalName(acquiringOnboardRequest.getClientLegalName());
+            acquiringOnboardEntity.setBusinessPhoneNumber(acquiringOnboardRequest.getBusinessPhoneNumber());
+            acquiringOnboardEntity.setBusinessEmail(acquiringOnboardRequest.getBusinessEmail());
+            acquiringOnboardEntity.setBusinessWebsite(acquiringOnboardRequest.getBusinessWebsite());
+            acquiringOnboardEntity.setOutletContactPerson(acquiringOnboardRequest.getOutletContactPerson());
+            acquiringOnboardEntity.setOutletPhone(acquiringOnboardRequest.getOutletPhone());
+            acquiringOnboardEntity.setNumberOfOutlet(acquiringOnboardRequest.getNumberOfOutlet());
+            acquiringOnboardEntity.setTypeOfGoodAndServices(acquiringOnboardRequest.getTypeOfGoodAndServices());
+            //save acquiringOnboardEntity
+            AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
+            acquiringOnboardEntity.setBankName(acquiringOnboardRequest.getBankName());
+            acquiringOnboardEntity.setAccountName(acquiringOnboardRequest.getAccountName());
+            acquiringOnboardEntity.setAccountNumber(acquiringOnboardRequest.getAccountNumber());
+            acquiringOnboardEntity.setBranchName(acquiringOnboardRequest.getBranchName());
+            acquiringOnboardEntity.setFeesAndCommission(acquiringOnboardRequest.getFeesAndCommission());
+            List<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities = new ArrayList<>();
+            for (AcquiringPrincipalInfoEntity acquiringPrincipalInfoRequest : acquiringOnboardRequest.getAcquiringPrincipalInfoEntities()) {
+                AcquiringPrincipalInfoEntity acquiringPrincipalInfoEntity = new AcquiringPrincipalInfoEntity();
+                acquiringPrincipalInfoEntity.setNameOfDirectorOrPrincipalOrPartner(acquiringPrincipalInfoRequest.getNameOfDirectorOrPrincipalOrPartner());
+                acquiringPrincipalInfoEntity.setDirectorOrPrincipalOrPartnerPhoneNumber(acquiringPrincipalInfoRequest.getDirectorOrPrincipalOrPartnerPhoneNumber());
+                acquiringPrincipalInfoEntity.setDirectorOrPrincipalOrPartnerEmail(acquiringPrincipalInfoRequest.getDirectorOrPrincipalOrPartnerEmail());
+                //add to list
+                acquiringPrincipalInfoEntities.add(acquiringPrincipalInfoEntity);
+                acquiringPrincipalInfoRepository.save(acquiringPrincipalInfoEntity);
+
+            }
+            //allow several signatures to be uploaded to uploadDir
+            for (MultipartFile file : signatureDoc) {
+                if (file.isEmpty()) {
+                    return "Please no signature uploaded";
+                }
+                String fileName = file.getOriginalFilename();
+                String filePath = FileStorageService.uploadDirectory + File.separator + fileName;
+                File dest = new File(filePath);
+                file.transferTo(dest);
+                AcquiringOnboardingKYCentity acquiringSignatureEntity = new AcquiringOnboardingKYCentity();
+                acquiringSignatureEntity.setFilePath(filePath);
+                acquiringSignatureEntity.setAcquiringOnboardEntity(acquiringOnboard);
+                acquiringOnboardingKYCRepository.save(acquiringSignatureEntity);
+                return null;
+
+
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while onboarding new merchant", e);
+        }
         return null;
     }
 }
+

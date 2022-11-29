@@ -26,11 +26,10 @@ public class AcquiringChannelOnboardingVC {
     @PostMapping("/acquiring-onboard-customer")
     public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
 
-                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
-                                                @RequestParam("signatureDoc1") MultipartFile signatureDoc1)
+                                                @RequestParam("signatureDoc") MultipartFile[] signatureDoc)
 
                                                  {
-        Object merchantObject= acquiringChannelService.onboardNewMerchant(merchDetails,signatureDoc,signatureDoc1 );
+        Object merchantObject= acquiringChannelService.onboardNewMerchant(merchDetails,signatureDoc );
         boolean success = merchantObject!=null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

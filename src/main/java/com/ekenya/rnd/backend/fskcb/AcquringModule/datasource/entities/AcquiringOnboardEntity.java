@@ -46,5 +46,6 @@ public class AcquiringOnboardEntity {
     private String accountName;
     private String accountNumber;
     private String feesAndCommission;
-
+    @OneToMany
+    private Set<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities;
 }

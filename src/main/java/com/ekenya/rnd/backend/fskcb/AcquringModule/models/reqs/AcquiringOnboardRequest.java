@@ -1,9 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.MerchantType;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SettlmentType;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -45,4 +43,5 @@ public class AcquiringOnboardRequest {
     private String nameOfDirectorOrPrincipalOrPartner;
     private String directorOrPrincipalOrPartnerPhoneNumber;
     private String directorOrPrincipalOrPartnerEmail;
+    private Set<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities;
 }
