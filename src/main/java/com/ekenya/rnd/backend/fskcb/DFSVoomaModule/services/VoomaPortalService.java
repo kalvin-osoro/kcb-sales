@@ -368,18 +368,21 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model) {
+    public ArrayNode getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model) {
         try {
             if (model == null){
                 return null;
             }
-            DFSVoomaFeedBackEntity dfsVoomaFeedBackEntity = dfsVoomaFeedBackRepository.findById(model.getId()).get();
             ObjectMapper mapper = new ObjectMapper();
-            ObjectNode objectNode = mapper.createObjectNode();
-            objectNode.put("id", dfsVoomaFeedBackEntity.getId());
-            objectNode.put("questionAsked", dfsVoomaFeedBackEntity.getQuestionAsked());
-            objectNode.put("response", dfsVoomaFeedBackEntity.getResponse());
-            objectNode.put("createdOn", dfsVoomaFeedBackEntity.getCreatedOn().getTime());
+            ArrayNode objectNode = mapper.createArrayNode();
+                for (DFSVoomaFeedBackEntity dfsVoomaFeedBackResponseEntity : dfsVoomaFeedBackRepository.findAll()) {
+                ObjectNode objectNode1 = mapper.createObjectNode();
+                objectNode1.put("id", dfsVoomaFeedBackResponseEntity.getId());
+                objectNode1.put("questionAsked", dfsVoomaFeedBackResponseEntity.getQuestionAsked());
+                objectNode1.put("response", dfsVoomaFeedBackResponseEntity.getResponse());
+                objectNode1.put("createdOn", dfsVoomaFeedBackResponseEntity.getCreatedOn().getTime());
+                objectNode.add(objectNode1);
+            }
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);
