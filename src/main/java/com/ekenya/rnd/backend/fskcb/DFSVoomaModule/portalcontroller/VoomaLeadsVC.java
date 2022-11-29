@@ -39,14 +39,15 @@ public class VoomaLeadsVC {
 
     //List all leads
     @RequestMapping(value = "/vooma-get-all-leads", method = RequestMethod.POST)
-    public ResponseEntity<?> getAllLeads(@RequestBody VoomaLeadsListRequest filters) {
-        List<?> voomaLeadRequests = voomaService.getAllLeads(filters);
+    public ResponseEntity<?> getAllLeads() {
+        List<?> voomaLeadRequests = voomaService.getAllLeads();
         boolean success = voomaLeadRequests != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)voomaLeadRequests);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

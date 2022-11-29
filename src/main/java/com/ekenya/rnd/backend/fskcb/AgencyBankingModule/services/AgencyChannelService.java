@@ -1,8 +1,5 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardingKYCentity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;

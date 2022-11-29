@@ -11,4 +11,8 @@ public interface DFSVoomaOnboardRepository extends JpaRepository<DFSVoomaOnboard
 
     @Query(value = "SELECT * FROM dfs_vooma_onboard WHERE dsr_id =? 1 ",nativeQuery = true)
     DFSVoomaOnboardEntity[] findByDsrId(Long dsrId);
+
+    //get all where isApproved is true
+    @Query(value = "SELECT * FROM dfs_vooma_onboard WHERE is_approved = true", nativeQuery = true)
+    Iterable<DFSVoomaOnboardEntity> findAllByIsApproved();
 }

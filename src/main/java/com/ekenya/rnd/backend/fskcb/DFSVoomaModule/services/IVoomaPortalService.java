@@ -21,7 +21,7 @@ public interface IVoomaPortalService {
 
     boolean assignLeadToDsr(VoomaAssignLeadRequest model);
 
-    List<ObjectNode> getAllLeads(VoomaLeadsListRequest filters);
+    List<ObjectNode> getAllLeads();
 
 
     List<ObjectNode> getCustomerVisitQuestionnaireResponses(VoomaCustomerVisitQuestionnaireRequest voomaCustomerVisitQuestionnaireRequest);
@@ -45,5 +45,7 @@ public interface IVoomaPortalService {
 
     List<ObjectNode> getAllCustomerFeedbacks();
 
-    Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequest dfsVoomaFeedBackRequest);
+    Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model);
+
+    List<ObjectNode> loadAllApprovedMerchants();
 }

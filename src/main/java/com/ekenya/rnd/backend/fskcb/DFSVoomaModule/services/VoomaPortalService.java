@@ -123,7 +123,7 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> getAllLeads(VoomaLeadsListRequest filters) {
+    public List<ObjectNode> getAllLeads() {
         //get all leads
         try {
             List<ObjectNode> list = new ArrayList<>();
@@ -279,6 +279,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
+                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
                 objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
@@ -367,9 +368,12 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequest dfsVoomaFeedBackRequest) {
+    public Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model) {
         try {
-            DFSVoomaFeedBackEntity dfsVoomaFeedBackEntity = dfsVoomaFeedBackRepository.findById(dfsVoomaFeedBackRequest.getId()).get();
+            if (model == null){
+                return null;
+            }
+            DFSVoomaFeedBackEntity dfsVoomaFeedBackEntity = dfsVoomaFeedBackRepository.findById(model.getId()).get();
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode objectNode = mapper.createObjectNode();
             objectNode.put("id", dfsVoomaFeedBackEntity.getId());
@@ -379,6 +383,34 @@ public class VoomaPortalService implements IVoomaPortalService {
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> loadAllApprovedMerchants() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAllByIsApproved()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dfsVoomaOnboardEntity.getId());
+                objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
+                objectNode.put("region", dfsVoomaOnboardEntity.getRegion());
+                objectNode.put("status", dfsVoomaOnboardEntity.getStatus().ordinal());
+                objectNode.put("dateOnborded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+                objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getMerchantPhone());
+                objectNode.put("email", dfsVoomaOnboardEntity.getMerchantEmail());
+                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
+                arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
     }

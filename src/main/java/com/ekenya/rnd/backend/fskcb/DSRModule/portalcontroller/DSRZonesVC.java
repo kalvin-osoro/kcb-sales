@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/dsr-zones")
+@RequestMapping(path = "/api/v1")
 public class DSRZonesVC {
     //
     @PostMapping("/dsr-zones-create")

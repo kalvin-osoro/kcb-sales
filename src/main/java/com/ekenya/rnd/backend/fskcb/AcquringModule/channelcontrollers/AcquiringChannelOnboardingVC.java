@@ -25,17 +25,12 @@ public class AcquiringChannelOnboardingVC {
     //Channel request
     @PostMapping("/acquiring-onboard-customer")
     public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
-                                                @RequestParam("frontID") MultipartFile frontID,
-                                                @RequestParam("backID") MultipartFile backID,
-                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
-                                                @RequestParam("certificateOFGoodConduct") MultipartFile certificateOFGoodConduct,
-                                                @RequestParam("businessLicense") MultipartFile businessLicense,
-                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
-                                                @RequestParam("customerPhoto") MultipartFile customerPhoto,
-                                                @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
+
                                                 @RequestParam("signatureDoc") MultipartFile signatureDoc,
-                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
-        Object merchantObject= acquiringChannelService.onboardNewMerchant(merchDetails, frontID,backID,kraPinCertificate,certificateOFGoodConduct,businessLicense,shopPhoto,customerPhoto,companyRegistrationDoc,signatureDoc,businessPermitDoc);
+                                                @RequestParam("signatureDoc1") MultipartFile signatureDoc1)
+
+                                                 {
+        Object merchantObject= acquiringChannelService.onboardNewMerchant(merchDetails,signatureDoc,signatureDoc1 );
         boolean success = merchantObject!=null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

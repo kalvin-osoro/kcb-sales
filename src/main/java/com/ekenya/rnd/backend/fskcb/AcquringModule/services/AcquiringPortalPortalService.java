@@ -419,7 +419,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             AcquiringOnboardEntity acquiringOnboardEntity1 = acquiringOnboardingsRepository.findById(acquiringOnboardEntity.getId()).get();
-            acquiringOnboardEntity1.setIsApproved(true);
+            acquiringOnboardEntity1.setApproved(true);
             //save
             acquiringOnboardingsRepository.save(acquiringOnboardEntity1);
             log.info("Merchant onboarding approved successfully");
@@ -438,10 +438,10 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.findAll()) {
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
-                asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+                asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
                 asset.put("Region", acquiringOnboardEntity.getRegion());
-                asset.put("phoneNumber", acquiringOnboardEntity.getMerchantPhone());
-                asset.put("email", acquiringOnboardEntity.getMerchantEmail());
+                asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                asset.put("email", acquiringOnboardEntity.getBusinessEmail());
                 asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
                 asset.put("agent Id", acquiringOnboardEntity.getDsrId());
                 asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
@@ -464,7 +464,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
              {
                 for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.fetchAllOnboardingCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
-                    asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+                    asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
                     asset.put("onboarding-status", acquiringOnboardEntity.getStatus().ordinal());
                     asset.put("agent Id", acquiringOnboardEntity.getDsrId());
                     asset.put("date_onboarded", acquiringOnboardEntity.getCreatedOn().getTime());
@@ -493,10 +493,10 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode asset = mapper.createObjectNode();
             asset.put("id", acquiringOnboardEntity.getId());
-            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
             asset.put("Region", acquiringOnboardEntity.getRegion());
-            asset.put("phoneNumber", acquiringOnboardEntity.getMerchantPhone());
-            asset.put("email", acquiringOnboardEntity.getMerchantEmail());
+            asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+            asset.put("email", acquiringOnboardEntity.getBusinessEmail());
             asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
             asset.put("agent Id", acquiringOnboardEntity.getDsrId());
             asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());

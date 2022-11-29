@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaFeedBackRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaFeedBackRequestById;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,8 +44,8 @@ public class VoomaCustomerFeedbackVC {
 
 
     @PostMapping("/vooma-get-customer-feedback-responses")
-    public ResponseEntity<?> getCustomerFeedbackResponses(@RequestBody DFSVoomaFeedBackRequest dfsVoomaFeedBackRequest) {
-        Object list = portalService.getCustomerFeedbackResponses(dfsVoomaFeedBackRequest);
+    public ResponseEntity<?> getCustomerFeedbackResponses(@RequestBody DFSVoomaFeedBackRequestById model) {
+        Object list = portalService.getCustomerFeedbackResponses(model);
         boolean success = list != null;
 
         //Response

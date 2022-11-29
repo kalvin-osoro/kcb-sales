@@ -60,106 +60,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
         return null;
     }
 
-    @Override
-    public Object onboardNewMerchant(String merchDetails, MultipartFile frontID, MultipartFile backID, MultipartFile kraPinCertificate, MultipartFile certificateOFGoodConduct, MultipartFile businessLicense, MultipartFile shopPhoto, MultipartFile customerPhoto, MultipartFile companyRegistrationDoc, MultipartFile signatureDoc, MultipartFile businessPermitDoc) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            AcquiringOnboardRequest onboardMerchantRequest = mapper.readValue(
-                    merchDetails, AcquiringOnboardRequest.class);
-            if (onboardMerchantRequest == null) throw new RuntimeException("Bad request");
-            AcquiringOnboardEntity acquiringOnboardEntity = new AcquiringOnboardEntity();
-            //merchant type
-            acquiringOnboardEntity.setMerchantType(onboardMerchantRequest.getMerchantType());
-            //company profile
-            acquiringOnboardEntity.setBusinessType(onboardMerchantRequest.getBusinessType());
-            acquiringOnboardEntity.setTradingName(onboardMerchantRequest.getTradingName());
-            acquiringOnboardEntity.setNatureOfTheBusiness(onboardMerchantRequest.getNatureOfTheBusiness());
-            //owner details
-            acquiringOnboardEntity.setMerchantName(onboardMerchantRequest.getMerchantName());
-            acquiringOnboardEntity.setMerchantEmail(onboardMerchantRequest.getMerchantEmail());
-            acquiringOnboardEntity.setMerchantPhone(onboardMerchantRequest.getMerchantPhone());
-            acquiringOnboardEntity.setMerchantIdNumber(onboardMerchantRequest.getMerchantIdNumber());
-            acquiringOnboardEntity.setKRApin(onboardMerchantRequest.getKRApin());
-            //business details
-            acquiringOnboardEntity.setBusinessName(onboardMerchantRequest.getBusinessName());
-            acquiringOnboardEntity.setBusinessEmail(onboardMerchantRequest.getBusinessEmail());
-            acquiringOnboardEntity.setOutletPhoneNo(onboardMerchantRequest.getOutletPhoneNo());
-            acquiringOnboardEntity.setBusinessKRAPin(onboardMerchantRequest.getBusinessKRAPin());
-            acquiringOnboardEntity.setWantVoomaPaybillNumber(onboardMerchantRequest.isWantVoomaPaybillNumber());
-            acquiringOnboardEntity.setWantVoomaTillNumber(onboardMerchantRequest.isWantVoomaTillNumber());
-            acquiringOnboardEntity.setExchangeForeign(onboardMerchantRequest.isExchangeForeign());
-            //next of kin
-            acquiringOnboardEntity.setNextOfKinFullName(onboardMerchantRequest.getNextOfKinFullName());
-            acquiringOnboardEntity.setNextOfKinPhoneNumber(onboardMerchantRequest.getNextOfKinPhoneNumber());
-            acquiringOnboardEntity.setNextOfKinIdNumber(onboardMerchantRequest.getNextOfKinIdNumber());
-            //physical address
-            acquiringOnboardEntity.setMerchantPbox(onboardMerchantRequest.getMerchantPbox());
-            acquiringOnboardEntity.setMerchantPostalCode(onboardMerchantRequest.getMerchantPostalCode());
-            acquiringOnboardEntity.setCounty(onboardMerchantRequest.getCounty());
-            acquiringOnboardEntity.setCity(onboardMerchantRequest.getCity());
-            acquiringOnboardEntity.setStreetName(onboardMerchantRequest.getStreetName());
-            acquiringOnboardEntity.setNearbyLandMark(onboardMerchantRequest.getNearbyLandMark());
-            acquiringOnboardEntity.setLongitude(onboardMerchantRequest.getLongitude());
-            acquiringOnboardEntity.setLatitude(onboardMerchantRequest.getLatitude());
-            //save merchant details
-            AcquiringOnboardEntity merchDtls = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
-            //documents upload
-            String folderName = "acquiringOnboarding";
-            String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + merchDtls.getId() + ".PNG", frontID, folderName);
 
-            String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + merchDtls.getId() + ".PNG", backID, folderName);
-
-            String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate, folderName);
-
-            String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
-                    "certificateOFGoodConduct_" + merchDtls.getId() + ".PNG", certificateOFGoodConduct, folderName);
-
-            String businessLicensePath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessLicense_" + merchDtls.getId() + ".PNG", businessLicense, folderName);
-
-
-            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + merchDtls.getId() + ".PNG", shopPhoto, folderName);
-
-            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + merchDtls.getId() + ".PNG", customerPhoto, folderName);
-
-
-            String companyRegistrationDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "companyRegistrationDoc_" + merchDtls.getId() + ".PNG", companyRegistrationDoc, folderName);
-
-            String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc, folderName);
-
-            String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc, folderName);
-            ArrayList<String> filePathList = new ArrayList<>();
-            filePathList.add(frontIDPath);
-            filePathList.add(backIDPath);
-            filePathList.add(kraPinCertificatePath);
-            filePathList.add(certificateOFGoodConductPath);
-            filePathList.add(shopPhotoPath);
-            filePathList.add(customerPhotoPath);
-            filePathList.add(companyRegistrationDocPath);
-            filePathList.add(signatureDocPath);
-            filePathList.add(businessPermitDocPath);
-            filePathList.add(businessLicensePath);
-            filePathList.forEach(filePath -> {
-                AcquiringOnboardingKYCentity merchantKYC = new AcquiringOnboardingKYCentity();
-                merchantKYC.setFilePath(filePath);
-                merchantKYC.setAcquiringOnboardEntity(merchDtls);
-                acquiringOnboardingKYCRepository.save(merchantKYC);
-            });
-
-            return true;
-        } catch (Exception e) {
-            log.error("Error occurred while scheduling customer visit", e);
-        }
-        return false;
-    }
 
     @Override
     public List<ObjectNode> getAllOnboardings() {
@@ -170,26 +71,14 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
-                asset.put("merchantType", acquiringOnboardEntity.getMerchantType().ordinal());
-                asset.put("businessType", acquiringOnboardEntity.getBusinessType());
-                asset.put("tradingName", acquiringOnboardEntity.getTradingName());
-                asset.put("natureOfTheBusiness", acquiringOnboardEntity.getNatureOfTheBusiness());
-                asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
-                asset.put("merchantEmail", acquiringOnboardEntity.getMerchantEmail());
-                asset.put("merchantPhone", acquiringOnboardEntity.getMerchantPhone());
-                asset.put("merchantIdNumber", acquiringOnboardEntity.getMerchantIdNumber());
-                asset.put("kRApin", acquiringOnboardEntity.getKRApin());
                 asset.put("businessName", acquiringOnboardEntity.getBusinessName());
+                asset.put("clientName", acquiringOnboardEntity.getClientLegalName());
                 asset.put("businessEmail", acquiringOnboardEntity.getBusinessEmail());
-                asset.put("outletPhoneNo", acquiringOnboardEntity.getOutletPhoneNo());
-                asset.put("businessKRAPin", acquiringOnboardEntity.getBusinessKRAPin());
-                asset.put("wantVoomaPaybillNumber", acquiringOnboardEntity.isWantVoomaPaybillNumber());
-                asset.put("wantVoomaTillNumber", acquiringOnboardEntity.isWantVoomaTillNumber());
-                asset.put("exchangeForeign", acquiringOnboardEntity.isExchangeForeign());
-                asset.put("nextOfKinFullName", acquiringOnboardEntity.getNextOfKinFullName());
-                asset.put("nextOfKinPhoneNumber", acquiringOnboardEntity.getNextOfKinPhoneNumber());
-                asset.put("nextOfKinIdNumber", acquiringOnboardEntity.getNextOfKinIdNumber());
-                asset.put("merchantPbox", acquiringOnboardEntity.getMerchantPbox());
+                asset.put("businessPhone", acquiringOnboardEntity.getBusinessPhoneNumber());
+                asset.put("outletContactPerson", acquiringOnboardEntity.getOutletContactPerson());
+                asset.put("outletPhoneNumber", acquiringOnboardEntity.getOutletPhone());
+                asset.put("numberOfOutlets", acquiringOnboardEntity.getNumberOfOutlet());
+                asset.put("typeOfGoodsAndServices", acquiringOnboardEntity.getTypeOfGoodAndServices());
                 list.add(asset);
             }
             return list;
@@ -293,14 +182,10 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
-                asset.put("businessType", acquiringOnboardEntity.getBusinessType());
-                asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
-                asset.put("merchantEmail", acquiringOnboardEntity.getMerchantEmail());
-                asset.put("merchantPhone", acquiringOnboardEntity.getMerchantPhone());
-                asset.put("merchantIdNumber", acquiringOnboardEntity.getMerchantIdNumber());
                 asset.put("businessName", acquiringOnboardEntity.getBusinessName());
+                asset.put("clientName", acquiringOnboardEntity.getClientLegalName());
                 asset.put("businessEmail", acquiringOnboardEntity.getBusinessEmail());
-
+                asset.put("businessPhone", acquiringOnboardEntity.getBusinessPhoneNumber());
                 list.add(asset);
             }
             return list;
@@ -529,6 +414,11 @@ public class AcquiringChannelService implements IAcquiringChannelService {
         } catch (Exception e) {
             log.error("Error occurred while getting all agents assets", e);
         }
+        return null;
+    }
+
+    @Override
+    public Object onboardNewMerchant(String merchDetails, MultipartFile signatureDoc, MultipartFile signatureDoc1) {
         return null;
     }
 }

@@ -16,7 +16,6 @@ public interface IAcquiringChannelService {
 
     JsonObject findCustomerByAccNo(String accNo);
 
-    Object onboardNewMerchant(String merchDetails, MultipartFile frontID, MultipartFile backID, MultipartFile kraPinCertificate, MultipartFile certificateOFGoodConduct, MultipartFile businessLicense,  MultipartFile shopPhoto, MultipartFile customerPhoto, MultipartFile companyRegistrationDoc, MultipartFile signatureDoc, MultipartFile businessPermitDoc);
 
     List<ObjectNode> getAllOnboardings();
 
@@ -43,4 +42,6 @@ public interface IAcquiringChannelService {
     boolean assignAssetToMerchant(Long assetId, Long agentId);
 
     List<ObjectNode> getAllAgentsAssets(Long agentId);
+
+    Object onboardNewMerchant(String merchDetails, MultipartFile signatureDoc, MultipartFile signatureDoc1);
 }
