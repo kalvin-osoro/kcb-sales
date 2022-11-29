@@ -202,33 +202,30 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> loadAllOnboardedMerchants(GetALLDSRMerchantOnboardingRequest model) {
-        try {
-            if (model == null) {
-                return null;
-            }
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findByDsrId(model.getDsrId())) {
-                ObjectNode objectNode = mapper.createObjectNode();
-                objectNode.put("id", dfsVoomaOnboardEntity.getId());
-                objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
-                objectNode.put("region", dfsVoomaOnboardEntity.getRegion());
-                objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getMerchantPhone());
-                objectNode.put("email", dfsVoomaOnboardEntity.getMerchantEmail());
-                objectNode.put("status", dfsVoomaOnboardEntity.getStatus().ordinal());
-                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
-                objectNode.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
-                list.add(objectNode);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading all onboarded merchants", e);
-        }
-        return null;
+    public List<ObjectNode> loadAllOnboardedMerchants( ) {
+       try {
+           List<ObjectNode> list = new ArrayList<>();
+                ObjectMapper mapper = new ObjectMapper();
+                for (DFSVoomaOnboardEntity dfsVoomaMerchantEntity : dfsVoomaOnboardRepository.findAll()) {
+                    ObjectNode objectNode = mapper.createObjectNode();
+                    objectNode.put("id", dfsVoomaMerchantEntity.getId());
+                    objectNode.put("merchantName", dfsVoomaMerchantEntity.getMerchantName());
+                    objectNode.put("region", dfsVoomaMerchantEntity.getRegion());
+                    objectNode.put("phone", dfsVoomaMerchantEntity.getMerchantPhone());
+                    objectNode.put("email", dfsVoomaMerchantEntity.getMerchantEmail());
+                    objectNode.put("status", dfsVoomaMerchantEntity.getStatus().ordinal());
+                    objectNode.put("dsrId", dfsVoomaMerchantEntity.getDsrId());
+                    objectNode.put("createdOn", dfsVoomaMerchantEntity.getCreatedOn().getTime());
+                    list.add(objectNode);
+       }
+        return list;
+       } catch (Exception e) {
+           log.error("Error occurred while loading all onboarded merchants", e);
+       }
+         return null;
     }
 
-    @Override
+        @Override
     public boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest) {
         try {
             DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(dfsVoomaApproveMerchantOnboarindRequest.getId()).get();
