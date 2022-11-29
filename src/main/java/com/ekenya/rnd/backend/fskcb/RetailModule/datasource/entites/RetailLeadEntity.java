@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -21,6 +22,9 @@ public class RetailLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String customerName;
+    private String remarks;
+    private String customerAccountNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -31,4 +35,5 @@ public class RetailLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private Date createdOn;
 }

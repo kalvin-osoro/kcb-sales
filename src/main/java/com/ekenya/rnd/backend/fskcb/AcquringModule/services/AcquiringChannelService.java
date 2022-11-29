@@ -105,6 +105,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
             acquiringLeadEntity.setTopic(model.getTopic());
             acquiringLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            acquiringLeadsRepository.save(acquiringLeadEntity);
 
         } catch (Exception e) {
             log.error("Error occurred while creating lead", e);
