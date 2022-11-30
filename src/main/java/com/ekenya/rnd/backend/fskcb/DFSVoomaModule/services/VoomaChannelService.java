@@ -1,5 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
@@ -30,6 +32,10 @@ public class VoomaChannelService implements IVoomaChannelService {
     private final DFSVoomaAgentOnboardingRepository dfsVoomaAgentOnboardingRepositor;
     private final DFSVoomaAgentOnboardingKYCRepository dfsVoomaAgentOnboardingKYCRepository;
     private final DFSVoomaAssetRepository dfsVoomaAssetRepository;
+
+    private final AcquiringAssetRepository acquiringAssetRepository;
+
+    private final AcquiringAssetFileRepository acquiringAssetFileRepository;
     
     private final FileStorageService fileStorageService;
 

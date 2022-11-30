@@ -1,15 +1,19 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.*;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,7 +38,13 @@ public class VoomaPortalService implements IVoomaPortalService {
     private final DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
     private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
+    private final DFSVoomaAssetFilesRepository dfsVoomaAssetFilesRepository;
+
+    private final DFSVoomaAssetRepository dfsVoomaAssetRepository;
+
     private final DFSVoomaFeedBackRepository dfsVoomaFeedBackRepository;
+
+    private final FileStorageService fileStorageService;
 
 
     @Override
@@ -274,7 +284,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
-                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
+//                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
                 objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
@@ -417,6 +427,44 @@ public class VoomaPortalService implements IVoomaPortalService {
             log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean createAsset(String assetDetails, MultipartFile[] assetFiles) {
+        try {
+            if (assetDetails == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
+            DFSVoomaAddAssetRequest acquiringAddAssetRequest =
+                    mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
+            DFSVoomaAssetEntity dfsVoomaAssetEntity = new DFSVoomaAssetEntity();
+            dfsVoomaAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
+            dfsVoomaAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
+            DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
+            String subFolder = "vooma-assets";
+
+            List<String> filePathList = new ArrayList<>();
+            //save files
+
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
+            //save file paths to db
+            filePathList.forEach(filePath -> {
+                DFSVoomaAssetFilesEntity dfsVoomaAssetFilesEntity = new DFSVoomaAssetFilesEntity();
+                dfsVoomaAssetFilesEntity.setDfsVoomaAssetEntity(savedAsset);
+                dfsVoomaAssetFilesEntity.setFilePath(filePath);
+                dfsVoomaAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
+            });
+            return true;
+
+        } catch (JsonMappingException e) {
+            //return ResponseEntity.badRequest().body("Invalid asset details");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
 

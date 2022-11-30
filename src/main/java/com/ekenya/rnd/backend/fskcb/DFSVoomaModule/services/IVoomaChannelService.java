@@ -49,4 +49,6 @@ public interface IVoomaChannelService {
     boolean updateCustomerVisit(VoomaCustomerVisitsRequest request);
 
     List<ObjectNode> getAllCustomerVisitsByDSR(VoomaCustomerVisitsRequest model);
+
+
 }

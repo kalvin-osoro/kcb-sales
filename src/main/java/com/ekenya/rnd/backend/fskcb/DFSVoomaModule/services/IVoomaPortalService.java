@@ -49,4 +49,6 @@ public interface IVoomaPortalService {
     ArrayNode getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model);
 
     List<ObjectNode> loadAllApprovedMerchants();
+
+    boolean createAsset(String assetDetails, MultipartFile[] assetFiles);
 }
