@@ -19,6 +19,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class RetailChannelService implements IRetailChannelService {
+
+    //create a random number generator
     @Autowired
     RetailLeadRepository retailLeadRepository;
 
@@ -65,6 +67,44 @@ public class RetailChannelService implements IRetailChannelService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while loading Leads", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<ObjectNode> loadDSRSummary() {
+        try {
+            ArrayList<ObjectNode>list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode deposits = mapper.createObjectNode();
+            //hardcoded for now waiting for the APIs
+            deposits.put("target", 1000);
+            deposits.put("actual", 500);
+            deposits.put("percentage", (deposits.get("actual").asInt() / deposits.get("target").asInt()) * 100);
+            list.add(deposits);
+            ObjectNode loans = mapper.createObjectNode();
+            loans.put("target", 1000);
+            loans.put("actual", 500);
+            loans.put("percentage", (loans.get("actual").asInt() / loans.get("target").asInt()) * 100);
+            list.add(loans);
+            ObjectNode insurance = mapper.createObjectNode();
+            insurance.put("target", 1000);
+            insurance.put("actual", 500);
+            insurance.put("percentage", (insurance.get("actual").asInt() / insurance.get("target").asInt()) * 100);
+            list.add(insurance);
+            ObjectNode creditCards = mapper.createObjectNode();
+            creditCards.put("target", 1000);
+            creditCards.put("actual", 500);
+            creditCards.put("percentage", (creditCards.get("actual").asInt() / creditCards.get("target").asInt()) * 100);
+            list.add(creditCards);
+            ObjectNode vooma = mapper.createObjectNode();
+            vooma.put("target", 1000);
+            vooma.put("actual", 500);
+            vooma.put("percentage", (vooma.get("actual").asInt() / vooma.get("target").asInt()) * 100);
+            list.add(vooma);
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading DSR Summary", e);
         }
         return null;
     }

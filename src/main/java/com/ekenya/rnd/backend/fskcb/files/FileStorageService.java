@@ -19,11 +19,11 @@ import java.util.logging.Logger;
 public class FileStorageService implements IFileStorageService {
     //working directory folder called "uploads"
 
-    public static String pathString ="/upload";
-    public static String uploadDirectory = System.getProperty("user.dir") + "/upload";
+    public static String pathString ="upload";
+    public static String uploadDirectory =  "upload";
     private final Path root = Paths.get(pathString);//
     private Logger log = Logger.getLogger(IFileStorageService.class.getName());
-    public static String uploadPath = "/upload";
+    public static String uploadPath = "upload";
 
 
     @Override
@@ -107,7 +107,7 @@ public class FileStorageService implements IFileStorageService {
                 Path path = null;
                 try {
                     bytes = file.getBytes();
-                    path = Files.write(Paths.get(pathString, fileName), bytes);
+                    path = Files.write(Paths.get(uploadDirectory, fileName), bytes);
                 } catch (IOException e) {
                     log.info("Error is ");
                 }

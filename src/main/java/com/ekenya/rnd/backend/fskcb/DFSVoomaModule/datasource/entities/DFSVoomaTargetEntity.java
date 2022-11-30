@@ -38,5 +38,7 @@ public class DFSVoomaTargetEntity {
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;
+    @Enumerated(EnumType.STRING)
+    private AssignmentType assignmentType;
 
 }

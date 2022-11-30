@@ -44,7 +44,6 @@ public class AcquiringAssetEntity {
     private String latitude;
     @Embedded
     private VisitsReport visitsReport;
-    private String images;
     private boolean assigned=false;
 
 }

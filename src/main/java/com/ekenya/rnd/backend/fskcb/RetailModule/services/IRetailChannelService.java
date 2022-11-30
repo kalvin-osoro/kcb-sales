@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddLeadReques
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailGetDSRLead;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IRetailChannelService {
@@ -14,4 +15,6 @@ public interface IRetailChannelService {
     ObjectNode loadDSRAnalytics(String staffNo);
 
     List<?> getAllLeads(RetailGetDSRLead model);
+
+    ArrayList<ObjectNode> loadDSRSummary();
 }

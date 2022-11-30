@@ -39,24 +39,22 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Override
     public boolean scheduleCustomerVisit(VoomaCustomerVisitsRequest model) {
-        try {
-            if (model == null) {
-                return false;
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
-            dfsVoomaCustomerVisitEntity.setCustomerName(model.getCustomerName());
-            dfsVoomaCustomerVisitEntity.setVisitDate(model.getVisitDate());
-            dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
-            dfsVoomaCustomerVisitEntity.setStatus(Status.ACTIVE);
-            dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            dfsVoomaCustomerVisitEntity.setDsrName(model.getDsrName());
-            //save
-            dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);
-            return true;
-        } catch (Exception e) {
-            log.error("Error occurred while scheduling customer visit", e);
-        }
+       try {
+           if (model == null) {
+               return false;
+           }
+              DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
+           dfsVoomaCustomerVisitEntity.setCustomerName(model.getCustomerName());
+           dfsVoomaCustomerVisitEntity.setVisitDate(model.getVisitDate());
+           dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
+           dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+           dfsVoomaCustomerVisitEntity.setStatus(Status.ACTIVE);
+              dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);
+              return true;
+
+       } catch (Exception e) {
+              log.error("Error occurred while scheduling customer visit", e);
+       }
         return false;
     }
 
@@ -300,7 +298,13 @@ public class VoomaPortalService implements IVoomaPortalService {
             dfsVoomaTargetEntity.setTargetSource(voomaAddTargetRequest.getTargetSource());
             dfsVoomaTargetEntity.setTargetType(voomaAddTargetRequest.getTargetType());
             dfsVoomaTargetEntity.setTargetDesc(voomaAddTargetRequest.getTargetDesc());
+            dfsVoomaTargetEntity.setStartDate(voomaAddTargetRequest.getStartDate());
+            dfsVoomaTargetEntity.setEndDate(voomaAddTargetRequest.getEndDate());
+            dfsVoomaTargetEntity.setAssignmentType(voomaAddTargetRequest.getAssignmentType());
+
+
             dfsVoomaTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
+
             dfsVoomaTargetEntity.setTargetValue(voomaAddTargetRequest.getTargetValue());
             dfsVoomaTargetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save
