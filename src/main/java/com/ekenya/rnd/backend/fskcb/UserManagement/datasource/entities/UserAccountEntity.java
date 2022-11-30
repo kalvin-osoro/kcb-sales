@@ -32,7 +32,6 @@ public class UserAccountEntity {
     private String fullName;
     @Column(nullable=false)
     private String phoneNumber;
-    private Boolean deleted = Boolean.FALSE;
     @Column(name="acc_type", nullable = false)
     //@Enumerated(EnumType.STRING)
     private AccountType accountType;
@@ -46,10 +45,11 @@ public class UserAccountEntity {
             joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRoleEntity> roles;
-    private  Boolean isVerified = Boolean.FALSE;
-    private  Boolean shouldSetPIN = Boolean.TRUE;
-    private  Boolean shouldChangePIN = Boolean.FALSE;
-    private  Boolean blocked = Boolean.FALSE;
+    private  boolean isVerified = Boolean.FALSE;
+    private  boolean shouldSetPIN = Boolean.TRUE;
+    private  boolean shouldChangePIN = false;
+    private  boolean blocked = Boolean.FALSE;
+    private boolean deleted = Boolean.FALSE;
 
     @Column(name="status", nullable = false)
     //@Enumerated(EnumType.STRING)

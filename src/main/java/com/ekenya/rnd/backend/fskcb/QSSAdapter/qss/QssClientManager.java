@@ -223,6 +223,10 @@ public class QssClientManager implements QSSClientInterface {
                             connectionStateObserver.onNext(HubConnectionState.DISCONNECTED);
                             mLogger.log(Level.SEVERE, "Hub Start Error => " + ex.getMessage());
                             //
+                            try {
+                                Thread.sleep(10000); //Sleep for 10 sec
+                            } catch (Exception e) {
+                            }
                             //emitter.onError(ex);
                             init().doOnError(error -> {
                                 mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
@@ -246,6 +250,10 @@ public class QssClientManager implements QSSClientInterface {
                             connectionStateObserver.onNext(HubConnectionState.DISCONNECTED);
                             // Try start again
                             mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
+                            try {
+                                Thread.sleep(10000);//Sleep for 10 sec
+                            } catch (Exception e) {
+                            }
                             init().doOnError(error -> {
                                 mLogger.log(Level.INFO,"Service disconnected, reconnecting...");
                                 init().subscribe();
@@ -681,7 +689,7 @@ public class QssClientManager implements QSSClientInterface {
             Path path = Paths.get("logs/qss");
             Files.createDirectories(path);
             // This block configure the logger with handler and formatter
-            FileHandler mFileHandler = new FileHandler("logs/qss/kcb-qss-client-" + sdf.format(Calendar.getInstance().getTime()) + ".log");
+            FileHandler mFileHandler = new FileHandler("logs/qss/kcb-qss-client-" + sdf.format(Calendar.getInstance().getTime()) + ".log", true);
             mLogger.addHandler(mFileHandler);
             // SimpleFormatter formatter = new SimpleFormatter();
             mFileHandler.setFormatter(new Formatter() {

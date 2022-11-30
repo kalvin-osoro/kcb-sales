@@ -98,7 +98,7 @@ public class AuthService implements IAuthService{
                 response.setSuccess(false);
                 response.setErrorMessage("Account NOT allowed to use this channel");
                 return response;
-            }else if(account.getBlocked() || account.getRemLoginAttempts() <=0){
+            }else if(account.isBlocked() || account.getRemLoginAttempts() <=0){
                 response.setSuccess(false);
                 response.setRemAttempts(account.getRemLoginAttempts());
                 response.setErrorMessage("Account is Blocked.");
@@ -135,7 +135,7 @@ public class AuthService implements IAuthService{
             //Update Login info ..
             account.setLastLogin(Calendar.getInstance().getTime());
             if(model.getLocation() != null) {
-                account.setLastCoords(model.getLocation().toString());
+                account.setLastCoords(mObjectMapper.writeValueAsString(model.getLocation()));
             }
             userRepository.save(account);
 
@@ -165,7 +165,7 @@ public class AuthService implements IAuthService{
             response.setType("Bearer");
             //
             response.setShouldSetSecQns(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty());
-            response.setShouldChangePin(account.getShouldChangePIN());
+            response.setShouldChangePin(account.isShouldChangePIN());
             //
             return response;
         }catch (AuthenticationException ex){
@@ -212,7 +212,7 @@ public class AuthService implements IAuthService{
                 response.setSuccess(false);
                 response.setErrorMessage("Account NOT Found in the system.");
                 return response;
-            }else if(account.getBlocked() || account.getRemLoginAttempts() <=0){
+            }else if(account.isBlocked() || account.getRemLoginAttempts() <=0){
                 response.setSuccess(false);
                 response.setRemAttempts(account.getRemLoginAttempts());
                 response.setErrorMessage("Account is Blocked.");
@@ -552,7 +552,7 @@ public class AuthService implements IAuthService{
             //
             for (SecQnAnswerReq prob:  model.getAnswers()) {
                 //
-                Optional<SecurityQuestionAnswerEntity> ans = securityQuestionAnswersRepo.findAllByIdAndUserIdAndStatus(account.getId(), account.getId(),Status.ACTIVE);
+                Optional<SecurityQuestionAnswerEntity> ans = securityQuestionAnswersRepo.findAllByQuestionIdAndUserIdAndStatus(prob.getQnId(), account.getId(),Status.ACTIVE);
 
                 if(ans.isPresent()){
                     valid = ans.get().getAnswer().equalsIgnoreCase(prob.getAnswer());

@@ -15,6 +15,8 @@ import ch.qos.logback.core.util.FileSize;
 import ch.qos.logback.core.util.StatusPrinter;
 import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -62,7 +64,13 @@ public class SpringBootKcbRestApiApplication   {
 	}
 	@Bean
 	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
+// for Jackson version 1.X
+		//mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+// for Jackson version 2.X
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		return mapper;
 	}
 	@Bean
 	public ModelMapper modelMapper() {
@@ -175,7 +183,7 @@ public class SpringBootKcbRestApiApplication   {
 			ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 			root.setLevel(Level.TRACE);
 			root.addAppender(rollingFileAppender);
-			root.setAdditive(true); /* set to true if root should log too */
+			root.setAdditive(false); /* set to true if root should log too */
 
 			// print any status messages (warnings, etc) encountered in logback config
 			//StatusPrinter.print(context);

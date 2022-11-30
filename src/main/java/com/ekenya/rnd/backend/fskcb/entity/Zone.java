@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.entity;
 
-import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ZoneCoordinates;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.ZoneCoordinates;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
