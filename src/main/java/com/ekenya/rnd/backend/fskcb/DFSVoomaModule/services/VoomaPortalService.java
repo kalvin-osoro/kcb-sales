@@ -437,12 +437,14 @@ public class VoomaPortalService implements IVoomaPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
 
-            DFSVoomaAddAssetRequest acquiringAddAssetRequest =
+            DFSVoomaAddAssetRequest dfsVoomaAddAssetRequest =
                     mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = new DFSVoomaAssetEntity();
-            dfsVoomaAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
-            dfsVoomaAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
+            dfsVoomaAssetEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+//            dfsVoomaAssetEntity.setAssetCondition(dfsVoomaAddAssetRequest.getAssetCondition());
             dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
             DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             String subFolder = "vooma-assets";
 
@@ -471,22 +473,38 @@ public class VoomaPortalService implements IVoomaPortalService {
 
         @Override
     public List<ObjectNode> getAllAssets() {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
-                ObjectNode objectNode = mapper.createObjectNode();
-                objectNode.put("id", dfsVoomaAssetEntity.getId());
-                objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
-                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
-                objectNode.put("createdOn", dfsVoomaAssetEntity.getCreatedOn().getTime());
-                list.add(objectNode);
+            try {
+                List<ObjectNode> list = new ArrayList<>();
+                ObjectMapper mapper = new ObjectMapper();
+                for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
+
+                    ObjectNode asset = mapper.createObjectNode();
+                    asset.put("id", dfsVoomaAssetEntity.getId());
+                    asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
+                    asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
+                    //asset.put("type",acquiringAssetEntity.getAssetType());
+                    //
+                    ArrayNode images = mapper.createArrayNode();
+
+                    //"http://10.20.2.12:8484/"
+
+                    // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
+
+
+                    asset.put("images", images);
+
+
+                    //
+                    list.add(asset);
+                }
+
+
+                return list;
+
+            } catch (Exception e) {
+                log.error("Error occurred while fetching all assets", e);
             }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while getting all assets", e);
-        }
-        return null;
+            return null;
     }
 
 

@@ -363,39 +363,60 @@ public class AgencyChannelService implements IAgencyChannelService {
             AgencyCustomerVisitsRequest agencyCustomerVisitsRequest = mapper.readValue(
                     visitDetails, AgencyCustomerVisitsRequest.class);
             if (agencyCustomerVisitsRequest == null) throw new RuntimeException("Bad request");
-//            AgencyBankingVisitEntity agencyBankingVisitEntity = new AgencyBankingVisitEntity();
-//            agencyBankingVisitEntity.setIsAgentOutletsBranded(agencyCustomerVisitsRequest.getIsAgentOutletsBranded());
-//            agencyBankingVisitEntity.setIsOutletHaveCorrectTarrif(agencyCustomerVisitsRequest.getIsOutletHaveCorrectTarrif());
-//            agencyBankingVisitEntity.setIsAgentCollectCashDepositAndPostLater(agencyCustomerVisitsRequest.getIsAgentCollectCashDepositAndPostLater());
-//            agencyBankingVisitEntity.setIsAgentHaveEnoughFloat(agencyCustomerVisitsRequest.getIsAgentHaveEnoughFloat());
-//            agencyBankingVisitEntity.setIsAgentActive(agencyCustomerVisitsRequest.getIsAgentActive());
-//            agencyBankingVisitEntity.setIsAgentInvolveInIllegalActivities(agencyCustomerVisitsRequest.getIsAgentInvolveInIllegalActivities());
-//            agencyBankingVisitEntity.setIsAgentHaveCopyOfAgentBulk(agencyCustomerVisitsRequest.getIsAgentHaveCopyOfAgentBulk());
-//            agencyBankingVisitEntity.setIsAgentChargeCustomerForUpfront(agencyCustomerVisitsRequest.getIsAgentChargeCustomerForUpfront());
-//            agencyBankingVisitEntity.setIsAgentMaintainedRecordsOfAccOpened(agencyCustomerVisitsRequest.getIsAgentMaintainedRecordsOfAccOpened());
-//            agencyBankingVisitEntity.setIsAgentTrainedKYC(agencyCustomerVisitsRequest.getIsAgentTrainedKYC());
-//            agencyBankingVisitEntity.setIsAgentUsedManualReceipt(agencyCustomerVisitsRequest.getIsAgentUsedManualReceipt());
-            //save
-//            AgencyBankingVisitEntity visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
-            //uplaod files
-//            String folderName = "agencyBankingVisit_" + visitInfo.getId();
-//            String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-//                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto,folderName );
-//            String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-//                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto,folderName );
-//            String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-//                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,folderName );
-//            //save the document paths
-//            ArrayList<String> filePathList = new ArrayList<>();
-//            filePathList.add(premiseInsidePhotoPath);
-//            filePathList.add(premiseOutsidePhotoPath);
-//            filePathList.add(cashRegisterPhotoPath);
-//            filePathList.forEach(filePath -> {
-//                AgencyBankingVisitFileEntity visitKYC = new AgencyBankingVisitFileEntity();
-//                visitKYC.setFilePath(filePath);
-//                visitKYC.setAgencyBankingVisitEntity(visitInfo);
-//                agencyBankingVisitFilesRepository.save(visitKYC);
-//            });
+            AgencyBankingVisitEntity agencyBankingVisitEntity = new AgencyBankingVisitEntity();
+            agencyBankingVisitEntity.setDsrName(agencyCustomerVisitsRequest.getDsrName());
+            agencyBankingVisitEntity.setAgentName(agencyCustomerVisitsRequest.getAgentName());
+            agencyBankingVisitEntity.setReasonForVisit(agencyCustomerVisitsRequest.getReasonForVisit());
+            agencyBankingVisitEntity.setVisitDate(agencyCustomerVisitsRequest.getVisitDate());
+            agencyBankingVisitEntity.setStatus(agencyCustomerVisitsRequest.getStatus());
+            agencyBankingVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            agencyBankingVisitEntity.setUpdatedOn(agencyCustomerVisitsRequest.getUpdatedOn());
+            agencyBankingVisitEntity.setScheduled(agencyCustomerVisitsRequest.getScheduled());
+            agencyBankingVisitEntity.setLocation(agencyCustomerVisitsRequest.getLocation());
+            agencyBankingVisitEntity.setPdqVersionCorrect(agencyCustomerVisitsRequest.getPdqVersionCorrect());
+            agencyBankingVisitEntity.setChargesUpfront(agencyCustomerVisitsRequest.getChargesUpfront());
+            agencyBankingVisitEntity.setMaintainsOpenedAcctRecords(agencyCustomerVisitsRequest.getMaintainsOpenedAcctRecords());
+            agencyBankingVisitEntity.setTrained(agencyCustomerVisitsRequest.getTrained());
+            agencyBankingVisitEntity.setUsesManualReceiptBook(agencyCustomerVisitsRequest.getUsesManualReceiptBook());
+            agencyBankingVisitEntity.setReconcileFloatAcctStat(agencyCustomerVisitsRequest.getReconcileFloatAcctStat());
+            agencyBankingVisitEntity.setMoreThanXTransactions(agencyCustomerVisitsRequest.getMoreThanXTransactions());
+            agencyBankingVisitEntity.setBranchCollectsRegisters(agencyCustomerVisitsRequest.getBranchCollectsRegisters());
+            agencyBankingVisitEntity.setTariffPosterWellDisplayed(agencyCustomerVisitsRequest.getTariffPosterWellDisplayed());
+            agencyBankingVisitEntity.setCustomersSignRegister(agencyCustomerVisitsRequest.getCustomersSignRegister());
+            agencyBankingVisitEntity.setRegisterReflected(agencyCustomerVisitsRequest.getRegisterReflected());
+            agencyBankingVisitEntity.setOutletWellBranded(agencyCustomerVisitsRequest.getOutletWellBranded());
+            agencyBankingVisitEntity.setRegisterCompleted(agencyCustomerVisitsRequest.getRegisterCompleted());
+            agencyBankingVisitEntity.setVisitedByStaff(agencyCustomerVisitsRequest.getVisitedByStaff());
+            agencyBankingVisitEntity.setLocatedStrategically(agencyCustomerVisitsRequest.getLocatedStrategically());
+            agencyBankingVisitEntity.setCsLevel(agencyCustomerVisitsRequest.getCsLevel());
+            agencyBankingVisitEntity.setOutletPresentable(agencyCustomerVisitsRequest.getOutletPresentable());
+            agencyBankingVisitEntity.setHasFloat(agencyCustomerVisitsRequest.getHasFloat());
+            agencyBankingVisitEntity.setHasFloat(agencyCustomerVisitsRequest.getHasFloat());
+            agencyBankingVisitEntity.setCustomerInflow(agencyCustomerVisitsRequest.getCustomerInflow());
+            agencyBankingVisitEntity.setAgentTrxInForeignCur(agencyCustomerVisitsRequest.getAgentTrxInForeignCur());
+            agencyBankingVisitEntity.setComments(agencyCustomerVisitsRequest.getComments());
+            agencyBankingVisitEntity.setHasMaterials(agencyCustomerVisitsRequest.getHasMaterials());
+            //save visit
+          AgencyBankingVisitEntity  visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
+
+            String folderName = "agencyBankingVisit_" + visitInfo.getId();
+            String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
+                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto,folderName );
+            String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
+                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto,folderName );
+            String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileName(
+                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,folderName );
+            //save the document paths
+            ArrayList<String> filePathList = new ArrayList<>();
+            filePathList.add(premiseInsidePhotoPath);
+            filePathList.add(premiseOutsidePhotoPath);
+            filePathList.add(cashRegisterPhotoPath);
+            filePathList.forEach(filePath -> {
+                AgencyBankingVisitFileEntity visitKYC = new AgencyBankingVisitFileEntity();
+                visitKYC.setFilePath(filePath);
+                visitKYC.setAgencyBankingVisitEntity(visitInfo);
+                agencyBankingVisitFilesRepository.save(visitKYC);
+            });
             return true;
         } catch (Exception e) {
             log.error("Error occurred while scheduling customer visit", e);
