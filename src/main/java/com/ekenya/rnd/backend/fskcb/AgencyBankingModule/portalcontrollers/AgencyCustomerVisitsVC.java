@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,7 @@ public class AgencyCustomerVisitsVC {
     }
 
     @PostMapping("/agency-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody AgencyCustomerVisitsRequest assetManagementRequest) {
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody AgencyRescheduleVisitsRequest assetManagementRequest) {
         //TODO; INSIDE SERVICE
         boolean success = agencyService.reScheduleCustomerVisit(assetManagementRequest);
 

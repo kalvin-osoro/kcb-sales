@@ -36,29 +36,29 @@ public class AgencyBankingVisitEntity {
     private boolean isCompleted=false;
     //yes or no question
     private String scheduled;
-           private String location;
-           private String pdqVersionCorrect;
+    private String location;
+    private String pdqVersionCorrect;
 //    status
-private String chargesUpfront;
-  private String  maintainsOpenedAcctRecords;
-  private String trained;
+    private String chargesUpfront;
+   private String  maintainsOpenedAcctRecords;
+   private String trained;
    private String usesManualReceiptBook;
    private String  reconcileFloatAcctStat;
    private String moreThanXTransactions;
-    private String  branchCollectsRegisters;
-    private String tariffPosterWellDisplayed;
-    private String  customersSignRegister;
-    private String  registerReflected;
-    private String      outletWellBranded;
-    private String registerCompleted;
-    private String    visitedByStaff;
-    private String locatedStrategically;
-    private String     csLevel;
-    private String   outletPresentable;
-    private String       hasFloat;
-    private String customerInflow;
-    private String     agentTrxInForeignCur;
-    private String    comments;
-    private String  hasMaterials;
+   private String  branchCollectsRegisters;
+   private String tariffPosterWellDisplayed;
+   private String  customersSignRegister;
+   private String  registerReflected;
+   private String      outletWellBranded;
+   private String registerCompleted;
+   private String    visitedByStaff;
+   private String locatedStrategically;
+   private String     csLevel;
+   private String   outletPresentable;
+   private String       hasFloat;
+   private String customerInflow;
+   private String     agentTrxInForeignCur;
+   private String    comments;
+   private String  hasMaterials;
 
 }

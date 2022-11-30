@@ -1,12 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,16 +74,16 @@ public class AgencyPortalService implements IAgencyPortalService {
     }
 
     @Override
-    public boolean reScheduleCustomerVisit(AgencyCustomerVisitsRequest agencyCustomerVisitsRequest) {
+    public boolean reScheduleCustomerVisit(AgencyRescheduleVisitsRequest agencyCustomerVisitsRequest) {
         try {
             if (agencyCustomerVisitsRequest == null) {
                 return false;
             }
-            AgencyBankingVisitEntity agencyBankingVisitEntity = agencyBankingVisitRepository.findById(agencyCustomerVisitsRequest.getId()).orElse(null);
+            AgencyBankingVisitEntity agencyBankingVisitEntity = agencyBankingVisitRepository.findById(agencyCustomerVisitsRequest.getVisitId()).orElse(null);
             if (agencyBankingVisitEntity == null) {
                 return false;
             }
-            agencyBankingVisitEntity.setVisitDate(agencyCustomerVisitsRequest.getVisitDate());
+            agencyBankingVisitEntity.setVisitDate(agencyCustomerVisitsRequest.getNewDate());
             agencyBankingVisitRepository.save(agencyBankingVisitEntity);
             return true;
         } catch (Exception e) {

@@ -480,7 +480,12 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
                 objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
                 objectNode.put("createdOn", dfsVoomaAssetEntity.getCreatedOn().getTime());
+                objectNode.put("assigned", dfsVoomaAssetEntity.isAssigned());
+                objectNode.put("lastServiceDate", dfsVoomaAssetEntity.getLastServiceDate().getTime());
+
                 list.add(objectNode);
+                return list;
+
             }
             return list;
         } catch (Exception e) {

@@ -12,7 +12,7 @@ public interface IAgencyPortalService {
 
     boolean scheduleCustomerVisit(AgencyCustomerVisitsRequest agencyCustomerVisitsRequest);
 
-    boolean reScheduleCustomerVisit(AgencyCustomerVisitsRequest assetManagementRequest);
+    boolean reScheduleCustomerVisit(AgencyRescheduleVisitsRequest assetManagementRequest);
 
     List<ObjectNode> getCustomerVisitQuestionnaireResponse(AgencyCustomerVisitQuestionnaireRequest agencyCustomerVisitQuestionnaireRequest);
 
