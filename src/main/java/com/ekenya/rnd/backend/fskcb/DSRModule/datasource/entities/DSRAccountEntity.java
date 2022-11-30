@@ -35,8 +35,8 @@ public class DSRAccountEntity {
     @Column(name="email", nullable = false)
     private String email;
 
-//    @Column(name="username")
-//    private String username;
+    @Column(name="grouping")
+    private String staffCategory;
 
     @Column(name="staff_no",nullable = false)
     private String staffNo;

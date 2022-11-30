@@ -31,6 +31,8 @@ public class DSRTeamEntity {
     @Column(nullable = false)
     private String name;
 
+    private String code;
+
     private String location;
 
     @Column(name="created_by")

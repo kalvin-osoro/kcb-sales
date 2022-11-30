@@ -572,6 +572,7 @@ public class AuthService implements IAuthService{
             }
         }catch (Exception ex){
             mLogger.log(Level.SEVERE,ex.getMessage(),ex);
+            valid = false;
         }
 
         return valid;

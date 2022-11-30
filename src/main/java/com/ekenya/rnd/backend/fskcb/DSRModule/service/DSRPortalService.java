@@ -637,6 +637,12 @@ public class DSRPortalService implements IDSRPortalService {
                     node.put("branchName","");
                 }
                 //
+                if(entity.getExpiryDate() != null) {
+                    node.put("expiry", dateFormat.format(entity.getExpiryDate()));
+                }else{
+                    node.put("expiry","");
+                }
+                //
                 list.add(node);
             }
             return list;

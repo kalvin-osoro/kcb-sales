@@ -1,10 +1,9 @@
-package com.ekenya.rnd.backend.fskcb.CrmAdapter;
+package com.ekenya.rnd.backend.fskcb.CrmAdapters.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 @Service

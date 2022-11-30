@@ -7,7 +7,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuest
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionType;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.ISmsService;
-import com.ekenya.rnd.backend.fskcb.CrmAdapter.ICRMService;
+import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
