@@ -108,9 +108,8 @@ public class AuthService implements IAuthService{
                 DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(model.getStaffNo()).orElse(null);
                 if(dsrAccount != null && dsrAccount.getExpiryDate() != null){
                     //
-//                    LocalDateTime accountExpiry = LocalDateTime.ofInstant(dsrAccount.getExpiryDate().toInstant(),
-//                            ZoneId.systemDefault());
-                    LocalDateTime accountExpiry = dsrAccount.getExpiryDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    LocalDateTime accountExpiry = LocalDateTime.ofInstant(dsrAccount.getExpiryDate().toInstant(),
+                            ZoneId.systemDefault());
                     //
                     if(accountExpiry.isAfter(LocalDateTime.now())){
                         response.setSuccess(false);

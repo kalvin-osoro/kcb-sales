@@ -32,9 +32,6 @@ public class DFSVoomaAssetEntity {
     private Long id;
     private String serialNumber;
     private Long agentId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dsr_id")
-    private DSRAccountEntity dsrDetails;
     private Date dateAssigned;
     @Column(name="status")
     @Enumerated(EnumType.STRING)
@@ -44,6 +41,9 @@ public class DFSVoomaAssetEntity {
     private Date lastServiceDate;
     private String longitude;
     private String latitude;
+    @Enumerated(EnumType.STRING)
+    private AssetType assetType;
+    private String assetNumber;
     private Date createdOn;
     @Embedded
     private VisitsReport visitsReport;

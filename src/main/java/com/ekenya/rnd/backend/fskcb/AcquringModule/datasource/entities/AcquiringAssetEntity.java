@@ -42,6 +42,7 @@ public class AcquiringAssetEntity {
     private Date lastServiceDate;
     private String longitude;
     private String latitude;
+
     @Embedded
     private VisitsReport visitsReport;
     private boolean assigned=false;

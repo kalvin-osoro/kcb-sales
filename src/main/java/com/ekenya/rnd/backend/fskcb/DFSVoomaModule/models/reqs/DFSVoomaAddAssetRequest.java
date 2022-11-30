@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AssetCondition;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.AssetType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,8 @@ public class DFSVoomaAddAssetRequest {
     private Long deviceId;
     private String serialNumber;
     private AssetCondition assetCondition;
+    private AssetType assetType;
+    private String assetNumber;
     private String lastServiceDate;
     private String visitDate;
     private String dsrId;

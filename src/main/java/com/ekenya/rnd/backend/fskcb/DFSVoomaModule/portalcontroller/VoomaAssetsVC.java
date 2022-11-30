@@ -42,14 +42,15 @@ public class VoomaAssetsVC {
 
     @PostMapping(value = "/vooma-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
-        List<?> list = voomaService.getAllAssets();
-        boolean success = list != null;
+        List<?> assets = voomaService.getAllAssets();
+        boolean success = assets != null;
+
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)list);
+            node.addAll((List)assets);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
