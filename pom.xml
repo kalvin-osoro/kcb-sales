@@ -230,6 +230,12 @@
 <!--			<artifactId>unxml</artifactId>-->
 <!--			<version>0.9</version>-->
 <!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20220924</version>
+		</dependency>
 	</dependencies>
 
 
