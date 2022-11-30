@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/api/v1")
 public class VoomaOnboardingVC {
     @Autowired
     private IVoomaPortalService voomaService;
@@ -21,11 +22,9 @@ public class VoomaOnboardingVC {
 
     //List all onboarded merchants
     @PostMapping(value = "/vooma-get-all-onboarded-merchant")
-    public ResponseEntity<?> getAllMerchantOnboardings(GetALLDSRMerchantOnboardingRequest model) {
-        List<?> list = voomaService.loadAllOnboardedMerchants(model);
+    public ResponseEntity<?> getAllMerchantOnboardings() {
+        List<?> list = voomaService.loadAllOnboardedMerchants();
         boolean success = list != null;
-
-
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
@@ -38,6 +37,23 @@ public class VoomaOnboardingVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping(value = "/vooma-get-all-approved-merchant")
+    public ResponseEntity<?> getAllMerchantApprovals() {
+        List<?> list = voomaService.loadAllApprovedMerchants();
+        boolean success = list != null;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 

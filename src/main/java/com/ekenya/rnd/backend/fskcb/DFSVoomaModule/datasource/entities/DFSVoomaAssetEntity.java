@@ -44,6 +44,7 @@ public class DFSVoomaAssetEntity {
     private Date lastServiceDate;
     private String longitude;
     private String latitude;
+    private Date createdOn;
     @Embedded
     private VisitsReport visitsReport;
     private String images;

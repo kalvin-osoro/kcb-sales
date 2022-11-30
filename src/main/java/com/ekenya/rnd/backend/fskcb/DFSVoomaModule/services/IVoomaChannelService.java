@@ -23,11 +23,7 @@ public interface IVoomaChannelService {
                               MultipartFile frontID,
                               MultipartFile backID,
                               MultipartFile kraPinCertificate,
-                              MultipartFile certificateOFGoodConduct,
-                              MultipartFile businessLicense,
                               MultipartFile shopPhoto,
-                              MultipartFile customerPhoto,
-                              MultipartFile companyRegistrationDoc,
                               MultipartFile signatureDoc,
                               MultipartFile businessPermitDoc);
 
@@ -53,4 +49,6 @@ public interface IVoomaChannelService {
     boolean updateCustomerVisit(VoomaCustomerVisitsRequest request);
 
     List<ObjectNode> getAllCustomerVisitsByDSR(VoomaCustomerVisitsRequest model);
+
+
 }

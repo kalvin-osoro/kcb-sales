@@ -1,5 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
@@ -30,6 +32,10 @@ public class VoomaChannelService implements IVoomaChannelService {
     private final DFSVoomaAgentOnboardingRepository dfsVoomaAgentOnboardingRepositor;
     private final DFSVoomaAgentOnboardingKYCRepository dfsVoomaAgentOnboardingKYCRepository;
     private final DFSVoomaAssetRepository dfsVoomaAssetRepository;
+
+    private final AcquiringAssetRepository acquiringAssetRepository;
+
+    private final AcquiringAssetFileRepository acquiringAssetFileRepository;
     
     private final FileStorageService fileStorageService;
 
@@ -132,7 +138,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     }
 
     @Override
-    public Object onboardNewMerchant(String merchDetails, MultipartFile frontID, MultipartFile backID, MultipartFile kraPinCertificate, MultipartFile certificateOFGoodConduct, MultipartFile businessLicense, MultipartFile shopPhoto, MultipartFile customerPhoto, MultipartFile companyRegistrationDoc, MultipartFile signatureDoc, MultipartFile businessPermitDoc) {
+    public Object onboardNewMerchant(String merchDetails, MultipartFile frontID, MultipartFile backID, MultipartFile kraPinCertificate,   MultipartFile shopPhoto,   MultipartFile signatureDoc, MultipartFile businessPermitDoc) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             DFSVoomaOnboardRequest onboardMerchantRequest = mapper.readValue(
@@ -187,23 +193,6 @@ public class VoomaChannelService implements IVoomaChannelService {
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
                     "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate,subFolderName);
 
-            String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
-                    "certificateOFGoodConduct_" + merchDtls.getId() + ".PNG", certificateOFGoodConduct,subFolderName);
-
-            String businessLicensePath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessLicense_" + merchDtls.getId() + ".PNG", businessLicense,subFolderName);
-
-
-            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + merchDtls.getId() + ".PNG", shopPhoto,subFolderName);
-
-            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + merchDtls.getId() + ".PNG", customerPhoto,subFolderName);
-
-
-            String companyRegistrationDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "companyRegistrationDoc_" + merchDtls.getId() + ".PNG", companyRegistrationDoc,subFolderName);
-
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
                     "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc,subFolderName);
 
@@ -214,13 +203,8 @@ public class VoomaChannelService implements IVoomaChannelService {
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
             filePathList.add(kraPinCertificatePath);
-            filePathList.add(certificateOFGoodConductPath);
-            filePathList.add(shopPhotoPath);
-            filePathList.add(customerPhotoPath);
-            filePathList.add(companyRegistrationDocPath);
             filePathList.add(signatureDocPath);
             filePathList.add(businessPermitDocPath);
-            filePathList.add(businessLicensePath);
             filePathList.forEach(filePath -> {
                 DFSVoomaOnboardingKYCentity merchantKYC = new DFSVoomaOnboardingKYCentity();
                 merchantKYC.setFilePath(filePath);

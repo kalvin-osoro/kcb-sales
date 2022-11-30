@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController("/retail-lead")
+@RequestMapping(path = "/api/v1")
 public class RetailLeadsVC {
     
     @Autowired

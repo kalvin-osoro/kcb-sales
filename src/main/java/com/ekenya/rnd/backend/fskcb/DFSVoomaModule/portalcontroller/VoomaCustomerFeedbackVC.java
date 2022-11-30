@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaFeedBackRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaFeedBackRequestById;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,16 +44,16 @@ public class VoomaCustomerFeedbackVC {
 
 
     @PostMapping("/vooma-get-customer-feedback-responses")
-    public ResponseEntity<?> getCustomerFeedbackResponses(@RequestBody DFSVoomaFeedBackRequest dfsVoomaFeedBackRequest) {
-        Object list = portalService.getCustomerFeedbackResponses(dfsVoomaFeedBackRequest);
+    public ResponseEntity<?> getCustomerFeedbackResponses(@RequestBody DFSVoomaFeedBackRequestById model) {
+        ArrayNode list = portalService.getCustomerFeedbackResponses(model);
         boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-            node.putArray("responses").addAll((ArrayNode) objectMapper.valueToTree(list));
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll(list);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

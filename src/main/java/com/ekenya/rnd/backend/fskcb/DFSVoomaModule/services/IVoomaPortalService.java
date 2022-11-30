@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public interface IVoomaPortalService {
 
     boolean assignLeadToDsr(VoomaAssignLeadRequest model);
 
-    List<ObjectNode> getAllLeads(VoomaLeadsListRequest filters);
+    List<ObjectNode> getAllLeads();
 
 
     List<ObjectNode> getCustomerVisitQuestionnaireResponses(VoomaCustomerVisitQuestionnaireRequest voomaCustomerVisitQuestionnaireRequest);
@@ -30,7 +31,7 @@ public interface IVoomaPortalService {
 
     boolean createQuestionnaire(VoomaAddQuestionnaireRequest voomaAddQuestionnaireRequest);
 
-    List<ObjectNode> loadAllOnboardedMerchants(GetALLDSRMerchantOnboardingRequest model);
+    List<ObjectNode> loadAllOnboardedMerchants();
 
     boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest);
 
@@ -45,5 +46,11 @@ public interface IVoomaPortalService {
 
     List<ObjectNode> getAllCustomerFeedbacks();
 
-    Object getCustomerFeedbackResponses(DFSVoomaFeedBackRequest dfsVoomaFeedBackRequest);
+    ArrayNode getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model);
+
+    List<ObjectNode> loadAllApprovedMerchants();
+
+    boolean createAsset(String assetDetails, MultipartFile[] assetFiles);
+
+    List<ObjectNode> getAllAssets();
 }

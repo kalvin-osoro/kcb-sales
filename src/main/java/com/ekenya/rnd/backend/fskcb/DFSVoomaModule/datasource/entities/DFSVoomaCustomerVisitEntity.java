@@ -27,7 +27,7 @@ public class DFSVoomaCustomerVisitEntity {
     private String highlights;
     private String visitDate;
     @Enumerated(EnumType.STRING)
-    private Status status=Status.ACTIVE;
+    private Status status;
     private String customerName;
     //    private Zone zone;
     private Date createdOn;

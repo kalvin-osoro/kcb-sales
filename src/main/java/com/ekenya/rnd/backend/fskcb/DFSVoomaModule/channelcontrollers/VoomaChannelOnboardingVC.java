@@ -25,17 +25,10 @@ public class  VoomaChannelOnboardingVC {
                                                 @RequestParam("frontID") MultipartFile frontID,
                                                 @RequestParam("backID") MultipartFile backID,
                                                 @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
-                                                @RequestParam("certificateOFGoodConduct") MultipartFile certificateOFGoodConduct,
-                                                @RequestParam("businessLicense") MultipartFile businessLicense,
                                                 @RequestParam("shopPhoto") MultipartFile shopPhoto,
-                                                @RequestParam("customerPhoto") MultipartFile customerPhoto,
-                                                @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
                                                 @RequestParam("signatureDoc") MultipartFile signatureDoc,
                                                 @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
-        Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,certificateOFGoodConduct,
-                businessLicense,shopPhoto,
-                customerPhoto,companyRegistrationDoc,
-                signatureDoc,businessPermitDoc);
+        Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
         boolean success = merchantObj != null;
 
         //Response

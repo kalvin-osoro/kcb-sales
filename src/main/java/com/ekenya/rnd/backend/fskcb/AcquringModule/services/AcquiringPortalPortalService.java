@@ -129,25 +129,20 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
         try {
             if (assetDetails == null) {
                 return false;
-                //return ResponseEntity.badRequest().body("Asset details are required");
             }
-            //
-
             ObjectMapper mapper = new ObjectMapper();
 
             AcquiringAddAssetRequest acquiringAddAssetRequest =
                     mapper.readValue(assetDetails, AcquiringAddAssetRequest.class);
             AcquiringAssetEntity acquiringAssetEntity = new AcquiringAssetEntity();
-            //
             acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
-            //
             acquiringAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
-            //
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(acquiringAssetEntity);
-            //
+            String subFolder = "acquiring-assets";
 
             List<String> filePathList = new ArrayList<>();
             //save files
+
             filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
             //save file paths to db
             filePathList.forEach(filePath -> {
@@ -185,9 +180,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
                 //"http://10.20.2.12:8484/"
 
                 // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
-                for (String path : acquiringAssetEntity.getImages().split(";")) {
-                    images.add(path);
-                }
+
 
                 asset.put("images", images);
 
@@ -419,7 +412,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             AcquiringOnboardEntity acquiringOnboardEntity1 = acquiringOnboardingsRepository.findById(acquiringOnboardEntity.getId()).get();
-            acquiringOnboardEntity1.setIsApproved(true);
+            acquiringOnboardEntity1.setApproved(true);
             //save
             acquiringOnboardingsRepository.save(acquiringOnboardEntity1);
             log.info("Merchant onboarding approved successfully");
@@ -438,10 +431,10 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.findAll()) {
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
-                asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+                asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
                 asset.put("Region", acquiringOnboardEntity.getRegion());
-                asset.put("phoneNumber", acquiringOnboardEntity.getMerchantPhone());
-                asset.put("email", acquiringOnboardEntity.getMerchantEmail());
+                asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                asset.put("email", acquiringOnboardEntity.getBusinessEmail());
                 asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
                 asset.put("agent Id", acquiringOnboardEntity.getDsrId());
                 asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
@@ -464,7 +457,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
              {
                 for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.fetchAllOnboardingCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
-                    asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+                    asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
                     asset.put("onboarding-status", acquiringOnboardEntity.getStatus().ordinal());
                     asset.put("agent Id", acquiringOnboardEntity.getDsrId());
                     asset.put("date_onboarded", acquiringOnboardEntity.getCreatedOn().getTime());
@@ -493,10 +486,10 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode asset = mapper.createObjectNode();
             asset.put("id", acquiringOnboardEntity.getId());
-            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
             asset.put("Region", acquiringOnboardEntity.getRegion());
-            asset.put("phoneNumber", acquiringOnboardEntity.getMerchantPhone());
-            asset.put("email", acquiringOnboardEntity.getMerchantEmail());
+            asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+            asset.put("email", acquiringOnboardEntity.getBusinessEmail());
             asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
             asset.put("agent Id", acquiringOnboardEntity.getDsrId());
             asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
@@ -608,7 +601,6 @@ try {
                     asset.put("asset_logitude", acquiringAssetEntity.getLongitude());
                     asset.put("asset_latitude", acquiringAssetEntity.getLatitude());
                     asset.put("asset_serial", acquiringAssetEntity.getSerialNumber());
-                    asset.put("image", acquiringAssetEntity.getImages());
 
                     list.add(asset);
                 }

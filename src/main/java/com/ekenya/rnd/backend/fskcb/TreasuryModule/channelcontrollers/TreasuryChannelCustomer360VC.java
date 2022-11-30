@@ -1,6 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryCustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryCustomerCallReportRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -86,7 +86,7 @@ public class TreasuryChannelCustomer360VC {
 
 
     @PostMapping("/treasury-get-customer-visit-questionnaire")
-    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody TreasuryCustomerVisitQuestionnaireRequest request) {
+    public ResponseEntity<?> getCustomerVisitQuestionnaireResponses(@RequestBody TreasuryCustomerCallReportRequest request) {
 
         //
         ArrayNode list = channelService.loadCustomerVisitQuestionnaireResponses(request);

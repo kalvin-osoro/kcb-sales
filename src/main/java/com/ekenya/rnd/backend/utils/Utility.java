@@ -29,9 +29,10 @@ public class Utility {
         return arrValidStatus.contains(status);
     }
     public static Date getPostgresCurrentTimeStampForInsert() throws Exception{
-        SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-        java.util.Date date = new Date();
-        return formatter1.parse(formatter1.format(date));
+Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = sdf.format(date);
+        return sdf.parse(formattedDate);
     }
 
 

@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class TreasuryChannelLeadsVC {
@@ -22,10 +25,10 @@ public class TreasuryChannelLeadsVC {
 
     //Create new lead
     @PostMapping("/treasury-create-lead")
-    public ResponseEntity<?> createLead(@RequestBody TreasuryAddLeadRequest request) {
+    public ResponseEntity<?> createLead(@RequestBody TreasuryAddLeadRequest model) {
 
         //TODO;
-        boolean success = channelService.attemptCreateLead(request);
+        boolean success = channelService.attemptCreateLead(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -43,17 +46,15 @@ public class TreasuryChannelLeadsVC {
     }
 
     @PostMapping(value = "/treasury-get-all-leads")
-    public ResponseEntity<?> getAllDSRLeads(@RequestBody String dsrId) {
-
-
-        //
-        ArrayNode list = channelService.loadDSRLeads(dsrId);
-
+    public ResponseEntity<?> getAllDSRLeads(@RequestBody TreasuryGetDSRLeads model) {
+        List<?>dsrLeads=channelService.loadDSRLead(model);
+        boolean success = dsrLeads!=null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null){
+        if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)dsrLeads);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

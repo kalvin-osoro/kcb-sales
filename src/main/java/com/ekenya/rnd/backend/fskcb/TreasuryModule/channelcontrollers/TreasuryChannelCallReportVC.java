@@ -1,48 +1,25 @@
-package com.ekenya.rnd.backend.fskcb.RetailModule.channelcontrollers;
+package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
-
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services.IPSChannelService;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryCustomerCallReportRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class RetailChannelTargetsVC {
-
-
+public class TreasuryChannelCallReportVC {
     @Autowired
-    IPSChannelService channelService;
+    ITreasuryChannelService channelService;
 
-
-    @PostMapping("/retail-get-targets-summary")
-    public ResponseEntity<?> getTargetsSummary() {
-
-        //Resp =>
-        //{
-        //    "visits":{
-        //        "achieved":67,
-        //        "target":100
-        //    },
-        //    "leads":{
-        //        "achieved":67,
-        //        "target":100
-        //    },
-        //    "campaigns":{
-        //        "achieved":67,
-        //        "target":100
-        //    },
-        //    "cur-comission":56000,
-        //    "prev-comission":45000
-        //}
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+    @PostMapping("/treasury-create-call-report")
+    ResponseEntity<?> createCallReport(@RequestBody TreasuryCustomerCallReportRequest model) {
+        boolean success = channelService.createCallReport(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -57,5 +34,6 @@ public class RetailChannelTargetsVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
+
     }
 }

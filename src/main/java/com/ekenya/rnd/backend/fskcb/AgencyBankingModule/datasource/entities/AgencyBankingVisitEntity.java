@@ -23,7 +23,6 @@ public class AgencyBankingVisitEntity {
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private  Long id;
-    //dsr id from dsr table
     private  Long dsrId;
     private String dsrName;
     private String agentName;
@@ -36,18 +35,30 @@ public class AgencyBankingVisitEntity {
     private Date updatedOn;
     private boolean isCompleted=false;
     //yes or no question
-    private String IsAgentOutletsBranded;
-    private String IsOutletHaveCorrectTarrif;
-    private String IsTransactionRecorded;
-    private String IsAgentCollectCashDepositAndPostLater;
-    private String IsAgentHaveEnoughFloat;
-    private String IsAgentActive;
-    private String IsAgentInvolveInIllegalActivities;
-    private String IsAgentHaveCopyOfAgentBulk;
-    private String IsAgentChargeCustomerForUpfront;
-    private String IsAgentMaintainedRecordsOfAccOpened;
-    private String IsAgentTrainedKYC;
-    private String IsAgentUsedManualReceipt;
-    private String reconcilleFloatAccStatement;
-    private String IsAgentDealWithForexExchange;
+    private String scheduled;
+           private String location;
+           private String pdqVersionCorrect;
+//    status
+private String chargesUpfront;
+  private String  maintainsOpenedAcctRecords;
+  private String trained;
+   private String usesManualReceiptBook;
+   private String  reconcileFloatAcctStat;
+   private String moreThanXTransactions;
+    private String  branchCollectsRegisters;
+    private String tariffPosterWellDisplayed;
+    private String  customersSignRegister;
+    private String  registerReflected;
+    private String      outletWellBranded;
+    private String registerCompleted;
+    private String    visitedByStaff;
+    private String locatedStrategically;
+    private String     csLevel;
+    private String   outletPresentable;
+    private String       hasFloat;
+    private String customerInflow;
+    private String     agentTrxInForeignCur;
+    private String    comments;
+    private String  hasMaterials;
+
 }

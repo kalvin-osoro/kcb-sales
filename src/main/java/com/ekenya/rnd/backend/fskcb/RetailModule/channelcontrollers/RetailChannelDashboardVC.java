@@ -5,11 +5,14 @@ import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailChannelService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
@@ -45,16 +48,14 @@ public class RetailChannelDashboardVC {
 
     @PostMapping("/retail-summary")
     public ResponseEntity<?> getSummary() {
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        ArrayList<?> list = retailChannelService.loadDSRSummary();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayList)list);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

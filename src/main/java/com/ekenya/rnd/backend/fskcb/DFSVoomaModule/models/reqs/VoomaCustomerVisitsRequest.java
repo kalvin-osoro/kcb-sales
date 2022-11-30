@@ -14,8 +14,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class VoomaCustomerVisitsRequest {
-    @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private  Long id;
     private  Long dsrId;
     private String dsrName;
