@@ -564,6 +564,8 @@ public class AuthService implements IAuthService{
                 valid = false;
             }else {
                 //
+                account.setPassword(passwordEncoder.encode(code));
+                //
                 account.setShouldSetPIN(true);
                 //
                 userRepository.save(account);//save user to db
