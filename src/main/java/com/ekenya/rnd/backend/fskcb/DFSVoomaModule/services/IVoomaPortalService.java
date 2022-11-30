@@ -51,4 +51,6 @@ public interface IVoomaPortalService {
     List<ObjectNode> loadAllApprovedMerchants();
 
     boolean createAsset(String assetDetails, MultipartFile[] assetFiles);
+
+    List<ObjectNode> getAllAssets();
 }

@@ -442,6 +442,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             DFSVoomaAssetEntity dfsVoomaAssetEntity = new DFSVoomaAssetEntity();
             dfsVoomaAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
             dfsVoomaAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
+            dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             String subFolder = "vooma-assets";
 
@@ -458,13 +459,34 @@ public class VoomaPortalService implements IVoomaPortalService {
             });
             return true;
 
-        } catch (JsonMappingException e) {
-            //return ResponseEntity.badRequest().body("Invalid asset details");
+
+    } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        return false;
+        @Override
+    public List<ObjectNode> getAllAssets() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dfsVoomaAssetEntity.getId());
+                objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
+                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
+                objectNode.put("createdOn", dfsVoomaAssetEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all assets", e);
+        }
+        return null;
     }
 
 

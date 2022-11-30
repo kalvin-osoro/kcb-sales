@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class VoomaAssetsVC {
@@ -40,17 +42,14 @@ public class VoomaAssetsVC {
 
     @PostMapping(value = "/vooma-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
-
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+        List<?> list = voomaService.getAllAssets();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
