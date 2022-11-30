@@ -226,7 +226,7 @@ public class UsersService implements IUsersService {
                 node.put("staffNo",account.getStaffNo());
                 node.put("email",account.getEmail());
                 node.put("phoneNo",account.getPhoneNumber());
-                node.put("verified",account.getIsVerified());
+                node.put("verified",account.isVerified());
                 node.put("type",account.getAccountType().toString());
                 try {
                     if(account.getLastLogin() != null) {
@@ -308,7 +308,7 @@ public class UsersService implements IUsersService {
             node.put("staffNo",account.getStaffNo());
             node.put("email",account.getEmail());
             node.put("phoneNo",account.getPhoneNumber());
-            node.put("verified",account.getIsVerified());
+            node.put("verified",account.isVerified());
             node.put("type",account.getAccountType().toString());
             try {
                 if(account.getLastLogin() != null) {

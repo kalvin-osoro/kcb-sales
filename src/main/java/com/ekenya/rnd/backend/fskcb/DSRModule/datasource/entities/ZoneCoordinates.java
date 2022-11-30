@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs;
+package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.entity.Zone;
 import lombok.*;

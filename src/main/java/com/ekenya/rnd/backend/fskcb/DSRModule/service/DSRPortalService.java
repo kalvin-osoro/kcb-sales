@@ -11,6 +11,10 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.ProfileAndUserEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfileEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
@@ -46,6 +50,12 @@ public class DSRPortalService implements IDSRPortalService {
     private IDSRAccountsRepository dsrAccountsRepository;
     @Autowired
     IBranchesRepository branchesRepository;
+
+    @Autowired
+    UserProfilesRepository userProfilesRepository;
+    @Autowired
+    ProfilesAndUsersRepository profilesAndUsersRepository;
+
     @Autowired
     IAuthService authService;
 
@@ -342,8 +352,9 @@ public class DSRPortalService implements IDSRPortalService {
     @Override
     public boolean addDSR(AddDSRAccountRequest dsrRequest) {
         try {
-            if (dsrRequest == null)
+            if (dsrRequest == null) {
                 throw new Exception("Bad request");
+            }
 
 //            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 //            if (userDetails == null)throw new RuntimeException("Service error");
@@ -375,6 +386,21 @@ public class DSRPortalService implements IDSRPortalService {
                 //
                 dsrAccountsRepository.save(dsrDetails);
 
+//                if(!dsrRequest.getProfiles().isEmpty()){
+//
+//                    for (Long profileId:
+//                         dsrRequest.getProfiles()) {
+//
+//                        UserProfileEntity userProfile = userProfilesRepository.findById(profileId).orElse(null)
+//
+//                                if(userProfile != null){
+//
+//                                    ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
+//                                    profileAndUserEntity.setUserId();
+//                                }
+//
+//                    }
+//                }
                 return true;
             }
             //Team not found or dsr already exists

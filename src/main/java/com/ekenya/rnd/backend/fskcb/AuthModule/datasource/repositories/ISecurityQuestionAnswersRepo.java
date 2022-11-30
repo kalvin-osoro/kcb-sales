@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface ISecurityQuestionAnswersRepo  extends JpaRepository<SecurityQuestionAnswerEntity, Long> {
 
+    Optional<SecurityQuestionAnswerEntity> findAllByQuestionIdAndUserIdAndStatus(Long qnId,long userId, Status status);
+
     Optional<SecurityQuestionAnswerEntity> findAllByIdAndUserIdAndStatus(Long id,long uid, Status status);
 
     List<SecurityQuestionAnswerEntity> findAllByUserIdAndStatus (long uid, Status status);

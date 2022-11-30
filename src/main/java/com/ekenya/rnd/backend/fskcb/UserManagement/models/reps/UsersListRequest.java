@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.models.reps;
 
 import com.ekenya.rnd.backend.utils.AppConstants;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UsersListRequest {
 
     public int pageNo = 1;//AppConstants.DEFAULT_PAGE_NUMBER;
