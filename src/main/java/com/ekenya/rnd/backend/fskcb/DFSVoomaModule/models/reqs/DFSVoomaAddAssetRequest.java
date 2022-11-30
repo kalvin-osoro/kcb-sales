@@ -24,13 +24,5 @@ public class DFSVoomaAddAssetRequest {
     private String visitDate;
     private String dsrId;
 
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
-        } catch (Exception ex) {
-            log.info("Error is "+ex.getMessage());
-        }
-        return "{}";
-    }
+
 }
