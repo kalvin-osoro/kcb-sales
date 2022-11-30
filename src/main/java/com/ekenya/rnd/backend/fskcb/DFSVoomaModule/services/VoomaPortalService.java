@@ -471,26 +471,23 @@ public class VoomaPortalService implements IVoomaPortalService {
 
         @Override
     public List<ObjectNode> getAllAssets() {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
-                ObjectNode objectNode = mapper.createObjectNode();
-                objectNode.put("id", dfsVoomaAssetEntity.getId());
-                objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
-                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
-                objectNode.put("createdOn", dfsVoomaAssetEntity.getCreatedOn().getTime());
-                objectNode.put("assigned", dfsVoomaAssetEntity.isAssigned());
-                objectNode.put("lastServiceDate", dfsVoomaAssetEntity.getLastServiceDate().getTime());
-
-                list.add(objectNode);
+            try {
+                List<ObjectNode> list = new ArrayList<>();
+                ObjectMapper mapper = new ObjectMapper();
+                for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
+                    ObjectNode objectNode = mapper.createObjectNode();
+                   objectNode.put("id", dfsVoomaAssetEntity.getId());
+                    objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
+                    objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
+                    objectNode.put("createdOn", dfsVoomaAssetEntity.getCreatedOn().getTime());
+                    objectNode.put("assigned", dfsVoomaAssetEntity.isAssigned());
+                    objectNode.put("lastAssigned", dfsVoomaAssetEntity.getLastServiceDate().getTime());
+                    list.add(objectNode);
+                }
                 return list;
-
+            } catch (Exception e) {
+                log.error("Error occurred while getting all targets", e);
             }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while getting all assets", e);
-        }
         return null;
     }
 
