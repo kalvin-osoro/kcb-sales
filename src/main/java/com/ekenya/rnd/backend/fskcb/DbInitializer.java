@@ -106,10 +106,16 @@ public class DbInitializer {
             userApp.setRoles(Collections.singleton(userRole));//set role to user
             userRepository.save(userApp);//save user to db
 
-            //
+            //Add admin to all profiles
             for (UserProfileEntity profile: profilesRepository.findAll()) {
                 //Add user to profile
 
+                ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
+                profileAndUserEntity.setUserId(userApp.getId());
+                profileAndUserEntity.setProfileId(profile.getId());
+                profileAndUserEntity.setStatus(Status.ACTIVE);
+
+                profilesAndUsersRepository.save(profileAndUserEntity);
             }
             //
             log.info("Admin Account registered successfully");
@@ -227,6 +233,9 @@ public class DbInitializer {
             profileRole.setRoleId(userRole.getId());
             //
             profilesAndRolesRepository.save(profileRole);
+
+            //Add admin to profile
+
         }
 
         //Acquiring
@@ -522,10 +531,13 @@ public class DbInitializer {
             }
             String teamName = "DFS KASARANI";
             String teamCode = "6756";
+            String teamLoc = "KASARANI";
 
             if(!dsrTeamsRepository.findByName(teamName).isPresent()){
                 DSRTeamEntity team = new DSRTeamEntity();
                 team.setName(teamName);
+                team.setCode(teamCode);
+                team.setLocation(teamLoc);
                 team.setRegionId(optionalDSRRegion.get().getId());
                 dsrTeamsRepository.save(team);
             }
