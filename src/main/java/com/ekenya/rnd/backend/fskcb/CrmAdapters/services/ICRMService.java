@@ -50,6 +50,8 @@ public interface ICRMService {
      */
     JsonObject fetchVoomaAccountsSoldByStaffNo(String staffNo);
 
+    JsonObject getForexRates();
+
 
 
 }

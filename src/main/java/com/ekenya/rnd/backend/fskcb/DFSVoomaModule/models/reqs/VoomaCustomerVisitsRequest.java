@@ -17,13 +17,13 @@ public class VoomaCustomerVisitsRequest {
     private  Long id;
     private  Long dsrId;
     private String dsrName;
-    private String merchantName;
+//    private String merchantName;
     private String customerName;
     private String reasonForVisit;
     private String actionPlan;
     private String highlights;
     private String visitDate;
-    private Status status;
+//    private Status status;
     private Date createdOn;
     private Date updatedOn;
 }

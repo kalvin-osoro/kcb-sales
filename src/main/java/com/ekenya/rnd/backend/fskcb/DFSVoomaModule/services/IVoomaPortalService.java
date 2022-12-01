@@ -31,7 +31,7 @@ public interface IVoomaPortalService {
 
     boolean createQuestionnaire(VoomaAddQuestionnaireRequest voomaAddQuestionnaireRequest);
 
-    List<ObjectNode> loadAllOnboardedMerchants();
+//    List<ObjectNode> loadAllOnboardedMerchants();
 
     boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest);
 
@@ -53,4 +53,6 @@ public interface IVoomaPortalService {
     boolean createAsset(String assetDetails, MultipartFile[] assetFiles);
 
     List<ObjectNode> getAllAssets();
+
+    List<ObjectNode> getAllMerchantOnboardings();
 }

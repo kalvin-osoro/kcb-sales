@@ -23,13 +23,13 @@ public class VoomaOnboardingVC {
     //List all onboarded merchants
     @PostMapping(value = "/vooma-get-all-onboarded-merchant")
     public ResponseEntity<?> getAllMerchantOnboardings() {
-        List<?> list = voomaService.loadAllOnboardedMerchants();
-        boolean success = list != null;
+        List<?> merchants = voomaService.getAllMerchantOnboardings();
+        boolean success = merchants != null;
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)list);
+
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
