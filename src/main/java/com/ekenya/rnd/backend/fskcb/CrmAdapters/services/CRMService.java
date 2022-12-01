@@ -63,6 +63,7 @@ public class CRMService implements ICRMService {
         map.add("scope", environment.getProperty("credentials.scope"));
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
+
         try {
             ResponseEntity<String> responseEntity = restTemplate.postForEntity(environment.getProperty("endpoints.crm.generateToken"),
                     entity, String.class);
