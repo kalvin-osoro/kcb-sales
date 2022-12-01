@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
@@ -583,6 +584,17 @@ public class VoomaPortalService implements IVoomaPortalService {
            DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
            DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+              if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                  user.setCampaignTargetValue(model.getTargetValue());
+              } if (target.getTargetType().equals(TargetType.LEADS)) {
+               user.setLeadsTargetValue(model.getTargetValue());
+           }
+           if (target.getTargetType().equals(TargetType.VISITS)) {
+               user.setVisitsTargetValue(model.getTargetValue());
+           }
+           if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+               user.setOnboardTargetValue(model.getTargetValue());
+           }
 
            Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
            dfsVoomaTargetEntities.add(target);
@@ -597,7 +609,6 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Override
     public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
-        //assign target to team and set their team target value
         try {
             if (model == null) {
                 return false;
@@ -605,6 +616,20 @@ public class VoomaPortalService implements IVoomaPortalService {
             DSRTeamEntity teamEntity = idsrTeamsRepository.findById(model.getTeamId()).orElse(null);
 
             DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                teamEntity.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                teamEntity.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                teamEntity.setVisitsTargetValue(model.getTargetValue());
+            }
+            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                teamEntity.setOnboardTargetValue(model.getTargetValue());
+            }
+
             Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) teamEntity.getDfsVoomaTargetEntities();
             dfsVoomaTargetEntities.add(target);
             teamEntity.setDfsVoomaTargetEntities(dfsVoomaTargetEntities);
@@ -614,6 +639,21 @@ public class VoomaPortalService implements IVoomaPortalService {
         } catch (Exception e) {
             log.error("Error occurred while assigning target to team", e);
         }
+        return false;
+    }
+
+    @Override
+    public Object getTargetById(VoomaTargetByIdRequest model) {
+        try {
+            if (model==null){
+                return  false;
+            }
+            DFSVoomaTargetEntity dfsVoomaTargetEntity = dfsVoomaTargetRepository.findById(model.getId()).orElse(null);
+            return dfsVoomaTargetEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting target by id", e);
+        }
+
         return false;
     }
 }

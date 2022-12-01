@@ -5,7 +5,6 @@ import com.ekenya.rnd.backend.utils.Status;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Target;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -100,6 +99,11 @@ public class DSRAccountEntity {
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "dfsVoomaTargetId"))
     private Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities;
+
+    private String campaignTargetValue;
+    private String leadsTargetValue;
+    private String visitsTargetValue;
+    private String onboardTargetValue;
 
 
 }

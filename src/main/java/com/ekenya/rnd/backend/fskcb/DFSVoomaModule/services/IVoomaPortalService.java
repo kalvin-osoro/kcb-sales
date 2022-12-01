@@ -61,4 +61,6 @@ public interface IVoomaPortalService {
     boolean assignTargetToDSR(DSRTAssignTargetRequest model);
 
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
+
+    Object getTargetById(VoomaTargetByIdRequest model);
 }

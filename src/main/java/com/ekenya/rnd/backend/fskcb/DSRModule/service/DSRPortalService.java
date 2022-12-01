@@ -279,6 +279,10 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("id",entity.getId());
                 node.put("name",entity.getName());
                 node.put("loc",entity.getLocation());
+                node.put("leadTargetValue",entity.getLeadsTargetValue());
+                node.put("campaignTargetValue",entity.getCampaignTargetValue());
+                node.put("visitTargetValue",entity.getVisitsTargetValue());
+                node.put("onboardingTargetValue",entity.getOnboardTargetValue());
                 node.put("status",entity.getStatus().equals(Status.ACTIVE)?"Active":"Inactive");
                 if(entity.getCreatedOn() != null) {
                     node.put("dateCreated", dateFormat.format(entity.getCreatedOn()));

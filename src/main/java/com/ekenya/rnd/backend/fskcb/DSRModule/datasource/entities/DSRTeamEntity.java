@@ -70,4 +70,9 @@ public class DSRTeamEntity {
             joinColumns = @JoinColumn(name = "teamId"),
             inverseJoinColumns = @JoinColumn(name = "dfsVoomaTargetId"))
     private Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities;
+
+    private String campaignTargetValue;
+    private String leadsTargetValue;
+    private String visitsTargetValue;
+    private String onboardTargetValue;
 }
