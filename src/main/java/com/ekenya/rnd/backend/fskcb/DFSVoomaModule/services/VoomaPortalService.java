@@ -7,7 +7,9 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.*;
 import com.ekenya.rnd.backend.utils.Status;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -33,6 +36,7 @@ import java.util.List;
 public class VoomaPortalService implements IVoomaPortalService {
     private final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     private final DFSVoomaLeadRepository dfsVoomaLeadRepository;
+    private final IDSRTeamsRepository idsrTeamsRepository;
     private final DFSVoomaQuestionerResponseRepository dfsVoomaQuestionerResponseRepository;
     private final DFSVoomaQuestionnaireQuestionRepository dfsVoomaQuestionnaireQuestionRepository;
     private final DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
@@ -49,24 +53,24 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Override
     public boolean scheduleCustomerVisit(VoomaCustomerVisitsRequest model) {
-       try {
-           if (model == null) {
-               return false;
-           }
-              DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
-           dfsVoomaCustomerVisitEntity.setCustomerName(model.getCustomerName());
-           dfsVoomaCustomerVisitEntity.setVisitDate(model.getVisitDate());
-           dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
-           dfsVoomaCustomerVisitEntity.setDsrName(model.getDsrName());
+        try {
+            if (model == null) {
+                return false;
+            }
+            DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
+            dfsVoomaCustomerVisitEntity.setCustomerName(model.getCustomerName());
+            dfsVoomaCustomerVisitEntity.setVisitDate(model.getVisitDate());
+            dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
+            dfsVoomaCustomerVisitEntity.setDsrName(model.getDsrName());
 
-           dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-           dfsVoomaCustomerVisitEntity.setStatus(Status.ACTIVE);
-              dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);
-              return true;
+            dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            dfsVoomaCustomerVisitEntity.setStatus(Status.ACTIVE);
+            dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);
+            return true;
 
-       } catch (Exception e) {
-              log.error("Error occurred while scheduling customer visit", e);
-       }
+        } catch (Exception e) {
+            log.error("Error occurred while scheduling customer visit", e);
+        }
         return false;
     }
 
@@ -235,7 +239,7 @@ public class VoomaPortalService implements IVoomaPortalService {
 //         return null;
 //    }
 
-        @Override
+    @Override
     public boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest) {
         try {
             DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(dfsVoomaApproveMerchantOnboarindRequest.getId()).get();
@@ -383,12 +387,12 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Override
     public ArrayNode getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model) {
         try {
-            if (model == null){
+            if (model == null) {
                 return null;
             }
             ObjectMapper mapper = new ObjectMapper();
             ArrayNode objectNode = mapper.createArrayNode();
-                for (DFSVoomaFeedBackEntity dfsVoomaFeedBackResponseEntity : dfsVoomaFeedBackRepository.findAll()) {
+            for (DFSVoomaFeedBackEntity dfsVoomaFeedBackResponseEntity : dfsVoomaFeedBackRepository.findAll()) {
                 ObjectNode objectNode1 = mapper.createObjectNode();
                 objectNode1.put("id", dfsVoomaFeedBackResponseEntity.getId());
                 objectNode1.put("questionAsked", dfsVoomaFeedBackResponseEntity.getQuestionAsked());
@@ -464,7 +468,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             return true;
 
 
-    } catch (JsonMappingException e) {
+        } catch (JsonMappingException e) {
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -473,41 +477,41 @@ public class VoomaPortalService implements IVoomaPortalService {
         }
     }
 
-        @Override
+    @Override
     public List<ObjectNode> getAllAssets() {
-                try {
-                    List<ObjectNode> list = new ArrayList<>();
-                    ObjectMapper mapper = new ObjectMapper();
-                    for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
 
-                        ObjectNode asset = mapper.createObjectNode();
-                        asset.put("id", dfsVoomaAssetEntity.getId());
-                        asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
-                        asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
-                        //asset.put("type",acquiringAssetEntity.getAssetType());
-                        //
-                        ArrayNode images = mapper.createArrayNode();
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", dfsVoomaAssetEntity.getId());
+                asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
+                asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
+                //asset.put("type",acquiringAssetEntity.getAssetType());
+                //
+                ArrayNode images = mapper.createArrayNode();
 
-                        //"http://10.20.2.12:8484/"
+                //"http://10.20.2.12:8484/"
 
-                        // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
-
-
-                        asset.put("images", images);
+                // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
 
 
-                        //
-                        list.add(asset);
-                    }
+                asset.put("images", images);
 
 
-                    return list;
-
-                } catch (Exception e) {
-                    log.error("Error occurred while fetching all assets", e);
-                }
-                return null;
+                //
+                list.add(asset);
             }
+
+
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all assets", e);
+        }
+        return null;
+    }
 
     @Override
     public List<ObjectNode> getAllMerchantOnboardings() {
@@ -524,10 +528,10 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getMerchantPhone());
                 objectNode.put("email", dfsVoomaOnboardEntity.getMerchantEmail());
                 objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
-                ArrayNode arrayNode = mapper.createArrayNode();
-                arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
-                arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
-                objectNode.put("co-ordinates", arrayNode);
+                ObjectNode node = mapper.createObjectNode();
+                node.put("longitude", dfsVoomaOnboardEntity.getLongitude());
+                node.put("latitude", dfsVoomaOnboardEntity.getLatitude());
+                objectNode.put("co-ordinates", node);
                 list.add(objectNode);
             }
             return list;
@@ -536,7 +540,84 @@ public class VoomaPortalService implements IVoomaPortalService {
         }
         return null;
     }
+
+    @Override
+    public Object getCustomerVisitById(VoomaCustomerVisitsByIdRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity =
+                    dfsVoomaCustomerVisitRepository.findById(model.getVisitId()).orElse(null);
+
+            //  //region,branch,dsrName,customerName,visitDate,latitude,longitude
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", dfsVoomaCustomerVisitEntity.getId());
+            objectNode.put("customerName", dfsVoomaCustomerVisitEntity.getCustomerName());
+            objectNode.put("dsrName", dfsVoomaCustomerVisitEntity.getDsrName());
+            objectNode.put("branch", dfsVoomaCustomerVisitEntity.getBranch());
+            objectNode.put("region", dfsVoomaCustomerVisitEntity.getRegion());
+            objectNode.put("location", dfsVoomaCustomerVisitEntity.getLocation());
+            objectNode.put("visitDate", dfsVoomaCustomerVisitEntity.getVisitDate());
+            //object of longitude and latitude
+            ObjectNode node = mapper.createObjectNode();
+            node.put("latitude", dfsVoomaCustomerVisitEntity.getLongitude());
+            node.put("longitude", dfsVoomaCustomerVisitEntity.getLatitude());
+            objectNode.put("co-ordinates", node);
+            return objectNode;
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while getting customer visit by id", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
+       try {
+           if (model == null) {
+               return false;
+           }
+           DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
+
+           DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+
+           Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
+           dfsVoomaTargetEntities.add(target);
+           user.setDfsVoomaTargetEntities(dfsVoomaTargetEntities);
+           dsrAccountsRepository.save(user);
+           return true;
+       } catch (Exception e) {
+              log.error("Error occurred while assigning target to dsr", e);
+       }
+        return false;
+    }
+
+    @Override
+    public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
+        //assign target to team and set their team target value
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRTeamEntity teamEntity = idsrTeamsRepository.findById(model.getTeamId()).orElse(null);
+
+            DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+            Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) teamEntity.getDfsVoomaTargetEntities();
+            dfsVoomaTargetEntities.add(target);
+            teamEntity.setDfsVoomaTargetEntities(dfsVoomaTargetEntities);
+            idsrTeamsRepository.save(teamEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to team", e);
+        }
+        return false;
+    }
 }
+
 
 
 

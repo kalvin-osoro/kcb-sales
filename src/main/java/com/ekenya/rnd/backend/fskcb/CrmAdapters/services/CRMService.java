@@ -1,9 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.CrmAdapters.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 
 @Service
 public class CRMService implements ICRMService {
+    public String mpole="Kuwa mpole";
 
     @Resource
     public Environment environment;
@@ -63,7 +66,6 @@ public class CRMService implements ICRMService {
         map.add("scope", environment.getProperty("credentials.scope"));
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
-
         try {
             ResponseEntity<String> responseEntity = restTemplate.postForEntity(environment.getProperty("endpoints.crm.generateToken"),
                     entity, String.class);
@@ -146,22 +148,22 @@ public class CRMService implements ICRMService {
     }
 
     @Override
-    public JsonObject getForexRates() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+    public ArrayNode getForexRates() {
+        //use currecy exchange api to get forex rates use web client
         try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(environment.getProperty("endpoints.crm.forexRates"),
-                    String.class, entity);
-            JsonObject payload = JsonParser.parseString(responseEntity.getBody()).getAsJsonObject();
-            return payload;
-
-        } catch (RestClientException e) {
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            throw new RuntimeException(e);
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayNode arrayNode = mapper.createArrayNode();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("currency", "USD");
+            node.put("buying", 100);
+            node.put("selling", 100);
+            node.put("waiting for Api integration...",mpole);
+            arrayNode.add(node);
+            return arrayNode;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 }
 

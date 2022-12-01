@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -19,23 +20,23 @@ public class VoomaCustomerVisitsVC {
 
     @Autowired
     IVoomaPortalService voomaService;
-    
+
     @PostMapping("/vooma-schedule-customer-visit")
     public ResponseEntity<?> scheduleCustomerVisit(@RequestBody VoomaCustomerVisitsRequest model) {
-        boolean success= voomaService.scheduleCustomerVisit(model);
+        boolean success = voomaService.scheduleCustomerVisit(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if (success) {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("success",success);
+            node.put("success", success);
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -48,16 +49,16 @@ public class VoomaCustomerVisitsVC {
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if (success) {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -67,20 +68,19 @@ public class VoomaCustomerVisitsVC {
         boolean success = customerVisits != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if (success) {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)customerVisits);
+            node.addAll((List) customerVisits);
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
         }
     }
-
 
 
     @PostMapping("/vooma-get-customer-visit-questionnaire-response")
@@ -90,18 +90,40 @@ public class VoomaCustomerVisitsVC {
         boolean success = customerVisitQuestionnaireResponses != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if (success) {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
             node.addAll((ArrayNode) objectMapper.valueToTree(customerVisitQuestionnaireResponses));
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
         }
     }
+    //region,branch,dsrName,customerName,location,visitDate,latitude,longitude
 
+    //get customer visits by id
+    @PostMapping("/vooma-get-customer-visit-by-id")
+    public ResponseEntity<?> getCustomerVisitById(@RequestBody VoomaCustomerVisitsByIdRequest model) {
+
+        Object customerVisit = voomaService.getCustomerVisitById(model);
+        boolean success = customerVisit != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putPOJO("customerVisit", customerVisit);
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
+    }
 }

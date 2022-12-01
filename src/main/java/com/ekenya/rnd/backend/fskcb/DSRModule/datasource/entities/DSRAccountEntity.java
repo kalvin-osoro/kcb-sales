@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.utils.Status;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Target;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -93,4 +94,12 @@ public class DSRAccountEntity {
     private Date dateLocked;
     @Column(name="date_locked")
     private Date dateUnlocked;
+    private String targetValue;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "dfs_vooma_target_dsr",
+            joinColumns = @JoinColumn(name = "dsrAccountId"),
+            inverseJoinColumns = @JoinColumn(name = "dfsVoomaTargetId"))
+    private Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities;
+
+
 }

@@ -55,4 +55,10 @@ public interface IVoomaPortalService {
     List<ObjectNode> getAllAssets();
 
     List<ObjectNode> getAllMerchantOnboardings();
+
+    Object getCustomerVisitById(VoomaCustomerVisitsByIdRequest model);
+
+    boolean assignTargetToDSR(DSRTAssignTargetRequest model);
+
+    boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 }

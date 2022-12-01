@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CrmAdapters.services;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -50,7 +51,7 @@ public interface ICRMService {
      */
     JsonObject fetchVoomaAccountsSoldByStaffNo(String staffNo);
 
-    JsonObject getForexRates();
+    public ArrayNode getForexRates();
 
 
 

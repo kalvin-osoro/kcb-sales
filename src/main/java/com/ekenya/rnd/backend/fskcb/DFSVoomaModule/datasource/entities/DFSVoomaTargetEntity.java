@@ -40,5 +40,4 @@ public class DFSVoomaTargetEntity {
     private TargetStatus targetStatus;
     @Enumerated(EnumType.STRING)
     private AssignmentType assignmentType;
-
 }

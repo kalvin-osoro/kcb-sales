@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.entity.Zone;
 import com.ekenya.rnd.backend.utils.Status;
@@ -63,4 +64,10 @@ public class DSRTeamEntity {
             joinColumns = @JoinColumn(name = "team_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "member_id"))
     private Set<DSRAccountEntity> members;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "dfs_vooma_target_team",
+            joinColumns = @JoinColumn(name = "teamId"),
+            inverseJoinColumns = @JoinColumn(name = "dfsVoomaTargetId"))
+    private Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities;
 }

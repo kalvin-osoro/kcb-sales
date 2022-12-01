@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.CRMService;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryNegRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryTradeRequest;
@@ -23,11 +24,13 @@ public class TreasuryChannelForexVC {
 
     @Autowired
     ITreasuryChannelService channelService;
+    @Autowired
+    CRMService crmService;
 
     @PostMapping("/treasury-get-forex-rates")
     public ResponseEntity<?> getForexCounterRates() {
 
-        ArrayNode rates = channelService.getForexRates();
+        ArrayNode rates = crmService.getForexRates();
 
 
         //Response

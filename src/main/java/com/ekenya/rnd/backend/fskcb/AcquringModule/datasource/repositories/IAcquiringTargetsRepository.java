@@ -18,13 +18,13 @@ public interface IAcquiringTargetsRepository  extends JpaRepository<AcquiringTar
     AcquiringTargetEntity[] fetchAllTargetCreatedLast7Days();
 
     //pick targets value and TargetAchieved where aquiringTargetType is ONBOARDING
-    @Query(value = "SELECT target_value, target_achievement FROM dbo_aqc_targets where acquiring_target_type = 'ONBOARDING'", nativeQuery = true)
+    @Query(value = "SELECT targetValue, targetAchievement FROM dbo_aqc_targets where acquiringTargetType = 'ONBOARDING'", nativeQuery = true)
     AcquiringTargetEntity[] fetchAllOnboardingTarget();
-@Query(value = "SELECT target_value, target_achievement,id FROM dbo_aqc_targets where acquiring_target_type = 'VISITS'", nativeQuery = true)
+@Query(value = "SELECT targetValue, targetAchievement,id FROM dbo_aqc_targets where acquiringTargetType = 'VISITS'", nativeQuery = true)
     AcquiringTargetEntity[] fetchAllVisitsTarget();
-@Query(value = "SELECT target_value, target_achievement,id FROM dbo_aqc_targets where acquiring_target_type = 'LEADS'", nativeQuery = true)
+@Query(value = "SELECT targetValue, targetAchievement,id FROM dbo_aqc_targets where acquiringTargetType = 'LEADS'", nativeQuery = true)
     AcquiringTargetEntity[] fetchAllLeadsTarget();
-@Query(value = "SELECT target_value, target_achievement,id FROM dbo_aqc_targets where acquiring_target_type = 'CAMPAINGS'", nativeQuery = true)
+@Query(value = "SELECT targetValue, targetAchievement,id FROM dbo_aqc_targets where acquiringTargetType = 'CAMPAINGS'", nativeQuery = true)
     AcquiringTargetEntity[] fetchAllCampaignsTarget();
     @Query(value = "SELECT t FROM dbo_aqc_targets t WHERE t.targetType = ?1",nativeQuery = true)
     AcquiringTargetEntity[] findAllByTargetType(TargetType leads);

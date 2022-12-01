@@ -1,6 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaAddTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -97,6 +99,7 @@ public class VoomaTargetsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -105,5 +108,47 @@ public class VoomaTargetsVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
+
     }
-}
+    //Assign targets to a team  and dsr
+    @PostMapping(value = "/vooma-assign-targets")
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+        boolean success = voomaService.assignTargetToDSR(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            }
+        }
+        //assign targets to a team
+        @PostMapping(value = "/vooma-assign-targets-to-team")
+        public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+            boolean success = voomaService.assignTargetToTeam(model);
+
+            //Response
+            ObjectMapper objectMapper = new ObjectMapper();
+            if(success){
+                //Object
+                ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+                    return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+                }else{
+
+                    //Response
+                    return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+                }
+            }
+        }
+
+
+

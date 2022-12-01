@@ -26,4 +26,10 @@ public class VoomaCustomerVisitsRequest {
 //    private Status status;
     private Date createdOn;
     private Date updatedOn;
+    private String region;
+    private String location;
+
+    private  String longitude;
+    private String latitude;
+    private String branch;
 }

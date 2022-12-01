@@ -26,6 +26,12 @@ public class DFSVoomaCustomerVisitEntity {
     private String actionPlan;
     private String highlights;
     private String visitDate;
+    private String region;
+    private String location;
+
+    private  String longitude;
+    private String latitude;
+    private String branch;
     @Enumerated(EnumType.STRING)
     private Status status;
     private String customerName;

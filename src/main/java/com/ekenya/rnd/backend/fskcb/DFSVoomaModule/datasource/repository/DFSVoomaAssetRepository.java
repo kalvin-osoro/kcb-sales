@@ -9,7 +9,7 @@ import java.util.List;
 public interface DFSVoomaAssetRepository extends JpaRepository<DFSVoomaAssetEntity, Long> {
 
 
-    @Query(value = "SELECT * FROM dfs_vooma_asset WHERE dfs_vooma_onboard_entity_id =?1 AND asset_type =?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM dfs_vooma_asset WHERE dfsVoomaOnboardEntity_id =?1 AND assetType =?2", nativeQuery = true)
     List<DFSVoomaAssetEntity> findAllByDfsVoomaOnboardingEntityId(Long merchantId);
 
 }
