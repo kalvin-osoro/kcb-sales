@@ -217,6 +217,17 @@ public class AuthService implements IAuthService{
                 response.setRemAttempts(account.getRemLoginAttempts());
                 response.setErrorMessage("Account is Blocked.");
                 return response;
+            }else{
+                //Check user is in role ADMIN and SYS_ADMIN
+                if(!account.getRoles().stream().allMatch( h ->
+                        h.getName().equalsIgnoreCase(SystemRoles.ADMIN) ||
+                        h.getName().equalsIgnoreCase(SystemRoles.SYS_ADMIN))) {
+                    //
+                    response.setSuccess(false);
+                    response.setRemAttempts(account.getRemLoginAttempts());
+                    response.setErrorMessage("Account is not authorised for this channel");
+                    return response;
+                }
             }
 
             //Continue ..
@@ -233,6 +244,23 @@ public class AuthService implements IAuthService{
             //Update Login info ..
             account.setLastLogin(Calendar.getInstance().getTime());
             userRepository.save(account);
+
+
+            ArrayNode profiles = mObjectMapper.createArrayNode();
+
+            for (ProfileAndUserEntity userAndProfile:
+                    profilesAndUsersRepository.findAllByUserId(account.getId())) {
+                UserProfileEntity userProfile = userProfilesRepository.findById(userAndProfile.getProfileId()).orElse(null);
+                //
+                if(userAndProfile != null) {
+                    ObjectNode node = mObjectMapper.createObjectNode();
+                    node.put("name",userProfile.getName());
+                    node.put("code",userProfile.getCode());
+                    profiles.add(node);
+                }
+            }
+            //
+            response.setProfiles(profiles);
 
             //get user roles
             List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
