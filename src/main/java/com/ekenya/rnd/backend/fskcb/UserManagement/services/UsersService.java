@@ -240,6 +240,22 @@ public class UsersService implements IUsersService {
                 }
                 node.put("lastLocation",account.getLastCoords());
                 //
+//                ArrayNode profiles = mObjectMapper.createArrayNode();
+//
+//                for (ProfileAndUserEntity userAndProfile:
+//                        profilesAndUsersRepository.findAllByUserId(account.getId())) {
+//                    UserProfileEntity userProfile = userProfilesRepository.findById(userAndProfile.getProfileId()).orElse(null);
+//                    //
+//                    if(userAndProfile != null) {
+//                        ObjectNode node1 = mObjectMapper.createObjectNode();
+//                        node1.put("name",userProfile.getName());
+//                        node1.put("code",userProfile.getCode());
+//                        profiles.add(node1);
+//                    }
+//                }
+//                //
+//                node.putPOJO("profiles",profiles);
+                //
                 list.add(node);
             }
             return list;
