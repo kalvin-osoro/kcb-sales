@@ -473,42 +473,43 @@ public class VoomaPortalService implements IVoomaPortalService {
 
         @Override
     public List<ObjectNode> getAllAssets() {
-            try {
-                List<ObjectNode> list = new ArrayList<>();
-                ObjectMapper mapper = new ObjectMapper();
-                for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
+                try {
+                    List<ObjectNode> list = new ArrayList<>();
+                    ObjectMapper mapper = new ObjectMapper();
+                    for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
 
-                    ObjectNode asset = mapper.createObjectNode();
-                    asset.put("id", dfsVoomaAssetEntity.getId());
-                    asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
-                    asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
-                    //asset.put("type",acquiringAssetEntity.getAssetType());
-                    //
-                    ArrayNode images = mapper.createArrayNode();
+                        ObjectNode asset = mapper.createObjectNode();
+                        asset.put("id", dfsVoomaAssetEntity.getId());
+                        asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
+                        asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
+                        //asset.put("type",acquiringAssetEntity.getAssetType());
+                        //
+                        ArrayNode images = mapper.createArrayNode();
 
-                    //"http://10.20.2.12:8484/"
+                        //"http://10.20.2.12:8484/"
 
-                    // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
-
-
-                    asset.put("images", images);
+                        // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
 
 
-                    //
-                    list.add(asset);
+                        asset.put("images", images);
+
+
+                        //
+                        list.add(asset);
+                    }
+
+
+                    return list;
+
+                } catch (Exception e) {
+                    log.error("Error occurred while fetching all assets", e);
                 }
-
-
-                return list;
-
-            } catch (Exception e) {
-                log.error("Error occurred while fetching all assets", e);
+                return null;
             }
-            return null;
     }
 
 
-}
+
 
 
 

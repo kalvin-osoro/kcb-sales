@@ -37,7 +37,7 @@ public class DFSVoomaAssetEntity {
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
     @Column(name = "asset_condition")
-    private AssetCondition assetCondition;
+    private AssetCondition assetCondition=AssetCondition.WORKING;
     private Date lastServiceDate;
     private String longitude;
     private String latitude;
