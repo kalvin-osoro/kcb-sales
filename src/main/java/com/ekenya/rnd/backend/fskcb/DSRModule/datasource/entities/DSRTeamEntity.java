@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.entity.Zone;
 import com.ekenya.rnd.backend.utils.Status;
@@ -89,4 +90,11 @@ public class DSRTeamEntity {
             joinColumns = @JoinColumn(name = "teamId"),
             inverseJoinColumns = @JoinColumn(name = "agencyTargetId"))
     private Set<AgencyBankingTargetEntity> agencyBankingTargetEntities;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ps_banking_target_team",
+            joinColumns = @JoinColumn(name = "teamId"),
+            inverseJoinColumns = @JoinColumn(name = "psBankingTargetId"))
+    private Set<PSBankingTargetEntity> psBankingTargetEntities;
+
 }

@@ -1,6 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSApproveMerchantOnboarindRequest;
@@ -50,4 +53,10 @@ public interface IPBPortalService {
     List<ObjectNode> getAllCustomerFeedbacks();
 
     Object getCustomerFeedbackResponses(PSBankingFeedBackRequest psBankingFeedBackRequest);
+
+    boolean assignTargetToDSR(DSRTAssignTargetRequest model);
+
+    boolean assignTargetToTeam(TeamTAssignTargetRequest model);
+
+    Object getTargetById(VoomaTargetByIdRequest model);
 }
