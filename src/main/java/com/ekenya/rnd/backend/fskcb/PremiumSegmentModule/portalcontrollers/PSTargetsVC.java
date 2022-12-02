@@ -110,7 +110,7 @@ boolean success = psService.createTarget(model);
     }
 
     @PostMapping(value = "/premium-assign-targets")
-    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(@RequestBody DSRTAssignTargetRequest model) {
         boolean success = psService.assignTargetToDSR(model);
 
         //Response
@@ -129,7 +129,7 @@ boolean success = psService.createTarget(model);
     }
     //assign targets to a team
     @PostMapping(value = "/premium-assign-targets-to-team")
-    public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToTeam(@RequestBody TeamTAssignTargetRequest model) {
         boolean success = psService.assignTargetToTeam(model);
 
         //Response
@@ -147,7 +147,7 @@ boolean success = psService.createTarget(model);
         }
     }
     @PostMapping(value = "/premium-get-all-targets-by-id")
-    public ResponseEntity<?> getVoomaGetTargetById(VoomaTargetByIdRequest model) {
+    public ResponseEntity<?> getVoomaGetTargetById(@RequestBody VoomaTargetByIdRequest model) {
         Object target = psService.getTargetById(model);
         Boolean success = target != null;
 

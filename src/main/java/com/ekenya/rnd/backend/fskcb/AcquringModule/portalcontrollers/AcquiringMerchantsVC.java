@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class AcquiringMerchantsVC {
@@ -36,18 +38,18 @@ public class AcquiringMerchantsVC {
         }
     }
 
-    @PostMapping(value = "/acquiring-get-all-merchants")
-    public ResponseEntity<?> getAllMerchant() {
-
-
-        //TODO;
-        boolean success = false;//acquiringService..(model);
+    @PostMapping(value = "/acquiring-get-all-approved-merchants")
+    public ResponseEntity<?> getAllApprovedMerchant() {
+        List<?> list = acquiringService.loadAllApprovedMerchants();
+        //
+        boolean success  = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

@@ -43,14 +43,15 @@ public class AcquiringTargetsVC {
 
     @PostMapping(value = "/acquiring-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
-        List<?> acquiringTargetsResponse = acquiringService.loadTargets();
-        boolean success = acquiringTargetsResponse != null;// acquiringTargetsResponse.size() > 0;
+        List<?> list = acquiringService.loadTargets();
+        boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

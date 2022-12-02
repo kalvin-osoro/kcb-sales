@@ -113,7 +113,7 @@ public class PBTargetsVC {
     }
 
     @PostMapping(value = "/ps-banking-assign-targets")
-    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(@RequestBody DSRTAssignTargetRequest model) {
         boolean success = pbService.assignTargetToDSR(model);
 
         //Response
@@ -132,7 +132,7 @@ public class PBTargetsVC {
     }
     //assign targets to a team
     @PostMapping(value = "/ps-banking-assign-targets-to-team")
-    public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToTeam(@RequestBody TeamTAssignTargetRequest model) {
         boolean success = pbService.assignTargetToTeam(model);
 
         //Response
@@ -150,7 +150,7 @@ public class PBTargetsVC {
         }
     }
     @PostMapping(value = "/ps-banking-get-all-targets-by-id")
-    public ResponseEntity<?> getVoomaGetTargetById(VoomaTargetByIdRequest model) {
+    public ResponseEntity<?> getVoomaGetTargetById(@RequestBody VoomaTargetByIdRequest model) {
         Object target = pbService.getTargetById(model);
         Boolean success = target != null;
 

@@ -12,11 +12,12 @@ import java.util.Date;
 @Repository
 public interface IAcquiringOnboardingsRepository extends JpaRepository<AcquiringOnboardEntity, Long> {
 
-    @Query(value = "SELECT * FROM dbo_aqc_onboardings where created_on >= current_date at time zone 'UTC' - interval '7 days'", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_aqc_onboarding where created_on >= current_date at time zone 'UTC' - interval '7 days'", nativeQuery = true)
     AcquiringOnboardEntity[] fetchAllOnboardingCreatedLast7Days();
-    @Query(value = "SELECT * FROM dbo_aqc_onboardings WHERE MATCH(merchant_name, business_name, nearly_land_mark) "
+    @Query(value = "SELECT * FROM dbo_aqc_onboarding WHERE MATCH(merchant_name, business_name, nearly_land_mark) "
             + "AGAINST (?1)", nativeQuery = true)
     AcquiringOnboardEntity[] searchCustomers(String keyword);
-    //find all customers within a region name
-//    AcquiringOnboardEntity[] findAllMechart(String name);
+    @Query(value = "SELECT * FROM dbo_aqc_onboarding WHERE isApproved = true", nativeQuery = true)
+    AcquiringOnboardEntity[] findAllByIsApproved();
+
 }

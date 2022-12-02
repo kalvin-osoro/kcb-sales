@@ -6,7 +6,9 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaOnboardRepository;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -42,6 +44,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final IAcquiringLeadsRepository mLeadsRepo;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
+    private final DFSVoomaOnboardRepository  dfsVoomaOnboardRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private  final IDSRAccountsRepository dsrAccountsRepository;
     private final ModelMapper modelMapper;
@@ -85,25 +88,24 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
     @Override
     public List<ObjectNode> loadTargets() {
         try {
-            List<ObjectNode> targets = new ArrayList<>();
+            List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringTargetEntity target : iAcquiringTargetsRepository.findAll()) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("id", target.getId());
-                node.put("name", target.getTargetName());
-                node.put("description", target.getTargetDesc());
-                node.put("status", target.getTargetStatus().toString());
-                node.put("value", target.getTargetValue());
-                node.put("achievement", target.getTargetAchievement());
-                node.put("source", target.getTargetSource());
-                node.put("startDate", target.getStartDate().toString());
-                node.put("endDate", target.getEndDate().toString());
-                node.put("type", target.getTargetType().toString());
-                targets.add(node);
+            for (AcquiringTargetEntity acquiringTargetEntity : iAcquiringTargetsRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", acquiringTargetEntity.getId());
+                objectNode.put("targetName", acquiringTargetEntity.getTargetName());
+                objectNode.put("targetSource", acquiringTargetEntity.getTargetSource());
+                objectNode.put("agencyTargetType", acquiringTargetEntity.getTargetType().ordinal());
+                objectNode.put("targetDesc", acquiringTargetEntity.getTargetDesc());
+                objectNode.put("targetStatus", acquiringTargetEntity.getTargetStatus().name());
+                objectNode.put("targetValue", acquiringTargetEntity.getTargetValue());
+//                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
+                objectNode.put("createdOn", acquiringTargetEntity.getCreatedOn().getTime());
+                list.add(objectNode);
             }
-            return targets;
+            return list;
         } catch (Exception e) {
-            log.error("Error loading targets", e);
+            log.error("Error occurred while getting all targets", e);
         }
         return null;
     }
@@ -423,6 +425,7 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             AcquiringOnboardEntity acquiringOnboardEntity1 = acquiringOnboardingsRepository.findById(acquiringOnboardEntity.getId()).get();
+            acquiringOnboardEntity.setStatus(OnboardingStatus.APPROVED);
             acquiringOnboardEntity1.setApproved(true);
             //save
             acquiringOnboardingsRepository.save(acquiringOnboardEntity1);
@@ -700,6 +703,35 @@ try {
             return target;
         } catch (Exception e) {
             log.error("Error occurred while fetching target by id", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> loadAllApprovedMerchants() {
+        try {
+
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.findAllByIsApproved()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", acquiringOnboardEntity.getId());
+                objectNode.put("merchantName", acquiringOnboardEntity.getClientLegalName());
+                objectNode.put("region", acquiringOnboardEntity.getRegion());
+                objectNode.put("status", acquiringOnboardEntity.getStatus().ordinal());
+                objectNode.put("dateOnborded", acquiringOnboardEntity.getCreatedOn().getTime());
+                objectNode.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                objectNode.put("email", acquiringOnboardEntity.getBusinessEmail());
+                objectNode.put("dsrId", acquiringOnboardEntity.getDsrId());
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(acquiringOnboardEntity.getLongitude());
+                arrayNode.add(acquiringOnboardEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
     }

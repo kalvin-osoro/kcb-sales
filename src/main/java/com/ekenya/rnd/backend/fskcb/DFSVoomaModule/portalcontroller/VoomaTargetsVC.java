@@ -62,7 +62,7 @@ public class VoomaTargetsVC {
 
 
     @PostMapping(value = "/vooma-get-agents-in-target")
-    public ResponseEntity<?> getVoomaAgentsInTarget(VoomaDSRsInTargetRequest model) {
+    public ResponseEntity<?> getVoomaAgentsInTarget(@RequestBody VoomaDSRsInTargetRequest model) {
         //TODO: Implement this
         boolean success = /*voomaService.getVoomaAgentsInTarget(model)*/true;
         ObjectMapper objectMapper = new ObjectMapper();
@@ -108,8 +108,8 @@ public class VoomaTargetsVC {
 
     }
     //Assign targets to a team  and dsr
-    @PostMapping(value = "/vooma-assign-targets")
-    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+    @PostMapping(value = "/vooma-assign-targets/")
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(@RequestBody DSRTAssignTargetRequest model) {
         boolean success = voomaService.assignTargetToDSR(model);
 
         //Response
@@ -128,7 +128,7 @@ public class VoomaTargetsVC {
         }
         //assign targets to a team
         @PostMapping(value = "/vooma-assign-targets-to-team")
-        public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+        public ResponseEntity<?> getVoomaAssignTargetsToTeam(@RequestBody TeamTAssignTargetRequest model) {
             boolean success = voomaService.assignTargetToTeam(model);
 
             //Response
@@ -146,7 +146,7 @@ public class VoomaTargetsVC {
                 }
             }
     @PostMapping(value = "/vooma-get-all-targets-by-id")
-    public ResponseEntity<?> getVoomaGetTargetById(VoomaTargetByIdRequest model) {
+    public ResponseEntity<?> getVoomaGetTargetById( @RequestBody VoomaTargetByIdRequest model) {
         Object target = voomaService.getTargetById(model);
         Boolean success = target != null;
 
