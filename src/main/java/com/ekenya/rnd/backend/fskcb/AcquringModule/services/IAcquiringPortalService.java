@@ -4,6 +4,9 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,4 +67,9 @@ public interface IAcquiringPortalService {
 
     List<?> getAssetsSummary(AcquringSummaryRequest filters);
 
+    boolean assignTargetToDSR(DSRTAssignTargetRequest model);
+
+    boolean assignTargetToTeam(TeamTAssignTargetRequest model);
+
+    Object getTargetById(VoomaTargetByIdRequest model);
 }

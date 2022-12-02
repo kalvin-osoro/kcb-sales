@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class AcquiringDSRsInTargetRequest {
     private String targetId;
-    private String[] dsrId;
+    private String dsrId;
     private Integer setTarget;
     private Integer achievedTarget;
     private String dsrName;

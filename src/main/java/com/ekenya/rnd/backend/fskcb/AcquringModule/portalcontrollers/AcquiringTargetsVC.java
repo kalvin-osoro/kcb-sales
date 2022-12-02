@@ -3,6 +3,9 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -98,6 +101,64 @@ public class AcquiringTargetsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping(value = "/acquiring-assign-targets")
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+        boolean success = acquiringService.assignTargetToDSR(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    //assign targets to a team
+    @PostMapping(value = "/acquiring-assign-targets-to-team")
+    public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+        boolean success = acquiringService.assignTargetToTeam(model);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping(value = "/acquiring-get-all-targets-by-id")
+    public ResponseEntity<?> getVoomaGetTargetById(VoomaTargetByIdRequest model) {
+        Object target = acquiringService.getTargetById(model);
+        Boolean success = target != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putPOJO("target",target);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

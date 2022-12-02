@@ -5,6 +5,15 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -23,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 
 
 @Service
@@ -34,9 +43,11 @@ public class AcquiringPortalPortalService implements IAcquiringPortalService {
     private final IAcquiringLeadsRepository mLeadsRepo;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
+    private  final IDSRAccountsRepository dsrAccountsRepository;
     private final ModelMapper modelMapper;
     private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
+    private final IDSRTeamsRepository dsrTeamsRepository;
     private final AcquiringCustomerVisitRepository acquiringCustomerVisitRepository;
     private final AcquiringQuestionnaireRepository acquiringQuestionnaireRepository;
 
@@ -612,7 +623,86 @@ try {
         return null;
     }
 
+    @Override
+    public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
+            AcquiringTargetEntity target = iAcquiringTargetsRepository.findById(model.getTargetId()).orElse(null);
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                user.setCampaignTargetValue(model.getTargetValue());
+            } if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                user.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<AcquiringTargetEntity> acquiringTargetEntities = (Set<AcquiringTargetEntity>) user.getAcquiringTargetEntities();
+            acquiringTargetEntities.add(target);
+            user.setAcquiringTargetEntities(acquiringTargetEntities);
+            dsrAccountsRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to dsr", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRTeamEntity teamEntity = dsrTeamsRepository.findById(model.getTeamId()).orElse(null);
+
+            AcquiringTargetEntity target = iAcquiringTargetsRepository.findById(model.getTargetId()).orElse(null);
+
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                teamEntity.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                teamEntity.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                teamEntity.setVisitsTargetValue(model.getTargetValue());
+            }
+            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                teamEntity.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<AcquiringTargetEntity> acquiringTargetEntities = (Set<AcquiringTargetEntity>) teamEntity.getAcquiringTargetEntities();
+            acquiringTargetEntities.add(target);
+            teamEntity.setAcquiringTargetEntities(acquiringTargetEntities);
+            dsrTeamsRepository.save(teamEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to team", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getTargetById(VoomaTargetByIdRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            AcquiringTargetEntity target = iAcquiringTargetsRepository.findById(model.getId()).orElse(null);
+            return target;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching target by id", e);
+        }
+        return null;
+    }
 
 
 }

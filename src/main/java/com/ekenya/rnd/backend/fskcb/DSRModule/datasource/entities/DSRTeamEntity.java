@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.entity.Zone;
@@ -75,4 +76,10 @@ public class DSRTeamEntity {
     private String leadsTargetValue;
     private String visitsTargetValue;
     private String onboardTargetValue;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "acquiring_target_team",
+            joinColumns = @JoinColumn(name = "teamId"),
+            inverseJoinColumns = @JoinColumn(name = "acquiringTargetId"))
+    private Set<AcquiringTargetEntity> acquiringTargetEntities;
 }
