@@ -1,6 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -38,4 +41,10 @@ public interface IPSPortalService {
     boolean createTarget(PSAddTargetRequest model);
 
     List<ObjectNode> getAllTargets();
+
+    boolean assignTargetToDSR(DSRTAssignTargetRequest model);
+
+    boolean assignTargetToTeam(TeamTAssignTargetRequest model);
+
+    Object getTargetById(VoomaTargetByIdRequest model);
 }

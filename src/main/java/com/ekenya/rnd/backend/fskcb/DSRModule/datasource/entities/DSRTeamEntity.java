@@ -4,6 +4,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSTargetEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.entity.Zone;
 import com.ekenya.rnd.backend.utils.Status;
@@ -96,5 +98,17 @@ public class DSRTeamEntity {
             joinColumns = @JoinColumn(name = "teamId"),
             inverseJoinColumns = @JoinColumn(name = "psBankingTargetId"))
     private Set<PSBankingTargetEntity> psBankingTargetEntities;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "premium_banking_target_team",
+            joinColumns = @JoinColumn(name = "teamId"),
+            inverseJoinColumns = @JoinColumn(name = "premiumBankingTargetId"))
+    private Set<PSTargetEntity> premiumBankingTargetEntities;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "treasury_target_team",
+            joinColumns = @JoinColumn(name = "teamId"),
+            inverseJoinColumns = @JoinColumn(name = "treasuryTargetId"))
+    private Set<TreasuryTargetEntity> treasuryTargetEntities;
 
 }

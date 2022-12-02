@@ -4,6 +4,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSTargetEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -125,6 +127,20 @@ public class DSRAccountEntity {
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "psBankingTargetId"))
     private Set<PSBankingTargetEntity> psBankingTargetEntities;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "premium_banking_target_dsr",
+            joinColumns = @JoinColumn(name = "dsrAccountId"),
+            inverseJoinColumns = @JoinColumn(name = "premiumBankingTargetId"))
+    private Set<PSTargetEntity> premiumTargetEntities;
+
+    //TreasuryTargetEntity
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "treasury_target_dsr",
+            joinColumns = @JoinColumn(name = "dsrAccountId"),
+            inverseJoinColumns = @JoinColumn(name = "treasuryTargetId"))
+    private Set<TreasuryTargetEntity> treasuryTargetEntities;
 
 
 

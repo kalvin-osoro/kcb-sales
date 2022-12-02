@@ -4,9 +4,17 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Onboardin
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingVisitEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaQuestionnaireQuestionEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.*;
@@ -22,16 +30,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TreasuryPortalService implements ITreasuryPortalService {
     private final TreasuryTradeRequestRepository treasuryTradeRequestRepository;
+    private final IDSRTeamsRepository dsrTeamsRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
     private final TreasuryNegotiationRequestRepository negotiationRequestRepository;
     private final TreasuryLeadRepository treasuryLeadRepository;
     private final TreasuryTargetRepository treasuryTargetRepository;
@@ -342,5 +349,85 @@ public class TreasuryPortalService implements ITreasuryPortalService {
         return null;
     }
 
+    @Override
+    public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
+            TreasuryTargetEntity target = treasuryTargetRepository.findById(model.getTargetId()).orElse(null);
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                user.setCampaignTargetValue(model.getTargetValue());
+            } if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                user.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<TreasuryTargetEntity> treasuryTargetEntities = (Set<TreasuryTargetEntity>) user.getTreasuryTargetEntities();
+            treasuryTargetEntities.add(target);
+            user.setTreasuryTargetEntities(treasuryTargetEntities);
+            dsrAccountsRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to dsr", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRTeamEntity teamEntity = dsrTeamsRepository.findById(model.getTeamId()).orElse(null);
+
+            TreasuryTargetEntity target = treasuryTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                teamEntity.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                teamEntity.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                teamEntity.setVisitsTargetValue(model.getTargetValue());
+            }
+            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                teamEntity.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<TreasuryTargetEntity> treasuryTargetEntities = (Set<TreasuryTargetEntity>) teamEntity.getTreasuryTargetEntities();
+            treasuryTargetEntities.add(target);
+            teamEntity.setTreasuryTargetEntities(treasuryTargetEntities);
+            dsrTeamsRepository.save(teamEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to team", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getTargetById(VoomaTargetByIdRequest model) {
+        try {
+            if (model==null){
+                return  false;
+            }
+            TreasuryTargetEntity treasuryTargetEntity = treasuryTargetRepository.findById(model.getId()).orElse(null);
+            return treasuryTargetEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting target by id", e);
+        }
+
+        return false;
+    }
 }

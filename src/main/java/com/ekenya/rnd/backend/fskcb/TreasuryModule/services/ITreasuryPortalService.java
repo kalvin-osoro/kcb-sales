@@ -1,5 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.services;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,4 +37,10 @@ public interface ITreasuryPortalService {
     List<ObjectNode> getLeadsSummary(TreasurySummaryRequest filters);
 
     ObjectNode loadRequestsSummary(TreasurySummaryRequest filters);
+
+    boolean assignTargetToDSR(DSRTAssignTargetRequest model);
+
+    boolean assignTargetToTeam(TeamTAssignTargetRequest model);
+
+    Object getTargetById(VoomaTargetByIdRequest model);
 }

@@ -5,8 +5,17 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Onboardin
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaCustomerVisitEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingFeedBackEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
@@ -23,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -31,6 +41,9 @@ public class PSPortalService implements IPSPortalService {
     private final PSQuestionnaireQuestionRepository psQuestionnaireQuestionRepository;
     private final PSBankingConvenantRepository psBankingConvenantRepository;
     private final PSLeadRepository psLeadRepository;
+
+    private final IDSRAccountsRepository dsrAccountsRepository;
+    private final IDSRTeamsRepository dsrTeamsRepository;
     private final PSTargetRepository psTargetRepository;
     private  final PSFeedBackRepository psFeedBackRepository;
     private final PSCustomerVisitRepository psCustomerVisitRepository;
@@ -395,5 +408,85 @@ public class PSPortalService implements IPSPortalService {
         return null;
     }
 
+    @Override
+    public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
+            PSTargetEntity target = psTargetRepository.findById(model.getTargetId()).orElse(null);
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                user.setCampaignTargetValue(model.getTargetValue());
+            } if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                user.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<PSTargetEntity> premiumTarget = (Set<PSTargetEntity>) user.getPremiumTargetEntities();
+            premiumTarget.add(target);
+            user.setPremiumTargetEntities(premiumTarget);
+            dsrAccountsRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to dsr", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRTeamEntity teamEntity = dsrTeamsRepository.findById(model.getTeamId()).orElse(null);
+
+            PSTargetEntity target = psTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                teamEntity.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                teamEntity.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                teamEntity.setVisitsTargetValue(model.getTargetValue());
+            }
+            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                teamEntity.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<PSTargetEntity> premiumTarget = (Set<PSTargetEntity>) teamEntity.getPremiumBankingTargetEntities();
+            premiumTarget.add(target);
+            teamEntity.setPremiumBankingTargetEntities(premiumTarget);
+            dsrTeamsRepository.save(teamEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to team", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getTargetById(VoomaTargetByIdRequest model) {
+        try {
+            if (model==null){
+                return  false;
+            }
+            PSTargetEntity psTargetEntity = psTargetRepository.findById(model.getId()).orElse(null);
+            return psTargetEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting target by id", e);
+        }
+
+        return false;
+    }
 }
