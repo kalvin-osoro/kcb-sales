@@ -6,6 +6,14 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +33,8 @@ import java.util.List;
 public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
+    private final IDSRAccountsRepository dsrAccountRepository;
+    private  final IDSRTeamsRepository teamsRepository;
     private final AgencyBankingLeadRepository agencyBankingLeadRepository;
     private final AgencyBankingQuestionnaireQuestionRepository agencyBankingQuestionnaireQuestionRepository;
     private final AgencyBankingTargetRepository agencyBankingTargetRepository;
@@ -325,6 +336,88 @@ public class AgencyPortalService implements IAgencyPortalService {
             log.error("Error occurred while fetching onboarding summary", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity user = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+
+            AgencyBankingTargetEntity target = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                user.setCampaignTargetValue(model.getTargetValue());
+            } if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                user.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<AgencyBankingTargetEntity> agencyBankingTargetEntities = (Set<AgencyBankingTargetEntity>) user.getAgencyBankingTargetEntities();
+            agencyBankingTargetEntities.add(target);
+            user.setAgencyBankingTargetEntities(agencyBankingTargetEntities);
+            dsrAccountRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to dsr", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRTeamEntity teamEntity = teamsRepository.findById(model.getTeamId()).orElse(null);
+
+            AgencyBankingTargetEntity target = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                teamEntity.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                teamEntity.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                teamEntity.setVisitsTargetValue(model.getTargetValue());
+            }
+            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                teamEntity.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<AgencyBankingTargetEntity> agencyBankingTargetEntities = (Set<AgencyBankingTargetEntity>) teamEntity.getAgencyBankingTargetEntities();
+            agencyBankingTargetEntities.add(target);
+            teamEntity.setAgencyBankingTargetEntities(agencyBankingTargetEntities);
+            teamsRepository.save(teamEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to team", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getTargetById(VoomaTargetByIdRequest model) {
+        try {
+            if (model==null){
+                return  false;
+            }
+            AgencyBankingTargetEntity agencyBankingTargetEntity = agencyBankingTargetRepository.findById(model.getId()).orElse(null);
+            return agencyBankingTargetEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting target by id", e);
+        }
+
+        return false;
     }
 
 }
