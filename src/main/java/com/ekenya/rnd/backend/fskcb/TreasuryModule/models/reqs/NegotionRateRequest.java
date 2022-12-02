@@ -1,6 +1,5 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TreasuryAssignLeadRequest {
-    private Long leadId;
-
-    private Long dsrId;
-    private Priority priority;
+public class NegotionRateRequest {
+    private String amount;
 }

@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.CRMService;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.NegotionRateRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryNegRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryTradeRequest;
@@ -48,9 +49,9 @@ public class TreasuryChannelForexVC {
         }
     }
     @PostMapping("/treasury-get-forex-neg-rates")
-    public ResponseEntity<?> getForexNegotiatedRates() {
+    public ResponseEntity<?> getForexNegotiatedRates(@RequestBody NegotionRateRequest model) {
 
-        ArrayNode forexList = channelService.loadForexCounterRates();
+        ArrayNode forexList = crmService.loadForexCounterRates(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -120,6 +121,7 @@ public class TreasuryChannelForexVC {
         if (success) {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.put("message","successful");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
@@ -151,4 +153,5 @@ public class TreasuryChannelForexVC {
             return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
         }
     }
+
 }

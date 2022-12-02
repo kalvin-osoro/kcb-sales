@@ -138,20 +138,27 @@ public class TreasuryPortalService implements ITreasuryPortalService {
     @Override
     public boolean assignLead(TreasuryAssignLeadRequest model) {
         try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity dsrAccountsEntity = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
+            if (dsrAccountsEntity == null) {
+                return false;
+            }
             TreasuryLeadEntity treasuryLeadEntity = treasuryLeadRepository.findById(model.getLeadId()).orElse(null);
-            treasuryLeadEntity.setDsrId(model.getDsrId());
-            //set start date from input
-            treasuryLeadEntity.setStartDate(model.getStartDate());
-            treasuryLeadEntity.setEndDate(model.getEndDate());
-            //save
-            treasuryLeadRepository.save(treasuryLeadEntity);
-            //update is assigned to true
+            if (treasuryLeadEntity == null) {
+                return false;
+            }
             treasuryLeadEntity.setAssigned(true);
+            //set dsrAccId from dsrAccountsEntity
+            treasuryLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
+            treasuryLeadRepository.save(treasuryLeadEntity);
             return true;
 
 
+
         } catch (Exception e) {
-            log.error("Error assigning lead to dsr", e);
+            log.error("Error occurred while assigning lead", e);
         }
         return false;
     }
@@ -169,7 +176,7 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 objectNode.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
                 objectNode.put("topic", treasuryLeadEntity.getTopic());
                 objectNode.put("priority", treasuryLeadEntity.getPriority().ordinal());
-                objectNode.put("dsrId", treasuryLeadEntity.getDsrId());
+//                objectNode.put("dsrId", treasuryLeadEntity.getDsrId());
                 list.add(objectNode);
             }
             return list;

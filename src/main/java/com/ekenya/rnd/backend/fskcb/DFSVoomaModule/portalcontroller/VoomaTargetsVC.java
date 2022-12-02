@@ -108,7 +108,7 @@ public class VoomaTargetsVC {
 
     }
     //Assign targets to a team  and dsr
-    @PostMapping(value = "/vooma-assign-targets/")
+    @PostMapping(value = "/vooma-assign-targets")
     public ResponseEntity<?> getVoomaAssignTargetsToDSR(@RequestBody DSRTAssignTargetRequest model) {
         boolean success = voomaService.assignTargetToDSR(model);
 

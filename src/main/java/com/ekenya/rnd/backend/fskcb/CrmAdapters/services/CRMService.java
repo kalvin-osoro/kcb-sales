@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CrmAdapters.services;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.NegotionRateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -27,7 +28,6 @@ import java.util.logging.Logger;
 
 @Service
 public class CRMService implements ICRMService {
-    public String mpole="Kuwa mpole";
 
     @Resource
     public Environment environment;
@@ -157,7 +157,25 @@ public class CRMService implements ICRMService {
             node.put("currency", "USD");
             node.put("buying", 100);
             node.put("selling", 100);
-            node.put("waiting for Api integration...",mpole);
+            node.put("currencyName","US Dollar");
+            arrayNode.add(node);
+            return arrayNode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayNode loadForexCounterRates(NegotionRateRequest model) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayNode arrayNode = mapper.createArrayNode();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("currency", "USD");
+            node.put("buying", 100);
+            node.put("selling", 100);
+            node.put("currencyName","US Dollar");
             arrayNode.add(node);
             return arrayNode;
         } catch (Exception e) {

@@ -27,5 +27,8 @@ public class TreasuryAddLeadRequest {
     private LeadStatus leadStatus;
     private String startDate;
     private String endDate;
+    private String product;
+    private String email;
+    private String phoneNumber;
     private Date createdOn;
 }

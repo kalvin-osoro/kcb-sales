@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CrmAdapters.services;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.NegotionRateRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -54,5 +55,5 @@ public interface ICRMService {
     public ArrayNode getForexRates();
 
 
-
+    ArrayNode loadForexCounterRates(NegotionRateRequest model);
 }

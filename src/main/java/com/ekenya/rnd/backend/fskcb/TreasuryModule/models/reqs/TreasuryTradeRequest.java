@@ -27,8 +27,6 @@ public class TreasuryTradeRequest {
     private TreasuryStatus status;  //enum
     private String dateBooked;
     private String remarks;
-    private Date createdOn;
-    private boolean isApproved=false;
     private String methodOfTransaction;
     private String branchName;
     private String natureOfTheBusiness;
@@ -37,4 +35,7 @@ public class TreasuryTradeRequest {
     private String dealingFrequency;
     private String period;
     private CustomerType customerType;
+    private  String phoneNumber;
+    private String dealerName;
+    private String sector;
 }

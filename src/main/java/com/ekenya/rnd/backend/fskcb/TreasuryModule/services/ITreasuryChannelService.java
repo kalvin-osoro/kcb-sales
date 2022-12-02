@@ -43,4 +43,8 @@ public interface ITreasuryChannelService {
     ObjectNode loadSummary();
 
     boolean createCallReport(TreasuryCustomerCallReportRequest model);
+
+    List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
+
+    boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 }

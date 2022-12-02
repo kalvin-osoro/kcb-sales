@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisit
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.SearchKeyWordRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
@@ -158,12 +159,11 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
     @Override
-    public List<ObjectNode> searchCustomers(String keyword) {
-        //search customer by name or phone number from onboarding
+    public List<ObjectNode> searchCustomers(SearchKeyWordRequest model) {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.searchCustomers(keyword)) {
+            for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.searchCustomers(model.getKeyword())) {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());

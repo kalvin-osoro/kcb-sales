@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.SearchKeyWordRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,8 +97,8 @@ public class AcquiringChannelDashboardVC {
 
 
     @PostMapping("/acquiring-search-customers")
-    public ResponseEntity<?> searchCustomers(@RequestParam String keyword) {
-        List<?>searchCustomers = acquiringService.searchCustomers(keyword);
+    public ResponseEntity<?> searchCustomers(@RequestBody SearchKeyWordRequest model) {
+        List<?>searchCustomers = acquiringService.searchCustomers(model);
         boolean success = searchCustomers != null;
 
         //Resp =>

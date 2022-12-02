@@ -40,9 +40,13 @@ public class TreasuryTradeRequestEntity {
     private String methodOfTransaction;
     private String branchName;
     private String natureOfTheBusiness;
+    private  String phoneNumber;
+    private String dealerName;
+    private String sector;
     private String customerSegment;
     private String monthlyTurnover;
     private String dealingFrequency;
+    private Boolean isAssigned=false;
     private String period;
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;

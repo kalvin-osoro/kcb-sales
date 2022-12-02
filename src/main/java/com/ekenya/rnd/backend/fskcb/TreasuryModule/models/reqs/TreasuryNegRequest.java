@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.NegotionCustomerType;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryPriority;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryStatus;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ import java.util.Date;
 public class TreasuryNegRequest {
     private String customerName;
     private String customerID;
+    private String natureOfBusiness;
+    private  String phoneNumber;
     private Double amount;
     private String currency;
     private TreasuryPriority priority;  //enum
@@ -25,5 +28,7 @@ public class TreasuryNegRequest {
     private String remarks;
     private String refCode;
     private Date createdOn;
-    private boolean isApproved=false;
+    private NegotionCustomerType customerType;
+    private String customerSegment;
+    private String sector;
 }

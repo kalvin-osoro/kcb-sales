@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,10 @@ public class TreasuryLeadEntity {
     private  Integer customerId;
     private String businessUnit;
     private String customerName;
+    private String product;
+    private String email;
     private String customerAccountNumber;
+    private String phoneNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -38,5 +42,9 @@ public class TreasuryLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private String outcomeOfTheVisit;
     private Date createdOn;
+    @ManyToOne
+    @JoinColumn(name = "dsrAccId")
+    private DSRAccountEntity dsrAccountEntity;
 }
