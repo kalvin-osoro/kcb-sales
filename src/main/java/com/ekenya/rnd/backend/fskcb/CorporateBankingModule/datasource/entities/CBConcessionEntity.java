@@ -11,7 +11,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -28,7 +27,7 @@ public class CBConcessionEntity {
     private String customerName;
     private String referenceNumber;
     private String customerAccountNumber;
-    private String submissionRate;
+    private String submissionDate;
     private String submittedBy;
     private String startDate;
     private String endDate;

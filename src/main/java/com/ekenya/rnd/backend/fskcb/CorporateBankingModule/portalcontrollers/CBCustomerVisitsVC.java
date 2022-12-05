@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerVisitQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBRescheduleRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,12 +42,8 @@ public class CBCustomerVisitsVC {
     }
 
     @PostMapping("/cb-reschedule-customer-visit")
-    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CBCustomerVisitsRequest model) {
+    public ResponseEntity<?> rescheduleCustomerVisit(@RequestBody CBRescheduleRequest model) {
         boolean success = cbService.rescheduleCustomerVisit(model);
-
-
-
-
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

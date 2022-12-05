@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAddAssetReportRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAssignAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyCollectAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetRecollectRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,8 +87,8 @@ public class AgencyChannelAssetsVC {
 
 
     @PostMapping("/agency-recollect-asset")
-    public ResponseEntity<?> recollectAsset(@RequestBody  Long assetId) {
-        boolean success = agencyChannelService.recollectAsset(assetId);
+    public ResponseEntity<?> recollectAsset(@RequestBody AssetRecollectRequest model) {
+        boolean success = agencyChannelService.recollectAsset(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

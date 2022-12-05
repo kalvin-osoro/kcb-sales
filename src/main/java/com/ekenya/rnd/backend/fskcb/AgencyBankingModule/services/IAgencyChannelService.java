@@ -13,7 +13,7 @@ public interface IAgencyChannelService {
 
     List <ObjectNode>getAllAgentAssets(Long agentId);
 
-    boolean recollectAsset(Long assetId);
+    boolean recollectAsset(AssetRecollectRequest model);
 
     boolean createLead(AgencyAddLeadRequest request);
 
@@ -26,5 +26,5 @@ public interface IAgencyChannelService {
 
     List<ObjectNode> getAllOnboardingsByDsr(AgencyAllDSROnboardingsRequest model);
 
-    Object createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto);
+    Object createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto,MultipartFile tariffPhoto);
 }

@@ -22,8 +22,9 @@ public class AgencyChannelCustomerVisitsVC {
     public ResponseEntity<?> createCustomerVisit(@RequestParam("visitDetails") String visitDetails,
                                                  @RequestParam("premiseInsidePhoto") MultipartFile premiseInsidePhoto,
                                                  @RequestParam("premiseOutsidePhoto") MultipartFile premiseOutsidePhoto,
+                                                 @RequestParam("tariffPhoto") MultipartFile tariffPhoto,
                                                  @RequestParam("cashRegisterPhoto") MultipartFile cashRegisterPhoto){
-        Object visitsObj = agencyChannelService.createCustomerVisit(visitDetails,premiseInsidePhoto,premiseOutsidePhoto,cashRegisterPhoto);
+        Object visitsObj = agencyChannelService.createCustomerVisit(visitDetails,premiseInsidePhoto,premiseOutsidePhoto,tariffPhoto,cashRegisterPhoto);
         boolean success = visitsObj != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

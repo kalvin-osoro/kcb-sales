@@ -81,15 +81,12 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public boolean recollectAsset(Long assetId) {
+    public boolean recollectAsset(AssetRecollectRequest model) {
         try {
-            if (assetId == null) {
+            if (model == null) {
                 return false;
             }
-            AgencyAssetEntity agencyAssetEntity = agencyAssetRepository.findById(assetId).orElse(null);
-            if (agencyAssetEntity == null) {
-                return false;
-            }
+            AgencyAssetEntity agencyAssetEntity = agencyAssetRepository.findById(model.getAssetId()).orElse(null);
             agencyAssetEntity.setAgencyOnboardingEntity(null);
             agencyAssetEntity.setAssigned(false);
             agencyAssetRepository.save(agencyAssetEntity);
@@ -356,7 +353,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public Object createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto) {
+    public Object createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto,MultipartFile tariffPhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -406,11 +403,14 @@ public class AgencyChannelService implements IAgencyChannelService {
                     "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto,folderName );
             String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileName(
                     "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,folderName );
+            String tariffPhotoPath = fileStorageService.saveFileWithSpecificFileName(
+                    "tariffPhoto_" + visitInfo.getId() + ".PNG", tariffPhoto,folderName );
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(premiseInsidePhotoPath);
             filePathList.add(premiseOutsidePhotoPath);
             filePathList.add(cashRegisterPhotoPath);
+            filePathList.add(tariffPhotoPath);
             filePathList.forEach(filePath -> {
                 AgencyBankingVisitFileEntity visitKYC = new AgencyBankingVisitFileEntity();
                 visitKYC.setFilePath(filePath);

@@ -35,6 +35,7 @@ public class CBPortalService implements ICBPortalService {
 
   private final ICBLeadsRepository cbLeadsRepository;
   private final CBRevenueLineRepository cbRevenueLineRepository;
+  private final CBOpportunitiesRepository cbOpportunitiesRepository;
   @Autowired
   ObjectMapper objectMapper;
   private final CBJustificationRepository cbJustificationRepository;
@@ -156,7 +157,7 @@ public class CBPortalService implements ICBPortalService {
     }
 
     @Override
-    public boolean rescheduleCustomerVisit(CBCustomerVisitsRequest model) {
+    public boolean rescheduleCustomerVisit(CBRescheduleRequest model) {
         try {
             if (model == null) {
                 return false;
@@ -165,7 +166,7 @@ public class CBPortalService implements ICBPortalService {
             if (model == null) {
                 return false;
             }
-            cbCustomerVisitEntity.setVisitDate(model.getVisitDate());
+            cbCustomerVisitEntity.setVisitDate(model.getNextVisitDate());
             cbCustomerVisitRepository.save(cbCustomerVisitEntity);
             return true;
         } catch (Exception e) {
@@ -190,7 +191,6 @@ public class CBPortalService implements ICBPortalService {
                 objectNode.put("createdOn", cbCustomerVisitEntity.getCreatedOn().toString());
                 objectNode.put("region", cbCustomerVisitEntity.getRegion());
                 list.add(objectNode);
-
             }
             return list;
         } catch (Exception e) {
@@ -299,7 +299,7 @@ public class CBPortalService implements ICBPortalService {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", cbConcessionEntity.getId());
                 node.put("customerName", cbConcessionEntity.getCustomerName());
-                node.put("submissionRate", cbConcessionEntity.getSubmissionRate());
+                node.put("submissionRate", cbConcessionEntity.getSubmissionDate());
                 node.put("submittedBy", cbConcessionEntity.getSubmittedBy());
                 node.put("status", cbConcessionEntity.getStatus().name());
                 node.put("justification", cbConcessionEntity.getJustification());
@@ -544,7 +544,9 @@ public class CBPortalService implements ICBPortalService {
             CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
             cbConcessionEntity.setConcessionStatus(model.getConcessionStatus());
             cbConcessionEntity.setCustomerName(model.getCustomerName());
-            cbConcessionEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
+            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
+            cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
+//            cbConcessionEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
             if (model.getRevenueLines()!= null) {
                 cbConcessionEntity.setRevenue(mapper.writeValueAsString(model.getRevenueLines()));
             }
@@ -558,5 +560,66 @@ public class CBPortalService implements ICBPortalService {
             log.error("Error while adding new concession", e);
         }
         return false;
+    }
+
+    @Override
+    public boolean addOpportunity(CBAddOpportunityRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBOpportunitiesEntity cbOpportunityEntity = new CBOpportunitiesEntity();
+            cbOpportunityEntity.setCustomerName(model.getCustomerName());
+            cbOpportunityEntity.setProduct(model.getProduct());
+            cbOpportunityEntity.setStage(model.getStage());
+            cbOpportunityEntity.setProbability(model.getProbability());
+            cbOpportunityEntity.setStatus(OpportunityStatus.OPEN);
+            cbOpportunityEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            cbOpportunitiesRepository.save(cbOpportunityEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error while adding new opportunity", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllOpportunities() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            List<CBOpportunitiesEntity> cbOpportunitiesEntities = cbOpportunitiesRepository.findAll();
+            for (CBOpportunitiesEntity cbOpportunitiesEntity : cbOpportunitiesEntities) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbOpportunitiesEntity.getId());
+                objectNode.put("customerName", cbOpportunitiesEntity.getCustomerName());
+                objectNode.put("product", cbOpportunitiesEntity.getProduct());
+                objectNode.put("value",cbOpportunitiesEntity.getValue());
+                objectNode.put("stage", cbOpportunitiesEntity.getStage().ordinal());
+                objectNode.put("probability", cbOpportunitiesEntity.getProbability());
+                objectNode.put("status", cbOpportunitiesEntity.getStatus().ordinal());
+                objectNode.put("createdOn", cbOpportunitiesEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all opportunities", e);
+        }
+        return null;
+    }
+
+    @Override
+    public Object getOpportunityById(CBGetOppByIdRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBOpportunitiesEntity cbOpportunitiesEntity = cbOpportunitiesRepository.findById(model.getOpportunityId()).orElse(null);
+            return cbOpportunitiesEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting opportunity by id", e);
+        }
+        return null;
     }
 }

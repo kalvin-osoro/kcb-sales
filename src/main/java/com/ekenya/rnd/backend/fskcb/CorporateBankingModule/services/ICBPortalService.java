@@ -22,7 +22,7 @@ public interface ICBPortalService {
 
     boolean scheduleCustomerVisit(CBCustomerVisitsRequest model);
 
-    boolean rescheduleCustomerVisit(CBCustomerVisitsRequest model);
+    boolean rescheduleCustomerVisit(CBRescheduleRequest model);
 
     List<ObjectNode> getAllCustomerVisits();
 
@@ -55,4 +55,10 @@ public interface ICBPortalService {
     Object getTargetById(VoomaTargetByIdRequest model);
 
     boolean addConcession(CBConcessionRequest model);
+
+    boolean addOpportunity(CBAddOpportunityRequest model);
+
+    List<ObjectNode> getAllOpportunities();
+
+    Object getOpportunityById(CBGetOppByIdRequest model);
 }
