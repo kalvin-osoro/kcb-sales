@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Call;
 import org.json.JSONObject;
 import org.json.XML;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 
 //@Service
 @Slf4j
+@Service
+@Primary
 public class VoomaCRMAdapter extends CRMService implements IVoomaCRMAdapter{
 
     private final String VOOMA_URL = "http://172.16.114.7:30001/payment/services/APIRequestMgrService";

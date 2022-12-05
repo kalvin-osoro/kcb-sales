@@ -254,6 +254,7 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 objectNode.put("targetValue", treasuryTargetEntity.getTargetValue());
                 objectNode.put("targetStatus", treasuryTargetEntity.getTargetStatus().ordinal());
                 objectNode.put("agencyTargetType", treasuryTargetEntity.getTargetType().ordinal());
+                objectNode.put("createdOn",treasuryTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
             return list;

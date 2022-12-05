@@ -449,7 +449,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 acquiringSignatureEntity.setFilePath(filePath);
                 acquiringSignatureEntity.setAcquiringOnboardEntity(acquiringOnboard);
                 acquiringOnboardingKYCRepository.save(acquiringSignatureEntity);
-                return null;
+                return true;
 
 
             }
