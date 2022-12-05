@@ -36,6 +36,7 @@ public class CBCustomerVisitEntity {
     private String channel;
     private String productOffered;
     private String opportunities;
+    private String region;
     private String remarks;
     private boolean staffOfOtherDepartmentPresent;
     private String timeSpent;

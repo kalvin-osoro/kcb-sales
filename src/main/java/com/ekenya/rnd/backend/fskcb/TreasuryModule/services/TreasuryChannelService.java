@@ -71,6 +71,8 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 node.put("priority", treasuryLeadEntity.getPriority().ordinal());
                 node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
                 node.put("leadId", treasuryLeadEntity.getId());
+                node.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
+                node.put("createdOn", treasuryLeadEntity.getCreatedOn().getTime());
                 list.add(node);
             }
             return list;

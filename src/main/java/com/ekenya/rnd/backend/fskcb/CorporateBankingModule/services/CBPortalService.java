@@ -1,9 +1,19 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -15,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +34,9 @@ import java.util.List;
 public class CBPortalService implements ICBPortalService {
 
   private final ICBLeadsRepository cbLeadsRepository;
+  private final IDSRTeamsRepository idsrTeamsRepository;
+  private final IDSRAccountsRepository dsrAccountRepository;
+  private final CBTargetRepository targetRepository;
   private final CBOnboardingRepository cbOnboardingRepository;
   private final CBBankingConvenantRepository cbBankingConvenantRepository;
   private final CBConcessionRepository cbConcessionRepository;
@@ -162,18 +176,21 @@ public class CBPortalService implements ICBPortalService {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             for (CBCustomerVisitEntity cbCustomerVisitEntity : cbCustomerVisitRepository.findAll()) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("id", cbCustomerVisitEntity.getId());
-                node.put("customerName", cbCustomerVisitEntity.getCustomerName());
-                node.put("visitDate", cbCustomerVisitEntity.getVisitDate().toString());
-                node.put("reasonForVisit", cbCustomerVisitEntity.getReasonForVisit());
-                node.put("dsrName", cbCustomerVisitEntity.getDsrName());
-                //add to list
-                list.add(node);
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbCustomerVisitEntity.getId());
+                objectNode.put("customerName", cbCustomerVisitEntity.getCustomerName());
+                objectNode.put("visitDate", cbCustomerVisitEntity.getVisitDate().toString());
+                objectNode.put("reasonForVisit", cbCustomerVisitEntity.getReasonForVisit());
+                objectNode.put("dsrName", cbCustomerVisitEntity.getDsrName());
+                objectNode.put("status", cbCustomerVisitEntity.getStatus().toString());
+                objectNode.put("createdOn", cbCustomerVisitEntity.getCreatedOn().toString());
+                objectNode.put("region", cbCustomerVisitEntity.getRegion());
+                list.add(objectNode);
+
             }
             return list;
         } catch (Exception e) {
-            log.error("Error occurred while loading customer visits", e);
+            log.error("Error occurred while getting all targets", e);
         }
         return null;
     }
@@ -389,5 +406,145 @@ public class CBPortalService implements ICBPortalService {
             log.error("Error occurred while fetching onboarding summary", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean createCBTarget(CBAddTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
+            CBTargetEntity cbTargetEntity = new CBTargetEntity();
+            cbTargetEntity.setTargetName(model.getTargetName());
+            cbTargetEntity.setTargetSource(model.getTargetSource());
+            cbTargetEntity.setTargetType(model.getTargetType());
+            cbTargetEntity.setTargetDesc(model.getTargetDesc());
+            cbTargetEntity.setStartDate(model.getStartDate());
+            cbTargetEntity.setEndDate(model.getEndDate());
+            cbTargetEntity.setAssignmentType(model.getAssignmentType());
+
+
+            cbTargetEntity.setTargetStatus(TargetStatus.ACTIVE);
+
+            cbTargetEntity.setTargetValue(model.getTargetValue());
+            cbTargetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //save
+            targetRepository.save(cbTargetEntity);
+            return true;
+
+            //save
+        } catch (Exception e) {
+            log.error("Error while adding new target", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllTargets() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBTargetEntity cbTargetEntity : targetRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbTargetEntity.getId());
+                objectNode.put("targetName", cbTargetEntity.getTargetName());
+                objectNode.put("targetSource", cbTargetEntity.getTargetSource());
+                objectNode.put("agencyTargetType", cbTargetEntity.getTargetType().ordinal());
+                objectNode.put("targetDesc", cbTargetEntity.getTargetDesc());
+                objectNode.put("targetStatus", cbTargetEntity.getTargetStatus().name());
+                objectNode.put("targetValue", cbTargetEntity.getTargetValue());
+//                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
+                objectNode.put("createdOn", cbTargetEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all targets", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity user = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+
+            CBTargetEntity target = targetRepository.findById(model.getTargetId()).orElse(null);
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                user.setCampaignTargetValue(model.getTargetValue());
+            } if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                user.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<CBTargetEntity> cbTargetEntities = (Set<CBTargetEntity>) user.getCbTargetEntities();
+            cbTargetEntities.add(target);
+            user.setCbTargetEntities(cbTargetEntities);
+            dsrAccountRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to dsr", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean assignTargetToTeam(TeamTAssignTargetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRTeamEntity teamEntity = idsrTeamsRepository.findById(model.getTeamId()).orElse(null);
+
+            CBTargetEntity target = targetRepository.findById(model.getTargetId()).orElse(null);
+
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                teamEntity.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                teamEntity.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                teamEntity.setVisitsTargetValue(model.getTargetValue());
+            }
+            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                teamEntity.setOnboardTargetValue(model.getTargetValue());
+            }
+
+            Set<CBTargetEntity> cbTargetEntities = (Set<CBTargetEntity>) teamEntity.getCbTargetEntities();
+            cbTargetEntities.add(target);
+            teamEntity.setCbTargetEntities(cbTargetEntities);
+            idsrTeamsRepository.save(teamEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to team", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getTargetById(VoomaTargetByIdRequest model) {
+        try {
+            if (model==null){
+                return  false;
+            }
+            CBTargetEntity cbTargetEntity = targetRepository.findById(model.getId()).orElse(null);
+            return cbTargetEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting target by id", e);
+        }
+
+        return false;
     }
 }

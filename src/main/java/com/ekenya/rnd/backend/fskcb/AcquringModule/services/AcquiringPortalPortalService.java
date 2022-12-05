@@ -40,7 +40,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AcquiringPortalPortalService implements IAcquiringPortalService {
+public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final IAcquiringLeadsRepository mLeadsRepo;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;

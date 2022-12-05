@@ -10,7 +10,7 @@ public interface ICRMService {
     JsonObject createCustomer(JsonObject jsonObject);
     JsonObject createLead(JsonObject jsonObject);
     JsonArray fetchStaffAccounts();
-    JsonObject getCustomerDetails(String accountNo);
+//    JsonObject getCustomerDetails(String accountNo);
     JsonObject getLoanDetails(String crmAccountId);
     JsonObject getLead(String crmUserId);
     JsonObject getCustomerRefNo(String accountNumber);
@@ -56,4 +56,5 @@ public interface ICRMService {
 
 
     ArrayNode loadForexCounterRates(NegotionRateRequest model);
+    JsonObject getCustomerDetails(long accountNo);
 }

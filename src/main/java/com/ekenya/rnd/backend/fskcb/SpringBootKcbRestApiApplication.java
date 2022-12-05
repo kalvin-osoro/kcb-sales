@@ -10,11 +10,13 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import ch.qos.logback.core.util.FileSize;
 import ch.qos.logback.core.util.StatusPrinter;
+import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.CRMService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +42,9 @@ import java.util.logging.FileHandler;
 public class SpringBootKcbRestApiApplication   {
 	@Resource
 	public Environment environment;
+
+	@Autowired
+	CRMService crmService;
 	@Bean
 	public DateTimeFormatter dateFormatter() {
 		return DateTimeFormatter.ISO_DATE_TIME;
@@ -262,9 +267,13 @@ public class SpringBootKcbRestApiApplication   {
 		StatusPrinter.print(context);
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+	public static String accessToken ;
+	@PostConstruct
+	void processToken(){
+		System.out.println(
+				"generate token"
+		);
+		accessToken = crmService.generateOauth2Token();
 	}
 
 }
