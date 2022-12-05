@@ -6,7 +6,6 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.Targ
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -14,13 +13,14 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
-import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,6 +34,10 @@ import java.util.Set;
 public class CBPortalService implements ICBPortalService {
 
   private final ICBLeadsRepository cbLeadsRepository;
+  private final CBRevenueLineRepository cbRevenueLineRepository;
+  @Autowired
+  ObjectMapper objectMapper;
+  private final CBJustificationRepository cbJustificationRepository;
   private final IDSRTeamsRepository idsrTeamsRepository;
   private final IDSRAccountsRepository dsrAccountRepository;
   private final CBTargetRepository targetRepository;
@@ -283,29 +287,8 @@ public class CBPortalService implements ICBPortalService {
         return null;
     }
 
-    @Override
-    public boolean addConcession(RetailAddConcessionRequest model) {
-        try {
-            if (model == null) {
-                return false;
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
-            cbConcessionEntity.setCustomerName(model.getCustomerName());
-            cbConcessionEntity.setSubmissionRate(model.getSubmissionRate());
-            cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
-            cbConcessionEntity.setStatus(Status.ACTIVE);
-            //TODO: set Revenue Line Implementation
 
-            cbConcessionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            //save
-            cbConcessionRepository.save(cbConcessionEntity);
-            return true;
-        } catch (Exception e) {
-            log.error("Error occurred while creating concession", e);
-        }
-        return false;
-    }
+
 
     @Override
     public List<ObjectNode> getAllConcessions() {
@@ -319,6 +302,8 @@ public class CBPortalService implements ICBPortalService {
                 node.put("submissionRate", cbConcessionEntity.getSubmissionRate());
                 node.put("submittedBy", cbConcessionEntity.getSubmittedBy());
                 node.put("status", cbConcessionEntity.getStatus().name());
+                node.put("justification", cbConcessionEntity.getJustification());
+                node.put("revenueLine", cbConcessionEntity.getRevenue());
                 node.put("createdOn", cbConcessionEntity.getCreatedOn().toString());
                 //add to list
                 list.add(node);
@@ -545,6 +530,33 @@ public class CBPortalService implements ICBPortalService {
             log.error("Error occurred while getting target by id", e);
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean addConcession(CBConcessionRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
+            CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
+            cbConcessionEntity.setConcessionStatus(model.getConcessionStatus());
+            cbConcessionEntity.setCustomerName(model.getCustomerName());
+            cbConcessionEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
+            if (model.getRevenueLines()!= null) {
+                cbConcessionEntity.setRevenue(mapper.writeValueAsString(model.getRevenueLines()));
+            }
+            if (model.getJustifications()!= null) {
+                cbConcessionEntity.setJustification(mapper.writeValueAsString(model.getJustifications()));
+            }
+            cbConcessionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            cbConcessionRepository.save(cbConcessionEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error while adding new concession", e);
+        }
         return false;
     }
 }

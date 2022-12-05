@@ -24,10 +24,11 @@ public class VoomaOnboardingVC {
     @PostMapping(value = "/vooma-get-all-onboarded-merchant")
     public ResponseEntity<?> getAllMerchantOnboardings() {
        List<?>list = voomaService.getAllMerchantOnboardings();
+       boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(list != null){
+        if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
             node.addAll((List)list);

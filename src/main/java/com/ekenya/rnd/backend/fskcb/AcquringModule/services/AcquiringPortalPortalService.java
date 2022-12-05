@@ -355,7 +355,6 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             AcquiringQuestionnaireQuestionEntity acquiringQuestionnaireEntity = new AcquiringQuestionnaireQuestionEntity();
             acquiringQuestionnaireEntity.setQuestion(acquiringAddQuestionnaireRequest.getQuestion());
             acquiringQuestionnaireEntity.setQuestionnaireDescription(acquiringAddQuestionnaireRequest.getQuestionnaireDescription());
-            acquiringQuestionnaireEntity.setQuestionnaireDescription(acquiringAddQuestionnaireRequest.getQuestionnaireDescription());
             acquiringQuestionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save
             acquiringQuestionnaireRepository.save(acquiringQuestionnaireEntity);

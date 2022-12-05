@@ -26,10 +26,6 @@ public class PSConcessionEntity {
     private String customerName;
     private String submissionRate;
     private String submittedBy;
-    @Embedded
-    PSRevenueLineEntity PSRevenueLinesEntity;
-    @Embedded
-    PSJustificationEntity justifications;
     private Date createdOn;
     private Status status;
 

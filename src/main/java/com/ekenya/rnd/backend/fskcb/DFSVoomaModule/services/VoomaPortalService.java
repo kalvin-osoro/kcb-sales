@@ -11,6 +11,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.*;
 import com.ekenya.rnd.backend.utils.Status;
@@ -292,7 +293,6 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
-//                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
                 objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
@@ -453,6 +453,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             String subFolder = "vooma-assets";
 
@@ -490,6 +491,10 @@ public class VoomaPortalService implements IVoomaPortalService {
                 asset.put("id", dfsVoomaAssetEntity.getId());
                 asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
                 asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
+                asset.put("lastServiceDate", dfsVoomaAssetEntity.getLastServiceDate().getTime());
+                asset.put("assigned",dfsVoomaAssetEntity.isAssigned());
+                asset.put("deviceId",dfsVoomaAssetEntity.getDeviceId());
+                asset.put("assetType", dfsVoomaAssetEntity.getAssetType().ordinal());
                 //asset.put("type",acquiringAssetEntity.getAssetType());
                 //
                 ArrayNode images = mapper.createArrayNode();
@@ -514,7 +519,6 @@ public class VoomaPortalService implements IVoomaPortalService {
         }
         return null;
     }
-
     @Override
     public List<ObjectNode> getAllMerchantOnboardings() {
         try {
@@ -526,19 +530,15 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
                 objectNode.put("region", dfsVoomaOnboardEntity.getRegion());
                 objectNode.put("status", dfsVoomaOnboardEntity.getStatus().ordinal());
-                objectNode.put("dateOnborded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
-                objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getMerchantPhone());
+                objectNode.put("dateOnboarded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+                objectNode.put("phoneNo", dfsVoomaOnboardEntity.getMerchantPhone());
                 objectNode.put("email", dfsVoomaOnboardEntity.getMerchantEmail());
-                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
-                ObjectNode node = mapper.createObjectNode();
-                node.put("longitude", dfsVoomaOnboardEntity.getLongitude());
-                node.put("latitude", dfsVoomaOnboardEntity.getLatitude());
-                objectNode.put("co-ordinates", node);
+                objectNode.put("dsrId",dfsVoomaOnboardEntity.getDsrId());
                 list.add(objectNode);
             }
             return list;
         } catch (Exception e) {
-            log.error("Error occurred while getting onboarding summary", e);
+            log.error("Error occurred while getting all targets", e);
         }
         return null;
     }

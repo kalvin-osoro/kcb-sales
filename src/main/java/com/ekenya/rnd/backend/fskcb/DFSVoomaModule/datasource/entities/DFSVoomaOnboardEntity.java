@@ -32,9 +32,9 @@ public class DFSVoomaOnboardEntity {
     private String region;
     private  String merchantIdNumber;
     private String merchantEmail;
-    @Column(name="merchant_phone_number")
+//    @Column(name="merchant_phone_number")
     private String merchantPhone;
-    @Column(name = "merchant_dob")
+//    @Column(name = "merchant_dob")
     private String merchantDob;
     private String merchantPbox;
     private String merchantPostalCode;
@@ -64,13 +64,13 @@ public class DFSVoomaOnboardEntity {
     private String nextOfKinIdNumber;
     private String nextOfKinPhoneNumber;
 
-    @Column(name="town")
+//    @Column(name="town")
     private String town;
-    @Column(name="street_name")
+//    @Column(name="street_name")
     private String streetName;
-    @Column(name="building_name")
+//    @Column(name="building_name")
     private String buildingName;
-    @Column(name="room_number")
+//    @Column(name="room_number")
     private String roomNumber;
     private String county;
     private String city;

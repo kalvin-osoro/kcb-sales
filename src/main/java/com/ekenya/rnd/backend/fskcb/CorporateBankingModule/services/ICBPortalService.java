@@ -34,7 +34,7 @@ public interface ICBPortalService {
 
     List<ObjectNode> getAllCampaigns();
 
-    boolean addConcession(RetailAddConcessionRequest model);
+    
 
     List<ObjectNode> getAllConcessions();
 
@@ -53,4 +53,6 @@ public interface ICBPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
+
+    boolean addConcession(CBConcessionRequest model);
 }

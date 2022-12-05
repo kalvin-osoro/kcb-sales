@@ -1,8 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSJustificationEntity;
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSRevenueLineEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,12 +32,10 @@ public class CBConcessionEntity {
     private String submittedBy;
     private String startDate;
     private String endDate;
-    @Embedded
-    PSRevenueLineEntity PSRevenueLinesEntity;
-    @Embedded
-    PSJustificationEntity justifications;
+private String revenue;
+private String justification;
     private Date createdOn;
-    private Status status;
+    private Status status=Status.ACTIVE;
     @Enumerated(EnumType.STRING)
     private ConcessionStatus concessionStatus;
 
