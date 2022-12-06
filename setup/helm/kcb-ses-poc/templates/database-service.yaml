@@ -1,0 +1,79 @@
+{{ if eq .Values.db.external false }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.appName }}-mysql"
+  labels:
+    app: "{{ .Values.appName }}-mysql"
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: "{{ .Values.appName }}-mysql"
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Values.appName }}-mysql-pv-claim"
+  labels:
+    app: "{{ .Values.appName }}-mysql"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}-mysql"
+  labels:
+    app: "{{ .Values.appName }}-mysql"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Values.appName }}-mysql"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.appName }}-mysql"
+    spec:
+      containers:
+      - image: mysql:8.0
+        name: "{{ .Values.appName }}-mysql"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.db.secretName }}"
+              key: "{{ .Values.db.rootPasswordKey }}"
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.db.secretName }}"
+              key: "{{ .Values.db.databaseNameKey }}" 
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.db.secretName }}"
+              key: "{{ .Values.db.usernameKey }}"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.db.secretName }}"
+              key: "{{ .Values.db.passwordKey }}"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: "{{ .Values.appName }}-mysql-pv-claim"
+{{ end }}
