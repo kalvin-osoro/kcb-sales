@@ -21,7 +21,7 @@ public class FileStorageService implements IFileStorageService {
 
     public static String pathString ="upload";
     public static String uploadDirectory =  "upload";
-    private final Path root = Paths.get(pathString);//
+    private final Path root = Paths.get(pathString);
     private Logger log = Logger.getLogger(IFileStorageService.class.getName());
     public static String uploadPath = "upload";
 
@@ -73,17 +73,17 @@ public class FileStorageService implements IFileStorageService {
 //    }
 
     @Override
-    public String saveFileWithSpecificFileName(String fileName, MultipartFile file,String folderName) {
+    public String saveFileWithSpecificFileName(String fileName, MultipartFile file) {
         try {
             File dir = new File(uploadDirectory);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            File subDir = new File(uploadDirectory + "/" + folderName);
-            if (!subDir.exists()) {
-                subDir.mkdirs();
-            }
-            File serverFile = new File(subDir.getAbsolutePath() + "/" + fileName);
+//            File subDir = new File(uploadDirectory + "/" + fileName);
+//            if (!subDir.exists()) {
+//                subDir.mkdirs();
+//            }
+            File serverFile = new File(uploadDirectory + "/" + fileName);
             file.transferTo(serverFile);
             return serverFile.getAbsolutePath();
         }catch (Exception e){

@@ -15,12 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 public class CBConcessionRequest {
     private String customerName;
-    private String referenceNumber;
+//    private String referenceNumber;
+    private CBJustificationRequest cbJustificationRequests;
+    private CBRevenueLineRequest cbRevenueLineRequests;
     private String submissionDate;
-    private List<CBRevenueLineRequest> revenueLines=new ArrayList<>();
     private String submittedBy;
-    private String customerAccountNumber;
     private ConcessionStatus concessionStatus;
-    private String stakeholder;
-    private List<CBJustificationRequest> justifications =new ArrayList<>();
 }

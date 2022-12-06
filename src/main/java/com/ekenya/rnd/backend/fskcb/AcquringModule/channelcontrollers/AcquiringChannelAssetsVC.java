@@ -8,6 +8,8 @@ import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +22,15 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/ch")
 public class AcquiringChannelAssetsVC {
     IAcquiringChannelService acquiringChannelService;
+//    @Autowired
+
 
     @PostMapping("/acquiring-assign-asset")
     public ResponseEntity<?> assignAssetToMerchant(@RequestBody AcquiringAssignAssetRequest request) {
         boolean success = acquiringChannelService.assignAssetToMerchant(request.getAssetId(), request.getAgentId());
         //Response
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper= new ObjectMapper();
         if(success){
-            //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 

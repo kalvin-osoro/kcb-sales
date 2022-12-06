@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,14 +26,16 @@ public class CBConcessionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String customerName;
-    private String referenceNumber;
-    private String customerAccountNumber;
+//    private String referenceNumber;
+//    private String customerAccountNumber;
     private String submissionDate;
     private String submittedBy;
-    private String startDate;
-    private String endDate;
-private String revenue;
-private String justification;
+//    private String startDate;
+//    private String endDate;
+    private String revenue;
+    private String justification;
+//    private Set<CBRevenueLineEntity> cbRevenueLineEntities;
+//    private Set<CBJustificationEntity> cbJustificationEntities;
     private Date createdOn;
     private Status status=Status.ACTIVE;
     @Enumerated(EnumType.STRING)

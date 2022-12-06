@@ -399,8 +399,10 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("businessUnit", acquiringLeadEntity.getBusinessUnit());
                 asset.put("leadStatus", String.valueOf(acquiringLeadEntity.getLeadStatus()));
                 asset.put("topic", acquiringLeadEntity.getTopic());
-                asset.put("priority", acquiringLeadEntity.getPriority().ordinal());
+                asset.put("priority", acquiringLeadEntity.getPriority().toString());
                 asset.put("dsrId", acquiringLeadEntity.getDsrId());
+                asset.put("createdOn",acquiringLeadEntity.getCreatedOn().getTime());
+
                 //add to list
                 list.add(asset);
 

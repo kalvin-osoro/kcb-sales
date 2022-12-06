@@ -21,6 +21,7 @@ public class VoomaAddLeadRequest {
     private String customerAccountNumber;
     private String customerName;
     private String topic;
+    private String product;
     private Priority priority;
     private Long dsrId;
     private String dsrName;

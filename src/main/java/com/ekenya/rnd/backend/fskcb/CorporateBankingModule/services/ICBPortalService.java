@@ -58,7 +58,15 @@ public interface ICBPortalService {
 
     boolean addOpportunity(CBAddOpportunityRequest model);
 
-    List<ObjectNode> getAllOpportunities();
+    List<ObjectNode> getAllOpportunities( );
 
     Object getOpportunityById(CBGetOppByIdRequest model);
+
+    boolean createQuestionnareType(QuestionTypeRequest model);
+
+    List<ObjectNode> getAllQuestionnareTypes();
+
+    boolean addQuestionnareQuestions(UQuestionnaireQuestionRequest model);
+
+    boolean addQuestionnareResponse(QuestionResponseRequest model);
 }

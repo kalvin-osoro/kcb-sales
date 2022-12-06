@@ -27,22 +27,14 @@ public class AgencyChannelOnboardingVC {
     public ResponseEntity<?> onboardNewCustomer(@RequestParam("AgentDetails") String AgentDetails,
                                                 @RequestParam("frontID") MultipartFile frontID,
                                                 @RequestParam("backID") MultipartFile backID,
-                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
                                                 @RequestParam("certificateOFGoodConduct") MultipartFile certificateOFGoodConduct,
-                                                @RequestParam("businessLicense") MultipartFile businessLicense,
                                                 @RequestParam("shopPhoto") MultipartFile shopPhoto,
                                                 @RequestParam("financialStatement") MultipartFile financialStatement,
                                                 @RequestParam("cv") MultipartFile cv,
                                                 @RequestParam("customerPhoto") MultipartFile customerPhoto,
-                                                @RequestParam("companyRegistrationDoc") MultipartFile companyRegistrationDoc,
-                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
-                                                @RequestParam("passportPhoto1") MultipartFile passportPhoto1,
-                                                @RequestParam("passportPhoto2") MultipartFile passportPhoto2,
-                                                @RequestParam("acceptanceLetter") MultipartFile acceptanceLetter,
-                                                @RequestParam("crbReport") MultipartFile crbReport,
-                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+                                                @RequestParam("crbReport") MultipartFile crbReport) {
         Object agentObject = agencyChannelService.onboardNewCustomer(AgentDetails,
-                frontID, backID, kraPinCertificate, certificateOFGoodConduct, businessLicense, shopPhoto, financialStatement, cv, customerPhoto, companyRegistrationDoc, signatureDoc, passportPhoto1, passportPhoto2, acceptanceLetter, crbReport, businessPermitDoc);
+                frontID, backID,  certificateOFGoodConduct,  shopPhoto, financialStatement, cv, customerPhoto,   crbReport);
         boolean success = agentObject != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

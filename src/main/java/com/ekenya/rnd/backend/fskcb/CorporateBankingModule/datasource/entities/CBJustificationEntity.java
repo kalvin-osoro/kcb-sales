@@ -20,6 +20,10 @@ public class CBJustificationEntity {
     private String justification;
     private String monitoringMechanism;
     private String stakeholder;
+//    @ManyToOne
+//    @JoinColumn(name = "concessionId")
+//    private CBConcessionEntity cbConcessionEntity;
     private Long concessionId;
+
 
 }

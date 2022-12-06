@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddOpportunityRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBGetOppByIdRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.QuestionTypeRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +37,7 @@ public class CBOpportunityVC {
     }
     //get all opportunities
     @PostMapping("/cb-get-all-opportunities")
-    ResponseEntity<?> getAllOpportunities(){
+    ResponseEntity<?> getAllOpportunities( ){
         List<?> response = cbService.getAllOpportunities();
         boolean success = response != null;
         ObjectMapper objectMapper = new ObjectMapper();

@@ -31,6 +31,7 @@ public class DFSVoomaLeadEntity {
     private Priority priority;
     private String customerName;
     private String customerAccountNumber;
+    private String product;
     private Long dsrId;
     private String dsrName;
     @Enumerated(EnumType.STRING)

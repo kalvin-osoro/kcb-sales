@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AssetCondition;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +16,8 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
-@Entity(name = "agency_banking_visits")
+@Entity
+@Table(name = "agency_bank_visit")
 @DynamicUpdate
 @DynamicInsert
 public class AgencyBankingVisitEntity {
@@ -29,7 +30,7 @@ public class AgencyBankingVisitEntity {
     private String reasonForVisit;
     private String visitDate;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status=Status.ACTIVE;
     //    private Zone zone;
     private Date createdOn;
     private Date updatedOn;
@@ -60,5 +61,10 @@ public class AgencyBankingVisitEntity {
    private String     agentTrxInForeignCur;
    private String    comments;
    private String  hasMaterials;
+   private String assetNumber;
+   private String serialNumber;
+   private String terminalId;
+   @Enumerated(EnumType.STRING)
+   private AssetCondition assetCondition;
 
 }

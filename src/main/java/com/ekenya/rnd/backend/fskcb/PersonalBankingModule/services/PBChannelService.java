@@ -99,18 +99,18 @@ public class PBChannelService implements IPBChannelService {
 //            String folderName = "customerDetails" + File.separator + savedCustomerDetails.getId();
             String folderName = "personalBanking";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + savedCustomerDetails.getId() + ".PNG", frontID, folderName);
+                    "frontID_" + savedCustomerDetails.getId() + ".PNG", frontID);
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID, folderName);
+                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID);
             String kraPath = fileStorageService.saveFileWithSpecificFileName(
-                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin, folderName);
+                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin);
             String signaturePath = fileStorageService.saveFileWithSpecificFileName(
-                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature, folderName);
+                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature);
             String crbReportPath = fileStorageService.saveFileWithSpecificFileName(
-                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport, folderName);
+                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport);
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto, folderName);
+                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto);
 
             //save file path
             ArrayList<String> filePathList = new ArrayList<>();

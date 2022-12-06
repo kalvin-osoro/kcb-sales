@@ -16,7 +16,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "agency_questionnare_responses")
+@Table(name = "agency_leads")
 @Entity
 @DynamicUpdate
 @DynamicInsert

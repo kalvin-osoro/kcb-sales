@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetSta
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.QuestionnareQuestion;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -34,6 +35,9 @@ import java.util.Set;
 public class CBPortalService implements ICBPortalService {
 
   private final ICBLeadsRepository cbLeadsRepository;
+  private final QuestionTypeRepository questionTypeRepository;
+  private final QuestionnareQuestionRepository questionnareQuestionRepository;
+  private final QuestionnaireResponseRepository questionnaireResponseRepository;
   private final CBRevenueLineRepository cbRevenueLineRepository;
   private final CBOpportunitiesRepository cbOpportunitiesRepository;
   @Autowired
@@ -85,6 +89,7 @@ public class CBPortalService implements ICBPortalService {
                 node.put("topic", cbLeadEntity.getTopic());
                 node.put("priority", cbLeadEntity.getPriority().ordinal());
                 node.put("dsrId", cbLeadEntity.getDsrId());
+                node.put("createdOn",cbLeadEntity.getCreatedOn().getTime());
                 //add to list
                 list.add(node);
             }
@@ -299,9 +304,7 @@ public class CBPortalService implements ICBPortalService {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", cbConcessionEntity.getId());
                 node.put("customerName", cbConcessionEntity.getCustomerName());
-                node.put("submissionRate", cbConcessionEntity.getSubmissionDate());
-                node.put("submittedBy", cbConcessionEntity.getSubmittedBy());
-                node.put("status", cbConcessionEntity.getStatus().name());
+                node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().ordinal());
                 node.put("justification", cbConcessionEntity.getJustification());
                 node.put("revenueLine", cbConcessionEntity.getRevenue());
                 node.put("createdOn", cbConcessionEntity.getCreatedOn().toString());
@@ -539,28 +542,40 @@ public class CBPortalService implements ICBPortalService {
             if (model == null) {
                 return false;
             }
-            ObjectMapper mapper = new ObjectMapper();
-
+            //create concession
             CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
-            cbConcessionEntity.setConcessionStatus(model.getConcessionStatus());
             cbConcessionEntity.setCustomerName(model.getCustomerName());
-            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
             cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
-//            cbConcessionEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
-            if (model.getRevenueLines()!= null) {
-                cbConcessionEntity.setRevenue(mapper.writeValueAsString(model.getRevenueLines()));
-            }
-            if (model.getJustifications()!= null) {
-                cbConcessionEntity.setJustification(mapper.writeValueAsString(model.getJustifications()));
-            }
-            cbConcessionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            cbConcessionRepository.save(cbConcessionEntity);
+            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
+            //add List of Reveanue Lines to Concession
+            List<CBRevenueLineEntity> cbRevenueLineEntities = new ArrayList<>();
+            CBRevenueLineEntity cbRevenueLineEntity1 = new CBRevenueLineEntity();
+            //get concessionId
+            cbRevenueLineEntity1.setConcessionId(cbConcessionEntity.getId());
+            cbRevenueLineEntity1.setDuration(model.getCbRevenueLineRequests().getDuration());
+            cbRevenueLineEntity1.setForgoneRevenue(model.getCbRevenueLineRequests().getForgoneRevenue());
+            cbRevenueLineEntity1.setRecommendedRate(model.getCbRevenueLineRequests().getRecommendedRate());
+            cbRevenueLineEntity1.setRevenueLineType(model.getCbRevenueLineRequests().getRevenueLineType());
+            cbRevenueLineEntity1.setSSRrate(model.getCbRevenueLineRequests().getSsrcRate());
+            cbRevenueLineRepository.save(cbRevenueLineEntity1);
+            // add List of Justifications to Concession
+            List<CBJustificationEntity> cbJustificationEntities = new ArrayList<>();
+            CBJustificationEntity cbJustificationEntity1 = new CBJustificationEntity();
+            //get the concessionId
+            cbJustificationEntity1.setConcessionId(cbConcessionEntity.getId());
+            cbJustificationEntity1.setStakeholder(model.getCbJustificationRequests().getStakeholder());
+            cbJustificationEntity1.setMonitoringMechanism(model.getCbJustificationRequests().getMonitoringMechanism());
+            cbJustificationEntity1.setJustification(model.getCbJustificationRequests().getJustification());
+            cbJustificationRepository.save(cbJustificationEntity1);
             return true;
-        } catch (Exception e) {
-            log.error("Error while adding new concession", e);
+            //add
+            } catch (Exception ex) {
+            log.error("Error occurred while adding concession", ex);
         }
         return false;
     }
+
+
 
     @Override
     public boolean addOpportunity(CBAddOpportunityRequest model) {
@@ -621,5 +636,95 @@ public class CBPortalService implements ICBPortalService {
             log.error("Error occurred while getting opportunity by id", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean createQuestionnareType(QuestionTypeRequest model) {
+        try {
+            if(model == null){
+                return false;
+            }
+            QuestionType cbQuestionTypeEntity = new QuestionType();
+            cbQuestionTypeEntity.setName(model.getName());
+            cbQuestionTypeEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            cbQuestionTypeEntity.setExpectedAnswer(model.getExpectedResponse());
+            cbQuestionTypeEntity.setStatus(Status.ACTIVE);
+            questionTypeRepository.save(cbQuestionTypeEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating question type", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllQuestionnareTypes() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            List<QuestionType> cbQuestionTypeEntities = questionTypeRepository.findAll();
+            for (QuestionType cbQuestionTypeEntity : cbQuestionTypeEntities) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbQuestionTypeEntity.getId());
+                objectNode.put("name", cbQuestionTypeEntity.getName());
+                objectNode.put("expectedAnswer", cbQuestionTypeEntity.getExpectedAnswer());
+                objectNode.put("status", cbQuestionTypeEntity.getStatus().ordinal());
+                objectNode.put("createdOn", cbQuestionTypeEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all question types", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addQuestionnareQuestions(UQuestionnaireQuestionRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            QuestionnareQuestion cbQuestionnaireQuestionEntity = new QuestionnareQuestion();
+            QuestionType cbQuestionTypeEntity = questionTypeRepository.findById(model.getQuestionType()).orElse(null);
+            cbQuestionnaireQuestionEntity.setQuestionType(cbQuestionTypeEntity);
+            cbQuestionnaireQuestionEntity.setQuestion(model.getQuestion());
+            cbQuestionnaireQuestionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            cbQuestionnaireQuestionEntity.setStatus(Status.ACTIVE);
+            cbQuestionnaireQuestionEntity.setQuestionDescription(model.getQuestionDescription());
+            cbQuestionnaireQuestionEntity.setChoices(model.getChoices());
+            questionnareQuestionRepository.save(cbQuestionnaireQuestionEntity);
+            return true;
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while adding question", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addQuestionnareResponse(QuestionResponseRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            List<QuestionnaireResponseRequest> questionnaireResponseRequestList =
+                    model.getListQuestionResponse();
+            for (QuestionnaireResponseRequest questionnaireResponseRequest : questionnaireResponseRequestList) {
+                QuestionnaireResponse cbQuestionnaireResponseEntity = new QuestionnaireResponse();
+                QuestionnareQuestion cbQuestionnaireQuestionEntity = questionnareQuestionRepository.findById(questionnaireResponseRequest.getQuestionnaireQuestion()).orElse(null);
+                cbQuestionnaireResponseEntity.setQuestion(cbQuestionnaireQuestionEntity);
+                cbQuestionnaireResponseEntity.setQuestionResponse(questionnaireResponseRequest.getQuestionResponse());
+//                cbQuestionnaireResponseEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                cbQuestionnaireResponseEntity.setStatus(String.valueOf(Status.ACTIVE));
+                questionnaireResponseRepository.save(cbQuestionnaireResponseEntity);
+                return true;
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while adding question response", e);
+        }
+        return false;
     }
 }

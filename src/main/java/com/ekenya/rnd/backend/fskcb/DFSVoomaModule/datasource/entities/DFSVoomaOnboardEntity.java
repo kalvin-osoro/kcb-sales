@@ -64,13 +64,9 @@ public class DFSVoomaOnboardEntity {
     private String nextOfKinIdNumber;
     private String nextOfKinPhoneNumber;
 
-//    @Column(name="town")
     private String town;
-//    @Column(name="street_name")
     private String streetName;
-//    @Column(name="building_name")
     private String buildingName;
-//    @Column(name="room_number")
     private String roomNumber;
     private String county;
     private String city;

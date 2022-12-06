@@ -11,11 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CBRevenueLineRequest {
-    private String SSRrate;
+    private String ssrcRate;
     private String recommendedRate;
     private Integer baseAmount;
     private String duration;
-    private String foreignRevenue;
     private Long concessionId;
     private String forgoneRevenue;
     private RevenueLineType revenueLineType;
