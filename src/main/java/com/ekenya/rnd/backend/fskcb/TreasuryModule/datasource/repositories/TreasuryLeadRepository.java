@@ -23,6 +23,8 @@ public interface TreasuryLeadRepository extends JpaRepository<TreasuryLeadEntity
     int countAllLeadsCreatedLast7DaysWarm();
     @Query(value = "SELECT count(*) FROM dbo_treasury_lead where created_on >= current_date at time zone 'UTC' - interval '7 days' AND priority = 'COLD'", nativeQuery = true)
     int countAllLeadsCreatedLast7DaysCold();
+    TreasuryLeadEntity[] findAllByDsrId(long dsrId);
 
-    TreasuryLeadEntity[] findAllByDsrId(Long dsrId);
+
+
 }

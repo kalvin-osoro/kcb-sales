@@ -4,19 +4,35 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
+@Entity
+@Table( name = "dbo_cb_revenue_lines")
+@DynamicInsert
+@DynamicUpdate
 public class CBRevenueLineEntity {
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    private  Long id;
     private String SSRrate;
     private String recommendedRate;
     private Integer baseAmount;
     private String duration;
     private String foreignRevenue;
+//    private Long concessionId;
+    private String forgoneRevenue;
+    private Long concessionId;
+//    @ManyToOne
+//    @JoinColumn(name = "concessionId")
+//    private CBConcessionEntity cbConcessionEntity;
+    @Enumerated( EnumType.STRING)
+    private RevenueLineType revenueLineType;
 
 }

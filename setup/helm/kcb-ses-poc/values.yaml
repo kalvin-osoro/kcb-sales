@@ -1,0 +1,17 @@
+appName: kcb-ses-poc
+db:
+  external: true 
+  externalParams:
+    secretName: external-db-secret
+    hostNameKey: database-host
+    databaseNameKey: database-name
+    userKey: database-user
+    passwordKey: database-password
+    port: 3306
+  secretName: mysql
+  databaseNameKey: database-name
+  usernameKey: database-user
+  passwordKey: database-password
+  rootPasswordKey: database-root-password
+  port: 3306
+imagePullSecretName: kcb-ses-poc-reg-sec

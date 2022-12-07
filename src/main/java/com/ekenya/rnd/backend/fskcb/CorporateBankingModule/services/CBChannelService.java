@@ -206,26 +206,24 @@ public class CBChannelService implements ICBChannelService {
 
     @Override
     public List<ObjectNode> getAllCustomerConcessions(CBConcessionRequest model) {
-        try {
-            if (model==null){
-                return null;
-            }
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (CBConcessionEntity cbCustomerConcessionEntity : cbConcessionRepository.findAllByCustomerAccountNumber(model.getCustomerAccountNumber())) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("customerName", cbCustomerConcessionEntity.getCustomerName());
-                node.put("customerAccountNumber", cbCustomerConcessionEntity.getCustomerAccountNumber());
-                node.put("referenceNumber", cbCustomerConcessionEntity.getReferenceNumber());
-                node.put("concessionStatus", cbCustomerConcessionEntity.getConcessionStatus().ordinal());
-                node.put("expiryDate", cbCustomerConcessionEntity.getEndDate().toString());
-
-                list.add(node);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while Customer's concession", e);
-        }
+//        try {
+//            if (model==null){
+//                return null;
+//            }
+//            List<ObjectNode> list = new ArrayList<>();
+//            ObjectMapper mapper = new ObjectMapper();
+//            for (CBConcessionEntity cbCustomerConcessionEntity : cbConcessionRepository.findAllByCustomerAccountNumber(model.getCustomerAccountNumber())) {
+//                ObjectNode node = mapper.createObjectNode();
+//                node.put("customerName", cbCustomerConcessionEntity.getCustomerName());
+//                node.put("concessionStatus", cbCustomerConcessionEntity.getConcessionStatus().ordinal());
+//
+//
+//                list.add(node);
+//            }
+//            return list;
+//        } catch (Exception e) {
+//            log.error("Error occurred while Customer's concession", e);
+//        }
         return null;
     }
 

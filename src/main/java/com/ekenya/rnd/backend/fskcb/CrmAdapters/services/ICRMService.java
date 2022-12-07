@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CrmAdapters.services;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.NegotionRateRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -9,7 +10,7 @@ public interface ICRMService {
     JsonObject createCustomer(JsonObject jsonObject);
     JsonObject createLead(JsonObject jsonObject);
     JsonArray fetchStaffAccounts();
-    JsonObject getCustomerDetails(String accountNo);
+//    JsonObject getCustomerDetails(String accountNo);
     JsonObject getLoanDetails(String crmAccountId);
     JsonObject getLead(String crmUserId);
     JsonObject getCustomerRefNo(String accountNumber);
@@ -54,5 +55,6 @@ public interface ICRMService {
     public ArrayNode getForexRates();
 
 
-
+    ArrayNode loadForexCounterRates(NegotionRateRequest model);
+    JsonObject getCustomerDetails(long accountNo);
 }

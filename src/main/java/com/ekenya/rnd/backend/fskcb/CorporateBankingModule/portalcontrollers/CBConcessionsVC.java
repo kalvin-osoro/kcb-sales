@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddConvenantRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddCovenantRequest;
@@ -22,7 +23,7 @@ public class CBConcessionsVC {
 
 
     @PostMapping("/cb-add-concession")
-    public ResponseEntity<?> addConcession(@RequestBody RetailAddConcessionRequest model) {
+    public ResponseEntity<?> addConcession(@RequestBody CBConcessionRequest model) {
         boolean success = cbService.addConcession(model);
 
         //Response
@@ -30,6 +31,7 @@ public class CBConcessionsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.put("message", "Concession added successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

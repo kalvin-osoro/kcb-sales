@@ -9,7 +9,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AcquiringAddQuestionnaireRequest {
-    private Long questionnaireId;
     private String question;
     private  String questionnaireDescription;
     private Date createdOn;

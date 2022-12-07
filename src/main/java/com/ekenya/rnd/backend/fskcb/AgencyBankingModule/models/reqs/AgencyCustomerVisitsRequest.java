@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AssetCondition;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,4 +50,9 @@ public class AgencyCustomerVisitsRequest {
     private String agentTrxInForeignCur;
     private String comments;
     private String hasMaterials;
+
+    private String assetNumber;
+    private String serialNumber;
+    private String terminalId;
+    private AssetCondition assetCondition;
 }

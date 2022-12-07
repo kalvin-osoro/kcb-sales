@@ -1,0 +1,51 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: "{{ .Values.appName }}-frontend"
+spec:
+  host: "{{ .Values.appName }}-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com"
+  port:
+    targetPort: 8081
+  to:
+    kind: Service
+    name: "{{ .Values.appName }}-frontend"
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.appName }}-frontend"
+spec:
+  type: ClusterIP
+  selector:
+    app: "{{ .Values.appName }}-frontend"
+  ports:
+    - port: 8081
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}-frontend"
+  labels:
+    app: "{{ .Values.appName }}-frontend"
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Values.appName }}-frontend"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.appName }}-frontend"
+    spec:
+      containers:
+        - name: "{{ .Values.appName }}-frontend"
+          image: arokcb.azurecr.io/eclectics/kcb-ses-poc-fe:v1.0.1
+          ports:
+            - containerPort: 8081
+      imagePullSecrets:
+        - name: kcb-ses-poc-reg-sec

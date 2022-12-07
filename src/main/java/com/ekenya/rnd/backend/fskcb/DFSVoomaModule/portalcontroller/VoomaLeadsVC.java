@@ -38,24 +38,38 @@ public class VoomaLeadsVC {
     }
 
     //List all leads
-    @RequestMapping(value = "/vooma-get-all-leads", method = RequestMethod.POST)
-    public ResponseEntity<?> getAllLeads() {
-        List<?> voomaLeadRequests = voomaService.getAllLeads();
-        boolean success = voomaLeadRequests != null;
-        //Response
+    @PostMapping("/vooma-get-all-leads")
+    ResponseEntity<?> getAllLeads( ){
+        List<?> response = voomaService.getAllLeads();
+        boolean success = response != null;
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
-            //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)voomaLeadRequests);
-//          node.put("id",0);
-
+            node.addAll((List)response);
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //fetchAllLeadsV2
+    @PostMapping("/vooma-get-all-leads-v2")
+    public ResponseEntity<?> getAllLeadsV2() {
+        List<?> voomaLeadRequests = voomaService.fetchAllLeadsV2();
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(voomaLeadRequests != null){
+            //Object
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,voomaLeadRequests,"Request Processed Successfully"));
+        }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+        }
+            //Object
+
 
 }

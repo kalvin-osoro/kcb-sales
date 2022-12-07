@@ -2,6 +2,9 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,7 +22,7 @@ public interface ICBPortalService {
 
     boolean scheduleCustomerVisit(CBCustomerVisitsRequest model);
 
-    boolean rescheduleCustomerVisit(CBCustomerVisitsRequest model);
+    boolean rescheduleCustomerVisit(CBRescheduleRequest model);
 
     List<ObjectNode> getAllCustomerVisits();
 
@@ -31,7 +34,7 @@ public interface ICBPortalService {
 
     List<ObjectNode> getAllCampaigns();
 
-    boolean addConcession(RetailAddConcessionRequest model);
+    
 
     List<ObjectNode> getAllConcessions();
 
@@ -40,4 +43,30 @@ public interface ICBPortalService {
     List<ObjectNode> getAllTrackedCovenants();
 
     List<ObjectNode> getOnboardingSummary();
+
+    boolean createCBTarget(CBAddTargetRequest model);
+
+    List<ObjectNode> getAllTargets();
+
+    boolean assignTargetToDSR(DSRTAssignTargetRequest model);
+
+    boolean assignTargetToTeam(TeamTAssignTargetRequest model);
+
+    Object getTargetById(VoomaTargetByIdRequest model);
+
+    boolean addConcession(CBConcessionRequest model);
+
+    boolean addOpportunity(CBAddOpportunityRequest model);
+
+    List<ObjectNode> getAllOpportunities( );
+
+    Object getOpportunityById(CBGetOppByIdRequest model);
+
+    boolean createQuestionnareType(QuestionTypeRequest model);
+
+    List<ObjectNode> getAllQuestionnareTypes();
+
+    boolean addQuestionnareQuestions(UQuestionnaireQuestionRequest model);
+
+    boolean addQuestionnareResponse(QuestionResponseRequest model);
 }

@@ -2,9 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
@@ -28,7 +26,7 @@ public interface IAcquiringChannelService {
 
     Object updateLead(AcquiringAddLeadRequest model);
 
-    List<ObjectNode> searchCustomers(String query);
+    List<ObjectNode> searchCustomers(SearchKeyWordRequest model);
 
     List<ObjectNode> getNearbyCustomers(AcquiringNearbyCustomersRequest model);
 
@@ -45,4 +43,6 @@ public interface IAcquiringChannelService {
     List<ObjectNode> getAllAgentsAssets(Long agentId);
 
     Object onboardNewMerchant(String merchDetails , MultipartFile[] signatureDoc);
+
+    boolean createCustomerFeedback(CustomerFeedbackRequest model);
 }

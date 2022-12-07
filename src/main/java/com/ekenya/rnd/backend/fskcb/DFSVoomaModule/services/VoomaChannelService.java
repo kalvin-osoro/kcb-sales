@@ -185,19 +185,19 @@ public class VoomaChannelService implements IVoomaChannelService {
 
 
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + merchDtls.getId() + ".PNG", frontID,subFolderName);
+                    "frontID_" + merchDtls.getId() + ".PNG", frontID);
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + merchDtls.getId() + ".PNG", backID,subFolderName);
+                    "backID_" + merchDtls.getId() + ".PNG", backID);
 
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate,subFolderName);
+                    "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate);
 
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc,subFolderName);
+                    "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc);
 
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc,subFolderName);
+                    "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc);
             //save paths to db
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
@@ -264,19 +264,19 @@ public class VoomaChannelService implements IVoomaChannelService {
             //save files to server
             String subFolderName = "voomaAgentOnboarding";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + agentData.getId() + ".PNG", frontID,subFolderName);
+                    "frontID_" + agentData.getId() + ".PNG", frontID);
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + agentData.getId() + ".PNG", backID,subFolderName);
+                    "backID_" + agentData.getId() + ".PNG", backID);
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + agentData.getId() + ".PNG", kraPinCertificate,subFolderName);
+                    "kraPinCertificate_" + agentData.getId() + ".PNG", kraPinCertificate);
             String businessCertificateOfRegistrationPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessCertificateOfRegistration_" + agentData.getId() + ".PNG", businessCertificateOfRegistration,subFolderName);
+                    "businessCertificateOfRegistration_" + agentData.getId() + ".PNG", businessCertificateOfRegistration);
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + agentData.getId() + ".PNG", shopPhoto,subFolderName);
+                    "shopPhoto_" + agentData.getId() + ".PNG", shopPhoto);
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDoc_" + agentData.getId() + ".PNG", signatureDoc,subFolderName);
+                    "signatureDoc_" + agentData.getId() + ".PNG", signatureDoc);
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + agentData.getId() + ".PNG", businessPermitDoc,subFolderName);
+                    "businessPermitDoc_" + agentData.getId() + ".PNG", businessPermitDoc);
             //save file paths to db
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);

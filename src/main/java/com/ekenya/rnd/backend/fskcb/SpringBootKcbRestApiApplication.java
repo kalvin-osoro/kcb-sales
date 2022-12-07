@@ -10,12 +10,13 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import ch.qos.logback.core.util.FileSize;
 import ch.qos.logback.core.util.StatusPrinter;
+import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.CRMService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +33,6 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.logging.FileHandler;
 
 @SpringBootApplication
@@ -43,6 +42,9 @@ import java.util.logging.FileHandler;
 public class SpringBootKcbRestApiApplication   {
 	@Resource
 	public Environment environment;
+
+	@Autowired
+	CRMService crmService;
 	@Bean
 	public DateTimeFormatter dateFormatter() {
 		return DateTimeFormatter.ISO_DATE_TIME;
@@ -69,9 +71,11 @@ public class SpringBootKcbRestApiApplication   {
 	}
 //
 
+	private FileHandler mFileHandler;
+
 	public static void main(String[] args) {
 		//
-		prepareLogger(args);
+		prepareLogger();
 		//
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 
@@ -80,7 +84,7 @@ public class SpringBootKcbRestApiApplication   {
 	@PostConstruct
 	public void init(){
 		//
-		//prepareLogger(null);
+		prepareLogger();
 	}
 
 //	@Bean
@@ -97,29 +101,20 @@ public class SpringBootKcbRestApiApplication   {
 //	}
 
 
-	public static void prepareLogger(String[] args) {
+	public static void prepareLogger() {
 
 		try {
-//			SLF4JBridgeHandler.removeHandlersForRootLogger();
-//			SLF4JBridgeHandler.install();
+//		SLF4JBridgeHandler.removeHandlersForRootLogger();
+//		SLF4JBridgeHandler.install();
 
-			//Default: Log inside container, ./logs/xxx
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
 			Path path = Paths.get("logs/kcb-sales-backend");
 			Files.createDirectories(path);
-			//
 			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 			context.stop();
 
-			String LOG_DIR = path.toAbsolutePath().toString();
-			if(args != null && Arrays.stream(args).anyMatch(l-> l.toLowerCase(Locale.ROOT).contains("logs-dir"))){
-				String argValue = Arrays.stream(args).filter(l-> l.toLowerCase(Locale.ROOT).contains("logs-dir")).findFirst().get();
-				if(argValue.contains("=")){
-					LOG_DIR = argValue.split("=")[1].trim();
-				}else if(argValue.contains(" ")){
-					LOG_DIR = argValue.split(" ")[1].trim();
-				}
-
-			}
+			final String LOG_DIR = path.toAbsolutePath().toString();
 
 
 			PatternLayoutEncoder logEncoder = new PatternLayoutEncoder();
@@ -272,9 +267,13 @@ public class SpringBootKcbRestApiApplication   {
 		StatusPrinter.print(context);
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+	public static String accessToken ;
+	@PostConstruct
+	void processToken(){
+		System.out.println(
+				"generate token"
+		);
+		accessToken = crmService.generateOauth2Token();
 	}
 
 }

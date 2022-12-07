@@ -20,6 +20,7 @@ public class AcquiringLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String product;
     private String customerName;
     private String remarks;
     private String customerAccountNumber;

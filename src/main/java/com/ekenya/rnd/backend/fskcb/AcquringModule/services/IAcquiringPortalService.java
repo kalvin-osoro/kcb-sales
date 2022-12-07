@@ -72,4 +72,6 @@ public interface IAcquiringPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
+
+    List<ObjectNode> loadAllApprovedMerchants();
 }

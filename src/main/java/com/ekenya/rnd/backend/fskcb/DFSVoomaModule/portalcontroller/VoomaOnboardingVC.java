@@ -23,16 +23,13 @@ public class VoomaOnboardingVC {
     //List all onboarded merchants
     @PostMapping(value = "/vooma-get-all-onboarded-merchant")
     public ResponseEntity<?> getAllMerchantOnboardings() {
-        List<?> merchants = voomaService.getAllMerchantOnboardings();
-        boolean success = merchants != null;
+       List<?> list = voomaService.getAllMerchantOnboardings();
+
+        //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ArrayNode node = objectMapper.createArrayNode();
+        if(list !=null){
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
 
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
@@ -41,15 +38,15 @@ public class VoomaOnboardingVC {
     }
     @PostMapping(value = "/vooma-get-all-approved-merchant")
     public ResponseEntity<?> getAllMerchantApprovals() {
-        List<?> list = voomaService.loadAllApprovedMerchants();
-        boolean success = list != null;
+        ArrayNode list = voomaService.loadAllApprovedMerchants();
+
 
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if(list != null){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)list);
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+//            ArrayNode node = objectMapper.createArrayNode();
+//            node.addAll((List)list);
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
                 //Response
@@ -74,6 +71,22 @@ public class VoomaOnboardingVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    //getAllOnboardingV2
+    @PostMapping(value = "/vooma-get-all-onboarding-v2")
+    public ResponseEntity<?> getAllOnboardingV2() {
+        List<?> list = voomaService.getAllOnboardingV2();
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list !=null){
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

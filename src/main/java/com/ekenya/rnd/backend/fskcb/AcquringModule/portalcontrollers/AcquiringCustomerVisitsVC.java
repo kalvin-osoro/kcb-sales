@@ -59,7 +59,7 @@ public class AcquiringCustomerVisitsVC {
     @PostMapping(value = "/acquiring-get-all-customer-visits")
     public ResponseEntity<?> getAllCustomerVisits() {
         List<?> acquiringCustomerVisit = acquiringService.loadCustomerVisits();
-        boolean success = acquiringCustomerVisit == null;
+        boolean success = acquiringCustomerVisit != null;
 
 
 

@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSTargetEntity;
@@ -142,6 +143,11 @@ public class DSRAccountEntity {
             inverseJoinColumns = @JoinColumn(name = "treasuryTargetId"))
     private Set<TreasuryTargetEntity> treasuryTargetEntities;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "cb_target_dsr",
+            joinColumns = @JoinColumn(name = "dsrAccountId"),
+            inverseJoinColumns = @JoinColumn(name = "cbTargetId"))
+    private Set<CBTargetEntity> cbTargetEntities;
 
 
 

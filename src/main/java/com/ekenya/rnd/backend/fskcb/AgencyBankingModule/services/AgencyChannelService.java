@@ -81,15 +81,12 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public boolean recollectAsset(Long assetId) {
+    public boolean recollectAsset(AssetRecollectRequest model) {
         try {
-            if (assetId == null) {
+            if (model == null) {
                 return false;
             }
-            AgencyAssetEntity agencyAssetEntity = agencyAssetRepository.findById(assetId).orElse(null);
-            if (agencyAssetEntity == null) {
-                return false;
-            }
+            AgencyAssetEntity agencyAssetEntity = agencyAssetRepository.findById(model.getAssetId()).orElse(null);
             agencyAssetEntity.setAgencyOnboardingEntity(null);
             agencyAssetEntity.setAssigned(false);
             agencyAssetRepository.save(agencyAssetEntity);
@@ -203,20 +200,13 @@ public class AgencyChannelService implements IAgencyChannelService {
     public Object onboardNewCustomer(String agentDetails,
                                      MultipartFile frontID,
                                      MultipartFile backID,
-                                     MultipartFile kraPinCertificate,
+
                                      MultipartFile certificateOFGoodConduct,
-                                     MultipartFile businessLicense,
                                      MultipartFile shopPhoto,
                                      MultipartFile financialStatement,
                                      MultipartFile cv,
                                      MultipartFile customerPhoto,
-                                     MultipartFile companyRegistrationDoc,
-                                     MultipartFile signatureDoc,
-                                     MultipartFile passportPhoto1,
-                                     MultipartFile passportPhoto2,
-                                     MultipartFile acceptanceLetter,
-                                     MultipartFile crbReport,
-                                     MultipartFile businessPermitDoc) {
+                                     MultipartFile crbReport) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             AgencyOnboardingRequest agencyOnboardingRequest = mapper.readValue(
@@ -257,57 +247,35 @@ public class AgencyChannelService implements IAgencyChannelService {
             //upload documents
             String folderName = "onboarding_" + agentInfo.getId();
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + agentInfo.getId() + ".PNG", frontID,folderName );
+                    "frontID_" + agentInfo.getId() + ".PNG", frontID );
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + agentInfo.getId() + ".PNG", backID,folderName );
+                    "backID_" + agentInfo.getId() + ".PNG", backID );
 
-            String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + agentInfo.getId() + ".PNG", kraPinCertificate,folderName );
+
             String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
-                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct,folderName );
-            String businessLicensePath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessLicense_" + agentInfo.getId() + ".PNG", businessLicense,folderName );
+                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct );
+
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto,folderName );
+                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto );
             String financialStatementPath = fileStorageService.saveFileWithSpecificFileName(
-                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement,folderName );
+                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement );
             String cvPath = fileStorageService.saveFileWithSpecificFileName(
-                    "cv_" + agentInfo.getId() + ".PNG", cv,folderName );
+                    "cv_" + agentInfo.getId() + ".PNG", cv );
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto,folderName );
-            String companyRegistrationDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "companyRegistrationDoc_" + agentInfo.getId() + ".PNG", companyRegistrationDoc,folderName );
-            String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDoc_" + agentInfo.getId() + ".PNG", signatureDoc,folderName );
-            String passportPhoto1Path = fileStorageService.saveFileWithSpecificFileName(
-                    "passportPhoto1_" + agentInfo.getId() + ".PNG", passportPhoto1,folderName );
-            String passportPhoto2Path = fileStorageService.saveFileWithSpecificFileName(
-                    "passportPhoto2_" + agentInfo.getId() + ".PNG", passportPhoto2,folderName );
-            String acceptanceLetterPath = fileStorageService.saveFileWithSpecificFileName(
-                    "acceptanceLetter_" + agentInfo.getId() + ".PNG", acceptanceLetter,folderName );
+                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto );
             String crbReportPath = fileStorageService.saveFileWithSpecificFileName(
-                    "crbReport_" + agentInfo.getId() + ".PNG", crbReport,folderName );
-            String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + agentInfo.getId() + ".PNG", businessPermitDoc,folderName );
+                    "crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport );
+
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
-            filePathList.add(kraPinCertificatePath);
             filePathList.add(certificateOFGoodConductPath);
-            filePathList.add(businessLicensePath);
             filePathList.add(shopPhotoPath);
             filePathList.add(financialStatementPath);
             filePathList.add(cvPath);
             filePathList.add(customerPhotoPath);
-            filePathList.add(companyRegistrationDocPath);
-            filePathList.add(signatureDocPath);
-            filePathList.add(passportPhoto1Path);
-            filePathList.add(passportPhoto2Path);
-            filePathList.add(acceptanceLetterPath);
-            filePathList.add(crbReportPath);
-            filePathList.add(businessPermitDocPath);
             filePathList.forEach(filePath -> {
                 AgencyOnboardingKYCEntity agentKYC = new AgencyOnboardingKYCEntity();
                 agentKYC.setFilPath(filePath);
@@ -356,7 +324,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public Object createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto) {
+    public boolean createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto,MultipartFile tariffPhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -396,21 +364,27 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyBankingVisitEntity.setAgentTrxInForeignCur(agencyCustomerVisitsRequest.getAgentTrxInForeignCur());
             agencyBankingVisitEntity.setComments(agencyCustomerVisitsRequest.getComments());
             agencyBankingVisitEntity.setHasMaterials(agencyCustomerVisitsRequest.getHasMaterials());
-            //save visit
+            agencyBankingVisitEntity.setAssetNumber(agencyCustomerVisitsRequest.getAssetNumber());
+            agencyBankingVisitEntity.setAssetCondition(agencyCustomerVisitsRequest.getAssetCondition());
+            agencyBankingVisitEntity.setSerialNumber(agencyCustomerVisitsRequest.getSerialNumber());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getTerminalId());
           AgencyBankingVisitEntity  visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
 
             String folderName = "agencyBankingVisit_" + visitInfo.getId();
             String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto,folderName );
+                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto );
             String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto,folderName );
+                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto );
             String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,folderName );
+                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto );
+            String tariffPhotoPath = fileStorageService.saveFileWithSpecificFileName(
+                    "tariffPhoto_" + visitInfo.getId() + ".PNG", tariffPhoto );
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(premiseInsidePhotoPath);
             filePathList.add(premiseOutsidePhotoPath);
             filePathList.add(cashRegisterPhotoPath);
+            filePathList.add(tariffPhotoPath);
             filePathList.forEach(filePath -> {
                 AgencyBankingVisitFileEntity visitKYC = new AgencyBankingVisitFileEntity();
                 visitKYC.setFilePath(filePath);

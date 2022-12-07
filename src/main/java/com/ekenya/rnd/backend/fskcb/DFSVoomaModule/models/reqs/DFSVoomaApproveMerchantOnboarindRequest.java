@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DFSVoomaApproveMerchantOnboarindRequest {
-    private Long id;
+    private Long customerId;
 //    private String merchantT24Account;
 //    private String customerT24Number;
     private String remarks;

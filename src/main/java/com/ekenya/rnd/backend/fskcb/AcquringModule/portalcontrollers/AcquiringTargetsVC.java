@@ -43,14 +43,15 @@ public class AcquiringTargetsVC {
 
     @PostMapping(value = "/acquiring-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
-        List<?> acquiringTargetsResponse = acquiringService.loadTargets();
-        boolean success = acquiringTargetsResponse != null;// acquiringTargetsResponse.size() > 0;
+        List<?> list = acquiringService.loadTargets();
+        boolean success = list != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -112,7 +113,7 @@ public class AcquiringTargetsVC {
     }
 
     @PostMapping(value = "/acquiring-assign-targets")
-    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(@RequestBody DSRTAssignTargetRequest model) {
         boolean success = acquiringService.assignTargetToDSR(model);
 
         //Response
@@ -131,7 +132,7 @@ public class AcquiringTargetsVC {
     }
     //assign targets to a team
     @PostMapping(value = "/acquiring-assign-targets-to-team")
-    public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToTeam(@RequestBody TeamTAssignTargetRequest model) {
         boolean success = acquiringService.assignTargetToTeam(model);
 
         //Response
@@ -149,7 +150,7 @@ public class AcquiringTargetsVC {
         }
     }
     @PostMapping(value = "/acquiring-get-all-targets-by-id")
-    public ResponseEntity<?> getVoomaGetTargetById(VoomaTargetByIdRequest model) {
+    public ResponseEntity<?> getVoomaGetTargetById(@RequestBody VoomaTargetByIdRequest model) {
         Object target = acquiringService.getTargetById(model);
         Boolean success = target != null;
 

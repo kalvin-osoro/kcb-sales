@@ -11,6 +11,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.*;
 import com.ekenya.rnd.backend.utils.Status;
@@ -22,6 +23,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,23 +36,33 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class VoomaPortalService implements IVoomaPortalService {
-    private final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
-    private final DFSVoomaLeadRepository dfsVoomaLeadRepository;
-    private final IDSRTeamsRepository idsrTeamsRepository;
-    private final DFSVoomaQuestionerResponseRepository dfsVoomaQuestionerResponseRepository;
-    private final DFSVoomaQuestionnaireQuestionRepository dfsVoomaQuestionnaireQuestionRepository;
-    private final DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
-    private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
-    private final IDSRAccountsRepository dsrAccountsRepository;
-    private final DFSVoomaAssetFilesRepository dfsVoomaAssetFilesRepository;
-
-    private final DFSVoomaAssetRepository dfsVoomaAssetRepository;
-
-    private final DFSVoomaFeedBackRepository dfsVoomaFeedBackRepository;
-
-    private final FileStorageService fileStorageService;
+    @Autowired
+    private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+    @Autowired
+    private DFSVoomaLeadRepository dfsVoomaLeadRepository;
+    @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
+    private IDSRTeamsRepository idsrTeamsRepository;
+    @Autowired
+    private DFSVoomaQuestionerResponseRepository dfsVoomaQuestionerResponseRepository;
+    @Autowired
+    private DFSVoomaQuestionnaireQuestionRepository dfsVoomaQuestionnaireQuestionRepository;
+    @Autowired
+    private DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
+    @Autowired
+    private DFSVoomaTargetRepository dfsVoomaTargetRepository;
+    @Autowired
+    private IDSRAccountsRepository dsrAccountsRepository;
+    @Autowired
+    private DFSVoomaAssetFilesRepository dfsVoomaAssetFilesRepository;
+    @Autowired
+    private DFSVoomaAssetRepository dfsVoomaAssetRepository;
+    @Autowired
+    private DFSVoomaFeedBackRepository dfsVoomaFeedBackRepository;
+    @Autowired
+    private FileStorageService fileStorageService;
 
 
     @Override
@@ -120,9 +133,10 @@ public class VoomaPortalService implements IVoomaPortalService {
         try {
             DFSVoomaLeadEntity dfsVoomaLeadEntity = dfsVoomaLeadRepository.findById(model.getLeadId()).orElse(null);
             dfsVoomaLeadEntity.setDsrId(model.getDsrId());
+            dfsVoomaLeadEntity.setPriority(model.getPriority());
             //set start date from input
-            dfsVoomaLeadEntity.setStartDate(model.getStartDate());
-            dfsVoomaLeadEntity.setEndDate(model.getEndDate());
+//            dfsVoomaLeadEntity.setStartDate(model.getStartDate());
+//            dfsVoomaLeadEntity.setEndDate(model.getEndDate());
             //save
             dfsVoomaLeadRepository.save(dfsVoomaLeadEntity);
             //update is assigned to true
@@ -148,10 +162,12 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("id", dfsVoomaLeadEntity.getId());
                 objectNode.put("customerId", dfsVoomaLeadEntity.getCustomerId());
                 objectNode.put("businessUnit", dfsVoomaLeadEntity.getBusinessUnit());
-                objectNode.put("leadStatus", dfsVoomaLeadEntity.getLeadStatus().ordinal());
+                objectNode.put("leadStatus", dfsVoomaLeadEntity.getLeadStatus().toString());
                 objectNode.put("topic", dfsVoomaLeadEntity.getTopic());
-                objectNode.put("priority", dfsVoomaLeadEntity.getPriority().ordinal());
+                objectNode.put("priority", dfsVoomaLeadEntity.getPriority().toString());
                 objectNode.put("dsrId", dfsVoomaLeadEntity.getDsrId());
+                objectNode.put("product",dfsVoomaLeadEntity.getProduct());
+                objectNode.put("createdOn",dfsVoomaLeadEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
             return list;
@@ -243,7 +259,7 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Override
     public boolean approveMerchantOnboarding(DFSVoomaApproveMerchantOnboarindRequest dfsVoomaApproveMerchantOnboarindRequest) {
         try {
-            DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(dfsVoomaApproveMerchantOnboarindRequest.getId()).get();
+            DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(dfsVoomaApproveMerchantOnboarindRequest.getCustomerId()).get();
             dfsVoomaOnboardEntity.setStatus(OnboardingStatus.APPROVED);
             dfsVoomaOnboardEntity.setIsApproved(true);
             dfsVoomaOnboardEntity.setRemarks(dfsVoomaApproveMerchantOnboarindRequest.getRemarks());
@@ -291,7 +307,6 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
-//                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
                 objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
@@ -409,9 +424,9 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> loadAllApprovedMerchants() {
+    public ArrayNode loadAllApprovedMerchants() {
         try {
-            List<ObjectNode> list = new ArrayList<>();
+            ArrayNode list = objectMapper.createArrayNode();
             ObjectMapper mapper = new ObjectMapper();
             for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
@@ -429,7 +444,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("co-ordinates", arrayNode);
                 list.add(objectNode);
             }
-            return list;
+            return mapper.valueToTree(list);
         } catch (Exception e) {
             log.error("Error occurred while getting onboarding summary", e);
         }
@@ -452,6 +467,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             String subFolder = "vooma-assets";
 
@@ -489,6 +505,10 @@ public class VoomaPortalService implements IVoomaPortalService {
                 asset.put("id", dfsVoomaAssetEntity.getId());
                 asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
                 asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
+                asset.put("lastServiceDate", dfsVoomaAssetEntity.getLastServiceDate().getTime());
+                asset.put("assigned", dfsVoomaAssetEntity.isAssigned());
+                asset.put("deviceId", dfsVoomaAssetEntity.getDeviceId());
+                asset.put("assetType", dfsVoomaAssetEntity.getAssetType().ordinal());
                 //asset.put("type",acquiringAssetEntity.getAssetType());
                 //
                 ArrayNode images = mapper.createArrayNode();
@@ -517,30 +537,33 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Override
     public List<ObjectNode> getAllMerchantOnboardings() {
         try {
+
             List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAll()) {
-                ObjectNode objectNode = mapper.createObjectNode();
-                objectNode.put("id", dfsVoomaOnboardEntity.getId());
-                objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
-                objectNode.put("region", dfsVoomaOnboardEntity.getRegion());
-                objectNode.put("status", dfsVoomaOnboardEntity.getStatus().ordinal());
-                objectNode.put("dateOnborded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
-                objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getMerchantPhone());
-                objectNode.put("email", dfsVoomaOnboardEntity.getMerchantEmail());
-                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+            List<DFSVoomaOnboardEntity> dfsVoomaOnboardEntityList = dfsVoomaOnboardRepository.findAll();
+            for (DFSVoomaOnboardEntity entity : dfsVoomaOnboardEntityList) {
+                ObjectMapper mapper = new ObjectMapper();
                 ObjectNode node = mapper.createObjectNode();
-                node.put("longitude", dfsVoomaOnboardEntity.getLongitude());
-                node.put("latitude", dfsVoomaOnboardEntity.getLatitude());
-                objectNode.put("co-ordinates", node);
-                list.add(objectNode);
+                node.put("id", entity.getId());
+                node.put("merchantName", entity.getMerchantName());
+                node.put("region", entity.getRegion());
+                node.put("status", entity.getStatus().ordinal());
+                node.put("dateOnborded", entity.getCreatedOn().getTime());
+                node.put("phoneNumber", entity.getMerchantPhone());
+                node.put("email", entity.getMerchantEmail());
+                node.put("dsrId", entity.getDsrId());
+                list.add(node);
             }
             return list;
         } catch (Exception e) {
             log.error("Error occurred while getting onboarding summary", e);
         }
+
         return null;
     }
+    // List<ObjectNode> list = new ArrayList<>();
+    //            List<CBOpportunitiesEntity> cbOpportunitiesEntities = cbOpportunitiesRepository.findAll();
+    //            for (CBOpportunitiesEntity cbOpportunitiesEntity : cbOpportunitiesEntities) {
+    //                ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public Object getCustomerVisitById(VoomaCustomerVisitsByIdRequest model) {
@@ -577,33 +600,34 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Override
     public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
-       try {
-           if (model == null) {
-               return false;
-           }
-           DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
-           DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
-              if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
-                  user.setCampaignTargetValue(model.getTargetValue());
-              } if (target.getTargetType().equals(TargetType.LEADS)) {
-               user.setLeadsTargetValue(model.getTargetValue());
-           }
-           if (target.getTargetType().equals(TargetType.VISITS)) {
-               user.setVisitsTargetValue(model.getTargetValue());
-           }
-           if (target.getTargetType().equals(TargetType.ONBOARDING)) {
-               user.setOnboardTargetValue(model.getTargetValue());
-           }
+            DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+                user.setCampaignTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setLeadsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.VISITS)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+                user.setOnboardTargetValue(model.getTargetValue());
+            }
 
-           Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
-           dfsVoomaTargetEntities.add(target);
-           user.setDfsVoomaTargetEntities(dfsVoomaTargetEntities);
-           dsrAccountsRepository.save(user);
-           return true;
-       } catch (Exception e) {
-              log.error("Error occurred while assigning target to dsr", e);
-       }
+            Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
+            dfsVoomaTargetEntities.add(target);
+            user.setDfsVoomaTargetEntities(dfsVoomaTargetEntities);
+            dsrAccountsRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning target to dsr", e);
+        }
         return false;
     }
 
@@ -626,7 +650,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 teamEntity.setVisitsTargetValue(model.getTargetValue());
             }
-            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 teamEntity.setOnboardTargetValue(model.getTargetValue());
             }
 
@@ -645,8 +669,8 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Override
     public Object getTargetById(VoomaTargetByIdRequest model) {
         try {
-            if (model==null){
-                return  false;
+            if (model == null) {
+                return false;
             }
             DFSVoomaTargetEntity dfsVoomaTargetEntity = dfsVoomaTargetRepository.findById(model.getId()).orElse(null);
             return dfsVoomaTargetEntity;
@@ -656,7 +680,84 @@ public class VoomaPortalService implements IVoomaPortalService {
 
         return false;
     }
-}
+
+    @Override
+    public List<?> getAllOnboardingV2() {
+        try {
+            List<DFSVoomaOnboardEntity> dfsVoomaOnboardEntityList = dfsVoomaOnboardRepository.findAll();
+            List<DFSVoomaOnboardEntity> dfsVoomaOnboardEntityList1 = new ArrayList<>();
+            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardEntityList) {
+                dfsVoomaOnboardEntity.getAccountName();
+                dfsVoomaOnboardEntity.getMerchantName();
+                dfsVoomaOnboardEntity.getRegion();
+                dfsVoomaOnboardEntity.getCreatedOn();
+                dfsVoomaOnboardEntity.getMerchantPhone();
+                dfsVoomaOnboardEntity.getMerchantEmail();
+                dfsVoomaOnboardEntity.getId();
+                dfsVoomaOnboardEntityList1.add(dfsVoomaOnboardEntity);
+//                return dfsVoomaOnboardEntityList1;
+            }
+            return dfsVoomaOnboardEntityList;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all onboarding", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<?> fetchAllAssetsV2() {
+        try {
+            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findAll();
+            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList1 = new ArrayList<>();
+            for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetEntityList) {
+                dfsVoomaAssetEntity.getAgentId();
+                dfsVoomaAssetEntity.getCreatedOn();
+                dfsVoomaAssetEntity.getAssetType();
+                dfsVoomaAssetEntity.getAssetCondition();
+                dfsVoomaAssetEntity.getSerialNumber();
+                dfsVoomaAssetEntity.getAssetNumber();
+                dfsVoomaAssetEntity.getDeviceId();
+                dfsVoomaAssetEntityList1.add(dfsVoomaAssetEntity);
+            }
+            return dfsVoomaAssetEntityList;
+
+        } catch (Exception e) {
+            log.error("Error occurred while getting all assets", e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<?> fetchAllLeadsV2() {
+
+        //fetch all leadstry
+        try {
+            List<DFSVoomaLeadEntity> dfsVoomaList = dfsVoomaLeadRepository.findAll();
+            List<DFSVoomaLeadEntity> dfsVoomaLeadEntityList = new ArrayList<>();
+            for (DFSVoomaLeadEntity dfsVoomaLeadEntity : dfsVoomaList) {
+               dfsVoomaLeadEntity.getId();
+                dfsVoomaLeadEntity.getCustomerId();
+                dfsVoomaLeadEntity.getCustomerName();
+                dfsVoomaLeadEntity.getLeadStatus();
+                dfsVoomaLeadEntity.getPriority();
+                dfsVoomaLeadEntity.getCreatedOn();
+                dfsVoomaLeadEntity.getPriority();
+                dfsVoomaLeadEntity.getBusinessUnit();
+                dfsVoomaLeadEntityList.add(dfsVoomaLeadEntity);
+            }
+            return dfsVoomaList;
+
+        } catch (Exception e) {
+            log.error("Error occurred while getting all assets", e);
+        }
+
+        return null;
+
+        }
+    }
+
+
 
 
 

@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AquiringTargetType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.AssignmentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,13 +35,14 @@ public class CBTargetEntity {
     private Integer targetAchievement;
     private  String targetSource;
     private Date startDate;
+
     private String endDate;
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;
-//    @OneToMany(mappedBy = "acquiringTargetEntity", cascade = CascadeType.ALL)
-//    private List<DSRAccountEntity> dsrAccountEntities;
+    @Enumerated(EnumType.STRING)
+    private AssignmentType assignmentType;
 
 }

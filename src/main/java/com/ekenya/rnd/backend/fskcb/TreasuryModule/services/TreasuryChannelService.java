@@ -1,11 +1,14 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryCallReportEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryNegotiationRequestEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTradeRequestEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.repositories.TreasuryCallReportRepository;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.repositories.TreasuryLeadRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.repositories.TreasuryNegotiationRequestRepository;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.repositories.TreasuryTradeRequestRepository;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.*;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -24,6 +27,7 @@ import java.util.List;
 @Service
 public class TreasuryChannelService implements ITreasuryChannelService {
     private final TreasuryLeadRepository treasuryLeadRepository;
+    private final TreasuryNegotiationRequestRepository treasuryNegotiationRequestRepository;
     private final TreasuryTradeRequestRepository treasuryTradeRequestRepository;
     private final TreasuryCallReportRepository treasuryCallReportRepository;
 
@@ -34,9 +38,14 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             TreasuryLeadEntity treasuryLeadEntity = new TreasuryLeadEntity();
             treasuryLeadEntity.setCustomerName(model.getCustomerName());
             treasuryLeadEntity.setBusinessUnit(model.getBusinessUnit());
+            treasuryLeadEntity.setEmail(model.getEmail());
+            treasuryLeadEntity.setPhoneNumber(model.getPhoneNumber());
+            treasuryLeadEntity.setProduct(model.getProduct());
             treasuryLeadEntity.setPriority(model.getPriority());
+            treasuryLeadEntity.setDsrId(model.getDsrId());
             treasuryLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
             treasuryLeadEntity.setTopic(model.getTopic());
+            treasuryLeadEntity.setLeadStatus(LeadStatus.OPEN);
             treasuryLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             treasuryLeadRepository.save(treasuryLeadEntity);
             return true;
@@ -50,22 +59,26 @@ public class TreasuryChannelService implements ITreasuryChannelService {
     @Override
     public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
         try {
+            if (model==null){
+                return null;
+            }
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             for (TreasuryLeadEntity treasuryLeadEntity : treasuryLeadRepository.findAllByDsrId(model.getDsrId())) {
                 ObjectNode node = mapper.createObjectNode();
-                node.put("customerId", treasuryLeadEntity.getCustomerId());
-                node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
-                node.put("leadStatus", String.valueOf(treasuryLeadEntity.getLeadStatus()));
-                node.put("topic", treasuryLeadEntity.getTopic());
+                node.put("customerName", treasuryLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
                 node.put("priority", treasuryLeadEntity.getPriority().ordinal());
-                node.put("dsrId", treasuryLeadEntity.getDsrId());
-                //add to list
+                node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
+                node.put("leadId", treasuryLeadEntity.getId());
+                node.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
+                node.put("createdOn", treasuryLeadEntity.getCreatedOn().getTime());
                 list.add(node);
             }
             return list;
+
         } catch (Exception e) {
-            log.error("Error occurred while loading questionnaires", e);
+            log.error("Error occurred while loading assigned leads", e);
         }
         return null;
 
@@ -112,21 +125,6 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             if (model==null){
                 return false;
             }
-            //if existing customer then create trade request
-            if (model.getCustomerType().equals("EXISTING")){
-                TreasuryTradeRequestEntity treasuryTradeRequestEntity = new TreasuryTradeRequestEntity();
-                treasuryTradeRequestEntity.setTreasuryPriority(model.getTreasuryPriority());
-                treasuryTradeRequestEntity.setCurrency(model.getCurrency());
-                treasuryTradeRequestEntity.setAmount(model.getAmount());
-                treasuryTradeRequestEntity.setDateBooked(model.getDateBooked());
-                treasuryTradeRequestEntity.setMethodOfTransaction(model.getMethodOfTransaction());
-                treasuryTradeRequestEntity.setBranchName(model.getBranchName());
-                //save
-                treasuryTradeRequestRepository.save(treasuryTradeRequestEntity);
-                return true;
-            }
-            //if new customer then create Trede request and create customer
-            if (model.getCustomerType().equals("NEW")){
                 TreasuryTradeRequestEntity treasuryTradeRequestEntity = new TreasuryTradeRequestEntity();
                 treasuryTradeRequestEntity.setCustomerName(model.getCustomerName());
                 treasuryTradeRequestEntity.setCustomerID(model.getCustomerID());
@@ -141,17 +139,19 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 treasuryTradeRequestEntity.setDateBooked(model.getDateBooked());
                 treasuryTradeRequestEntity.setMethodOfTransaction(model.getMethodOfTransaction());
                 treasuryTradeRequestEntity.setBranchName(model.getBranchName());
+                treasuryTradeRequestEntity.setPhoneNumber(model.getPhoneNumber());
+                treasuryTradeRequestEntity.setDealerName(model.getDealerName());
+                treasuryTradeRequestEntity.setSector(model.getSector());
                 //save
                 treasuryTradeRequestRepository.save(treasuryTradeRequestEntity);
                 return true;
+            } catch (Exception e) {
+                log.error("Error occurred while creating trade request", e);
             }
-        } catch (Exception e) {
-            log.error("Error occurred while creating trade request", e);
 
-
-        }
         return false;
     }
+
 
     @Override
     public List<ObjectNode> loadAllDSRTradeReqs(TreasuryGetDSRTradeRequest model) {
@@ -191,8 +191,30 @@ public class TreasuryChannelService implements ITreasuryChannelService {
 
     @Override
     public boolean attemptCreateNegotiationRequest(TreasuryNegRequest request) {
+        try {
+            if (request==null){
+                return false;
+            }
+                TreasuryNegotiationRequestEntity treasuryNegotiationRequestEntity = new TreasuryNegotiationRequestEntity();
+                treasuryNegotiationRequestEntity.setCustomerName(request.getCustomerName());
+                treasuryNegotiationRequestEntity.setCustomerID(request.getCustomerID());
+                treasuryNegotiationRequestEntity.setNatureOfBusiness(request.getNatureOfBusiness());
+                treasuryNegotiationRequestEntity.setCustomerSegment(request.getCustomerSegment());
+                treasuryNegotiationRequestEntity.setPriority(request.getPriority());
+                treasuryNegotiationRequestEntity.setCurrency(request.getCurrency());
+                treasuryNegotiationRequestEntity.setPhoneNumber(request.getPhoneNumber());
+                treasuryNegotiationRequestEntity.setSector(request.getSector());
+                treasuryNegotiationRequestEntity.setAmount(request.getAmount());
+                treasuryNegotiationRequestEntity.setDateBooked(request.getDateBooked());
+                treasuryNegotiationRequestRepository.save(treasuryNegotiationRequestEntity);
+                return true;
+            } catch (Exception e) {
+                log.error("Error occurred while creating negotiation request", e);
+            }
         return false;
     }
+
+
 
     @Override
     public ArrayNode loadDSRNegotiationRequests() {
@@ -261,6 +283,52 @@ public class TreasuryChannelService implements ITreasuryChannelService {
 
         } catch (Exception e) {
             log.error("Error occurred while creating call report", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (TreasuryLeadEntity treasuryLeadEntity : treasuryLeadRepository.findAllByDsrId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", treasuryLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", treasuryLeadEntity.getPriority().ordinal());
+                node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
+                node.put("leadId", treasuryLeadEntity.getId());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean attemptUpdateLead(TreasuryUpdateLeadRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            TreasuryLeadEntity treasuryLeadEntity = treasuryLeadRepository.findById(model.getLeadId()).orElse(null);
+            if (treasuryLeadEntity==null){
+                return false;
+            }
+            treasuryLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
+            treasuryLeadEntity.setLeadStatus(model.getLeadStatus());
+            //save
+            treasuryLeadRepository.save(treasuryLeadEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while updating lead", e);
         }
         return false;
     }

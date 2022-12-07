@@ -24,7 +24,6 @@ public class AgencyOnboardingRequest {
     private String agentPostalCode;
     private Long dsrId;
     private Date createdOn;
-    private Boolean isApproved=false;
     private String remarks;
     private String latitude;
     private String longitude;

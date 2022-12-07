@@ -48,7 +48,7 @@ public interface IVoomaPortalService {
 
     ArrayNode getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model);
 
-    List<ObjectNode> loadAllApprovedMerchants();
+    ArrayNode loadAllApprovedMerchants();
 
     boolean createAsset(String assetDetails, MultipartFile[] assetFiles);
 
@@ -63,4 +63,7 @@ public interface IVoomaPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
+    List<?> getAllOnboardingV2();
+    List<?> fetchAllAssetsV2();
+    List<?> fetchAllLeadsV2();
 }

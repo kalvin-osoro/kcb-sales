@@ -30,10 +30,15 @@ public class TreasuryNegotiationRequestEntity {
     private TreasuryPriority priority;  //enum
     private String salesCode;
     @Enumerated(EnumType.STRING)
-    private TreasuryStatus status;  //enum
+    private TreasuryStatus status=TreasuryStatus.OPEN;  //enum
     private String dateBooked;
     private String refCode;
     private String remarks;
-    private Date createdOn;
+    private  String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    private NegotionCustomerType customerType;
     private boolean isApproved=false;
+    private String natureOfBusiness;
+    private String customerSegment;
+    private String sector;
 }

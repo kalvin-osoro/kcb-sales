@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dbo_pb_targets")
+@Table(name = "dbo_treasury_targets")
 public class TreasuryTargetEntity {
     @Id
     @GeneratedValue(

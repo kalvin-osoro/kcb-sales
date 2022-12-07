@@ -116,7 +116,7 @@ public class TreasuryTargetsVC {
         }
     }
     @PostMapping(value = "/treasury-assign-targets")
-    public ResponseEntity<?> getVoomaAssignTargetsToDSR(DSRTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToDSR(@RequestBody DSRTAssignTargetRequest model) {
         boolean success = portalService.assignTargetToDSR(model);
 
         //Response
@@ -135,7 +135,7 @@ public class TreasuryTargetsVC {
     }
     //assign targets to a team
     @PostMapping(value = "/treasury-assign-targets-to-team")
-    public ResponseEntity<?> getVoomaAssignTargetsToTeam(TeamTAssignTargetRequest model) {
+    public ResponseEntity<?> getVoomaAssignTargetsToTeam(@RequestBody TeamTAssignTargetRequest model) {
         boolean success = portalService.assignTargetToTeam(model);
 
         //Response
@@ -153,7 +153,7 @@ public class TreasuryTargetsVC {
         }
     }
     @PostMapping(value = "/treasury-get-all-targets-by-id")
-    public ResponseEntity<?> getVoomaGetTargetById(VoomaTargetByIdRequest model) {
+    public ResponseEntity<?> getVoomaGetTargetById(@RequestBody VoomaTargetByIdRequest model) {
         Object target = portalService.getTargetById(model);
         Boolean success = target != null;
 
