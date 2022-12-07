@@ -1,5 +1,9 @@
 package com.ekenya.rnd.backend.fskcb;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecQuestionOptionEntity;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionEntity;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionAnswersRepo;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
@@ -34,6 +38,8 @@ public class DbInitializer {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ISecurityQuestionsRepo securityQuestionsRepo;
     @Autowired
     UserProfilesRepository profilesRepository;
     @Autowired
@@ -74,6 +80,9 @@ public class DbInitializer {
 
         //4. Seed demo DSRs
         createTestDSRs();
+
+        //5. Create Sec Qns
+        createDefaultSecQns();
     }
 
 
@@ -466,7 +475,7 @@ public class DbInitializer {
 //            }
 
             String staffNo = "KCB100";
-            String email = "dsr34@kcbfieldsales.co.ke";
+            String email = "testdsr@kcbfieldsales.co.ke";
             if(!dSRAccountsRepository.findByStaffNo(staffNo).isPresent()) {
 
                 //Capture info
@@ -475,9 +484,9 @@ public class DbInitializer {
                 dsrDetails.setStaffNo(staffNo);
                 dsrDetails.setPhoneNo("254734406645");
                 dsrDetails.setStatus(Status.ACTIVE);
-                dsrDetails.setFullName("TEST DSR");
+                dsrDetails.setFullName("Test Account");
                 dsrDetails.setLocation(team.getLocation());
-                dsrDetails.setGender("other");
+                dsrDetails.setGender("Male");
                 dsrDetails.setIdNumber("");
                 dsrDetails.setTeamId(team.getId());
                 dsrDetails.setCreatedBy("0");
@@ -501,11 +510,15 @@ public class DbInitializer {
                 //Save DSR
                 dSRAccountsRepository.save(dsrDetails);
 
-                //Add to profile this profile
-                ProfileAndUserEntity profileUser = new ProfileAndUserEntity();
-                profileUser.setUserId(userApp.getId());
-                profileUser.setProfileId(profileUser.getId());
-                profilesAndUsersRepository.save(profileUser);
+                //Add to all profiles
+                for (UserProfileEntity profile:
+                     profilesRepository.findAllByStatus(Status.ACTIVE)) {
+                    //
+                    ProfileAndUserEntity profileUser = new ProfileAndUserEntity();
+                    profileUser.setUserId(userApp.getId());
+                    profileUser.setProfileId(profile.getId());
+                    profilesAndUsersRepository.save(profileUser);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -543,6 +556,50 @@ public class DbInitializer {
             }
         }catch (Exception ex){
             //
+        }
+    }
+
+    private void createDefaultSecQns(){
+
+        try{
+
+            String qn1 = "What is your oldest sibling’s middle name?";
+            if(!securityQuestionsRepo.findByTitle(qn1).isPresent()) {
+                SecurityQuestionEntity questionEntity1 = new SecurityQuestionEntity();
+                questionEntity1.setTitle(qn1);
+                securityQuestionsRepo.save(questionEntity1);
+
+            }
+            String qn2 = "What city were you born in?";
+            if(!securityQuestionsRepo.findByTitle(qn2).isPresent()) {
+                SecurityQuestionEntity questionEntity2 = new SecurityQuestionEntity();
+                questionEntity2.setTitle(qn2);
+                securityQuestionsRepo.save(questionEntity2);
+            }
+
+            String qn3 = "What was the first concert you attended?";
+            if(!securityQuestionsRepo.findByTitle(qn3).isPresent()) {
+                SecurityQuestionEntity questionEntity3 = new SecurityQuestionEntity();
+                questionEntity3.setTitle(qn3);
+                securityQuestionsRepo.save(questionEntity3);
+            }
+
+            String qn4 = "What was the make and model of your first car?";
+            if(!securityQuestionsRepo.findByTitle(qn4).isPresent()) {
+                SecurityQuestionEntity questionEntity4 = new SecurityQuestionEntity();
+                questionEntity4.setTitle(qn4);
+                securityQuestionsRepo.save(questionEntity4);
+            }
+
+
+            String qn5 = "In what city or town did your parents meet?";
+            if(!securityQuestionsRepo.findByTitle(qn5).isPresent()) {
+                SecurityQuestionEntity questionEntity5 = new SecurityQuestionEntity();
+                questionEntity5.setTitle(qn5);
+                securityQuestionsRepo.save(questionEntity5);
+            }
+        }catch (Exception ex){
+
         }
     }
 }

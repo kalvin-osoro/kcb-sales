@@ -13,13 +13,14 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Privilege Management")
 @RestController
 @RequestMapping(path = "/api/v1")
-@Secured(SystemRoles.USER)
+@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class ProfilesVC {
     @Autowired
     ObjectMapper mObjectMapper;
