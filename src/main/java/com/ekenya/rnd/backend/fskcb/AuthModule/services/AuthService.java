@@ -110,8 +110,8 @@ public class AuthService implements IAuthService{
                     //
                     LocalDateTime accountExpiry = LocalDateTime.ofInstant(dsrAccount.getExpiryDate().toInstant(),
                             ZoneId.systemDefault());
-                    //
-                    if(accountExpiry.isAfter(LocalDateTime.now())){
+                    //Expiry is before ..
+                    if(accountExpiry.isBefore(LocalDateTime.now())){
                         response.setSuccess(false);
                         response.setRemAttempts(account.getRemLoginAttempts());
                         response.setErrorMessage("Account Access as Expired.");
