@@ -33,6 +33,8 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.logging.FileHandler;
 
 @SpringBootApplication
@@ -75,7 +77,7 @@ public class SpringBootKcbRestApiApplication   {
 
 	public static void main(String[] args) {
 		//
-		prepareLogger();
+		prepareLogger(args);
 		//
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 
@@ -84,7 +86,7 @@ public class SpringBootKcbRestApiApplication   {
 	@PostConstruct
 	public void init(){
 		//
-		prepareLogger();
+	//	prepareLogger();
 	}
 
 //	@Bean
@@ -101,20 +103,29 @@ public class SpringBootKcbRestApiApplication   {
 //	}
 
 
-	public static void prepareLogger() {
+	public static void prepareLogger(String[] args) {
 
 		try {
-//		SLF4JBridgeHandler.removeHandlersForRootLogger();
-//		SLF4JBridgeHandler.install();
+//			SLF4JBridgeHandler.removeHandlersForRootLogger();
+//			SLF4JBridgeHandler.install();
 
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
+			//Default: Log inside container, ./logs/xxx
 			Path path = Paths.get("logs/kcb-sales-backend");
 			Files.createDirectories(path);
+			//
 			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 			context.stop();
 
-			final String LOG_DIR = path.toAbsolutePath().toString();
+			String LOG_DIR = path.toAbsolutePath().toString();
+			if(args != null && Arrays.stream(args).anyMatch(l-> l.toLowerCase(Locale.ROOT).contains("logs-dir"))){
+				String argValue = Arrays.stream(args).filter(l-> l.toLowerCase(Locale.ROOT).contains("logs-dir")).findFirst().get();
+				if(argValue.contains("=")){
+					LOG_DIR = argValue.split("=")[1].trim();
+				}else if(argValue.contains(" ")){
+					LOG_DIR = argValue.split(" ")[1].trim();
+				}
+
+			}
 
 
 			PatternLayoutEncoder logEncoder = new PatternLayoutEncoder();
