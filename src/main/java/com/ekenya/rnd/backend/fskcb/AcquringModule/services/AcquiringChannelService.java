@@ -3,10 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.SearchKeyWordRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
@@ -29,6 +26,7 @@ import java.util.List;
 public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
+    private final CustomerFeedBackRepository customerFeedBackRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final FileStorageService fileStorageService;
     private final IAcquiringTargetsRepository acquiringTargetsRepository;
@@ -457,6 +455,25 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             log.error("Error occurred while onboarding new merchant", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean createCustomerFeedback(CustomerFeedbackRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CustomerFeedBack customerFeedBack=new CustomerFeedBack();
+            customerFeedBack.setDescribeTheService(model.getDescribeTheService());
+            customerFeedBack.setWhyWouldYouChange(model.getWhyWouldYouChange());
+            customerFeedBack.setWhatWouldYouChange(model.getWhatWouldYouChange());
+            customerFeedBackRepository.save(customerFeedBack);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating customer feedback", e);
+        }
+        return false;
     }
 }
 

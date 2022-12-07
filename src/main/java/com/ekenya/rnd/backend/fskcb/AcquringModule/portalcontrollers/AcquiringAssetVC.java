@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalServ
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,12 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/v1")
 public class AcquiringAssetVC {
-
-     private final IAcquiringPortalService acquiringService;
-
-    public AcquiringAssetVC(IAcquiringPortalService acquiringService) {
-        this.acquiringService = acquiringService;
-    }
+        @Autowired
+     private IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-create-asset")
     public ResponseEntity<?> createAsset(@RequestParam("assetDetails") String assetDetails,
