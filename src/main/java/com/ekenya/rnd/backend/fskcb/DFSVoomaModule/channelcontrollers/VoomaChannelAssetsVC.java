@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.CustomerAssetsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAddAssetReportRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAssignAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCollectAssetRequest;
@@ -64,8 +65,8 @@ public class VoomaChannelAssetsVC {
     }
 
     @PostMapping(value = "/vooma-get-all-merchant-assets")
-    public ResponseEntity<?> getAllMerchantAssets(@RequestBody Long merchantId) {
-        List<?> assets = voomaChannelService.getAllAgentMerchantAssets(merchantId);
+    public ResponseEntity<?> getAllMerchantAssets(@RequestBody CustomerAssetsRequest model) {
+        List<?> assets = voomaChannelService.getAllAgentMerchantAssets(model);
         boolean success = assets != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -73,7 +74,6 @@ public class VoomaChannelAssetsVC {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
             node.addAll((ArrayNode) objectMapper.valueToTree(assets));
-//          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

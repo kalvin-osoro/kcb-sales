@@ -31,12 +31,13 @@ public class  VoomaChannelOnboardingVC {
         Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
         boolean success = merchantObj != null;
 
+        System.out.println(merchantObj);
+
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message","Merchant Onboarded Successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -65,8 +66,6 @@ public class  VoomaChannelOnboardingVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message","Agent Onboarded Successfully");
-//          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

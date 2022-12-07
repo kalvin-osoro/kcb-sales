@@ -66,4 +66,6 @@ public interface IVoomaPortalService {
     List<?> getAllOnboardingV2();
     List<?> fetchAllAssetsV2();
     List<?> fetchAllLeadsV2();
+
+    Object agentById(VoomaMerchantDetailsRequest model);
 }

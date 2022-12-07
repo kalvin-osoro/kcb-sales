@@ -40,7 +40,6 @@ public class DFSVoomaAgentOnboardingEntity {
 //    //physical address
     private String postalAddress;
     private String postalCode;
-    @Column(name = "cityORtown")
     private String town;
     private String nearestLandmark;
     private String staffId;

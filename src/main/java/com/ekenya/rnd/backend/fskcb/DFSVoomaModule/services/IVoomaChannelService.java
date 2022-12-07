@@ -40,7 +40,7 @@ public interface IVoomaChannelService {
 
     boolean assignAssetToAgent(VoomaAssignAssetRequest model);
 
-    List<ObjectNode> getAllAgentMerchantAssets(Long merchantId);
+    List<ObjectNode> getAllAgentMerchantAssets(CustomerAssetsRequest model);
 
     boolean recollectAsset(VoomaCollectAssetRequest model);
 
@@ -51,4 +51,5 @@ public interface IVoomaChannelService {
     List<ObjectNode> getAllCustomerVisitsByDSR(VoomaCustomerVisitsRequest model);
 
 
+    Object getSummary(DSRSummaryRequest model);
 }

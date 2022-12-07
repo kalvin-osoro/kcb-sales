@@ -39,6 +39,7 @@ public class DFSVoomaOnboardEntity {
     private String merchantPbox;
     private String merchantPostalCode;
     private Long dsrId;
+    private String dsrName;
     private Date createdOn;
     private Boolean isApproved=false;
     private String remarks;

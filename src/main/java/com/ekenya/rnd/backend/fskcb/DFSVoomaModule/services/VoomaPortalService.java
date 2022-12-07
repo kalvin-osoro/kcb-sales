@@ -41,6 +41,9 @@ public class VoomaPortalService implements IVoomaPortalService {
     private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     @Autowired
     private DFSVoomaLeadRepository dfsVoomaLeadRepository;
+
+    @Autowired
+    private DFSVoomaAgentOnboardingRepository dfsVoomaAgentOnboardingRepository;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -275,7 +278,7 @@ public class VoomaPortalService implements IVoomaPortalService {
     public Object getMerchantById(VoomaMerchantDetailsRequest model) {
         //get merchant by id
         try {
-            DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(model.getId()).get();
+            DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(model.getMerchantId()).get();
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode objectNode = mapper.createObjectNode();
             objectNode.put("id", dfsVoomaOnboardEntity.getId());
@@ -755,7 +758,21 @@ public class VoomaPortalService implements IVoomaPortalService {
         return null;
 
         }
+
+    @Override
+    public Object agentById(VoomaMerchantDetailsRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DFSVoomaAgentOnboardingEntity dfsVoomaAgentEntity = dfsVoomaAgentOnboardingRepository.findById(model.getMerchantId()).orElse(null);
+            return dfsVoomaAgentEntity;
+        } catch (Exception e) {
+            log.error("Error occurred while getting agent by id", e);
+        }
+        return null;
     }
+}
 
 
 

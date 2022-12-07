@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.files;
 
 import com.ekenya.rnd.backend.utils.Utility;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,13 @@ import java.util.List;
 import java.util.logging.Logger;
 @Service
 public class FileStorageService implements IFileStorageService {
+
+    Logger log = Logger.getLogger(FileStorageService.class.getName());
     //working directory folder called "uploads"
 
     public static String pathString ="upload";
     public static String uploadDirectory =  "upload";
     private final Path root = Paths.get(pathString);
-    private Logger log = Logger.getLogger(IFileStorageService.class.getName());
     public static String uploadPath = "upload";
 
 
@@ -75,20 +77,14 @@ public class FileStorageService implements IFileStorageService {
     @Override
     public String saveFileWithSpecificFileName(String fileName, MultipartFile file) {
         try {
-            File dir = new File(uploadDirectory);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-//            File subDir = new File(uploadDirectory + "/" + fileName);
-//            if (!subDir.exists()) {
-//                subDir.mkdirs();
-//            }
-            File serverFile = new File(uploadDirectory + "/" + fileName);
-            file.transferTo(serverFile);
-            return serverFile.getAbsolutePath();
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
+            fileName = new File(uploadDirectory+fileName).getName();
+            file.transferTo(new File(fileName));
+            log.info("Path is "+fileName);
+            return fileName;
+        } catch (Exception e) {
+            log.info("Could not store the file. Error in saveFileWithSpecificFileName: "
+                    + e.getMessage());
+            return "";
         }
 
 

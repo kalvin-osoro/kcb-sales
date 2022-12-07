@@ -36,6 +36,29 @@ public class VoomaMerchantsVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
+
+
+
+    }
+    @PostMapping("/vooma-get-agent-by-id")
+    public ResponseEntity<?> getAgentById(@RequestBody VoomaMerchantDetailsRequest model) {
+        Object agent = acquiringService.agentById(model);
+        boolean success = agent != null;
+
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("merchant").add(objectMapper.valueToTree(agent));
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
     }
 
 //    @PostMapping(value = "/vooma-get-all-merchants")

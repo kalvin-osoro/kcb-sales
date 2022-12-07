@@ -212,6 +212,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaOnboardingKYRepository.save(merchantKYC);
             });
 
+
             return true;
         } catch (Exception e) {
             log.error("Error occurred while onboarding merchant", e);
@@ -306,18 +307,17 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model ==null){
                 return false;
             }
-            DFSVoomaAgentOnboardingEntity dfsVoomaAgentOnboardingEntity = dfsVoomaAgentOnboardingRepositor.findById(model.getCustomerId()).orElse(null);
-            DFSVoomaAssetEntity dfsVoomaAssetEntity =dfsVoomaAssetRepository.findById(model.getAssetId()).orElse(null);
-            if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null){
+            DFSVoomaOnboardEntity dfsVoomaMerchantOnboardingEntity = dfsVoomaOnboardRepository.findById(model.getCustomerId()).orElse(null);
+            DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
+            if (dfsVoomaMerchantOnboardingEntity == null || dfsVoomaAssetEntity == null){
                 return false;
             }
-            dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(dfsVoomaAgentOnboardingEntity);
+            dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(dfsVoomaMerchantOnboardingEntity);
             dfsVoomaAssetEntity.setAssigned(true);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
-            ;
             return true;
         } catch (Exception e) {
-            log.error("Error occurred while assigning asset to merchant", e);
+            log.error("Error occurred while assigning asset to agent", e);
         }
         return false;
     }
@@ -329,7 +329,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 return false;
             }
             DFSVoomaAgentOnboardingEntity dfsVoomaAgentOnboardingEntity = dfsVoomaAgentOnboardingRepositor.findById(model.getCustomerId()).orElse(null);
-            DFSVoomaAssetEntity dfsVoomaAssetEntity =dfsVoomaAssetRepository.findById(model.getAssetId()).orElse(null);
+            DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
             if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null){
                 return false;
             }
@@ -338,16 +338,19 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
         } catch (Exception e) {
-            log.error("Error occurred while assigning asset to agent ", e);
+            log.error("Error occurred while assigning asset to agent", e);
         }
         return false;
     }
 
     @Override
-    public List<ObjectNode> getAllAgentMerchantAssets(Long merchantId) {
+    public List<ObjectNode> getAllAgentMerchantAssets(CustomerAssetsRequest model) {
         try {
+            if (model == null){
+                return null;
+            }
             //get all assets for merchant
-            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findAllByDfsVoomaOnboardingEntityId(merchantId);
+            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findAllByDfsVoomaOnboardingEntityId(model.getCustomerId());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             dfsVoomaAssetEntityList.forEach(dfsVoomaAssetEntity -> {
@@ -441,6 +444,11 @@ public class VoomaChannelService implements IVoomaChannelService {
             log.error("Error occurred while getting all customer visits by DSR", e);
         }
         return null;
+    }
+
+    @Override
+    public Object getSummary(DSRSummaryRequest model) {
+       return null;
     }
 
 }

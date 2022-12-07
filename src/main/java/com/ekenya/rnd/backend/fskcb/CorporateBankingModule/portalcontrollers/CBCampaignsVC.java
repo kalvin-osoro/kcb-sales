@@ -49,7 +49,7 @@ public class CBCampaignsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(campaigns));
+            node.addAll((List)campaigns);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
