@@ -814,13 +814,14 @@ public class VoomaPortalService implements IVoomaPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
-                ArrayNode arrayNode = mapper.createArrayNode();
-                arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
-                arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
-                objectNode.put("co-ordinates", arrayNode);
-                list.add(objectNode);
+                ObjectNode node = mapper.createObjectNode();
+                node.put("latitude",dfsVoomaOnboardEntity.getLatitude());
+                node.put("longititude",dfsVoomaOnboardEntity.getLongitude());
+                objectNode.put("co-ordinates", node);
+                list.add(node);
+
             }
-            return mapper.valueToTree(list);
+            return list;
         } catch (Exception e) {
             log.error("Error occurred while getting onboarding summary", e);
         }
@@ -864,13 +865,14 @@ public class VoomaPortalService implements IVoomaPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (DFSVoomaAgentOnboardingEntity dfsVoomaOnboardEntity : dfsVoomaAgentOnboardingRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
-                ArrayNode arrayNode = mapper.createArrayNode();
-                arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
-                arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
-                objectNode.put("co-ordinates", arrayNode);
-                list.add(objectNode);
+                ObjectNode node = mapper.createObjectNode();
+                node.put("latitude",dfsVoomaOnboardEntity.getLatitude());
+                node.put("longititude",dfsVoomaOnboardEntity.getLongitude());
+                objectNode.put("co-ordinates", node);
+                list.add(node);
+
             }
-            return mapper.valueToTree(list);
+            return list;
         } catch (Exception e) {
             log.error("Error occurred while getting onboarding summary", e);
         }

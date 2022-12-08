@@ -28,10 +28,9 @@ public class CBRevenueLineEntity {
     private String foreignRevenue;
 //    private Long concessionId;
     private String forgoneRevenue;
+    @ManyToOne
+    private CBConcessionEntity cbConcessionEntity;
     private Long concessionId;
-//    @ManyToOne
-//    @JoinColumn(name = "concessionId")
-//    private CBConcessionEntity cbConcessionEntity;
     @Enumerated( EnumType.STRING)
     private RevenueLineType revenueLineType;
 

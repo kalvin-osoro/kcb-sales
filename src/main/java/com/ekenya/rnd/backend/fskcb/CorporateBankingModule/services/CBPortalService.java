@@ -536,44 +536,7 @@ public class CBPortalService implements ICBPortalService {
         return false;
     }
 
-    @Override
-    public boolean addConcession(CBConcessionRequest model) {
-        try {
-            if (model == null) {
-                return false;
-            }
-            //create concession
-            CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
-            cbConcessionEntity.setCustomerName(model.getCustomerName());
-            cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
-            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
-            //add List of Reveanue Lines to Concession
-            List<CBRevenueLineEntity> cbRevenueLineEntities = new ArrayList<>();
-            CBRevenueLineEntity cbRevenueLineEntity1 = new CBRevenueLineEntity();
-            //get concessionId
-            cbRevenueLineEntity1.setConcessionId(cbConcessionEntity.getId());
-            cbRevenueLineEntity1.setDuration(model.getCbRevenueLineRequests().getDuration());
-            cbRevenueLineEntity1.setForgoneRevenue(model.getCbRevenueLineRequests().getForgoneRevenue());
-            cbRevenueLineEntity1.setRecommendedRate(model.getCbRevenueLineRequests().getRecommendedRate());
-            cbRevenueLineEntity1.setRevenueLineType(model.getCbRevenueLineRequests().getRevenueLineType());
-            cbRevenueLineEntity1.setSSRrate(model.getCbRevenueLineRequests().getSsrcRate());
-            cbRevenueLineRepository.save(cbRevenueLineEntity1);
-            // add List of Justifications to Concession
-            List<CBJustificationEntity> cbJustificationEntities = new ArrayList<>();
-            CBJustificationEntity cbJustificationEntity1 = new CBJustificationEntity();
-            //get the concessionId
-            cbJustificationEntity1.setConcessionId(cbConcessionEntity.getId());
-            cbJustificationEntity1.setStakeholder(model.getCbJustificationRequests().getStakeholder());
-            cbJustificationEntity1.setMonitoringMechanism(model.getCbJustificationRequests().getMonitoringMechanism());
-            cbJustificationEntity1.setJustification(model.getCbJustificationRequests().getJustification());
-            cbJustificationRepository.save(cbJustificationEntity1);
-            return true;
-            //add
-            } catch (Exception ex) {
-            log.error("Error occurred while adding concession", ex);
-        }
-        return false;
-    }
+
 
 
 
@@ -725,6 +688,11 @@ public class CBPortalService implements ICBPortalService {
         } catch (Exception e) {
             log.error("Error occurred while adding question response", e);
         }
+        return false;
+    }
+
+    @Override
+    public boolean addConcession(CBConcessionRequest model) {
         return false;
     }
 }

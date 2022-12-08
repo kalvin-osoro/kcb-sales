@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,10 +36,13 @@ public class CBConcessionEntity {
     private String revenue;
     private String justification;
 //    private Set<CBRevenueLineEntity> cbRevenueLineEntities;
-//    private Set<CBJustificationEntity> cbJustificationEntities;
+
     private Date createdOn;
     private Status status=Status.ACTIVE;
     @Enumerated(EnumType.STRING)
     private ConcessionStatus concessionStatus;
+    private List<CBRevenueLineEntity>cbRevenueLineEntities;
+    private Set<CBJustificationEntity> cbJustificationEntities;
+
 
 }
