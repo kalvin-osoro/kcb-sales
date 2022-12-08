@@ -40,6 +40,8 @@ public class DFSVoomaAgentOnboardingEntity {
     private Integer VATNumber;
 //    //physical address
     private String postalAddress;
+    private boolean isApproved=false;
+    private String remarks;
     private String postalCode;
     private String town;
     private String nearestLandmark;

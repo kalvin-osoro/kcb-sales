@@ -21,9 +21,9 @@ public class VoomaReportsVC {
     IVoomaPortalService voomaService;
 
     @PostMapping("/vooma-onboarding-summary")
-    public ResponseEntity<?> getOnboardingSummary(@RequestBody VoomaSummaryRequest filters) {
+    public ResponseEntity<?> getOnboardingSummary() {
 
-        List<?> list = voomaService.getOnboardingSummary(filters);
+        List<?> list = voomaService.getOnboardingSummary();
         boolean success = list != null;
         //Expected Response structure
         //Take last 7 days

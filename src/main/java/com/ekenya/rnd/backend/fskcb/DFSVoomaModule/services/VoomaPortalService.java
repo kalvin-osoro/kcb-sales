@@ -365,7 +365,7 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> getOnboardingSummary(VoomaSummaryRequest filters) {
+    public List<ObjectNode> getOnboardingSummary() {
         //get onboarding summary
         try {
             List<ObjectNode> list = new ArrayList<>();
@@ -375,7 +375,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("id", dfsVoomaOnboardEntity.getId());
                 objectNode.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
                 objectNode.put("region", dfsVoomaOnboardEntity.getRegion());
-                objectNode.put("status", dfsVoomaOnboardEntity.getStatus().ordinal());
+                objectNode.put("status", dfsVoomaOnboardEntity.getStatus().toString());
                 objectNode.put("dateOnborded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
                 ArrayNode arrayNode = mapper.createArrayNode();
                 arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
@@ -805,6 +805,76 @@ public class VoomaPortalService implements IVoomaPortalService {
             log.error("Error occurred while approving merchant onboarding", e);
         }
         return false;
+    }
+
+    @Override
+    public ArrayNode getAllApprovedMerchantCoordinates() {
+        try {
+            ArrayNode list = objectMapper.createArrayNode();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAllByIsApproved()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
+                arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return mapper.valueToTree(list);
+        } catch (Exception e) {
+            log.error("Error occurred while getting onboarding summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean rejectAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model) {
+        try {
+            DFSVoomaAgentOnboardingEntity dfsVoomaOnboardEntity = dfsVoomaAgentOnboardingRepository.findById(model.getCustomerId()).get();
+            dfsVoomaOnboardEntity.setStatus(OnboardingStatus.REJECTED);
+            dfsVoomaOnboardEntity.setApproved(false);
+            dfsVoomaOnboardEntity.setRemarks(model.getRemarks());
+            dfsVoomaAgentOnboardingRepository.save(dfsVoomaOnboardEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while approving merchant onboarding", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean approveAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model) {
+        try {
+            DFSVoomaAgentOnboardingEntity dfsVoomaOnboardEntity = dfsVoomaAgentOnboardingRepository.findById(model.getCustomerId()).get();
+            dfsVoomaOnboardEntity.setStatus(OnboardingStatus.APPROVED);
+            dfsVoomaOnboardEntity.setApproved(true);
+            dfsVoomaOnboardEntity.setRemarks(model.getRemarks());
+            dfsVoomaAgentOnboardingRepository.save(dfsVoomaOnboardEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while approving merchant onboarding", e);
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayNode getAllApprovedAgentCoordinates() {
+        try {
+            ArrayNode list = objectMapper.createArrayNode();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaAgentOnboardingEntity dfsVoomaOnboardEntity : dfsVoomaAgentOnboardingRepository.findAllByIsApproved()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
+                arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return mapper.valueToTree(list);
+        } catch (Exception e) {
+            log.error("Error occurred while getting onboarding summary", e);
+        }
+        return null;
     }
 }
 

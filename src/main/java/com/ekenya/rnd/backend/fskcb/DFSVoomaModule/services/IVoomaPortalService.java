@@ -42,7 +42,7 @@ public interface IVoomaPortalService {
     boolean createVoomaTarget(DFSVoomaAddTargetRequest voomaAddTargetRequest);
 
 
-    List<ObjectNode> getOnboardingSummary(VoomaSummaryRequest filters);
+    List<ObjectNode> getOnboardingSummary();
 
     List<ObjectNode> getAllCustomerFeedbacks();
 
@@ -70,4 +70,12 @@ public interface IVoomaPortalService {
     Object agentById(VoomaMerchantDetailsRequest model);
 
     boolean rejectMerchantOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
+
+    ArrayNode getAllApprovedMerchantCoordinates();
+
+    boolean rejectAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
+
+    boolean approveAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
+
+    ArrayNode getAllApprovedAgentCoordinates();
 }
