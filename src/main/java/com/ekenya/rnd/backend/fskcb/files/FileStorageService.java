@@ -5,16 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 @Service
 public class FileStorageService implements IFileStorageService {
@@ -130,7 +134,37 @@ public class FileStorageService implements IFileStorageService {
             }
         }
 
-    }
+//    public FileMD store(MultipartFile file, String userName) throws Exception {
+//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+//        try {
+//            if (file.isEmpty()) {
+//                throw new Exception("Sorry ! file empty ");
+//            }
+//            if (fileName.contains("..")) {
+//                throw new Exception("Sorry! Filename contains invalid path sequence " + fileName);
+//            }
+//
+//            Path targetLocation = Paths.get(String.valueOf(Files.createDirectories(Path.of(String.valueOf(this.fileStorageLocation), "/" + userName + "/")))).toAbsolutePath().normalize().resolve(fileName);
+//            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+//            String fileDownLoadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                    //.path("/app/uploads/" + userName + "/")
+//                    .path("/uploads/" + userName + "/").path(fileName).toUriString();
+//            logger.info("file download location ===>" + fileDownLoadUri);
+//            FileMD fileDB = new FileMD();
+//            fileDB.setName(fileName);
+//            fileDB.setSize(file.getSize());
+//            fileDB.setData(file.getBytes());
+//            fileDB.setType(file.getContentType());
+//            fileDB.setUri(fileDownLoadUri);
+//            return fileRepository.save(fileDB);
+//        } catch (Exception e) {
+//            throw new Exception("Could not store file " + fileName + ". Please try again!", e);
+//        }
+//    }
+
+
+
+}
 
 
 

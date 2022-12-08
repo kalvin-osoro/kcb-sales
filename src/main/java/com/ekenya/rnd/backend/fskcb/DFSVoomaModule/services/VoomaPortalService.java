@@ -289,6 +289,17 @@ public class VoomaPortalService implements IVoomaPortalService {
             objectNode.put("status", dfsVoomaOnboardEntity.getStatus().ordinal());
             objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
             objectNode.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+            ObjectNode cordinates = mapper.createObjectNode();
+            cordinates.put("latitude", dfsVoomaOnboardEntity.getLatitude());
+            cordinates.put("longitude", dfsVoomaOnboardEntity.getLongitude());
+            objectNode.set("cordinates", cordinates);
+            ObjectNode businessDetails=mapper.createObjectNode();
+            businessDetails.put("businessName",dfsVoomaOnboardEntity.getTradingName());
+            businessDetails.put("physicalLocation",dfsVoomaOnboardEntity.getRegion());
+            businessDetails.put("pobox",dfsVoomaOnboardEntity.getMerchantPbox());
+            businessDetails.put("postalCode",dfsVoomaOnboardEntity.getMerchantPostalCode());
+            businessDetails.put("city",dfsVoomaOnboardEntity.getCity());
+            objectNode.set("businessDetails",businessDetails);
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);

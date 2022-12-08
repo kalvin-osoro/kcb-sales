@@ -183,37 +183,26 @@ public class VoomaChannelService implements IVoomaChannelService {
             //subdirectory name generateSubDirectory
             String subFolderName = "voomaOnboardingMerchant";
 
-
-            String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + merchDtls.getId() + ".PNG", frontID);
-
-            String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + merchDtls.getId() + ".PNG", backID);
-
-            String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileName(
-                    "kraPinCertificate_" + merchDtls.getId() + ".PNG", kraPinCertificate);
-
-            String signatureDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "signatureDocDoc_" + merchDtls.getId() + ".PNG", signatureDoc);
-
-            String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileName(
-                    "businessPermitDoc_" + merchDtls.getId() + ".PNG", businessPermitDoc);
-            //save paths to db
-            ArrayList<String> filePathList = new ArrayList<>();
-            filePathList.add(frontIDPath);
-            filePathList.add(backIDPath);
-            filePathList.add(kraPinCertificatePath);
-            filePathList.add(signatureDocPath);
-            filePathList.add(businessPermitDocPath);
-            filePathList.forEach(filePath -> {
-                DFSVoomaOnboardingKYCentity merchantKYC = new DFSVoomaOnboardingKYCentity();
-                merchantKYC.setFilePath(filePath);
-                merchantKYC.setDfsVoomaOnboardEntity(merchDtls);
-                dfsVoomaOnboardingKYRepository.save(merchantKYC);
-            });
-
-
+            // upload  files and save fileDownloadUri to database using saveFileWithSpecificFileName method
+            String frontIDFileDownloadUri = fileStorageService.saveFileWithSpecificFileName("frontID", frontID);
+            String backIDFileDownloadUri = fileStorageService.saveFileWithSpecificFileName("backID", backID);
+            String kraPinCertificateFileDownloadUri = fileStorageService.saveFileWithSpecificFileName("kraPinCertificate", kraPinCertificate);
+            String shopPhotoFileDownloadUri = fileStorageService.saveFileWithSpecificFileName("shopPhoto", shopPhoto);
+            String signatureDocFileDownloadUri = fileStorageService.saveFileWithSpecificFileName("signatureDoc", signatureDoc);
+            String businessPermitDocFileDownloadUri = fileStorageService.saveFileWithSpecificFileName("businessPermitDoc", businessPermitDoc);
+            //save fileDownloadUri to database
+            DFSVoomaOnboardingKYCentity dfsVoomaOnboardFilesEntity = new DFSVoomaOnboardingKYCentity();
+            dfsVoomaOnboardFilesEntity.setFilePath(frontIDFileDownloadUri);
+            dfsVoomaOnboardFilesEntity.setFilePath(backIDFileDownloadUri);
+            dfsVoomaOnboardFilesEntity.setFilePath(kraPinCertificateFileDownloadUri);
+            dfsVoomaOnboardFilesEntity.setFilePath(shopPhotoFileDownloadUri);
+            dfsVoomaOnboardFilesEntity.setFilePath(signatureDocFileDownloadUri);
+            dfsVoomaOnboardFilesEntity.setFilePath(businessPermitDocFileDownloadUri);
+            dfsVoomaOnboardFilesEntity.setDfsVoomaOnboardEntity(merchDtls);
+            dfsVoomaOnboardingKYRepository.save(dfsVoomaOnboardFilesEntity);
             return true;
+
+
         } catch (Exception e) {
             log.error("Error occurred while onboarding merchant", e);
         }
