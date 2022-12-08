@@ -8,4 +8,7 @@ public interface AcquiringCustomerVisitRepository extends JpaRepository<Acquirin
 
 @Query(value = "SELECT * FROM acquiring_customer_visits WHERE dsr_id=?1", nativeQuery = true)
     AcquiringCustomerVisitEntity[] getAllCustomerVisitsByDSR(int dsrId);
+
+    @Query(value = "SELECT COUNT(*) FROM acquiring_customer_visits WHERE dsrId=?1", nativeQuery = true)
+    int countTotalVisits(Long dsrId);
 }

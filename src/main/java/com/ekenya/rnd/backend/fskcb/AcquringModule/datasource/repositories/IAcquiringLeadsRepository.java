@@ -31,4 +31,8 @@ public interface IAcquiringLeadsRepository extends JpaRepository<AcquiringLeadEn
 
     @Query(value = "SELECT * FROM dbo_aqc_leads where assigned = true", nativeQuery = true)
     AcquiringLeadEntity[] fetchAllAssignedLeads();
+
+
+    @Query(value = "SELECT count(*) FROM dbo_aqc_leads where assigned = true AND dsrId = ?1", nativeQuery = true)
+    int countTotalAssignedLeads(Long dsrId);
 }

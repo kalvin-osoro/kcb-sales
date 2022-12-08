@@ -5,10 +5,14 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -26,6 +31,7 @@ import java.util.List;
 public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
     private final CustomerFeedBackRepository customerFeedBackRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final FileStorageService fileStorageService;
@@ -474,6 +480,44 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             log.error("Error occurred while creating customer feedback", e);
         }
         return false;
+    }
+
+    @Override
+    public ArrayNode getDSRSummary(DSRSummaryRequest model) {
+
+try {
+    if (model == null) {
+        return null;
+    }
+    //hard commission for now
+    ArrayNode arrayNode = new ObjectMapper().createArrayNode();
+    ObjectNode objectNode = new ObjectMapper().createObjectNode();
+    short commission=120;
+    short targetAchieved=300;
+    objectNode.put("commission", commission);
+    //get total number of dsr visits by dsr id
+    int totalVisits = acquiringCustomerVisitRepository.countTotalVisits(model.getDsrId());
+    objectNode.put("customer-visits", totalVisits);
+    //if null hard code visits for now
+    if (totalVisits == 0) {
+        objectNode.put("customer-visits", 100);
+    }
+    //get total number of dsr assigned leads by dsr id
+    int totalAssignedLeads = acquiringLeadsRepository.countTotalAssignedLeads(model.getDsrId());
+    objectNode.put("assigned-leads", totalAssignedLeads);
+    //if null hard code assigned leads for now
+    if (totalAssignedLeads == 0) {
+        objectNode.put("assigned-leads", 100);
+    }
+//    //get total number of dsr targets achieved by dsr id
+//hard code for now since we dont know metrics to messure target achieved
+    objectNode.put("targetAchieved",targetAchieved);
+    arrayNode.add(objectNode);
+    return arrayNode;
+} catch (Exception e) {
+    log.error("Error occurred while getting dsr summary", e);
+}
+        return null;
     }
 }
 

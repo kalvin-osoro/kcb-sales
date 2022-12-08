@@ -4,6 +4,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisit
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,4 +47,6 @@ public interface IAcquiringChannelService {
     Object onboardNewMerchant(String merchDetails , MultipartFile[] signatureDoc);
 
     boolean createCustomerFeedback(CustomerFeedbackRequest model);
+
+    ArrayNode getDSRSummary(DSRSummaryRequest model);
 }
