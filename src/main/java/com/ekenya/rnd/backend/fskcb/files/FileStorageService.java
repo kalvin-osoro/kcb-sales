@@ -81,14 +81,17 @@ public class FileStorageService implements IFileStorageService {
     @Override
     public String saveFileWithSpecificFileName(String fileName, MultipartFile file) {
         try {
-            fileName = new File(uploadDirectory+fileName).getName();
-            file.transferTo(new File(fileName));
-            log.info("Path is "+fileName);
-            return fileName;
-        } catch (Exception e) {
-            log.info("Could not store the file. Error in saveFileWithSpecificFileName: "
-                    + e.getMessage());
-            return "";
+            Path subDirectory = Paths.get(uploadDirectory + "/subfolder");
+            if (!Files.exists(subDirectory)) {
+                Files.createDirectories(subDirectory);
+            }
+            //copy file to subdirectory
+            Path copyLocation = Paths.get(subDirectory + File.separator + fileName);
+            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            return copyLocation.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
 
 
@@ -124,7 +127,25 @@ public class FileStorageService implements IFileStorageService {
 
         }
     }
-        //save file
+
+    @Override
+    public String saveFileWithSpecificFileNameV(String fileName, MultipartFile file, String folderName) {
+        try {
+            Path subDirectory = Paths.get(uploadDirectory + "/" + folderName);
+            if (!Files.exists(subDirectory)) {
+                Files.createDirectories(subDirectory);
+            }
+            //copy file to subdirectory
+            Path copyLocation = Paths.get(subDirectory + File.separator + fileName);
+            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            return copyLocation.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+        }
+    }
+
+    //save file
         public void save(MultipartFile file){
             try {
                 Files.copy(file.getInputStream(),

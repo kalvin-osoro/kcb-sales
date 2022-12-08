@@ -565,6 +565,14 @@ public class VoomaPortalService implements IVoomaPortalService {
                 node.put("phoneNumber", entity.getMerchantPhone());
                 node.put("email", entity.getMerchantEmail());
                 node.put("dsrId", entity.getDsrId());
+                //list of documents
+                ArrayNode arrayNode = mapper.createArrayNode();
+                for (DFSVoomaOnboardingKYCentity dfsVoomaOnboardFilesEntity : entity.getKycEntities()) {
+                    ObjectNode document = mapper.createObjectNode();
+                    document.put("id", dfsVoomaOnboardFilesEntity.getId());
+                    document.put("path", dfsVoomaOnboardFilesEntity.getFilePath());
+                    arrayNode.add(document);
+                }
                 list.add(node);
             }
             return list;
