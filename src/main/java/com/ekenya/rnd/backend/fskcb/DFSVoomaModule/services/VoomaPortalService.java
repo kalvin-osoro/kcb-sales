@@ -791,6 +791,21 @@ public class VoomaPortalService implements IVoomaPortalService {
         }
         return null;
     }
+
+    @Override
+    public boolean rejectMerchantOnboarding(DFSVoomaRejectMerchantOnboarindRequest model) {
+        try {
+            DFSVoomaOnboardEntity dfsVoomaOnboardEntity = dfsVoomaOnboardRepository.findById(model.getCustomerId()).get();
+            dfsVoomaOnboardEntity.setStatus(OnboardingStatus.REJECTED);
+            dfsVoomaOnboardEntity.setIsApproved(false);
+            dfsVoomaOnboardEntity.setRemarks(model.getRemarks());
+            dfsVoomaOnboardRepository.save(dfsVoomaOnboardEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while approving merchant onboarding", e);
+        }
+        return false;
+    }
 }
 
 

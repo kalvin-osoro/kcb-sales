@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
@@ -178,6 +179,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaOnboardEntity.setNearbyLandMark(onboardMerchantRequest.getNearbyLandMark());
             dfsVoomaOnboardEntity.setLongitude(onboardMerchantRequest.getLongitude());
             dfsVoomaOnboardEntity.setLatitude(onboardMerchantRequest.getLatitude());
+            dfsVoomaOnboardEntity.setStatus(OnboardingStatus.PENDING);
             //save merchant details
             DFSVoomaOnboardEntity merchDtls = dfsVoomaOnboardRepository.save(dfsVoomaOnboardEntity);
             //subdirectory name generateSubDirectory
@@ -252,6 +254,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAgentOnboardEntity.setKCBAgent(voomaAgentOnboardRequest.isKCBAgent());
             dfsVoomaAgentOnboardEntity.setNumberOfOutlets(voomaAgentOnboardRequest.getNumberOfOutlets());
             dfsVoomaAgentOnboardEntity.setKRAPin(voomaAgentOnboardRequest.getKRAPin());
+            dfsVoomaAgentOnboardEntity.setStatus(OnboardingStatus.PENDING);
             dfsVoomaAgentOnboardEntity.setVATNumber(voomaAgentOnboardRequest.getVATNumber());
             //physical address
             dfsVoomaAgentOnboardEntity.setPostalAddress(voomaAgentOnboardRequest.getPostalAddress());

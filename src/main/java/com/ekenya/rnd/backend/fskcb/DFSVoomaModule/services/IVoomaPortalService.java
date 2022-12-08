@@ -68,4 +68,6 @@ public interface IVoomaPortalService {
     List<?> fetchAllLeadsV2();
 
     Object agentById(VoomaMerchantDetailsRequest model);
+
+    boolean rejectMerchantOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
 }

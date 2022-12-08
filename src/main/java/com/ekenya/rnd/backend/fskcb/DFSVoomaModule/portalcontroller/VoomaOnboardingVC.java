@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaRejectMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.GetALLDSRMerchantOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -87,6 +88,24 @@ public class VoomaOnboardingVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/vooma-reject-onboarding")
+    public ResponseEntity<?> rejectOnboarding(@RequestBody DFSVoomaRejectMerchantOnboarindRequest model) {
+
+        boolean success = voomaService.rejectMerchantOnboarding(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

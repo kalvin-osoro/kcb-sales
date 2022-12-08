@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface DFSVoomaOnboardRepository extends JpaRepository<DFSVoomaOnboardEntity, Long> {
 
    //findAll
-    @Query(value = "SELECT * FROM dfs_vooma_onboard WHERE created_on >= DATE_SUB(NOW(), INTERVAL 7 DAY)", nativeQuery = true)
+   @Query(value = "SELECT * FROM dbo_aqc_onboarding where createdOn >= current_date at time zone 'UTC' - interval '7 days'", nativeQuery = true)
     Iterable<DFSVoomaOnboardEntity> findAllByCreatedOn();
 
 //    @Query(value = "SELECT * FROM dfs_vooma_onboard WHERE dsr_id =? 1 ",nativeQuery = true)
