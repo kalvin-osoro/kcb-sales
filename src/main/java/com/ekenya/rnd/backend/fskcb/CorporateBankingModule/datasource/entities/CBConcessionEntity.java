@@ -33,16 +33,13 @@ public class CBConcessionEntity {
     private String submittedBy;
 //    private String startDate;
 //    private String endDate;
-    private String revenue;
-    private String justification;
 //    private Set<CBRevenueLineEntity> cbRevenueLineEntities;
 
     private Date createdOn;
-    private Status status=Status.ACTIVE;
     @Enumerated(EnumType.STRING)
     private ConcessionStatus concessionStatus;
-    private List<CBRevenueLineEntity>cbRevenueLineEntities;
-    private Set<CBJustificationEntity> cbJustificationEntities;
+//    private List<CBRevenueLineEntity>cbRevenueLineEntities;
+//    private List<CBJustificationEntity> cbJustificationEntities;
 
 
 }

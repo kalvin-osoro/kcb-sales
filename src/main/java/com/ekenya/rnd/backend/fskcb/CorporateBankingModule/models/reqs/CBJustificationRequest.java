@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class CBJustificationRequest {
     private String justification;
-    private Long concessionId;
     private String monitoringMechanism;
     private String stakeholder;
 }

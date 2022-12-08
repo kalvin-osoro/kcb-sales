@@ -305,8 +305,7 @@ public class CBPortalService implements ICBPortalService {
                 node.put("id", cbConcessionEntity.getId());
                 node.put("customerName", cbConcessionEntity.getCustomerName());
                 node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().ordinal());
-                node.put("justification", cbConcessionEntity.getJustification());
-                node.put("revenueLine", cbConcessionEntity.getRevenue());
+                node.put("submittedBy",cbConcessionEntity.getSubmittedBy());
                 node.put("createdOn", cbConcessionEntity.getCreatedOn().toString());
                 //add to list
                 list.add(node);
@@ -693,6 +692,40 @@ public class CBPortalService implements ICBPortalService {
 
     @Override
     public boolean addConcession(CBConcessionRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
+            cbConcessionEntity.setCustomerName(model.getCustomerName());
+            cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
+            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
+            cbConcessionEntity.setConcessionStatus(ConcessionStatus.PENDING);
+            cbConcessionRepository.save(cbConcessionEntity);
+            List<CBRevenueLineRequest> revenueLineRequestList =  model.getCbRevenueLineRequests();
+            for (CBRevenueLineRequest revenueLineRequest : revenueLineRequestList) {
+                CBRevenueLineEntity cbRevenueLineEntity = new CBRevenueLineEntity();
+                cbRevenueLineEntity.setSSRrate(revenueLineRequest.getSsrcRate());
+                cbRevenueLineEntity.setRecommendedRate(revenueLineRequest.getRecommendedRate());
+                cbRevenueLineEntity.setRevenueLineType(revenueLineRequest.getRevenueLineType());
+                cbRevenueLineEntity.setBaseAmount(revenueLineRequest.getBaseAmount());
+                cbRevenueLineEntity.setDuration(revenueLineRequest.getDuration());
+                cbRevenueLineEntity.setCbConcessionEntity(cbConcessionEntity);
+                cbRevenueLineRepository.save(cbRevenueLineEntity);
+            }
+            List<CBJustificationRequest> justificationRequestList = model.getCbJustificationRequests();
+            for (CBJustificationRequest justificationRequest : justificationRequestList) {
+                CBJustificationEntity cbJustificationEntity = new CBJustificationEntity();
+                cbJustificationEntity.setJustification(justificationRequest.getJustification());
+                cbJustificationEntity.setMonitoringMechanism(justificationRequest.getMonitoringMechanism());
+                cbJustificationEntity.setStakeholder(justificationRequest.getStakeholder());
+                cbJustificationEntity.setCbConcessionEntity(cbConcessionEntity);
+                cbJustificationRepository.save(cbJustificationEntity);
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while adding concession", e);
+        }
         return false;
     }
 }

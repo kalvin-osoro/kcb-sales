@@ -29,8 +29,8 @@ public class CBRevenueLineEntity {
 //    private Long concessionId;
     private String forgoneRevenue;
     @ManyToOne
+    @JoinColumn(name = "concessionId")
     private CBConcessionEntity cbConcessionEntity;
-    private Long concessionId;
     @Enumerated( EnumType.STRING)
     private RevenueLineType revenueLineType;
 

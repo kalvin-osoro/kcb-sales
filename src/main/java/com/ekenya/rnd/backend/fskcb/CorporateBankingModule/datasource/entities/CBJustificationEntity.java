@@ -23,7 +23,6 @@ public class CBJustificationEntity {
     @ManyToOne
     @JoinColumn(name = "concessionId")
     private CBConcessionEntity cbConcessionEntity;
-    private Long concessionId;
 
 
 }
