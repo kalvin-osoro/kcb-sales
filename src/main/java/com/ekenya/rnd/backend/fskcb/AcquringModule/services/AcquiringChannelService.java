@@ -5,6 +5,10 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBRevenueLineEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBRevenueLineRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
@@ -31,6 +35,7 @@ import java.util.Optional;
 public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
+    private final AcquiringPrincipalRepository acquiringPrincipalRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private final CustomerFeedBackRepository customerFeedBackRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
@@ -421,42 +426,49 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringOnboardEntity.setOutletContactPerson(acquiringOnboardRequest.getOutletContactPerson());
             acquiringOnboardEntity.setOutletPhone(acquiringOnboardRequest.getOutletPhone());
             acquiringOnboardEntity.setNumberOfOutlet(acquiringOnboardRequest.getNumberOfOutlet());
+            acquiringOnboardEntity.setLatitude(acquiringOnboardRequest.getLatitude());
+            acquiringOnboardEntity.setLongitude(acquiringOnboardRequest.getLongitude());
+            acquiringOnboardEntity.setStatus(OnboardingStatus.PENDING);
             acquiringOnboardEntity.setTypeOfGoodAndServices(acquiringOnboardRequest.getTypeOfGoodAndServices());
-            //save acquiringOnboardEntity
-            AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
             acquiringOnboardEntity.setBankName(acquiringOnboardRequest.getBankName());
             acquiringOnboardEntity.setAccountName(acquiringOnboardRequest.getAccountName());
             acquiringOnboardEntity.setAccountNumber(acquiringOnboardRequest.getAccountNumber());
             acquiringOnboardEntity.setBranchName(acquiringOnboardRequest.getBranchName());
             acquiringOnboardEntity.setFeesAndCommission(acquiringOnboardRequest.getFeesAndCommission());
-            List<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities = new ArrayList<>();
-            for (AcquiringPrincipalInfoEntity acquiringPrincipalInfoRequest : acquiringOnboardRequest.getAcquiringPrincipalInfoEntities()) {
+            AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
+            //
+            List<AcquiringPrincipalInfoRequest> acquiringPrincipalInfoRequestList =  acquiringOnboardRequest.getAcquiringPrincipalInfoRequests();
+            for (AcquiringPrincipalInfoRequest acquiringPrincipalInfoRequest : acquiringPrincipalInfoRequestList) {
                 AcquiringPrincipalInfoEntity acquiringPrincipalInfoEntity = new AcquiringPrincipalInfoEntity();
                 acquiringPrincipalInfoEntity.setNameOfDirectorOrPrincipalOrPartner(acquiringPrincipalInfoRequest.getNameOfDirectorOrPrincipalOrPartner());
                 acquiringPrincipalInfoEntity.setDirectorOrPrincipalOrPartnerPhoneNumber(acquiringPrincipalInfoRequest.getDirectorOrPrincipalOrPartnerPhoneNumber());
                 acquiringPrincipalInfoEntity.setDirectorOrPrincipalOrPartnerEmail(acquiringPrincipalInfoRequest.getDirectorOrPrincipalOrPartnerEmail());
-                //add to list
-                acquiringPrincipalInfoEntities.add(acquiringPrincipalInfoEntity);
+                acquiringPrincipalInfoEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);//
                 acquiringPrincipalInfoRepository.save(acquiringPrincipalInfoEntity);
-
+            }
+            //
+            List<AcquiringPrincipalRequest> acquiringPrincipalRequestList = acquiringOnboardRequest.getAcquiringPrincipalRequests();
+            for (AcquiringPrincipalRequest acquiringPrincipalRequest : acquiringPrincipalRequestList) {
+                AcquiringPrincipalEntity acquiringPrincipalEntity = new AcquiringPrincipalEntity();
+                acquiringPrincipalEntity.setName(acquiringPrincipalRequest.getPrincipalName());
+                acquiringPrincipalEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);
+                acquiringPrincipalRepository.save(acquiringPrincipalEntity);
             }
             //allow several signatures to be uploaded to uploadDir
-            for (MultipartFile file : signatureDoc) {
-                if (file.isEmpty()) {
-                    return "Please no signature uploaded";
-                }
-                String fileName = file.getOriginalFilename();
-                String filePath = FileStorageService.uploadDirectory + File.separator + fileName;
-                File dest = new File(filePath);
-                file.transferTo(dest);
-                AcquiringOnboardingKYCentity acquiringSignatureEntity = new AcquiringOnboardingKYCentity();
-                acquiringSignatureEntity.setFilePath(filePath);
-                acquiringSignatureEntity.setAcquiringOnboardEntity(acquiringOnboard);
-                acquiringOnboardingKYCRepository.save(acquiringSignatureEntity);
-                return true;
+            List<String> filePathList = new ArrayList<>();
+            //
+            //save files
 
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("SignatoriesSignatures_", signatureDoc);
+            //save file paths to db
+            filePathList.forEach(filePath -> {
+                AcquiringOnboardingKYCentity signatureFilesEntity = new AcquiringOnboardingKYCentity();
+                signatureFilesEntity.setAcquiringOnboardEntity(acquiringOnboard);
+                signatureFilesEntity.setFilePath(filePath);
+                acquiringOnboardingKYCRepository.save(signatureFilesEntity);
+            });
+            return true;
 
-            }
         } catch (Exception e) {
             log.error("Error occurred while onboarding new merchant", e);
         }

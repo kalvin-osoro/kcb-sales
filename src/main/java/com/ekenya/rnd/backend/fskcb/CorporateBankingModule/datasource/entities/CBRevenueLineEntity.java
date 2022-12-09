@@ -26,7 +26,6 @@ public class CBRevenueLineEntity {
     private Integer baseAmount;
     private String duration;
     private String foreignRevenue;
-//    private Long concessionId;
     private String forgoneRevenue;
     @ManyToOne
     @JoinColumn(name = "concessionId")

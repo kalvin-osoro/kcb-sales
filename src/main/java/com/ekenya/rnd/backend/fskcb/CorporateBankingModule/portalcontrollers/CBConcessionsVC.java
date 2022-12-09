@@ -31,7 +31,6 @@ public class CBConcessionsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message", "Concession added successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

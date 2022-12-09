@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -15,17 +13,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dbo_aqc_onboarding_principal_info")
-@DynamicUpdate
-@DynamicInsert
-public class AcquiringPrincipalInfoEntity {
+@Table(name = "dbo_acq_principal")
+public class AcquiringPrincipalEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nameOfDirectorOrPrincipalOrPartner;
-
-    private String directorOrPrincipalOrPartnerPhoneNumber;
-    private String directorOrPrincipalOrPartnerEmail;
+    private String name;
     @ManyToOne
     @JoinColumn(name = "acquiringOnboardId")
     private AcquiringOnboardEntity acquiringOnboardEntity;

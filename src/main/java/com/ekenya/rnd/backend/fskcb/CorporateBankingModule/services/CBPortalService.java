@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.QuestionnareQuestion;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.QuestionEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -18,6 +19,7 @@ import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.Conce
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -302,15 +304,23 @@ public class CBPortalService implements ICBPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (CBConcessionEntity cbConcessionEntity : cbConcessionRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
-                node.put("id", cbConcessionEntity.getId());
-                node.put("customerName", cbConcessionEntity.getCustomerName());
-                node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().ordinal());
-                node.put("submittedBy",cbConcessionEntity.getSubmittedBy());
-                node.put("createdOn", cbConcessionEntity.getCreatedOn().toString());
-                //add to list
+                node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().toString());
+                node.put("createdOn", cbConcessionEntity.getCreatedOn().getTime());
+
+                List<CBRevenueLineEntity> cbRevenueLineEntityList=cbConcessionEntity.getCbRevenueLineEntityList();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                for (CBRevenueLineEntity cbRevenueLineEntity : cbRevenueLineEntityList) {
+                    ObjectNode node1 = mapper.createObjectNode();
+                    node1.put("foregoneRevenue",cbRevenueLineEntity.getForgoneRevenue());
+                    node1.put("revenueLineType",cbRevenueLineEntity.getRevenueLineType().toString());
+                    arrayNode.add(node1);
+                }
+                node.put("revenueLines", arrayNode);
                 list.add(node);
+
             }
             return list;
+
         } catch (Exception e) {
             log.error("Error occurred while loading concessions", e);
         }
@@ -710,7 +720,7 @@ public class CBPortalService implements ICBPortalService {
                 cbRevenueLineEntity.setRevenueLineType(revenueLineRequest.getRevenueLineType());
                 cbRevenueLineEntity.setBaseAmount(revenueLineRequest.getBaseAmount());
                 cbRevenueLineEntity.setDuration(revenueLineRequest.getDuration());
-                cbRevenueLineEntity.setCbConcessionEntity(cbConcessionEntity);
+                cbRevenueLineEntity.setCbConcessionEntity(cbConcessionEntity);//
                 cbRevenueLineRepository.save(cbRevenueLineEntity);
             }
             List<CBJustificationRequest> justificationRequestList = model.getCbJustificationRequests();

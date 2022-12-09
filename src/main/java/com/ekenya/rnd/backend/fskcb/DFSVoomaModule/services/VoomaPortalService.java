@@ -4,6 +4,9 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBConcessionEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
@@ -11,6 +14,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.fskcb.payload.*;
@@ -39,6 +43,10 @@ import java.util.Set;
 public class VoomaPortalService implements IVoomaPortalService {
     @Autowired
     private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+    @Autowired
+    private QuestionnaireRepository questionnaireRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
     @Autowired
     private DFSVoomaLeadRepository dfsVoomaLeadRepository;
 
@@ -875,6 +883,64 @@ public class VoomaPortalService implements IVoomaPortalService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while getting onboarding summary", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addQuestionnaire(QuestionnaireRequest model) {
+        try {
+            if (model ==null){
+                return false;
+            }
+            QuestionnaireEntity questionnaireEntity = new QuestionnaireEntity();
+            questionnaireEntity.setQuestionnaireTitle(model.getQuestionnaireTitle());
+            questionnaireEntity.setQuestionnaireType(model.getQuestionnaireType());
+            questionnaireEntity.setQuestionnaireDesc(model.getQuestionnaireDesc());
+            questionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            questionnaireRepository.save(questionnaireEntity);
+
+            List<QuestionRequest>questionRequestList=model.getQuestionRequests();
+            for (QuestionRequest questionRequest : questionRequestList) {
+                QuestionEntity questionEntity = new QuestionEntity();
+                questionEntity.setQuestion(questionRequest.getQuestion());
+                questionEntity.setQuestionType(questionRequest.getQuestionType());
+                questionEntity.setQuestionnaireEntity(questionnaireEntity);
+                questionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                questionRepository.save(questionEntity);
+            }
+            return  true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while adding concession", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllAllQuestionnaireV1() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (QuestionnaireEntity questionnaireEntity : questionnaireRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
+                objectNode.put("createdOn",questionnaireEntity.getCreatedOn().getTime());
+                List<QuestionEntity> questionEntityList=questionnaireEntity.getQuestionEntitySet();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                for (QuestionEntity questionEntity : questionEntityList) {
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("question", questionEntity.getQuestion());
+                    node.put("questionType", questionEntity.getQuestionType());
+                    arrayNode.add(node);
+                }
+                objectNode.put("questions", arrayNode);
+                list.add(objectNode);
+
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all assets", e);
         }
         return null;
     }

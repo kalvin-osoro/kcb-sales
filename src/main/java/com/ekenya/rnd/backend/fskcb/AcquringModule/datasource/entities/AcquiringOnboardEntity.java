@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBRevenueLineEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,9 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -46,6 +49,8 @@ public class AcquiringOnboardEntity {
     private String accountName;
     private String accountNumber;
     private String feesAndCommission;
-    @OneToMany
-    private Set<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities;
+    @OneToMany(mappedBy="acquiringOnboardEntity", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntityList = new ArrayList<>();
+    @OneToMany(mappedBy="acquiringOnboardEntity", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<AcquiringPrincipalEntity> acquiringPrincipalEntityList = new ArrayList<>();
 }

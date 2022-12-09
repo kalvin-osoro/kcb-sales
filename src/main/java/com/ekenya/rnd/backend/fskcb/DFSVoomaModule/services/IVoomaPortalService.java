@@ -78,4 +78,8 @@ public interface IVoomaPortalService {
     boolean approveAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
 
     ArrayNode getAllApprovedAgentCoordinates();
+
+    boolean addQuestionnaire(QuestionnaireRequest model);
+
+    List<ObjectNode> getAllAllQuestionnaireV1();
 }
