@@ -40,6 +40,8 @@ public interface ICBPortalService {
 
     boolean addTrackedCovenant(CBAddConvenantRequest model);
 
+    boolean setTrackedCovenantStatus(CBAddConvenantRequest model);
+
     List<ObjectNode> getAllTrackedCovenants();
 
     List<ObjectNode> getOnboardingSummary();

@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
+import com.ekenya.rnd.backend.utils.ConcessionTrackingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class CBAddConvenantRequest {
     private String endDate;
     private Integer intervalForCheck;
     private Long dsrId;
-    private ConcessionStatus status;
+    private ConcessionTrackingStatus status;
     private Date createdOn;
     private String alertMessage;
     private Integer alertBeforeExpiry;
