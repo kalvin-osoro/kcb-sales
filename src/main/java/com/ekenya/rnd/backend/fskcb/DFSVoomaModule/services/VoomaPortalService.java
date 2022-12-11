@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -74,6 +75,9 @@ public class VoomaPortalService implements IVoomaPortalService {
     private DFSVoomaFeedBackRepository dfsVoomaFeedBackRepository;
     @Autowired
     private FileStorageService fileStorageService;
+
+    //variable of todays date
+    private String today = Utility.getTodayDate();
 
 
     @Override
@@ -177,8 +181,8 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("topic", dfsVoomaLeadEntity.getTopic());
                 objectNode.put("priority", dfsVoomaLeadEntity.getPriority().toString());
                 objectNode.put("dsrId", dfsVoomaLeadEntity.getDsrId());
-                objectNode.put("product",dfsVoomaLeadEntity.getProduct());
-                objectNode.put("createdOn",dfsVoomaLeadEntity.getCreatedOn().getTime());
+                objectNode.put("product", dfsVoomaLeadEntity.getProduct());
+                objectNode.put("createdOn", dfsVoomaLeadEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
             return list;
@@ -301,13 +305,13 @@ public class VoomaPortalService implements IVoomaPortalService {
             cordinates.put("latitude", dfsVoomaOnboardEntity.getLatitude());
             cordinates.put("longitude", dfsVoomaOnboardEntity.getLongitude());
             objectNode.set("cordinates", cordinates);
-            ObjectNode businessDetails=mapper.createObjectNode();
-            businessDetails.put("businessName",dfsVoomaOnboardEntity.getTradingName());
-            businessDetails.put("physicalLocation",dfsVoomaOnboardEntity.getRegion());
-            businessDetails.put("pobox",dfsVoomaOnboardEntity.getMerchantPbox());
-            businessDetails.put("postalCode",dfsVoomaOnboardEntity.getMerchantPostalCode());
-            businessDetails.put("city",dfsVoomaOnboardEntity.getCity());
-            objectNode.set("businessDetails",businessDetails);
+            ObjectNode businessDetails = mapper.createObjectNode();
+            businessDetails.put("businessName", dfsVoomaOnboardEntity.getTradingName());
+            businessDetails.put("physicalLocation", dfsVoomaOnboardEntity.getRegion());
+            businessDetails.put("pobox", dfsVoomaOnboardEntity.getMerchantPbox());
+            businessDetails.put("postalCode", dfsVoomaOnboardEntity.getMerchantPostalCode());
+            businessDetails.put("city", dfsVoomaOnboardEntity.getCity());
+            objectNode.set("businessDetails", businessDetails);
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);
@@ -385,6 +389,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("region", dfsVoomaOnboardEntity.getRegion());
                 objectNode.put("status", dfsVoomaOnboardEntity.getStatus().toString());
                 objectNode.put("dateOnborded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+
                 ArrayNode arrayNode = mapper.createArrayNode();
                 arrayNode.add(dfsVoomaOnboardEntity.getLongitude());
                 arrayNode.add(dfsVoomaOnboardEntity.getLatitude());
@@ -766,7 +771,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             List<DFSVoomaLeadEntity> dfsVoomaList = dfsVoomaLeadRepository.findAll();
             List<DFSVoomaLeadEntity> dfsVoomaLeadEntityList = new ArrayList<>();
             for (DFSVoomaLeadEntity dfsVoomaLeadEntity : dfsVoomaList) {
-               dfsVoomaLeadEntity.getId();
+                dfsVoomaLeadEntity.getId();
                 dfsVoomaLeadEntity.getCustomerId();
                 dfsVoomaLeadEntity.getCustomerName();
                 dfsVoomaLeadEntity.getLeadStatus();
@@ -784,7 +789,7 @@ public class VoomaPortalService implements IVoomaPortalService {
 
         return null;
 
-        }
+    }
 
     @Override
     public Object agentById(VoomaMerchantDetailsRequest model) {
@@ -823,8 +828,8 @@ public class VoomaPortalService implements IVoomaPortalService {
             for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 ObjectNode node = mapper.createObjectNode();
-                node.put("latitude",dfsVoomaOnboardEntity.getLatitude());
-                node.put("longititude",dfsVoomaOnboardEntity.getLongitude());
+                node.put("latitude", dfsVoomaOnboardEntity.getLatitude());
+                node.put("longititude", dfsVoomaOnboardEntity.getLongitude());
                 objectNode.put("co-ordinates", node);
                 list.add(node);
 
@@ -874,8 +879,8 @@ public class VoomaPortalService implements IVoomaPortalService {
             for (DFSVoomaAgentOnboardingEntity dfsVoomaOnboardEntity : dfsVoomaAgentOnboardingRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 ObjectNode node = mapper.createObjectNode();
-                node.put("latitude",dfsVoomaOnboardEntity.getLatitude());
-                node.put("longititude",dfsVoomaOnboardEntity.getLongitude());
+                node.put("latitude", dfsVoomaOnboardEntity.getLatitude());
+                node.put("longititude", dfsVoomaOnboardEntity.getLongitude());
                 objectNode.put("co-ordinates", node);
                 list.add(node);
 
@@ -890,7 +895,7 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Override
     public boolean addQuestionnaire(QuestionnaireRequest model) {
         try {
-            if (model ==null){
+            if (model == null) {
                 return false;
             }
             QuestionnaireEntity questionnaireEntity = new QuestionnaireEntity();
@@ -900,7 +905,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             questionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             questionnaireRepository.save(questionnaireEntity);
 
-            List<QuestionRequest>questionRequestList=model.getQuestionRequests();
+            List<QuestionRequest> questionRequestList = model.getQuestionRequests();
             for (QuestionRequest questionRequest : questionRequestList) {
                 QuestionEntity questionEntity = new QuestionEntity();
                 questionEntity.setQuestion(questionRequest.getQuestion());
@@ -909,7 +914,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 questionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
                 questionRepository.save(questionEntity);
             }
-            return  true;
+            return true;
 
         } catch (Exception e) {
             log.error("Error occurred while adding concession", e);
@@ -925,8 +930,8 @@ public class VoomaPortalService implements IVoomaPortalService {
             for (QuestionnaireEntity questionnaireEntity : questionnaireRepository.findAll()) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
-                objectNode.put("createdOn",questionnaireEntity.getCreatedOn().getTime());
-                List<QuestionEntity> questionEntityList=questionnaireEntity.getQuestionEntitySet();
+                objectNode.put("createdOn", questionnaireEntity.getCreatedOn().getTime());
+                List<QuestionEntity> questionEntityList = questionnaireEntity.getQuestionEntitySet();
                 ArrayNode arrayNode = mapper.createArrayNode();
                 for (QuestionEntity questionEntity : questionEntityList) {
                     ObjectNode node = mapper.createObjectNode();
@@ -944,7 +949,224 @@ public class VoomaPortalService implements IVoomaPortalService {
         }
         return null;
     }
+
+    @Override
+    public List<ObjectNode> getOnboardingSummaryv1() {
+        //
+
+        //expected response for last 7 days i.e todays date - 7 days, 6 days, 5 days, 4 days, 3 days, 2 days, 1 days, today
+        //"onboardingData": [
+        //        {
+        //            "name": "Successful Onboarding",
+        //            "total": 36,
+        //            "series": [
+        //                {
+        //                    "date": "2020-05-01",
+        //                    "value": 12
+        //                },
+        //                {
+        //                    "date": "2020-05-02",
+        //                    "value": 24
+        //                },
+        //            ]
+        //        },
+        //        {
+        //            "name": "Failed Onboarding",
+        //            "total": 41,
+        //            "series": [
+        //                {
+        //                    "date": "2020-05-01",
+        //                    "value": 15
+        //                },
+        //                {
+        //                    "date": "2020-05-02",
+        //                    "value": 26
+        //                },
+        //            ]
+        //        }
+        //    ]
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("name", "Successful Onboarding");
+            objectNode.put("total", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            ArrayNode arrayNode = mapper.createArrayNode();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime());
+            node.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node.get("value").asInt() == 0) {
+                node.put("value", 0);
+            }
+            arrayNode.add(node);
+            ObjectNode node1 = mapper.createObjectNode();
+            node1.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000);
+            node1.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node1.get("value").asInt() == 0) {
+                node1.put("value", 0);
+            }
+            arrayNode.add(node1);
+            ObjectNode node2 = mapper.createObjectNode();
+            node2.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 2);
+            node2.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node2.get("value").asInt() == 0) {
+                node2.put("value", 0);
+            }
+            arrayNode.add(node2);
+            ObjectNode node3 = mapper.createObjectNode();
+            node3.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 3);
+            node3.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node3.get("value").asInt() == 0) {
+                node3.put("value", 0);
+            }
+            arrayNode.add(node3);
+            ObjectNode node4 = mapper.createObjectNode();
+            node4.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 4);
+            node4.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node4.get("value").asInt() == 0) {
+                node4.put("value", 0);
+            }
+            arrayNode.add(node4);
+            ObjectNode node5 = mapper.createObjectNode();
+            node5.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 5);
+            node5.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node5.get("value").asInt() == 0) {
+                node5.put("value", 0);
+            }
+            arrayNode.add(node5);
+            ObjectNode node6 = mapper.createObjectNode();
+            node6.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 6);
+            node6.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.APPROVED));
+            if (node6.get("value").asInt() == 0) {
+                node6.put("value", 0);
+            }
+            arrayNode.add(node6);
+            objectNode.put("series", arrayNode);
+            list.add(objectNode);
+
+            ObjectNode objectNode1 = mapper.createObjectNode();
+            objectNode1.put("name", "Failed Onboarding");
+            objectNode1.put("total", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            ArrayNode arrayNode1 = mapper.createArrayNode();
+            ObjectNode node7 = mapper.createObjectNode();
+            node7.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime());
+            node7.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node7.get("value").asInt() == 0) {
+                node7.put("value", 0);
+            }
+            arrayNode1.add(node7);
+            ObjectNode node8 = mapper.createObjectNode();
+            node8.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000);
+            node8.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node8.get("value").asInt() == 0) {
+                node8.put("value", 0);
+            }
+            arrayNode1.add(node8);
+            ObjectNode node9 = mapper.createObjectNode();
+            node9.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 2);
+            node9.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node9.get("value").asInt() == 0) {
+                node9.put("value", 0);
+            }
+            arrayNode1.add(node9);
+            ObjectNode node10 = mapper.createObjectNode();
+            node10.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 3);
+            node10.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node10.get("value").asInt() == 0) {
+                node10.put("value", 0);
+            }
+            arrayNode1.add(node10);
+            ObjectNode node11 = mapper.createObjectNode();
+            node11.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 4);
+            node11.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node11.get("value").asInt() == 0) {
+                node11.put("value", 0);
+            }
+            arrayNode1.add(node11);
+            ObjectNode node12 = mapper.createObjectNode();
+            node12.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 5);
+            node12.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node12.get("value").asInt() == 0) {
+                node12.put("value", 0);
+            }
+            arrayNode1.add(node12);
+            ObjectNode node13 = mapper.createObjectNode();
+            node13.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 6);
+            node13.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.REJECTED));
+            if (node13.get("value").asInt() == 0) {
+                node13.put("value", 0);
+            }
+            arrayNode1.add(node13);
+            objectNode1.put("series", arrayNode1);
+            list.add(objectNode1);
+
+            //pending onboarding
+            ObjectNode objectNode2 = mapper.createObjectNode();
+            objectNode2.put("name", "Pending Onboarding");
+            objectNode2.put("total", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            ArrayNode arrayNode2 = mapper.createArrayNode();
+            ObjectNode node14 = mapper.createObjectNode();
+            node14.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime());
+            node14.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node14.get("value").asInt() == 0) {
+                node14.put("value", 0);
+            }
+            arrayNode2.add(node14);
+            ObjectNode node15 = mapper.createObjectNode();
+            node15.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000);
+            node15.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node15.get("value").asInt() == 0) {
+                node15.put("value", 0);
+            }
+            arrayNode2.add(node15);
+            ObjectNode node16 = mapper.createObjectNode();
+            node16.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 2);
+            node16.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node16.get("value").asInt() == 0) {
+                node16.put("value", 0);
+            }
+            arrayNode2.add(node16);
+            ObjectNode node17 = mapper.createObjectNode();
+            node17.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 3);
+            node17.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node17.get("value").asInt() == 0) {
+                node17.put("value", 0);
+            }
+            arrayNode2.add(node17);
+            ObjectNode node18 = mapper.createObjectNode();
+            node18.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 4);
+            node18.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node18.get("value").asInt() == 0) {
+                node18.put("value", 0);
+            }
+            arrayNode2.add(node18);
+            ObjectNode node19 = mapper.createObjectNode();
+            node19.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 5);
+            node19.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node19.get("value").asInt() == 0) {
+                node19.put("value", 0);
+            }
+            arrayNode2.add(node19);
+            ObjectNode node20 = mapper.createObjectNode();
+            node20.put("date", Utility.getPostgresCurrentTimeStampForInsert().getTime() - 86400000 * 6);
+            node20.put("value", dfsVoomaOnboardRepository.countByStatusForLast7Days(OnboardingStatus.PENDING));
+            if (node20.get("value").asInt() == 0) {
+                node20.put("value", 0);
+            }
+            arrayNode2.add(node20);
+            objectNode2.put("series", arrayNode2);
+            list.add(objectNode2);
+            return list;
+        } catch (Exception e) {
+            log.error("Exception in getOnboardingStatusForLast7Days() method", e);
+
+        }
+        return null;
+
+
+    }
 }
+
 
 
 

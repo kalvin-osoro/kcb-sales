@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AcquiringPrincipalInfoRequest {
     private String nameOfDirectorOrPrincipalOrPartner;
     private String directorOrPrincipalOrPartnerPhoneNumber;

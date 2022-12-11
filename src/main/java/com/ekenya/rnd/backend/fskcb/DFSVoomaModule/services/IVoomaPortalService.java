@@ -82,4 +82,6 @@ public interface IVoomaPortalService {
     boolean addQuestionnaire(QuestionnaireRequest model);
 
     List<ObjectNode> getAllAllQuestionnaireV1();
+
+    List<ObjectNode> getOnboardingSummaryv1();
 }
