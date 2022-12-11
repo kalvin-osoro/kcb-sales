@@ -952,39 +952,6 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Override
     public List<ObjectNode> getOnboardingSummaryv1() {
-        //
-
-        //expected response for last 7 days i.e todays date - 7 days, 6 days, 5 days, 4 days, 3 days, 2 days, 1 days, today
-        //"onboardingData": [
-        //        {
-        //            "name": "Successful Onboarding",
-        //            "total": 36,
-        //            "series": [
-        //                {
-        //                    "date": "2020-05-01",
-        //                    "value": 12
-        //                },
-        //                {
-        //                    "date": "2020-05-02",
-        //                    "value": 24
-        //                },
-        //            ]
-        //        },
-        //        {
-        //            "name": "Failed Onboarding",
-        //            "total": 41,
-        //            "series": [
-        //                {
-        //                    "date": "2020-05-01",
-        //                    "value": 15
-        //                },
-        //                {
-        //                    "date": "2020-05-02",
-        //                    "value": 26
-        //                },
-        //            ]
-        //        }
-        //    ]
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
