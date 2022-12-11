@@ -16,6 +16,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
+import com.ekenya.rnd.backend.utils.ConcessionTrackingStatus;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -341,6 +344,9 @@ public class CBPortalService implements ICBPortalService {
             cbBankingConvenantEntity.setAlertMessage(model.getAlertMessage());
             cbBankingConvenantEntity.setDsrId(model.getDsrId());
             cbBankingConvenantEntity.setAlertBeforeExpiry(model.getAlertBeforeExpiry());
+
+            cbBankingConvenantEntity.setStartDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            cbBankingConvenantEntity.setStatus(ConcessionTrackingStatus.GREEN);
 
             cbBankingConvenantEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save
