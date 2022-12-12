@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CustomerDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -44,10 +45,10 @@ public class AcquiringChannelCustomer360VC {
 
     //CUSTOMER360 VIEW
     @PostMapping("/acquiring-get-customer-details")
-    public ResponseEntity<?> getCustomerDetails(@RequestBody Long accountNo) {
+    public ResponseEntity<?> getCustomerDetails(@RequestBody CustomerDetailsRequest model) {
 
 
-        JsonObject resp = crmService.getCustomerDetails(accountNo);
+        JsonObject resp = crmService.getCustomerDetails(model.getAccountNo());
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
