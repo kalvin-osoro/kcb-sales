@@ -16,6 +16,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AcquiringOnboardRequest {
     private String clientLegalName;
     private Long dsrId;
