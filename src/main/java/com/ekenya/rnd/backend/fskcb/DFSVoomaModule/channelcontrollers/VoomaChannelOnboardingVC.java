@@ -96,5 +96,30 @@ public class  VoomaChannelOnboardingVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    @PostMapping("/vooma-onboard-merchantV1")
+    public ResponseEntity<?> onboardNewMerchantv1(@RequestParam("merchDetails") String merchDetails,
+                                                @RequestParam("frontID") MultipartFile frontID,
+                                                @RequestParam("backID") MultipartFile backID,
+                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
+                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
+                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+        Object merchantObj=voomaChannelService.onboardNewMerchantV1(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
+        boolean success = merchantObj != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 
 }

@@ -52,4 +52,12 @@ public interface IVoomaChannelService {
 
 
     Object getSummary(DSRSummaryRequest model);
+
+    Object onboardNewMerchantV1(String merchDetails,
+                                MultipartFile frontID,
+                                MultipartFile backID,
+                                MultipartFile kraPinCertificate,
+                                MultipartFile shopPhoto,
+                                MultipartFile signatureDoc,
+                                MultipartFile businessPermitDoc);
 }

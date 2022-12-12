@@ -4,11 +4,15 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Onboardin
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,9 @@ import java.util.List;
 public class VoomaChannelService implements IVoomaChannelService {
 
     private  final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+    private final DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
+    private final DFSVoomaOwnerDetailsRepository dfsVoomaOwnerDetailsRepository;
+    private final DFSVoomaContactDetailsRepository dfsVoomaContactDetailsRepository;
     private  final DFSVoomaLeadRepository dfsVoomaLeadRepository;
     private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
     private final DFSVoomaOnboardingKYRepository dfsVoomaOnboardingKYRepository;
@@ -451,6 +458,122 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public Object getSummary(DSRSummaryRequest model) {
        return null;
+    }
+
+    @Override
+    public Object onboardNewMerchantV1(String merchDetails,
+                                       MultipartFile frontID,
+                                       MultipartFile backID,
+                                       MultipartFile kraPinCertificate,
+                                       MultipartFile shopPhoto,
+                                       MultipartFile signatureDoc,
+                                       MultipartFile businessPermitDoc) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            DFSVoomaMerchantOnboardV1Request dfsVoomaMerchantOnboardV1Request = mapper.readValue(
+                    merchDetails, DFSVoomaMerchantOnboardV1Request.class);
+            if (dfsVoomaMerchantOnboardV1Request == null) throw new RuntimeException("Bad request");
+            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1 = new DFSVoomaMerchantOnboardV1();
+            //organisations details
+            dfsVoomaMerchantOnboardV1.setBusinessType(dfsVoomaMerchantOnboardV1Request.getBusinessType());
+            dfsVoomaMerchantOnboardV1.setTradingName(dfsVoomaMerchantOnboardV1Request.getTradingName());
+            dfsVoomaMerchantOnboardV1.setNatureOfBusiness(dfsVoomaMerchantOnboardV1Request.getNatureOfBusiness());
+            //business details
+            dfsVoomaMerchantOnboardV1.setBusinessName(dfsVoomaMerchantOnboardV1Request.getBusinessName());
+            dfsVoomaMerchantOnboardV1.setOutletPhoneNumber(dfsVoomaMerchantOnboardV1Request.getOutletPhoneNumber());
+            dfsVoomaMerchantOnboardV1.setBusinessEmailAddress(dfsVoomaMerchantOnboardV1Request.getBusinessEmailAddress());
+            dfsVoomaMerchantOnboardV1.setBusinessKraPin(dfsVoomaMerchantOnboardV1Request.getBusinessKraPin());
+            dfsVoomaMerchantOnboardV1.setWantTillNumber(dfsVoomaMerchantOnboardV1Request.getWantTillNumber());
+            dfsVoomaMerchantOnboardV1.setWantPaybillNumber(dfsVoomaMerchantOnboardV1Request.getWantPaybillNumber());
+            dfsVoomaMerchantOnboardV1.setDealingWithForeignExchange(dfsVoomaMerchantOnboardV1Request.getDealingWithForeignExchange());
+            //settlement details
+            dfsVoomaMerchantOnboardV1.setBranchName(dfsVoomaMerchantOnboardV1Request.getBranchName());
+            dfsVoomaMerchantOnboardV1.setAccountName(dfsVoomaMerchantOnboardV1Request.getAccountName());
+            dfsVoomaMerchantOnboardV1.setAccountNumber(dfsVoomaMerchantOnboardV1Request.getAccountNumber());
+            dfsVoomaMerchantOnboardV1.setDate(dfsVoomaMerchantOnboardV1Request.getDate());
+            //physical address
+            dfsVoomaMerchantOnboardV1.setPostalAddress(dfsVoomaMerchantOnboardV1Request.getPostalAddress());
+            dfsVoomaMerchantOnboardV1.setPostalCode(dfsVoomaMerchantOnboardV1Request.getPostalCode());
+            dfsVoomaMerchantOnboardV1.setCityOrTown(dfsVoomaMerchantOnboardV1Request.getCityOrTown());
+            dfsVoomaMerchantOnboardV1.setNearestLandmark(dfsVoomaMerchantOnboardV1Request.getNearestLandmark());
+            dfsVoomaMerchantOnboardV1.setLatitude(dfsVoomaMerchantOnboardV1Request.getLatitude());
+            dfsVoomaMerchantOnboardV1.setLongitude(dfsVoomaMerchantOnboardV1Request.getLongitude());
+            dfsVoomaMerchantOnboardV1.setOnboardingStatus(OnboardingStatus.PENDING);
+            //save merchant
+            DFSVoomaMerchantOnboardV1 merchantDetails1 = dfsVoomaMerchantOnboardV1Repository.save(dfsVoomaMerchantOnboardV1);
+
+            //save Owner details can be multiple
+            List<DFSVoomaOwnerDetailsRequest> ownerDetailsRequests = dfsVoomaMerchantOnboardV1Request.getDfsVoomaOwnerDetailsRequests();
+            for (DFSVoomaOwnerDetailsRequest dfsVoomaOwnerDetailsRequest : ownerDetailsRequests) {
+                DFSVoomaOwnerDetailsEntity dfsVoomaOwnerDetailsEntity = new DFSVoomaOwnerDetailsEntity();
+                dfsVoomaOwnerDetailsEntity.setFullName(dfsVoomaOwnerDetailsRequest.getFullName());
+                dfsVoomaOwnerDetailsEntity.setIdNumber(dfsVoomaOwnerDetailsRequest.getIdNumber());
+                dfsVoomaOwnerDetailsEntity.setPhoneNumber(dfsVoomaOwnerDetailsRequest.getPhoneNumber());
+                dfsVoomaOwnerDetailsEntity.setEmailAddress(dfsVoomaOwnerDetailsRequest.getEmailAddress());
+                dfsVoomaOwnerDetailsEntity.setIdType(dfsVoomaOwnerDetailsRequest.getIdType());
+                dfsVoomaOwnerDetailsEntity.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaOwnerDetailsRepository.save(dfsVoomaOwnerDetailsEntity);
+            }
+           List<DFSVoomaContactDetailsRequest> detailsRequestList =dfsVoomaMerchantOnboardV1Request.getDfsVoomaContactDetailsRequests();
+            for (DFSVoomaContactDetailsRequest dfsVoomaContactDetailsRequest : detailsRequestList) {
+                DFSVoomaContactDetailsEntity dfsVoomaContactDetailsEntity = new DFSVoomaContactDetailsEntity();
+                dfsVoomaContactDetailsEntity.setContactPersonName(dfsVoomaContactDetailsRequest.getContactPersonName());
+                dfsVoomaContactDetailsEntity.setContactPersonPhoneNumber(dfsVoomaContactDetailsRequest.getContactPersonPhoneNumber());
+                dfsVoomaContactDetailsEntity.setContactPersonEmailAddress(dfsVoomaContactDetailsRequest.getContactPersonEmailAddress());
+                dfsVoomaContactDetailsEntity.setContactPersonIdType(dfsVoomaContactDetailsRequest.getContactPersonIdType());
+                dfsVoomaContactDetailsEntity.setContactPersonIdNumber(dfsVoomaContactDetailsRequest.getContactPersonIdNumber());
+                //financial details
+                dfsVoomaContactDetailsEntity.setFinancialContactPersonIdType(dfsVoomaContactDetailsRequest.getFinancialContactPersonIdType());
+                dfsVoomaContactDetailsEntity.setFinancialContactPersonIdNumber(dfsVoomaContactDetailsRequest.getFinancialContactPersonIdNumber());
+                dfsVoomaContactDetailsEntity.setFinancialContactPersonName(dfsVoomaContactDetailsRequest.getFinancialContactPersonName());
+                dfsVoomaContactDetailsEntity.setFinancialContactPersonPhoneNumber(dfsVoomaContactDetailsRequest.getFinancialContactPersonPhoneNumber());
+                dfsVoomaContactDetailsEntity.setFinancialContactPersonEmailAddress(dfsVoomaContactDetailsRequest.getFinancialContactPersonEmailAddress());
+                //administrative details
+                dfsVoomaContactDetailsEntity.setAdministrativeContactPersonIdType(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonIdType());
+                dfsVoomaContactDetailsEntity.setAdministrativeContactPersonIdNumber(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonIdNumber());
+                dfsVoomaContactDetailsEntity.setAdministrativeContactPersonName(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonName());
+                dfsVoomaContactDetailsEntity.setAdministrativeContactPersonPhoneNumber(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonPhoneNumber());
+                dfsVoomaContactDetailsEntity.setAdministrativeContactPersonEmailAddress(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonEmailAddress());
+                dfsVoomaContactDetailsEntity.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaContactDetailsRepository.save(dfsVoomaContactDetailsEntity);
+            }
+            //upload documents
+            String folderName = "voomaOnboardingMerchant";
+
+            String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "frontID_" + merchantDetails1.getId() + ".PNG", frontID,folderName);
+            String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "backID_" + merchantDetails1.getId() + ".PNG", backID,folderName);
+            String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "kraPinCertificate_" + merchantDetails1.getId() + ".PNG", kraPinCertificate,folderName);
+
+            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "shopPhoto_" + merchantDetails1.getId() + ".PNG", shopPhoto,folderName);
+            String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc,folderName);
+            String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc,folderName);
+            //save file paths to db
+            ArrayList<String> filePathList = new ArrayList<>();
+            filePathList.add(frontIDPath);
+            filePathList.add(backIDPath);
+            filePathList.add(kraPinCertificatePath);
+            filePathList.add(shopPhotoPath);
+            filePathList.add(signatureDocPath);
+            filePathList.add(businessPermitDocPath);
+            filePathList.forEach(filePath -> {
+                DFSVoomaOnboardingKYCentity agentKYC = new DFSVoomaOnboardingKYCentity();
+                agentKYC.setFilePath(filePath);
+                agentKYC.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaOnboardingKYRepository.save(agentKYC);
+            });
+            return true;
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while onboarding merchant", e);
+        }
+        return false;
     }
 
 }
