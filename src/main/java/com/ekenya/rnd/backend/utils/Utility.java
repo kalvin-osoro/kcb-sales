@@ -29,7 +29,7 @@ public class Utility {
         return arrValidStatus.contains(status);
     }
     public static Date getPostgresCurrentTimeStampForInsert() throws Exception{
-Date date = new Date();
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = sdf.format(date);
         return sdf.parse(formattedDate);

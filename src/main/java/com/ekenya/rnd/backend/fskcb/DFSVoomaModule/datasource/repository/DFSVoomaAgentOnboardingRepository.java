@@ -6,6 +6,8 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaO
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+
 public interface DFSVoomaAgentOnboardingRepository extends JpaRepository<DFSVoomaAgentOnboardingEntity, Long> {
     @Query(value = "SELECT * FROM dfs_vooma_agent_onboarding WHERE isApproved = true", nativeQuery = true)
     Iterable<DFSVoomaAgentOnboardingEntity> findAllByIsApproved();

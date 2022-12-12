@@ -49,10 +49,6 @@ public class CBCustomerVisitsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            //successfull message
-            node.put("message","Visit Rescheduled Successfully");
-//          node.put("id",0);
-
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 

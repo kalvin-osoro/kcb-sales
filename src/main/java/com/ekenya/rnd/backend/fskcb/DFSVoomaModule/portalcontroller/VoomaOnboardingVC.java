@@ -39,14 +39,14 @@ public class VoomaOnboardingVC {
     }
     @PostMapping(value = "/vooma-get-all-approved-merchant")
     public ResponseEntity<?> getAllMerchantApprovals() {
-        ArrayNode list = voomaService.loadAllApprovedMerchants();
+        List<?> list = voomaService.loadAllApprovedMerchants();
 
 
         ObjectMapper objectMapper = new ObjectMapper();
         if(list != null){
             //Object
-//            ArrayNode node = objectMapper.createArrayNode();
-//            node.addAll((List)list);
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
             return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 

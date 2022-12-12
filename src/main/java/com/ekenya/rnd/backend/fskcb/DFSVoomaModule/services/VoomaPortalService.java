@@ -451,9 +451,9 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public ArrayNode loadAllApprovedMerchants() {
+    public List<ObjectNode> loadAllApprovedMerchants() {
         try {
-            ArrayNode list = objectMapper.createArrayNode();
+            List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             for (DFSVoomaOnboardEntity dfsVoomaOnboardEntity : dfsVoomaOnboardRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
@@ -471,12 +471,13 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("co-ordinates", arrayNode);
                 list.add(objectNode);
             }
-            return mapper.valueToTree(list);
+            return list;
         } catch (Exception e) {
             log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
     }
+
 
     @Override
     public boolean createAsset(String assetDetails, MultipartFile[] assetFiles) {

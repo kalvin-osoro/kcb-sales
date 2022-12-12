@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,4 +28,8 @@ public interface DFSVoomaOnboardRepository extends JpaRepository<DFSVoomaOnboard
     @Query(value = "SELECT count(*) FROM dfs_vooma_onboard WHERE status = ?1 AND createdOn >= (current_date - interval 7 day)", nativeQuery = true)
     int countByStatusForLast7Days(OnboardingStatus onboardingStatus);
 
+
+    short countByStatusAndCreatedOn(OnboardingStatus approved, LocalDate plusDays);
+
+    short countByCreatedOn(LocalDate next);
 }

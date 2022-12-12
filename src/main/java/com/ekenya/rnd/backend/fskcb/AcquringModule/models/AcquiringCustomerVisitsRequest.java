@@ -23,7 +23,9 @@ public class AcquiringCustomerVisitsRequest {
     private String actionPlan;
     private String highlights;
     private Status status;
-    //    private Zone zone;
-    private Date createdOn;
-    private Date updatedOn;
+    private String visitType;
+    private String attendance;
+    private String entityBrief;
+    private String longitude;
+    private String latitude;
 }

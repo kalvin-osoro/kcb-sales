@@ -170,10 +170,7 @@ public class CBPortalService implements ICBPortalService {
             if (model == null) {
                 return false;
             }
-            CBCustomerVisitEntity cbCustomerVisitEntity = cbCustomerVisitRepository.findById(model.getId()).orElse(null);
-            if (model == null) {
-                return false;
-            }
+            CBCustomerVisitEntity cbCustomerVisitEntity = cbCustomerVisitRepository.findById(model.getVisitId()).orElse(null);
             cbCustomerVisitEntity.setVisitDate(model.getNextVisitDate());
             cbCustomerVisitRepository.save(cbCustomerVisitEntity);
             return true;
@@ -280,10 +277,10 @@ public class CBPortalService implements ICBPortalService {
                 node.put("id", cbCampaignsEntity.getId());
                 node.put("campaignName", cbCampaignsEntity.getCampaignName());
                 node.put("campaignDesc", cbCampaignsEntity.getCampaignDesc());
-                node.put("campainType", cbCampaignsEntity.getCampainType().ordinal());
+                node.put("campainType", cbCampaignsEntity.getCampainType().toString());
                 node.put("startDate", cbCampaignsEntity.getStartDate());
                 node.put("endDate", cbCampaignsEntity.getEndDate());
-                node.put("status", cbCampaignsEntity.getStatus().ordinal());
+                node.put("status", cbCampaignsEntity.getStatus().toString());
                 node.put("createdOn", cbCampaignsEntity.getCreatedOn().getTime());
                 //add to list
                 list.add(node);
@@ -756,6 +753,24 @@ public class CBPortalService implements ICBPortalService {
             return true;
         } catch (Exception e) {
             log.error("Error occurred while adding concession", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateOpportunity(CBUpdateOpportunity model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBOpportunitiesEntity cbOpportunitiesEntity = cbOpportunitiesRepository.findById(model.getOpportunityId()).orElse(null);
+            cbOpportunitiesEntity.setProbability(model.getProbability());
+            cbOpportunitiesEntity.setStage(model.getStage());
+            cbOpportunitiesRepository.save(cbOpportunitiesEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while updating opportunity", e);
         }
         return false;
     }

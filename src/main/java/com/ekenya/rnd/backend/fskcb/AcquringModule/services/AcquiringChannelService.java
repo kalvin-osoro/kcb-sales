@@ -324,8 +324,11 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringCustomerVisitsEntity.setReasonForVisit(model.getReasonForVisit());
             acquiringCustomerVisitsEntity.setActionPlan(model.getActionPlan());
             acquiringCustomerVisitsEntity.setHighlights(model.getHighlights());
-//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            String username = userDetails.getUsername();
+            acquiringCustomerVisitsEntity.setVisitType(model.getVisitType());
+            acquiringCustomerVisitsEntity.setEntityBrief(model.getEntityBrief());
+            acquiringCustomerVisitsEntity.setLatitude(model.getLatitude());
+            acquiringCustomerVisitsEntity.setLongitude(model.getLongitude());
+            acquiringCustomerVisitsEntity.setAttendance(model.getAttendance());
             acquiringCustomerVisitsEntity.setDsrName("test");
             acquiringCustomerVisitsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save customer visit
@@ -432,7 +435,8 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringOnboardEntity.setTypeOfGoodAndServices(acquiringOnboardRequest.getTypeOfGoodAndServices());
             acquiringOnboardEntity.setBankName(acquiringOnboardRequest.getBankName());
             acquiringOnboardEntity.setAccountName(acquiringOnboardRequest.getAccountName());
-            acquiringOnboardEntity.setAccountNumber(acquiringOnboardRequest.getAccountNumber());
+            acquiringOnboardEntity.setAccountNumberInKES(acquiringOnboardRequest.getAccountNumberInKES());
+            acquiringOnboardEntity.setAccountNumberInUSD(acquiringOnboardRequest.getAccountNumberInUSD());
             acquiringOnboardEntity.setBranchName(acquiringOnboardRequest.getBranchName());
             acquiringOnboardEntity.setFeesAndCommission(acquiringOnboardRequest.getFeesAndCommission());
             AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);

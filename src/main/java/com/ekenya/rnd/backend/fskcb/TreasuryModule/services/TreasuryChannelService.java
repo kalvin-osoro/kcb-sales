@@ -319,12 +319,8 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 return false;
             }
             TreasuryLeadEntity treasuryLeadEntity = treasuryLeadRepository.findById(model.getLeadId()).orElse(null);
-            if (treasuryLeadEntity==null){
-                return false;
-            }
             treasuryLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
             treasuryLeadEntity.setLeadStatus(model.getLeadStatus());
-            //save
             treasuryLeadRepository.save(treasuryLeadEntity);
             return true;
         } catch (Exception e) {

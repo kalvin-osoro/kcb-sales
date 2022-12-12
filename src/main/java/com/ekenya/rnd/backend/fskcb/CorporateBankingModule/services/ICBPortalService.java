@@ -71,4 +71,6 @@ public interface ICBPortalService {
     boolean addQuestionnareResponse(QuestionResponseRequest model);
 
     boolean addConcession(CBConcessionRequest model);
+
+    boolean updateOpportunity(CBUpdateOpportunity model);
 }
