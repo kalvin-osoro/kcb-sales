@@ -478,6 +478,8 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaMerchantOnboardV1.setBusinessType(dfsVoomaMerchantOnboardV1Request.getBusinessType());
             dfsVoomaMerchantOnboardV1.setTradingName(dfsVoomaMerchantOnboardV1Request.getTradingName());
             dfsVoomaMerchantOnboardV1.setNatureOfBusiness(dfsVoomaMerchantOnboardV1Request.getNatureOfBusiness());
+            dfsVoomaMerchantOnboardV1.setMerchantType(dfsVoomaMerchantOnboardV1Request.getMerchantType());
+            dfsVoomaMerchantOnboardV1.setSettlmentType(dfsVoomaMerchantOnboardV1Request.getSettlmentType());
             //business details
             dfsVoomaMerchantOnboardV1.setBusinessName(dfsVoomaMerchantOnboardV1Request.getBusinessName());
             dfsVoomaMerchantOnboardV1.setOutletPhoneNumber(dfsVoomaMerchantOnboardV1Request.getOutletPhoneNumber());

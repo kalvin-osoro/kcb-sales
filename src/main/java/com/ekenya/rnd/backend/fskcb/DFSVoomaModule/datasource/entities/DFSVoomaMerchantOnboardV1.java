@@ -1,6 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.MerchantType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SettlmentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,6 +53,10 @@ public class DFSVoomaMerchantOnboardV1 {
     private boolean isApproved=false;
     @Enumerated(EnumType.STRING)
     private OnboardingStatus onboardingStatus;
+    @Enumerated(EnumType.STRING)
+    private MerchantType merchantType;
+    @Enumerated(EnumType.STRING)
+    private SettlmentType settlmentType;
     private String remarks;
     @OneToMany(mappedBy = "dfsVoomaMerchantOnboardV1")
     private List<DFSVoomaOwnerDetailsEntity> dfsVoomaOwnerDetailsEntities=new ArrayList<>();

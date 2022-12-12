@@ -1,11 +1,15 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.MerchantType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SettlmentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 
 @Getter
@@ -36,6 +40,8 @@ public class DFSVoomaMerchantOnboardV1Request {
     private String latitude;
     private String longitude;
     private String nearestLandmark;
+    private MerchantType merchantType;
+    private SettlmentType settlmentType;
     private List<DFSVoomaOwnerDetailsRequest> dfsVoomaOwnerDetailsRequests;
     private List<DFSVoomaContactDetailsRequest> dfsVoomaContactDetailsRequests;
 }
