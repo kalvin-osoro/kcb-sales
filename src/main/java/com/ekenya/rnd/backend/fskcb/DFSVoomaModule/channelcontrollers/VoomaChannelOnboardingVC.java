@@ -122,4 +122,31 @@ public class  VoomaChannelOnboardingVC {
         }
     }
 
+    @PostMapping("/vooma-onboard-agentV1")
+    public ResponseEntity<?> onboardNewAgentV1(@RequestParam("agentDetails") String agentDetails,
+                                             @RequestParam("frontID") MultipartFile frontID,
+                                             @RequestParam("backID") MultipartFile backID,
+                                             @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+                                             @RequestParam("businessCertificateOfRegistration") MultipartFile businessCertificateOfRegistration,
+                                             @RequestParam("shopPhoto") MultipartFile shopPhoto,
+                                             @RequestParam("signatureDoc") MultipartFile[] signatureDoc,
+                                             @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+        Object agentObj=voomaChannelService.onboardNewAgentV1(agentDetails,frontID,backID,kraPinCertificate,businessCertificateOfRegistration,
+                shopPhoto,signatureDoc,businessPermitDoc);
+        boolean success = agentObj != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
 }

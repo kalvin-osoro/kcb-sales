@@ -60,4 +60,12 @@ public interface IVoomaChannelService {
                                 MultipartFile shopPhoto,
                                 MultipartFile signatureDoc,
                                 MultipartFile businessPermitDoc);
+
+    Object onboardNewAgentV1(String agentDetails,
+                             MultipartFile frontID,
+                             MultipartFile backID,
+                             MultipartFile kraPinCertificate,
+                             MultipartFile businessCertificateOfRegistration,
+                             MultipartFile shopPhoto, MultipartFile[] signatureDoc,
+                             MultipartFile businessPermitDoc);
 }

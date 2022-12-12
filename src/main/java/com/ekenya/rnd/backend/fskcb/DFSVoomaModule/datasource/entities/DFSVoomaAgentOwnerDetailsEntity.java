@@ -14,20 +14,20 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dfs_vooma_agent_onboarding_kyc")
+@Table(name = "dfs_vooma_agent_contact_details")
 @DynamicUpdate
 @DynamicInsert
-public class DFSVoomaAgentOnboardingKYCEntity {
+public class DFSVoomaAgentOwnerDetailsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private  DFSVoomaAgentOnboardingEntity dfsVoomaAgentOnboardingEntity;
+    private String fullName;
+    private String idNumber;
+    private String idType;
+    private String phoneNumber;
+    private String emailAddress;
+    private String dob;
     @ManyToOne
     @JoinColumn(name = "agentOnboardId")
     private DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardV1;
-    @ManyToOne
-    @JoinColumn(name = "ownerDetailsId")
-    private DFSVoomaAgentOwnerDetailsEntity dfsVoomaAgentOwnerDetails;
-    private String filePath;
 }
