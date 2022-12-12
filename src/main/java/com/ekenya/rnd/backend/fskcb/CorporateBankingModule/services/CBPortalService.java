@@ -577,6 +577,7 @@ public class CBPortalService implements ICBPortalService {
             cbOpportunityEntity.setCustomerName(model.getCustomerName());
             cbOpportunityEntity.setProduct(model.getProduct());
             cbOpportunityEntity.setStage(model.getStage());
+            cbOpportunityEntity.setValue(model.getValue());
             cbOpportunityEntity.setProbability(model.getProbability());
             cbOpportunityEntity.setStatus(OpportunityStatus.OPEN);
             cbOpportunityEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
