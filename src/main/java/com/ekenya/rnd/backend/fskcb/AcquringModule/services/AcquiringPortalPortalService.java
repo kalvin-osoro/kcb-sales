@@ -450,7 +450,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("region", acquiringOnboardEntity.getRegion());
                 asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
                 asset.put("email", acquiringOnboardEntity.getBusinessEmail());
-                asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
+                asset.put("status", acquiringOnboardEntity.getStatus().toString());
                 asset.put("agentId", acquiringOnboardEntity.getDsrId());
                 asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
                 list.add(asset);
