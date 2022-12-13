@@ -408,7 +408,7 @@ public class CRMService implements ICRMService {
             ResponseEntity<String> responseEntity = null;
 
 
-            responseEntity = restTemplate.exchange(url, HttpMethod.GET,entity,String.class,accountNo);
+            responseEntity = restTemplate.exchange(url, HttpMethod.GET,entity,String.class);
             return JsonParser.parseString(responseEntity.getBody()).getAsJsonObject();
         }catch (HttpClientErrorException e){
 
