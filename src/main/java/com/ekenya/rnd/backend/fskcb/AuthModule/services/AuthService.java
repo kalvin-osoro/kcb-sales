@@ -166,6 +166,14 @@ public class AuthService implements IAuthService{
             //
             response.setShouldSetSecQns(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty());
             response.setShouldChangePin(account.isShouldChangePIN());
+            response.setName(account.getFullName());
+            //
+            DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
+            if(dsrAccount != null) {
+                response.setSalesCode(dsrAccount.getSalesCode());
+            }else{
+                response.setSalesCode("");
+            }
             //
             return response;
         }catch (AuthenticationException ex){
@@ -273,6 +281,14 @@ public class AuthService implements IAuthService{
             response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
             response.setRoles(roles);
             response.setType("Bearer");
+            response.setName(account.getFullName());
+            //
+            DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
+            if(dsrAccount != null) {
+                response.setSalesCode(dsrAccount.getSalesCode());
+            }else{
+                response.setSalesCode("");
+            }
             //
             return response;
         }catch (AuthenticationException ex){
