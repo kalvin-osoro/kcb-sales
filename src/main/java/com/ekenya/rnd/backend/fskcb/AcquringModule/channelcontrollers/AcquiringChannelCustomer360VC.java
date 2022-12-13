@@ -45,10 +45,10 @@ public class AcquiringChannelCustomer360VC {
 
     //CUSTOMER360 VIEW
     @PostMapping("/acquiring-get-customer-details")
-    public ResponseEntity<?> getCustomerDetails(@RequestBody CustomerDetailsRequest model) {
+    public ResponseEntity<?> getCustomerDetails(Long  accountNo) {
 
 
-        JsonObject resp = crmService.getCustomerDetails(model.getAccountNo());
+        JsonObject resp = crmService.getCustomerDetails(accountNo);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
