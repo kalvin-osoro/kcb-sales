@@ -323,11 +323,11 @@ public class VoomaPortalService implements IVoomaPortalService {
             for (DFSVoomaContactDetailsEntity dfsVoomaContactPerson : dfsVoomaContactPersonList) {
                 ObjectNode contactPerson = mapper.createObjectNode();
                 contactPerson.put("id", dfsVoomaContactPerson.getId());
-                contactPerson.put("firstName", dfsVoomaContactPerson.getContactPersonName());
-                contactPerson.put("email", dfsVoomaContactPerson.getContactPersonEmailAddress());
-                contactPerson.put("phoneNumber", dfsVoomaContactPerson.getContactPersonPhoneNumber());
-                contactPerson.put("idNumber", dfsVoomaContactPerson.getContactPersonIdNumber());
-                contactPerson.put("idType", dfsVoomaContactPerson.getContactPersonIdType());
+                contactPerson.put("contactPersonName", dfsVoomaContactPerson.getContactPersonName());
+                contactPerson.put("contactPersonNameEmail", dfsVoomaContactPerson.getContactPersonEmailAddress());
+                contactPerson.put("contactPersonNamePhoneNumber", dfsVoomaContactPerson.getContactPersonPhoneNumber());
+                contactPerson.put("contactPersonNameiIdNumber", dfsVoomaContactPerson.getContactPersonIdNumber());
+                contactPerson.put("contactPersonNameIdType", dfsVoomaContactPerson.getContactPersonIdType());
                 //
                 contactPerson.put("financeContactPersonName",dfsVoomaContactPerson.getFinancialContactPersonIdType());
                 contactPerson.put("financeContactPersonPhone",dfsVoomaContactPerson.getFinancialContactPersonPhoneNumber());

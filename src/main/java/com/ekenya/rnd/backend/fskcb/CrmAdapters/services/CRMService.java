@@ -396,15 +396,12 @@ public class CRMService implements ICRMService {
 
     @Override
     public JsonObject getCustomerDetails(long accountNo) {
-//        String token = "Bearer "+ generateOauth2Token();
         HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization",token);
         String url =GET_CUSTOMER_DETAILS_BY_ACCOUNT_NO+accountNo;
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         try {
-            //log.info("getCustomerDetails ",accountNo);
             ResponseEntity<String> responseEntity = null;
 
 
