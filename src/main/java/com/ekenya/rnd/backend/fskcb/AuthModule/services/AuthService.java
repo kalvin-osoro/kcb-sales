@@ -171,6 +171,7 @@ public class AuthService implements IAuthService{
             response.setShouldSetSecQns(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty());
             response.setShouldChangePin(account.isShouldChangePIN());
             response.setName(account.getFullName());
+            response.setEmail(account.getEmail());
             //
             DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
             if(dsrAccount != null) {
@@ -291,6 +292,7 @@ public class AuthService implements IAuthService{
             response.setRoles(roles);
             response.setType("Bearer");
             response.setName(account.getFullName());
+            response.setEmail(account.getEmail());
             //
             DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
             if(dsrAccount != null) {
