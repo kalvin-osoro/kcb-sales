@@ -35,6 +35,9 @@ public class DFSVoomaCustomerVisitEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
     private String customerName;
+    private String visitType;
+    private String attendance;
+    private String entityBrief;
     //    private Zone zone;
     private Date createdOn;
     private Date updatedOn;

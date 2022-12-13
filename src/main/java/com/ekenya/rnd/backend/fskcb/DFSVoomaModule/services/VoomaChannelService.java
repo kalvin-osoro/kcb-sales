@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -414,9 +416,12 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
             dfsVoomaCustomerVisitEntity.setActionPlan(model.getActionPlan());
             dfsVoomaCustomerVisitEntity.setHighlights(model.getHighlights());
-//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            String username = userDetails.getUsername();
-            dfsVoomaCustomerVisitEntity.setDsrName("test");
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = userDetails.getUsername();
+            dfsVoomaCustomerVisitEntity.setDsrName(username);
+            dfsVoomaCustomerVisitEntity.setAttendance(model.getAttendance());
+            dfsVoomaCustomerVisitEntity.setVisitType(model.getVisitType());
+            dfsVoomaCustomerVisitEntity.setEntityBrief(model.getEntityBrief());
             dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save customer visit
             dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);

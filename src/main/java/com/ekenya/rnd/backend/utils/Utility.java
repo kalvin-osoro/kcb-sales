@@ -149,4 +149,8 @@ return new Date();
         Date previousDate = new Date(t - (i * 24 * 3600 * 1000));
         return previousDate.toString();
     }
+    public static String generateRandomNumber() {
+        String password = RandomStringUtils.random(6, false, true);
+        return password;
+    }
 }

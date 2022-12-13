@@ -68,6 +68,7 @@ public class AcquiringCustomerVisitsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)acquiringCustomerVisit);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

@@ -32,4 +32,7 @@ public class VoomaCustomerVisitsRequest {
     private  String longitude;
     private String latitude;
     private String branch;
+    private String visitType;
+    private String attendance;
+    private String entityBrief;
 }
