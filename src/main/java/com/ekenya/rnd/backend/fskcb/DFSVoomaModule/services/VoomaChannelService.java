@@ -502,6 +502,12 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaMerchantOnboardV1.setAccountName(dfsVoomaMerchantOnboardV1Request.getAccountName());
             dfsVoomaMerchantOnboardV1.setAccountNumber(dfsVoomaMerchantOnboardV1Request.getAccountNumber());
             dfsVoomaMerchantOnboardV1.setDate(dfsVoomaMerchantOnboardV1Request.getDate());
+            dfsVoomaMerchantOnboardV1.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+
+//            UserDetails userDetails=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails();
+//            String username=userDetails.getUsername();
+//            dfsVoomaMerchantOnboardV1.setDsrName(username);
+
             //physical address
             dfsVoomaMerchantOnboardV1.setPostalAddress(dfsVoomaMerchantOnboardV1Request.getPostalAddress());
             dfsVoomaMerchantOnboardV1.setPostalCode(dfsVoomaMerchantOnboardV1Request.getPostalCode());
@@ -594,7 +600,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                                     MultipartFile kraPinCertificate,
                                     MultipartFile businessCertificateOfRegistration,
                                     MultipartFile shopPhoto,
-                                    MultipartFile[] signatureDoc,
+                                    MultipartFile signatureDoc,
                                     MultipartFile businessPermitDoc) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -611,7 +617,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAgentOnboardV1.setBusinessEmail(dfsVoomaAgentOnboardV1Request.getBusinessEmail());
             dfsVoomaAgentOnboardV1.setIsKCBAgent(dfsVoomaAgentOnboardV1Request.getIsKCBAgent());
             dfsVoomaAgentOnboardV1.setNumberOfOutlets(dfsVoomaAgentOnboardV1Request.getNumberOfOutlets());
-            dfsVoomaAgentOnboardV1.setKRAPin(dfsVoomaAgentOnboardV1Request.getKRAPin());
+//            dfsVoomaAgentOnboardV1.setKRAPin(dfsVoomaAgentOnboardV1Request.getKRAPin());
             dfsVoomaAgentOnboardV1.setVATNumber(dfsVoomaAgentOnboardV1Request.getVATNumber());
             dfsVoomaAgentOnboardV1.setDealingWithForeignExchange(dfsVoomaAgentOnboardV1Request.getDealingWithForeignExchange());
             //settlement details
@@ -619,6 +625,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAgentOnboardV1.setAccountName(dfsVoomaAgentOnboardV1Request.getAccountName());
             dfsVoomaAgentOnboardV1.setAccountNumber(dfsVoomaAgentOnboardV1Request.getAccountNumber());
             dfsVoomaAgentOnboardV1.setDate(dfsVoomaAgentOnboardV1Request.getDate());
+            dfsVoomaAgentOnboardV1.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //physical address
             dfsVoomaAgentOnboardV1.setPostalAddress(dfsVoomaAgentOnboardV1Request.getPostalAddress());
             dfsVoomaAgentOnboardV1.setPostalCode(dfsVoomaAgentOnboardV1Request.getPostalCode());
@@ -679,8 +686,8 @@ public class VoomaChannelService implements IVoomaChannelService {
                     "businessCertificateOfRegistration_" + agentOnboardV1.getId() + ".PNG", businessCertificateOfRegistration,folderName);
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "shopPhoto_" + agentOnboardV1.getId() + ".PNG", shopPhoto,folderName);
-//            String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-//                    "signatureDoc_" + agentOnboardV1.getId() + ".PNG", signatureDoc,folderName);
+            String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
+                 "signatureDoc_" + agentOnboardV1.getId() + ".PNG", signatureDoc,folderName);
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "businessPermitDoc_" + agentOnboardV1.getId() + ".PNG", businessPermitDoc,folderName);
             //save file paths to db
@@ -690,7 +697,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             filePathList.add(kraPinCertificatePath);
             filePathList.add(businessCertificateOfRegistrationPath);
             filePathList.add(shopPhotoPath);
-//            filePathList.add(signatureDocPath);
+            filePathList.add(signatureDocPath);
             filePathList.add(businessPermitDocPath);
             filePathList.forEach(filePath -> {
                 DFSVoomaAgentOnboardingKYCEntity agentKYC = new DFSVoomaAgentOnboardingKYCEntity();
@@ -698,17 +705,17 @@ public class VoomaChannelService implements IVoomaChannelService {
                 agentKYC.setDfsVoomaAgentOnboardV1(agentOnboardV1);
                 dfsVoomaAgentOnboardingKYCRepository.save(agentKYC);
             });
-            List<String> filePathList1 = new ArrayList<>();
-            //save files
-
-            filePathList1 = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_"+agentOnboardV1.getId(), signatureDoc);
-            //save file paths to db
-            filePathList1.forEach(filePath -> {
-                DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
-                signatureFiles.setDfsVoomaAgentOnboardV1(agentOnboardV1);
-                signatureFiles.setFilePath(filePath);
-                dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
-            });;
+//            List<String> filePathList1 = new ArrayList<>();
+//            //save files
+//
+//            filePathList1 = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_"+agentOnboardV1.getId(), signatureDoc);
+//            //save file paths to db
+//            filePathList1.forEach(filePath -> {
+//                DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
+//                signatureFiles.setDfsVoomaAgentOnboardV1(agentOnboardV1);
+//                signatureFiles.setFilePath(filePath);
+//                dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
+//            });
             return true;
         } catch (Exception e) {
             log.error("Error occurred while Onboarding Agent", e);

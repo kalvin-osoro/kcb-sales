@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dbo_treasury_trade_request")
+@Table(name = "dbo_treasury_call_report")
 @DynamicInsert
 @DynamicUpdate
 public class TreasuryCallReportEntity {

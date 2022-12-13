@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,6 +22,7 @@ import java.util.List;
 @Table(name = "dfs_vooma_Agent_onboardingV1")
 @DynamicUpdate
 @DynamicInsert
+
 public class DFSVoomaAgentOnboardV1 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +33,11 @@ public class DFSVoomaAgentOnboardV1 {
     private String businessCategory;
     private String businessPhoneNumber;
     private String businessEmail;
-    private Boolean isKCBAgent;
-    private Integer numberOfOutlets;
-    private String KRAPin;
-    private Integer VATNumber;
-    private Boolean dealingWithForeignExchange;
+    private Boolean isKCBAgent=false;
+    private String numberOfOutlets;
+//    private String KRAPin;
+    private String VATNumber;
+    private Boolean dealingWithForeignExchange=false;
     private Boolean isApproved=false;
     private String remarks;
     //settlement Details
@@ -51,10 +54,11 @@ public class DFSVoomaAgentOnboardV1 {
     private String longitude;
     @Enumerated(EnumType.STRING)
     private OnboardingStatus onboardingStatus;
+    private Date createdOn;
 
-    @OneToMany(mappedBy = "dfsVoomaAgentOnboardV1", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dfsVoomaAgentOnboardV1")
     private List<DFSVoomaAgentOwnerDetailsEntity> dfsVoomaAgentOwnerDetailsEntityList = new ArrayList<>();
-    @OneToMany(mappedBy = "dfsVoomaAgentOnboardV1", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dfsVoomaAgentOnboardV1")
     private List<DFSVoomaAgentContactDetailsEntity> dfsVoomaAgentContactDetailsEntityList = new ArrayList<>();
 
 }

@@ -19,9 +19,9 @@ public class DFSVoomaAgentOnboardV1Request {
     private String businessPhoneNumber;
     private String businessEmail;
     private Boolean isKCBAgent;
-    private Integer numberOfOutlets;
-    private String KRAPin;
-    private Integer VATNumber;
+    private String numberOfOutlets;
+//    private String KRAPin;
+    private String VATNumber;
     private Boolean dealingWithForeignExchange;
     private String remarks;
     private OnboardingStatus onboardingStatus;

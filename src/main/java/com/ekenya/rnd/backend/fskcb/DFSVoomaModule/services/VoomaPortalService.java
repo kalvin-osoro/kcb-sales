@@ -45,6 +45,12 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Autowired
     private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     @Autowired
+    private DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
+    @Autowired
+    private DFSVoomaContactDetailsRepository dfsVoomaContactDetailsRepository;
+    @Autowired
+    private DFSVoomaOwnerDetailsRepository dfsVoomaOwnerDetailsRepository;
+    @Autowired
     private QuestionnaireRepository questionnaireRepository;
     @Autowired
     private QuestionRepository questionRepository;
@@ -567,26 +573,18 @@ public class VoomaPortalService implements IVoomaPortalService {
         try {
 
             List<ObjectNode> list = new ArrayList<>();
-            List<DFSVoomaOnboardEntity> dfsVoomaOnboardEntityList = dfsVoomaOnboardRepository.findAll();
-            for (DFSVoomaOnboardEntity entity : dfsVoomaOnboardEntityList) {
+            List<DFSVoomaMerchantOnboardV1> dfsVoomaOnboardEntityList = dfsVoomaMerchantOnboardV1Repository.findAll();
+            for (DFSVoomaMerchantOnboardV1 entity : dfsVoomaOnboardEntityList) {
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", entity.getId());
-                node.put("merchantName", entity.getMerchantName());
-                node.put("region", entity.getRegion());
-                node.put("status", entity.getStatus().ordinal());
+                node.put("businessName", entity.getBusinessName());
+                node.put("cityOrTown", entity.getCityOrTown());
+                node.put("status", entity.getOnboardingStatus().toString());
                 node.put("dateOnborded", entity.getCreatedOn().getTime());
-                node.put("phoneNumber", entity.getMerchantPhone());
-                node.put("email", entity.getMerchantEmail());
-                node.put("dsrId", entity.getDsrId());
-                //list of documents
-                ArrayNode arrayNode = mapper.createArrayNode();
-                for (DFSVoomaOnboardingKYCentity dfsVoomaOnboardFilesEntity : entity.getKycEntities()) {
-                    ObjectNode document = mapper.createObjectNode();
-                    document.put("id", dfsVoomaOnboardFilesEntity.getId());
-                    document.put("path", dfsVoomaOnboardFilesEntity.getFilePath());
-                    arrayNode.add(document);
-                }
+                node.put("phoneNumber", entity.getOutletPhoneNumber());
+                node.put("email", entity.getOutletPhoneNumber());
+                node.put("dsrName", entity.getDsrName());
                 list.add(node);
             }
             return list;
