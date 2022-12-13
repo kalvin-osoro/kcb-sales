@@ -46,6 +46,7 @@ public class DFSVoomaMerchantOnboardV1 {
     private String date;
     //pysical address
     private String postalAddress;
+    private String VATNumber;
     private String postalCode;
     private String cityOrTown;
     private String nearestLandmark;

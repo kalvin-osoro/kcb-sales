@@ -529,6 +529,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaOwnerDetailsEntity.setEmailAddress(dfsVoomaOwnerDetailsRequest.getEmailAddress());
                 dfsVoomaOwnerDetailsEntity.setIdType(dfsVoomaOwnerDetailsRequest.getIdType());
                 dfsVoomaOwnerDetailsEntity.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaOwnerDetailsEntity.setMerchantId(merchantDetails1.getId());
                 dfsVoomaOwnerDetailsRepository.save(dfsVoomaOwnerDetailsEntity);
             }
            List<DFSVoomaContactDetailsRequest> detailsRequestList =dfsVoomaMerchantOnboardV1Request.getDfsVoomaContactDetailsRequests();
@@ -552,6 +553,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaContactDetailsEntity.setAdministrativeContactPersonPhoneNumber(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonPhoneNumber());
                 dfsVoomaContactDetailsEntity.setAdministrativeContactPersonEmailAddress(dfsVoomaContactDetailsRequest.getAdministrativeContactPersonEmailAddress());
                 dfsVoomaContactDetailsEntity.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaContactDetailsEntity.setMerchantId(merchantDetails1.getId());
                 dfsVoomaContactDetailsRepository.save(dfsVoomaContactDetailsEntity);
             }
             //upload documents

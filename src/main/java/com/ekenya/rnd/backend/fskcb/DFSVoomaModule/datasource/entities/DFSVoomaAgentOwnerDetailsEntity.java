@@ -27,7 +27,7 @@ public class DFSVoomaAgentOwnerDetailsEntity {
     private String phoneNumber;
     private String emailAddress;
     private String dob;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agentOnboardId")
     private DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardV1;
 }

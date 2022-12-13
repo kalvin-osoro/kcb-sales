@@ -26,7 +26,7 @@ public class DFSVoomaContactDetailsEntity {
     private String contactPersonEmailAddress;
     private String contactPersonIdNumber;
     private String contactPersonIdType;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "merchantOnboardId")
     private DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1;
 
@@ -35,6 +35,7 @@ public class DFSVoomaContactDetailsEntity {
     private String financialContactPersonEmailAddress;
     private String financialContactPersonIdNumber;
     private String financialContactPersonIdType;
+    private Long merchantId;
     //administrative contact
     private String administrativeContactPersonName;
     private String administrativeContactPersonPhoneNumber;

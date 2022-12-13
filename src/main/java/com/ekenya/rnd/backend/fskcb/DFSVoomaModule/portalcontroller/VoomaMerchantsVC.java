@@ -1,10 +1,12 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaMerchantDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -29,24 +31,23 @@ public class VoomaMerchantsVC {
         boolean success = merchant != null;
 
 
-
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
+        if (success) {
             //return merchant object
             ObjectNode node = objectMapper.createObjectNode();
             node.putArray("merchant").add(objectMapper.valueToTree(merchant));
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
 
 
-
     }
+
     @PostMapping("/vooma-get-agent-by-id")
     public ResponseEntity<?> getAgentById(@RequestBody VoomaMerchantDetailsRequest model) {
         Object agent = acquiringService.agentById(model);
@@ -93,16 +94,17 @@ public class VoomaMerchantsVC {
     @GetMapping("fileupload/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        System.out.println("filename "+filename);
+        System.out.println("filename " + filename);
         Resource file = fileStorageService.load(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
+
     @GetMapping("fileupload2/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
-        System.out.println("filename "+filename);
+        System.out.println("filename " + filename);
         Resource file = fileStorageService.load(filename);
         MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
         return ResponseEntity.ok()
@@ -110,4 +112,8 @@ public class VoomaMerchantsVC {
                 .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
                 .body(file);
     }
+
+
+
+
 }
