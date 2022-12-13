@@ -26,8 +26,8 @@ public class DFSVoomaAgentOnboardingKYCEntity {
     @ManyToOne
     @JoinColumn(name = "agentOnboardId")
     private DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardV1;
-    @ManyToOne
-    @JoinColumn(name = "ownerDetailsId")
-    private DFSVoomaAgentOwnerDetailsEntity dfsVoomaAgentOwnerDetails;
+//    @ManyToOne
+//    @JoinColumn(name = "ownerDetailsId")
+//    private DFSVoomaAgentOwnerDetailsEntity dfsVoomaAgentOwnerDetails;
     private String filePath;
 }

@@ -68,7 +68,7 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("customerName", treasuryLeadEntity.getCustomerName());
 //                node.put("customerID", treasuryLeadEntity.getCustomerId());
-                node.put("priority", treasuryLeadEntity.getPriority().ordinal());
+                node.put("priority", treasuryLeadEntity.getPriority().toString());
                 node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
                 node.put("leadId", treasuryLeadEntity.getId());
                 node.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
@@ -299,7 +299,7 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("customerName", treasuryLeadEntity.getCustomerName());
 //                node.put("customerID", treasuryLeadEntity.getCustomerId());
-                node.put("priority", treasuryLeadEntity.getPriority().ordinal());
+                node.put("priority", treasuryLeadEntity.getPriority().toString());
                 node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
                 node.put("leadId", treasuryLeadEntity.getId());
                 list.add(node);

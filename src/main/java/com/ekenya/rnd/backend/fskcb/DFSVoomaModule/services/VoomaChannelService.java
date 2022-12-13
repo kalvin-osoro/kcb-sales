@@ -638,17 +638,6 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaAgentOwnerDetailsEntity.setDfsVoomaAgentOnboardV1(agentOnboardV1);
                 DFSVoomaAgentOwnerDetailsEntity ownerDetailsEntity=dfsVoomaAgentOwnerDetailsRepository.save(dfsVoomaAgentOwnerDetailsEntity);
 
-                List<String> filePathList = new ArrayList<>();
-                //save files
-
-                filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_"+ownerDetailsEntity.getFullName(), signatureDoc);
-                //save file paths to db
-                filePathList.forEach(filePath -> {
-                    DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
-                    signatureFiles.setDfsVoomaAgentOwnerDetails(ownerDetailsEntity);
-                    signatureFiles.setFilePath(filePath);
-                    dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
-                });
             }
             List<DFSVoomaAgentContactDetailsRequest> detailsRequestList =dfsVoomaAgentOnboardV1Request.getDfsVoomaAgentContactDetailsRequests();
             for (DFSVoomaAgentContactDetailsRequest dfsVoomaContactDetailsRequest : detailsRequestList) {
@@ -704,6 +693,17 @@ public class VoomaChannelService implements IVoomaChannelService {
                 agentKYC.setDfsVoomaAgentOnboardV1(agentOnboardV1);
                 dfsVoomaAgentOnboardingKYCRepository.save(agentKYC);
             });
+            List<String> filePathList1 = new ArrayList<>();
+            //save files
+
+            filePathList1 = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_"+agentOnboardV1.getId(), signatureDoc);
+            //save file paths to db
+            filePathList1.forEach(filePath -> {
+                DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
+                signatureFiles.setDfsVoomaAgentOnboardV1(agentOnboardV1);
+                signatureFiles.setFilePath(filePath);
+                dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
+            });;
             return true;
         } catch (Exception e) {
             log.error("Error occurred while Onboarding Agent", e);

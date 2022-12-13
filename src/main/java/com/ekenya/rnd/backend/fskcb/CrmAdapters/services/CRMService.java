@@ -399,7 +399,7 @@ public class CRMService implements ICRMService {
 //        String token = "Bearer "+ generateOauth2Token();
         HttpHeaders headers = new HttpHeaders();
 //        headers.set("Authorization",token);
-        String url= "http://keprecrmappde02:8081/api/Values?entity=accountsbyaccno&paramval="+accountNo;
+        String url= "http://keprecrmappde02:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
