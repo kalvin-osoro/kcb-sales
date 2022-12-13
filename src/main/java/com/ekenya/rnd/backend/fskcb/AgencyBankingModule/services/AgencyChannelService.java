@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
@@ -242,31 +243,33 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyOnboardingEntity.setIsAgentHeldLiableInAnyCourtOfLaw(agencyOnboardingRequest.getIsAgentHeldLiableInAnyCourtOfLaw());
             agencyOnboardingEntity.setIsAgentEverBeenDismissedFromEmployment(agencyOnboardingRequest.getIsAgentEverBeenDismissedFromEmployment());
             agencyOnboardingEntity.setIsAgentExchangeForeignCurrency(agencyOnboardingRequest.getIsAgentExchangeForeignCurrency());
+            agencyOnboardingEntity.setStatus(OnboardingStatus.PENDING);
+            agencyOnboardingEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save the onboarding request
             AgencyOnboardingEntity agentInfo = agencyOnboardingRepository.save(agencyOnboardingEntity);
 
             //upload documents
-            String folderName = "onboarding_" + agentInfo.getId();
-            String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + agentInfo.getId() + ".PNG", frontID );
+            String folderName = "onboardingAgency";
+            String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "frontID_" + agentInfo.getId() + ".PNG", frontID,folderName );
 
-            String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + agentInfo.getId() + ".PNG", backID );
+            String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "backID_" + agentInfo.getId() + ".PNG", backID,folderName );
 
 
-            String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileName(
-                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct );
+            String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct,folderName );
 
-            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto );
-            String financialStatementPath = fileStorageService.saveFileWithSpecificFileName(
-                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement );
-            String cvPath = fileStorageService.saveFileWithSpecificFileName(
-                    "cv_" + agentInfo.getId() + ".PNG", cv );
-            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto );
-            String crbReportPath = fileStorageService.saveFileWithSpecificFileName(
-                    "crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport );
+            String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto,folderName );
+            String financialStatementPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement,folderName );
+            String cvPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "cv_" + agentInfo.getId() + ".PNG", cv,folderName );
+            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto ,folderName);
+            String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport,folderName );
 
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();

@@ -12,7 +12,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgencyOnboardingRequest {
-    private Long id;
     private String agentName;
     private String agentCode;
     private String region;
@@ -23,7 +22,6 @@ public class AgencyOnboardingRequest {
     private String agentPbox;
     private String agentPostalCode;
     private Long dsrId;
-    private Date createdOn;
     private String remarks;
     private String latitude;
     private String longitude;
@@ -32,7 +30,6 @@ public class AgencyOnboardingRequest {
     private String streetName;
     private String buildingName;
     private String roomNumber;
-    private OnboardingStatus status;
     //agency onboarding details
     private String nameOfProposiedAgent;
     private String businessType;

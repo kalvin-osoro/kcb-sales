@@ -68,16 +68,16 @@ public class AcquiringChannelCustomer360VC {
 
     }
 
-    @GetMapping("/get-crm-customer")
-    public ResponseEntity<?> getCRMCustomer() {
-        try {
-            String uri="http://keprecrmappde02:8081/api/Values?entity=accounts&paramval=";
-            RestTemplate restTemplate = new RestTemplate();
-            String result = restTemplate.getForObject(uri, String.class);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/get-crm-customer")
+//    public ResponseEntity<?> getCRMCustomer() {
+//        try {
+//            String uri="https://fakestoreapi.com/products/1";
+//            RestTemplate restTemplate = new RestTemplate();
+//            String result = restTemplate.getForObject(uri, String.class);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }
