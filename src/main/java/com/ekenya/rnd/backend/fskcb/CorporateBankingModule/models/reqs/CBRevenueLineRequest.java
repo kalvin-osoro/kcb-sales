@@ -15,7 +15,6 @@ public class CBRevenueLineRequest {
     private String recommendedRate;
     private Integer baseAmount;
     private String duration;
-    private Long concessionId;
     private String forgoneRevenue;
     private RevenueLineType revenueLineType;
 

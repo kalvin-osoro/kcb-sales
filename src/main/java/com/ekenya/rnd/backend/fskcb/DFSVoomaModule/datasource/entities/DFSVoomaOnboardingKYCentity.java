@@ -22,5 +22,7 @@ public class DFSVoomaOnboardingKYCentity {
     private Long id;
     @ManyToOne
     private DFSVoomaOnboardEntity dfsVoomaOnboardEntity;
+    @ManyToOne
+    private DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1;
     private String filePath;
 }

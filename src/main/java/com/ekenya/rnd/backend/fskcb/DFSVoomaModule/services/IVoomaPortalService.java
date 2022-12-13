@@ -42,13 +42,13 @@ public interface IVoomaPortalService {
     boolean createVoomaTarget(DFSVoomaAddTargetRequest voomaAddTargetRequest);
 
 
-    List<ObjectNode> getOnboardingSummary(VoomaSummaryRequest filters);
+    List<ObjectNode> getOnboardingSummary();
 
     List<ObjectNode> getAllCustomerFeedbacks();
 
     ArrayNode getCustomerFeedbackResponses(DFSVoomaFeedBackRequestById model);
 
-    ArrayNode loadAllApprovedMerchants();
+    List<ObjectNode> loadAllApprovedMerchants();
 
     boolean createAsset(String assetDetails, MultipartFile[] assetFiles);
 
@@ -66,4 +66,22 @@ public interface IVoomaPortalService {
     List<?> getAllOnboardingV2();
     List<?> fetchAllAssetsV2();
     List<?> fetchAllLeadsV2();
+
+    Object agentById(VoomaMerchantDetailsRequest model);
+
+    boolean rejectMerchantOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
+
+    ArrayNode getAllApprovedMerchantCoordinates();
+
+    boolean rejectAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
+
+    boolean approveAgentOnboarding(DFSVoomaRejectMerchantOnboarindRequest model);
+
+    ArrayNode getAllApprovedAgentCoordinates();
+
+    boolean addQuestionnaire(QuestionnaireRequest model);
+
+    List<ObjectNode> getAllAllQuestionnaireV1();
+
+    List<ObjectNode> getOnboardingSummaryv1();
 }

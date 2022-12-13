@@ -21,9 +21,9 @@ public class VoomaReportsVC {
     IVoomaPortalService voomaService;
 
     @PostMapping("/vooma-onboarding-summary")
-    public ResponseEntity<?> getOnboardingSummary(@RequestBody VoomaSummaryRequest filters) {
+    public ResponseEntity<?> getOnboardingSummary() {
 
-        List<?> list = voomaService.getOnboardingSummary(filters);
+        List<?> list = voomaService.getOnboardingSummary();
         boolean success = list != null;
         //Expected Response structure
         //Take last 7 days
@@ -194,6 +194,29 @@ public class VoomaReportsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/vooma-onboarding-summaryv1")
+    public ResponseEntity<?> getOnboardingSummaryv1() {
+
+        List<?> list = voomaService.getOnboardingSummaryv1();
+        boolean success = list != null;
+
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

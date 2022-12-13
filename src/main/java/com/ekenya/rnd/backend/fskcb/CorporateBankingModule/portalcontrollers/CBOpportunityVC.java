@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddOpportunityRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBGetOppByIdRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBUpdateOpportunity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.QuestionTypeRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -60,6 +61,19 @@ public class CBOpportunityVC {
             ObjectNode node = objectMapper.createObjectNode();
             node.setAll((ObjectNode)response);
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+
+        }
+    }
+    //update opportunity
+    @PostMapping("/cb-update-opportunity")
+    ResponseEntity<?> updateOpportunity(@RequestBody CBUpdateOpportunity model){
+        boolean success = cbService.updateOpportunity(model);
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            ObjectNode node = objectMapper.createObjectNode();
+            return ResponseEntity.ok(new BaseAppResponse(1,objectMapper.createObjectNode(),"Request Processed Successfully"));
         }else{
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
 

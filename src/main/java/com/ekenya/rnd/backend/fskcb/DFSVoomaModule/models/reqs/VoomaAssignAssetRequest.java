@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoomaAssignAssetRequest {
-    private Long assetId;
+    private String serialNumber;
     private Long customerId;
 }

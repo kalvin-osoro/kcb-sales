@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,4 +39,5 @@ public class DFSVoomaAgentOnboardRequest {
     private String staffId;
     private String latitude;
     private String longitude;
+    private OnboardingStatus status;
 }

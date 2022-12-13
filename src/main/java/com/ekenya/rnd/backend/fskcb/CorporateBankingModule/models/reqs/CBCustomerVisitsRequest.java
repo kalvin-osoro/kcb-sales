@@ -20,7 +20,6 @@ public class CBCustomerVisitsRequest {
     private String dsrName;
     private String reasonForVisit;
     private String visitDate;
-    private Status status;
     private Zone zone;
     //call details
     private String typeOfVisit;

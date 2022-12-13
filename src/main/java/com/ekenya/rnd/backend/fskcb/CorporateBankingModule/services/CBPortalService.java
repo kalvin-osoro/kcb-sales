@@ -4,7 +4,6 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetSta
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.QuestionnareQuestion;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -15,15 +14,19 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
+import com.ekenya.rnd.backend.utils.ConcessionTrackingStatus;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,25 +37,25 @@ import java.util.Set;
 @Service
 public class CBPortalService implements ICBPortalService {
 
-  private final ICBLeadsRepository cbLeadsRepository;
-  private final QuestionTypeRepository questionTypeRepository;
-  private final QuestionnareQuestionRepository questionnareQuestionRepository;
-  private final QuestionnaireResponseRepository questionnaireResponseRepository;
-  private final CBRevenueLineRepository cbRevenueLineRepository;
-  private final CBOpportunitiesRepository cbOpportunitiesRepository;
-  @Autowired
-  ObjectMapper objectMapper;
-  private final CBJustificationRepository cbJustificationRepository;
-  private final IDSRTeamsRepository idsrTeamsRepository;
-  private final IDSRAccountsRepository dsrAccountRepository;
-  private final CBTargetRepository targetRepository;
-  private final CBOnboardingRepository cbOnboardingRepository;
-  private final CBBankingConvenantRepository cbBankingConvenantRepository;
-  private final CBConcessionRepository cbConcessionRepository;
-  private final CBCCampaignRepository cbcCampaignRepository;
-  private final CBBankingFeedBackRepository cbBankingFeedBackRepository;
-  private final CBCustomerVisitRepository cbCustomerVisitRepository;
-  private final CBQuestionnaireQuestionRepository cbQuestionnaireQuestionRepository;
+    private final ICBLeadsRepository cbLeadsRepository;
+    private final QuestionTypeRepository questionTypeRepository;
+    private final QuestionnareQuestionRepository questionnareQuestionRepository;
+    private final QuestionnaireResponseRepository questionnaireResponseRepository;
+    private final CBRevenueLineRepository cbRevenueLineRepository;
+    private final CBOpportunitiesRepository cbOpportunitiesRepository;
+    private final CBJustificationRepository cbJustificationRepository;
+    private final IDSRTeamsRepository idsrTeamsRepository;
+    private final IDSRAccountsRepository dsrAccountRepository;
+    private final CBTargetRepository targetRepository;
+    private final CBOnboardingRepository cbOnboardingRepository;
+    private final CBBankingConvenantRepository cbBankingConvenantRepository;
+    private final CBConcessionRepository cbConcessionRepository;
+    private final CBCCampaignRepository cbcCampaignRepository;
+    private final CBBankingFeedBackRepository cbBankingFeedBackRepository;
+    private final CBCustomerVisitRepository cbCustomerVisitRepository;
+    private final CBQuestionnaireQuestionRepository cbQuestionnaireQuestionRepository;
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Override
     public boolean assignLead(CBAssignLeadRequest model) {
@@ -89,7 +92,7 @@ public class CBPortalService implements ICBPortalService {
                 node.put("topic", cbLeadEntity.getTopic());
                 node.put("priority", cbLeadEntity.getPriority().ordinal());
                 node.put("dsrId", cbLeadEntity.getDsrId());
-                node.put("createdOn",cbLeadEntity.getCreatedOn().getTime());
+                node.put("createdOn", cbLeadEntity.getCreatedOn().getTime());
                 //add to list
                 list.add(node);
             }
@@ -167,10 +170,7 @@ public class CBPortalService implements ICBPortalService {
             if (model == null) {
                 return false;
             }
-            CBCustomerVisitEntity cbCustomerVisitEntity = cbCustomerVisitRepository.findById(model.getId()).orElse(null);
-            if (model == null) {
-                return false;
-            }
+            CBCustomerVisitEntity cbCustomerVisitEntity = cbCustomerVisitRepository.findById(model.getVisitId()).orElse(null);
             cbCustomerVisitEntity.setVisitDate(model.getNextVisitDate());
             cbCustomerVisitRepository.save(cbCustomerVisitEntity);
             return true;
@@ -189,7 +189,7 @@ public class CBPortalService implements ICBPortalService {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", cbCustomerVisitEntity.getId());
                 objectNode.put("customerName", cbCustomerVisitEntity.getCustomerName());
-                objectNode.put("visitDate", cbCustomerVisitEntity.getVisitDate().toString());
+                objectNode.put("visitDate", cbCustomerVisitEntity.getVisitDate());
                 objectNode.put("reasonForVisit", cbCustomerVisitEntity.getReasonForVisit());
                 objectNode.put("dsrName", cbCustomerVisitEntity.getDsrName());
                 objectNode.put("status", cbCustomerVisitEntity.getStatus().toString());
@@ -277,10 +277,10 @@ public class CBPortalService implements ICBPortalService {
                 node.put("id", cbCampaignsEntity.getId());
                 node.put("campaignName", cbCampaignsEntity.getCampaignName());
                 node.put("campaignDesc", cbCampaignsEntity.getCampaignDesc());
-                node.put("campainType", cbCampaignsEntity.getCampainType().ordinal());
-                node.put("startDate", cbCampaignsEntity.getStartDate().toString());
-                node.put("endDate", cbCampaignsEntity.getEndDate().toString());
-                node.put("status", cbCampaignsEntity.getStatus().ordinal());
+                node.put("campainType", cbCampaignsEntity.getCampainType().toString());
+                node.put("startDate", cbCampaignsEntity.getStartDate());
+                node.put("endDate", cbCampaignsEntity.getEndDate());
+                node.put("status", cbCampaignsEntity.getStatus().toString());
                 node.put("createdOn", cbCampaignsEntity.getCreatedOn().getTime());
                 //add to list
                 list.add(node);
@@ -293,8 +293,6 @@ public class CBPortalService implements ICBPortalService {
     }
 
 
-
-
     @Override
     public List<ObjectNode> getAllConcessions() {
         try {
@@ -302,16 +300,23 @@ public class CBPortalService implements ICBPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (CBConcessionEntity cbConcessionEntity : cbConcessionRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
-                node.put("id", cbConcessionEntity.getId());
-                node.put("customerName", cbConcessionEntity.getCustomerName());
-                node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().ordinal());
-                node.put("justification", cbConcessionEntity.getJustification());
-                node.put("revenueLine", cbConcessionEntity.getRevenue());
-                node.put("createdOn", cbConcessionEntity.getCreatedOn().toString());
-                //add to list
+                node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().toString());
+                node.put("createdOn", cbConcessionEntity.getCreatedOn().getTime());
+
+                List<CBRevenueLineEntity> cbRevenueLineEntityList = cbConcessionEntity.getCbRevenueLineEntityList();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                for (CBRevenueLineEntity cbRevenueLineEntity : cbRevenueLineEntityList) {
+                    ObjectNode node1 = mapper.createObjectNode();
+                    node1.put("foregoneRevenue", cbRevenueLineEntity.getForgoneRevenue());
+                    node1.put("revenueLineType", cbRevenueLineEntity.getRevenueLineType().toString());
+                    arrayNode.add(node1);
+                }
+                node.put("revenueLines", arrayNode);
                 list.add(node);
+
             }
             return list;
+
         } catch (Exception e) {
             log.error("Error occurred while loading concessions", e);
         }
@@ -333,9 +338,31 @@ public class CBPortalService implements ICBPortalService {
             cbBankingConvenantEntity.setDsrId(model.getDsrId());
             cbBankingConvenantEntity.setAlertBeforeExpiry(model.getAlertBeforeExpiry());
 
+            cbBankingConvenantEntity.setStartDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            cbBankingConvenantEntity.setStatus(ConcessionTrackingStatus.GREEN);
+
             cbBankingConvenantEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save
             cbBankingConvenantRepository.save(cbBankingConvenantEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error adding tracked covenant", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setTrackedCovenantStatus(CBAddConvenantRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            cbBankingConvenantRepository.findById(model.getId()).ifPresent(covenant -> {
+                        covenant.setStatus(model.getStatus());
+                        //save
+                        cbBankingConvenantRepository.save(covenant);
+                    }
+            );
             return true;
         } catch (Exception e) {
             log.error("Error adding tracked covenant", e);
@@ -349,7 +376,9 @@ public class CBPortalService implements ICBPortalService {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             for (CBBankingConvenantEntity cbBankingConvenantEntity : cbBankingConvenantRepository.findAll()) {
+
                 ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbBankingConvenantEntity.getId());
                 objectNode.put("customerId", cbBankingConvenantEntity.getCustomerId());
                 ObjectNode period = mapper.createObjectNode();
                 period.put("startDate", cbBankingConvenantEntity.getStartDate());
@@ -465,7 +494,8 @@ public class CBPortalService implements ICBPortalService {
             CBTargetEntity target = targetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
-            } if (target.getTargetType().equals(TargetType.LEADS)) {
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
@@ -475,7 +505,7 @@ public class CBPortalService implements ICBPortalService {
                 user.setOnboardTargetValue(model.getTargetValue());
             }
 
-            Set<CBTargetEntity> cbTargetEntities = (Set<CBTargetEntity>) user.getCbTargetEntities();
+            Set<CBTargetEntity> cbTargetEntities = user.getCbTargetEntities();
             cbTargetEntities.add(target);
             user.setCbTargetEntities(cbTargetEntities);
             dsrAccountRepository.save(user);
@@ -505,11 +535,11 @@ public class CBPortalService implements ICBPortalService {
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 teamEntity.setVisitsTargetValue(model.getTargetValue());
             }
-            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 teamEntity.setOnboardTargetValue(model.getTargetValue());
             }
 
-            Set<CBTargetEntity> cbTargetEntities = (Set<CBTargetEntity>) teamEntity.getCbTargetEntities();
+            Set<CBTargetEntity> cbTargetEntities = teamEntity.getCbTargetEntities();
             cbTargetEntities.add(target);
             teamEntity.setCbTargetEntities(cbTargetEntities);
             idsrTeamsRepository.save(teamEntity);
@@ -524,8 +554,8 @@ public class CBPortalService implements ICBPortalService {
     @Override
     public Object getTargetById(VoomaTargetByIdRequest model) {
         try {
-            if (model==null){
-                return  false;
+            if (model == null) {
+                return false;
             }
             CBTargetEntity cbTargetEntity = targetRepository.findById(model.getId()).orElse(null);
             return cbTargetEntity;
@@ -535,46 +565,6 @@ public class CBPortalService implements ICBPortalService {
 
         return false;
     }
-
-    @Override
-    public boolean addConcession(CBConcessionRequest model) {
-        try {
-            if (model == null) {
-                return false;
-            }
-            //create concession
-            CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
-            cbConcessionEntity.setCustomerName(model.getCustomerName());
-            cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
-            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
-            //add List of Reveanue Lines to Concession
-            List<CBRevenueLineEntity> cbRevenueLineEntities = new ArrayList<>();
-            CBRevenueLineEntity cbRevenueLineEntity1 = new CBRevenueLineEntity();
-            //get concessionId
-            cbRevenueLineEntity1.setConcessionId(cbConcessionEntity.getId());
-            cbRevenueLineEntity1.setDuration(model.getCbRevenueLineRequests().getDuration());
-            cbRevenueLineEntity1.setForgoneRevenue(model.getCbRevenueLineRequests().getForgoneRevenue());
-            cbRevenueLineEntity1.setRecommendedRate(model.getCbRevenueLineRequests().getRecommendedRate());
-            cbRevenueLineEntity1.setRevenueLineType(model.getCbRevenueLineRequests().getRevenueLineType());
-            cbRevenueLineEntity1.setSSRrate(model.getCbRevenueLineRequests().getSsrcRate());
-            cbRevenueLineRepository.save(cbRevenueLineEntity1);
-            // add List of Justifications to Concession
-            List<CBJustificationEntity> cbJustificationEntities = new ArrayList<>();
-            CBJustificationEntity cbJustificationEntity1 = new CBJustificationEntity();
-            //get the concessionId
-            cbJustificationEntity1.setConcessionId(cbConcessionEntity.getId());
-            cbJustificationEntity1.setStakeholder(model.getCbJustificationRequests().getStakeholder());
-            cbJustificationEntity1.setMonitoringMechanism(model.getCbJustificationRequests().getMonitoringMechanism());
-            cbJustificationEntity1.setJustification(model.getCbJustificationRequests().getJustification());
-            cbJustificationRepository.save(cbJustificationEntity1);
-            return true;
-            //add
-            } catch (Exception ex) {
-            log.error("Error occurred while adding concession", ex);
-        }
-        return false;
-    }
-
 
 
     @Override
@@ -587,6 +577,7 @@ public class CBPortalService implements ICBPortalService {
             cbOpportunityEntity.setCustomerName(model.getCustomerName());
             cbOpportunityEntity.setProduct(model.getProduct());
             cbOpportunityEntity.setStage(model.getStage());
+            cbOpportunityEntity.setValue(model.getValue());
             cbOpportunityEntity.setProbability(model.getProbability());
             cbOpportunityEntity.setStatus(OpportunityStatus.OPEN);
             cbOpportunityEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
@@ -610,7 +601,7 @@ public class CBPortalService implements ICBPortalService {
                 objectNode.put("id", cbOpportunitiesEntity.getId());
                 objectNode.put("customerName", cbOpportunitiesEntity.getCustomerName());
                 objectNode.put("product", cbOpportunitiesEntity.getProduct());
-                objectNode.put("value",cbOpportunitiesEntity.getValue());
+                objectNode.put("value", cbOpportunitiesEntity.getValue());
                 objectNode.put("stage", cbOpportunitiesEntity.getStage().ordinal());
                 objectNode.put("probability", cbOpportunitiesEntity.getProbability());
                 objectNode.put("status", cbOpportunitiesEntity.getStatus().ordinal());
@@ -641,7 +632,7 @@ public class CBPortalService implements ICBPortalService {
     @Override
     public boolean createQuestionnareType(QuestionTypeRequest model) {
         try {
-            if(model == null){
+            if (model == null) {
                 return false;
             }
             QuestionType cbQuestionTypeEntity = new QuestionType();
@@ -724,6 +715,63 @@ public class CBPortalService implements ICBPortalService {
             }
         } catch (Exception e) {
             log.error("Error occurred while adding question response", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addConcession(CBConcessionRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBConcessionEntity cbConcessionEntity = new CBConcessionEntity();
+            cbConcessionEntity.setCustomerName(model.getCustomerName());
+            cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
+            cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
+            cbConcessionEntity.setConcessionStatus(ConcessionStatus.PENDING);
+            cbConcessionRepository.save(cbConcessionEntity);
+            List<CBRevenueLineRequest> revenueLineRequestList = model.getCbRevenueLineRequests();
+            for (CBRevenueLineRequest revenueLineRequest : revenueLineRequestList) {
+                CBRevenueLineEntity cbRevenueLineEntity = new CBRevenueLineEntity();
+                cbRevenueLineEntity.setSSRrate(revenueLineRequest.getSsrcRate());
+                cbRevenueLineEntity.setRecommendedRate(revenueLineRequest.getRecommendedRate());
+                cbRevenueLineEntity.setRevenueLineType(revenueLineRequest.getRevenueLineType());
+                cbRevenueLineEntity.setBaseAmount(revenueLineRequest.getBaseAmount());
+                cbRevenueLineEntity.setDuration(revenueLineRequest.getDuration());
+                cbRevenueLineEntity.setCbConcessionEntity(cbConcessionEntity);//
+                cbRevenueLineRepository.save(cbRevenueLineEntity);
+            }
+            List<CBJustificationRequest> justificationRequestList = model.getCbJustificationRequests();
+            for (CBJustificationRequest justificationRequest : justificationRequestList) {
+                CBJustificationEntity cbJustificationEntity = new CBJustificationEntity();
+                cbJustificationEntity.setJustification(justificationRequest.getJustification());
+                cbJustificationEntity.setMonitoringMechanism(justificationRequest.getMonitoringMechanism());
+                cbJustificationEntity.setStakeholder(justificationRequest.getStakeholder());
+                cbJustificationEntity.setCbConcessionEntity(cbConcessionEntity);
+                cbJustificationRepository.save(cbJustificationEntity);
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while adding concession", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateOpportunity(CBUpdateOpportunity model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBOpportunitiesEntity cbOpportunitiesEntity = cbOpportunitiesRepository.findById(model.getOpportunityId()).orElse(null);
+            cbOpportunitiesEntity.setProbability(model.getProbability());
+            cbOpportunitiesEntity.setStage(model.getStage());
+            cbOpportunitiesRepository.save(cbOpportunitiesEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while updating opportunity", e);
         }
         return false;
     }

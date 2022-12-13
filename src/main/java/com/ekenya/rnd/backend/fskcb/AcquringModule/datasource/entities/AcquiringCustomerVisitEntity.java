@@ -38,6 +38,20 @@ public class AcquiringCustomerVisitEntity {
     private Date createdOn;
     private Date updatedOn;
     private boolean isCompleted=false;
+    private String visitType;
+    private String attendance;
+    private String entityBrief;
+    private String longitude;
+    private String latitude;
+
+    ///Fields in Call report in Acquiring -visitType,
+    // attendance,
+    // entityBrief,
+    // objective,
+    // highlights,
+    // actionPoints,
+    // latitude,
+    // longitude
 
 
 }

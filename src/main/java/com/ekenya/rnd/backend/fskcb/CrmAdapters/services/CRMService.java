@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 @Service
 public class CRMService implements ICRMService {
 
+    private static final String GET_CUSTOMER_DETAILS_BY_ACCOUNT_NO = "http://keprecrmappde02:8081/api/Values?entity=accountsbyaccno&paramval=";
+
     @Resource
     public Environment environment;
 
@@ -394,10 +396,10 @@ public class CRMService implements ICRMService {
 
     @Override
     public JsonObject getCustomerDetails(long accountNo) {
-        String token = "Bearer "+ generateOauth2Token();
+//        String token = "Bearer "+ generateOauth2Token();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization",token);
-        String url= "https://eclecticsdemo.crm4.dynamics.com/api/data/v9.1/accounts?$filter=new_nmb_account_number eq "+accountNo;
+//        headers.set("Authorization",token);
+        String url =GET_CUSTOMER_DETAILS_BY_ACCOUNT_NO+accountNo;
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -420,5 +422,8 @@ public class CRMService implements ICRMService {
 
         return null;
     }
+
+
+
 }
 

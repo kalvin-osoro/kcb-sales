@@ -31,7 +31,6 @@ public class CBConcessionsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message", "Concession added successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -65,6 +64,24 @@ public class CBConcessionsVC {
     @PostMapping("/cb-add-tracked-covenant")
     public ResponseEntity<?> addTrackedCovenant(@RequestBody CBAddConvenantRequest model) {
         boolean success = cbService.addTrackedCovenant(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/cb-change-tracked-covenant-status")
+    public ResponseEntity<?> changeTrackedCovenantStatus(@RequestBody CBAddConvenantRequest model) {
+        boolean success = cbService.setTrackedCovenantStatus(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

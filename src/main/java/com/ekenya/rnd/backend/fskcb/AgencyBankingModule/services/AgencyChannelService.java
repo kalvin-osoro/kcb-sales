@@ -8,6 +8,7 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaA
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
+import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -363,6 +364,7 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyBankingVisitEntity.setCustomerInflow(agencyCustomerVisitsRequest.getCustomerInflow());
             agencyBankingVisitEntity.setAgentTrxInForeignCur(agencyCustomerVisitsRequest.getAgentTrxInForeignCur());
             agencyBankingVisitEntity.setComments(agencyCustomerVisitsRequest.getComments());
+            agencyBankingVisitEntity.setStatus(Status.ACTIVE);
             agencyBankingVisitEntity.setHasMaterials(agencyCustomerVisitsRequest.getHasMaterials());
             agencyBankingVisitEntity.setAssetNumber(agencyCustomerVisitsRequest.getAssetNumber());
             agencyBankingVisitEntity.setAssetCondition(agencyCustomerVisitsRequest.getAssetCondition());

@@ -13,4 +13,5 @@ public interface IFileStorageService {
 //    List<String>multipleFilesWithDifferentParams(MultipartFile file1, MultipartFile file2, MultipartFile file3);
     String saveFileWithSpecificFileName(String fileName, MultipartFile file);
     List<String>saveMultipleFileWithSpecificFileName(String module, MultipartFile[] files);
+    String saveFileWithSpecificFileNameV(String fileName, MultipartFile file,String folderName);
 }

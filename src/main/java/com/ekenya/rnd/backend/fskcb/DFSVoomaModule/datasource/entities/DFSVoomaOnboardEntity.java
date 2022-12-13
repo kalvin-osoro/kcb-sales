@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,6 +40,7 @@ public class DFSVoomaOnboardEntity {
     private String merchantPbox;
     private String merchantPostalCode;
     private Long dsrId;
+    private String dsrName;
     private Date createdOn;
     private Boolean isApproved=false;
     private String remarks;
@@ -73,4 +75,6 @@ public class DFSVoomaOnboardEntity {
     private String nearbyLandMark;
     @Enumerated(EnumType.STRING)
     private OnboardingStatus status;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<DFSVoomaOnboardingKYCentity> kycEntities;
 }

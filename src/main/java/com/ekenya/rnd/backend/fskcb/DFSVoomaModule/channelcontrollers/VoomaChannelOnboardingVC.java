@@ -31,12 +31,13 @@ public class  VoomaChannelOnboardingVC {
         Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
         boolean success = merchantObj != null;
 
+        System.out.println(merchantObj);
+
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message","Merchant Onboarded Successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -65,8 +66,6 @@ public class  VoomaChannelOnboardingVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message","Agent Onboarded Successfully");
-//          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
@@ -95,6 +94,58 @@ public class  VoomaChannelOnboardingVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/vooma-onboard-merchantV1")
+    public ResponseEntity<?> onboardNewMerchantv1(@RequestParam("merchDetails") String merchDetails,
+                                                @RequestParam("frontID") MultipartFile frontID,
+                                                @RequestParam("backID") MultipartFile backID,
+                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
+                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
+                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+        Object merchantObj=voomaChannelService.onboardNewMerchantV1(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
+        boolean success = merchantObj != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/vooma-onboard-agentV1")
+    public ResponseEntity<?> onboardNewAgentV1(@RequestParam("agentDetails") String agentDetails,
+                                             @RequestParam("frontID") MultipartFile frontID,
+                                             @RequestParam("backID") MultipartFile backID,
+                                             @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+                                             @RequestParam("businessCertificateOfRegistration") MultipartFile businessCertificateOfRegistration,
+                                             @RequestParam("shopPhoto") MultipartFile shopPhoto,
+                                             @RequestParam("signatureDoc") MultipartFile[] signatureDoc,
+                                             @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+        Object agentObj=voomaChannelService.onboardNewAgentV1(agentDetails,frontID,backID,kraPinCertificate,businessCertificateOfRegistration,
+                shopPhoto,signatureDoc,businessPermitDoc);
+        boolean success = agentObj != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 

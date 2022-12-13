@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +23,10 @@ public class AcquiringPrincipalInfoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nameOfDirectorOrPrincipalOrPartner;
-    @ManyToOne
-    private AcquiringOnboardEntity acquiringOnboardEntity;
+
     private String directorOrPrincipalOrPartnerPhoneNumber;
     private String directorOrPrincipalOrPartnerEmail;
+    @ManyToOne
+    @JoinColumn(name = "acquiringOnboardId")
+    private AcquiringOnboardEntity acquiringOnboardEntity;
 }

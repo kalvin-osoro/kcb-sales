@@ -57,4 +57,5 @@ public interface ICRMService {
 
     ArrayNode loadForexCounterRates(NegotionRateRequest model);
     JsonObject getCustomerDetails(long accountNo);
+
 }

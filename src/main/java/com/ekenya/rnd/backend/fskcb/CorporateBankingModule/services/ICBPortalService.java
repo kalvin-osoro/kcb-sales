@@ -40,6 +40,8 @@ public interface ICBPortalService {
 
     boolean addTrackedCovenant(CBAddConvenantRequest model);
 
+    boolean setTrackedCovenantStatus(CBAddConvenantRequest model);
+
     List<ObjectNode> getAllTrackedCovenants();
 
     List<ObjectNode> getOnboardingSummary();
@@ -53,9 +55,7 @@ public interface ICBPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
-
-    boolean addConcession(CBConcessionRequest model);
-
+    
     boolean addOpportunity(CBAddOpportunityRequest model);
 
     List<ObjectNode> getAllOpportunities( );
@@ -69,4 +69,8 @@ public interface ICBPortalService {
     boolean addQuestionnareQuestions(UQuestionnaireQuestionRequest model);
 
     boolean addQuestionnareResponse(QuestionResponseRequest model);
+
+    boolean addConcession(CBConcessionRequest model);
+
+    boolean updateOpportunity(CBUpdateOpportunity model);
 }

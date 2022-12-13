@@ -22,6 +22,7 @@ public class AgencyBankingVisitFileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "visitId")
     private AgencyBankingVisitEntity agencyBankingVisitEntity;
     private String filePath;
 }

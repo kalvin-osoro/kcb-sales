@@ -29,7 +29,7 @@ public class TreasuryForexVC {
         if (success) {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+            node.addAll((List) list);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
@@ -71,7 +71,7 @@ public class TreasuryForexVC {
         ObjectMapper objectMapper = new ObjectMapper();
         if (success) {
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+            node.addAll((List) list);
             //Object
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));

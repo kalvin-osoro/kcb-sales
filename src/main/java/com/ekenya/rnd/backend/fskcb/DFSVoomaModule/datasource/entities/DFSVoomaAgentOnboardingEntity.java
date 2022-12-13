@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -39,12 +40,15 @@ public class DFSVoomaAgentOnboardingEntity {
     private Integer VATNumber;
 //    //physical address
     private String postalAddress;
+    private boolean isApproved=false;
+    private String remarks;
     private String postalCode;
-    @Column(name = "cityORtown")
     private String town;
     private String nearestLandmark;
     private String staffId;
     private String latitude;
     private String longitude;
+    @Enumerated(EnumType.STRING)
+    private OnboardingStatus status;
 
 }

@@ -6,8 +6,12 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaT
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface DFSVoomaLeadRepository extends JpaRepository<DFSVoomaLeadEntity, Long> {
     @Query("SELECT l FROM DFSVoomaLeadEntity l WHERE l.dsrId = ?1")
     DFSVoomaLeadEntity[] findAllByDsrId(Long dsrId);
+
+    List<DFSVoomaLeadEntity> findByDsrIdAndAssigned(Long dsrId, boolean b);
 
 }

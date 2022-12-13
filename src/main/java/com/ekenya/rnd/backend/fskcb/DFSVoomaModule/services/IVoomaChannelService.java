@@ -40,7 +40,7 @@ public interface IVoomaChannelService {
 
     boolean assignAssetToAgent(VoomaAssignAssetRequest model);
 
-    List<ObjectNode> getAllAgentMerchantAssets(Long merchantId);
+    List<ObjectNode> getAllAgentMerchantAssets(CustomerAssetsRequest model);
 
     boolean recollectAsset(VoomaCollectAssetRequest model);
 
@@ -51,4 +51,21 @@ public interface IVoomaChannelService {
     List<ObjectNode> getAllCustomerVisitsByDSR(VoomaCustomerVisitsRequest model);
 
 
+    Object getSummary(DSRSummaryRequest model);
+
+    Object onboardNewMerchantV1(String merchDetails,
+                                MultipartFile frontID,
+                                MultipartFile backID,
+                                MultipartFile kraPinCertificate,
+                                MultipartFile shopPhoto,
+                                MultipartFile signatureDoc,
+                                MultipartFile businessPermitDoc);
+
+    Object onboardNewAgentV1(String agentDetails,
+                             MultipartFile frontID,
+                             MultipartFile backID,
+                             MultipartFile kraPinCertificate,
+                             MultipartFile businessCertificateOfRegistration,
+                             MultipartFile shopPhoto, MultipartFile[] signatureDoc,
+                             MultipartFile businessPermitDoc);
 }

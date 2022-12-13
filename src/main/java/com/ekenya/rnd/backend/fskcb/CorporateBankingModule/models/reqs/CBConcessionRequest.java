@@ -16,9 +16,8 @@ import java.util.List;
 public class CBConcessionRequest {
     private String customerName;
 //    private String referenceNumber;
-    private CBJustificationRequest cbJustificationRequests;
-    private CBRevenueLineRequest cbRevenueLineRequests;
+    private List<CBJustificationRequest> cbJustificationRequests;
+    private List<CBRevenueLineRequest> cbRevenueLineRequests;
     private String submissionDate;
     private String submittedBy;
-    private ConcessionStatus concessionStatus;
 }

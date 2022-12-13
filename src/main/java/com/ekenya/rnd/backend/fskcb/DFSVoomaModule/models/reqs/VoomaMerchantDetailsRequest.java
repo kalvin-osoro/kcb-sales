@@ -10,5 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoomaMerchantDetailsRequest {
-    private Long id;
+    private Long merchantId;
 }

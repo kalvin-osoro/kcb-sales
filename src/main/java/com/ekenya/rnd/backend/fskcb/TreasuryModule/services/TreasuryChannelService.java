@@ -68,7 +68,7 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("customerName", treasuryLeadEntity.getCustomerName());
 //                node.put("customerID", treasuryLeadEntity.getCustomerId());
-                node.put("priority", treasuryLeadEntity.getPriority().ordinal());
+                node.put("priority", treasuryLeadEntity.getPriority().toString());
                 node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
                 node.put("leadId", treasuryLeadEntity.getId());
                 node.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
@@ -299,7 +299,7 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("customerName", treasuryLeadEntity.getCustomerName());
 //                node.put("customerID", treasuryLeadEntity.getCustomerId());
-                node.put("priority", treasuryLeadEntity.getPriority().ordinal());
+                node.put("priority", treasuryLeadEntity.getPriority().toString());
                 node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
                 node.put("leadId", treasuryLeadEntity.getId());
                 list.add(node);
@@ -319,12 +319,8 @@ public class TreasuryChannelService implements ITreasuryChannelService {
                 return false;
             }
             TreasuryLeadEntity treasuryLeadEntity = treasuryLeadRepository.findById(model.getLeadId()).orElse(null);
-            if (treasuryLeadEntity==null){
-                return false;
-            }
             treasuryLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
             treasuryLeadEntity.setLeadStatus(model.getLeadStatus());
-            //save
             treasuryLeadRepository.save(treasuryLeadEntity);
             return true;
         } catch (Exception e) {

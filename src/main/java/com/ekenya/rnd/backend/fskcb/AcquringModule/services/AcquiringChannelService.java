@@ -5,10 +5,18 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBRevenueLineEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBRevenueLineRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -26,6 +35,8 @@ import java.util.List;
 public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
+    private final AcquiringPrincipalRepository acquiringPrincipalRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
     private final CustomerFeedBackRepository customerFeedBackRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private final FileStorageService fileStorageService;
@@ -313,8 +324,11 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringCustomerVisitsEntity.setReasonForVisit(model.getReasonForVisit());
             acquiringCustomerVisitsEntity.setActionPlan(model.getActionPlan());
             acquiringCustomerVisitsEntity.setHighlights(model.getHighlights());
-//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            String username = userDetails.getUsername();
+            acquiringCustomerVisitsEntity.setVisitType(model.getVisitType());
+            acquiringCustomerVisitsEntity.setEntityBrief(model.getEntityBrief());
+            acquiringCustomerVisitsEntity.setLatitude(model.getLatitude());
+            acquiringCustomerVisitsEntity.setLongitude(model.getLongitude());
+            acquiringCustomerVisitsEntity.setAttendance(model.getAttendance());
             acquiringCustomerVisitsEntity.setDsrName("test");
             acquiringCustomerVisitsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save customer visit
@@ -415,42 +429,52 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringOnboardEntity.setOutletContactPerson(acquiringOnboardRequest.getOutletContactPerson());
             acquiringOnboardEntity.setOutletPhone(acquiringOnboardRequest.getOutletPhone());
             acquiringOnboardEntity.setNumberOfOutlet(acquiringOnboardRequest.getNumberOfOutlet());
+            acquiringOnboardEntity.setRegion(acquiringOnboardRequest.getRegion());
+            acquiringOnboardEntity.setLatitude(acquiringOnboardRequest.getLatitude());
+            acquiringOnboardEntity.setLongitude(acquiringOnboardRequest.getLongitude());
+            acquiringOnboardEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            acquiringOnboardEntity.setStatus(OnboardingStatus.PENDING);
             acquiringOnboardEntity.setTypeOfGoodAndServices(acquiringOnboardRequest.getTypeOfGoodAndServices());
-            //save acquiringOnboardEntity
-            AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
             acquiringOnboardEntity.setBankName(acquiringOnboardRequest.getBankName());
             acquiringOnboardEntity.setAccountName(acquiringOnboardRequest.getAccountName());
-            acquiringOnboardEntity.setAccountNumber(acquiringOnboardRequest.getAccountNumber());
+            acquiringOnboardEntity.setAccountNumberInKES(acquiringOnboardRequest.getAccountNumberInKES());
+            acquiringOnboardEntity.setAccountNumberInUSD(acquiringOnboardRequest.getAccountNumberInUSD());
             acquiringOnboardEntity.setBranchName(acquiringOnboardRequest.getBranchName());
             acquiringOnboardEntity.setFeesAndCommission(acquiringOnboardRequest.getFeesAndCommission());
-            List<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities = new ArrayList<>();
-            for (AcquiringPrincipalInfoEntity acquiringPrincipalInfoRequest : acquiringOnboardRequest.getAcquiringPrincipalInfoEntities()) {
+            AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
+            //
+            List<AcquiringPrincipalInfoRequest> acquiringPrincipalInfoRequestList =  acquiringOnboardRequest.getAcquiringPrincipalInfoRequests();
+            for (AcquiringPrincipalInfoRequest acquiringPrincipalInfoRequest : acquiringPrincipalInfoRequestList) {
                 AcquiringPrincipalInfoEntity acquiringPrincipalInfoEntity = new AcquiringPrincipalInfoEntity();
                 acquiringPrincipalInfoEntity.setNameOfDirectorOrPrincipalOrPartner(acquiringPrincipalInfoRequest.getNameOfDirectorOrPrincipalOrPartner());
                 acquiringPrincipalInfoEntity.setDirectorOrPrincipalOrPartnerPhoneNumber(acquiringPrincipalInfoRequest.getDirectorOrPrincipalOrPartnerPhoneNumber());
                 acquiringPrincipalInfoEntity.setDirectorOrPrincipalOrPartnerEmail(acquiringPrincipalInfoRequest.getDirectorOrPrincipalOrPartnerEmail());
-                //add to list
-                acquiringPrincipalInfoEntities.add(acquiringPrincipalInfoEntity);
+                acquiringPrincipalInfoEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);//
                 acquiringPrincipalInfoRepository.save(acquiringPrincipalInfoEntity);
-
+            }
+            //
+            List<AcquiringPrincipalRequest> acquiringPrincipalRequestList = acquiringOnboardRequest.getAcquiringPrincipalRequests();
+            for (AcquiringPrincipalRequest acquiringPrincipalRequest : acquiringPrincipalRequestList) {
+                AcquiringPrincipalEntity acquiringPrincipalEntity = new AcquiringPrincipalEntity();
+                acquiringPrincipalEntity.setName(acquiringPrincipalRequest.getPrincipalName());
+                acquiringPrincipalEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);
+                acquiringPrincipalRepository.save(acquiringPrincipalEntity);
             }
             //allow several signatures to be uploaded to uploadDir
-            for (MultipartFile file : signatureDoc) {
-                if (file.isEmpty()) {
-                    return "Please no signature uploaded";
-                }
-                String fileName = file.getOriginalFilename();
-                String filePath = FileStorageService.uploadDirectory + File.separator + fileName;
-                File dest = new File(filePath);
-                file.transferTo(dest);
-                AcquiringOnboardingKYCentity acquiringSignatureEntity = new AcquiringOnboardingKYCentity();
-                acquiringSignatureEntity.setFilePath(filePath);
-                acquiringSignatureEntity.setAcquiringOnboardEntity(acquiringOnboard);
-                acquiringOnboardingKYCRepository.save(acquiringSignatureEntity);
-                return true;
+            List<String> filePathList = new ArrayList<>();
+            //
+            //save files
 
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("SignatoriesSignatures_", signatureDoc);
+            //save file paths to db
+            filePathList.forEach(filePath -> {
+                AcquiringOnboardingKYCentity signatureFilesEntity = new AcquiringOnboardingKYCentity();
+                signatureFilesEntity.setAcquiringOnboardEntity(acquiringOnboard);
+                signatureFilesEntity.setFilePath(filePath);
+                acquiringOnboardingKYCRepository.save(signatureFilesEntity);
+            });
+            return true;
 
-            }
         } catch (Exception e) {
             log.error("Error occurred while onboarding new merchant", e);
         }
@@ -474,6 +498,44 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             log.error("Error occurred while creating customer feedback", e);
         }
         return false;
+    }
+
+    @Override
+    public ArrayNode getDSRSummary(DSRSummaryRequest model) {
+
+try {
+    if (model == null) {
+        return null;
+    }
+    //hard commission for now
+    ArrayNode arrayNode = new ObjectMapper().createArrayNode();
+    ObjectNode objectNode = new ObjectMapper().createObjectNode();
+    short commission=120;
+    short targetAchieved=300;
+    objectNode.put("commission", commission);
+    //get total number of dsr visits by dsr id
+    int totalVisits = acquiringCustomerVisitRepository.countTotalVisits(model.getDsrId());
+    objectNode.put("customer-visits", totalVisits);
+    //if null hard code visits for now
+    if (totalVisits == 0) {
+        objectNode.put("customer-visits", 100);
+    }
+    //get total number of dsr assigned leads by dsr id
+    int totalAssignedLeads = acquiringLeadsRepository.countTotalAssignedLeads(model.getDsrId());
+    objectNode.put("assigned-leads", totalAssignedLeads);
+    //if null hard code assigned leads for now
+    if (totalAssignedLeads == 0) {
+        objectNode.put("assigned-leads", 100);
+    }
+//    //get total number of dsr targets achieved by dsr id
+//hard code for now since we dont know metrics to messure target achieved
+    objectNode.put("targetAchieved",targetAchieved);
+    arrayNode.add(objectNode);
+    return arrayNode;
+} catch (Exception e) {
+    log.error("Error occurred while getting dsr summary", e);
+}
+        return null;
     }
 }
 

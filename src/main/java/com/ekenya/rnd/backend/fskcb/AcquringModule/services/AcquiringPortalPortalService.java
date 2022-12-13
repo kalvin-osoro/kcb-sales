@@ -447,11 +447,11 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
                 asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
-                asset.put("Region", acquiringOnboardEntity.getRegion());
+                asset.put("region", acquiringOnboardEntity.getRegion());
                 asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
                 asset.put("email", acquiringOnboardEntity.getBusinessEmail());
-                asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
-                asset.put("agent Id", acquiringOnboardEntity.getDsrId());
+                asset.put("status", acquiringOnboardEntity.getStatus().toString());
+                asset.put("agentId", acquiringOnboardEntity.getDsrId());
                 asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
                 list.add(asset);
             }
@@ -505,9 +505,17 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             asset.put("Region", acquiringOnboardEntity.getRegion());
             asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
             asset.put("email", acquiringOnboardEntity.getBusinessEmail());
-            asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
             asset.put("agent Id", acquiringOnboardEntity.getDsrId());
             asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
+            ObjectNode cordinates = mapper.createObjectNode();
+            cordinates.put("latitude", acquiringOnboardEntity.getLatitude());
+            cordinates.put("longitude", acquiringOnboardEntity.getLongitude());
+            asset.put("cordinates", cordinates);
+            ObjectNode businessDetails = mapper.createObjectNode();
+            businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
+            businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
+            asset.set("businessDetails", businessDetails);
             return asset;
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);
@@ -719,8 +727,10 @@ try {
                 objectNode.put("id", acquiringOnboardEntity.getId());
                 objectNode.put("merchantName", acquiringOnboardEntity.getClientLegalName());
                 objectNode.put("region", acquiringOnboardEntity.getRegion());
-                objectNode.put("status", acquiringOnboardEntity.getStatus().ordinal());
+                objectNode.put("status", acquiringOnboardEntity.getStatus().toString());
                 objectNode.put("dateOnborded", acquiringOnboardEntity.getCreatedOn().getTime());
+                objectNode.put("payBillNo",Utility.generateRandomNumber());
+                objectNode.put("tillNo",Utility.generateRandomNumber());
                 objectNode.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
                 objectNode.put("email", acquiringOnboardEntity.getBusinessEmail());
                 objectNode.put("dsrId", acquiringOnboardEntity.getDsrId());

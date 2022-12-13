@@ -29,7 +29,7 @@ public class Utility {
         return arrValidStatus.contains(status);
     }
     public static Date getPostgresCurrentTimeStampForInsert() throws Exception{
-Date date = new Date();
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = sdf.format(date);
         return sdf.parse(formattedDate);
@@ -135,5 +135,22 @@ return new Date();
             extension = originalFilename.substring(i+1);
         }
         return extension;
+    }
+
+    public static String getTodayDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat ("dd-MM-yyyy");
+        String date = formatter.format(new java.util.Date());
+        return date;
+    }
+
+    public static String getPreviousDate(int i) {
+        Date date = new Date();
+        long t = date.getTime();
+        Date previousDate = new Date(t - (i * 24 * 3600 * 1000));
+        return previousDate.toString();
+    }
+    public static String generateRandomNumber() {
+        String password = RandomStringUtils.random(6, false, true);
+        return password;
     }
 }

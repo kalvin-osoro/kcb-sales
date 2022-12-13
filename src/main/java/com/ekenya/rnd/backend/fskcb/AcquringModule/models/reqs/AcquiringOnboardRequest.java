@@ -10,12 +10,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AcquiringOnboardRequest {
     private String clientLegalName;
@@ -23,8 +23,8 @@ public class AcquiringOnboardRequest {
     private String region;
     private String businessPhoneNumber;
     private String businessEmail;
-    private OnboardingStatus status;
-    private Date createdOn;
+//    private OnboardingStatus status;
+//    private Date createdOn;
     private String latitude;
     private String longitude;
     private  String businessName;
@@ -37,11 +37,10 @@ public class AcquiringOnboardRequest {
     private String bankName;
     private String branchName;
     private String accountName;
-    private String accountNumber;
+    private String accountNumberInUSD;
+    private String accountNumberInKES;
     private String feesAndCommission;
+    private List<AcquiringPrincipalInfoRequest> acquiringPrincipalInfoRequests;
+    private List<AcquiringPrincipalRequest> acquiringPrincipalRequests;
 
-    private String nameOfDirectorOrPrincipalOrPartner;
-    private String directorOrPrincipalOrPartnerPhoneNumber;
-    private String directorOrPrincipalOrPartnerEmail;
-    private Set<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntities;
 }

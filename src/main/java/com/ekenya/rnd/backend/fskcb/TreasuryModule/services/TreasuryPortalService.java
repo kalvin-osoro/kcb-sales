@@ -57,9 +57,10 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 node.put("customerID", treasuryTradeRequestEntity.getCustomerID());
                 node.put("Amount", treasuryTradeRequestEntity.getAmount());
                 node.put("currency", treasuryTradeRequestEntity.getCurrency());
-                node.put("priority", treasuryTradeRequestEntity.getTreasuryPriority().ordinal());
+                node.put("priority", treasuryTradeRequestEntity.getTreasuryPriority().toString());
                 node.put("salesCode", treasuryTradeRequestEntity.getSalesCode());
                 node.put("status", treasuryTradeRequestEntity.getStatus().toString());
+                node.put("refCode",treasuryTradeRequestEntity.getRefCode());
                 node.put("dateBooked", treasuryTradeRequestEntity.getDateBooked());
 
                 list.add(node);
@@ -85,6 +86,7 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 node.put("currency", treasuryNegotiationRequestEntity.getCurrency());
                 node.put("priority", treasuryNegotiationRequestEntity.getPriority().toString());
                 node.put("salesCode", treasuryNegotiationRequestEntity.getSalesCode());
+                node.put("refCode",treasuryNegotiationRequestEntity.getRefCode());
                 node.put("status", treasuryNegotiationRequestEntity.getStatus().toString());
                 node.put("dateBooked", treasuryNegotiationRequestEntity.getDateBooked());
 

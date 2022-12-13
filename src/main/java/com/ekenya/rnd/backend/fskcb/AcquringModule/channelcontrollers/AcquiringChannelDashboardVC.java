@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisit
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.SearchKeyWordRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -21,7 +22,7 @@ public class AcquiringChannelDashboardVC {
    private IAcquiringChannelService acquiringService;
 
     @PostMapping("/acquiring-summary")
-    public ResponseEntity<?> getSummary() {
+    public ResponseEntity<?> getSummary(DSRSummaryRequest model) {
 
         //Resp =>
         //{
@@ -31,15 +32,15 @@ public class AcquiringChannelDashboardVC {
         //    "customer-visits":9 //Total assigned customer visits
         //}
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ArrayNode dsrSummary= acquiringService.getDSRSummary(model);
+        boolean success = dsrSummary!=null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            node.put("dsrSummary",dsrSummary);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

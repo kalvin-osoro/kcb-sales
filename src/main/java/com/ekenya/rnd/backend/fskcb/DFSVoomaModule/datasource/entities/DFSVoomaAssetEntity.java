@@ -36,7 +36,6 @@ public class DFSVoomaAssetEntity {
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
-    @Column(name = "asset_condition")
     private AssetCondition assetCondition=AssetCondition.WORKING;
     private Date lastServiceDate;
     private String deviceId;

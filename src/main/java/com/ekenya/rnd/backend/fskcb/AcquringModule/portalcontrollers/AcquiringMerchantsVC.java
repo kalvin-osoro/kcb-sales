@@ -28,6 +28,7 @@ public class AcquiringMerchantsVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.putPOJO("merchant",merchant);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
