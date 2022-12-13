@@ -25,4 +25,6 @@ public class LoginResponse {
     private ArrayNode profiles;
     private String name;
     private String salesCode;
+    private String teamName;
+    private String teamCode;
 }

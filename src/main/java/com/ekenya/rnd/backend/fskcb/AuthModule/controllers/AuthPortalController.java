@@ -42,6 +42,8 @@ public class AuthPortalController {
                 node.put("type",resp.getType());
                 node.put("name",resp.getName());
                 node.put("sales_code",resp.getSalesCode());
+                node.put("team_name",resp.getTeamName());
+                node.put("team_code",resp.getTeamCode());
                 node.put("issued",dateFormat.format(resp.getIssued()));
                 node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());

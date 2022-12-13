@@ -8,7 +8,9 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
@@ -68,6 +70,8 @@ public class AuthService implements IAuthService{
     @Autowired
     ProfilesAndUsersRepository profilesAndUsersRepository;
 
+    @Autowired
+    IDSRTeamsRepository dsrTeamsRepository;
     @Autowired
     private JwtTokenProvider tokenProvider;
     @Autowired
@@ -171,8 +175,13 @@ public class AuthService implements IAuthService{
             DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
             if(dsrAccount != null) {
                 response.setSalesCode(dsrAccount.getSalesCode());
+                DSRTeamEntity teamEntity = dsrTeamsRepository.getById(dsrAccount.getTeamId());
+                response.setTeamName(teamEntity.getName());
+                response.setTeamCode(teamEntity.getCode());
             }else{
                 response.setSalesCode("");
+                response.setTeamName("");
+                response.setTeamCode("");
             }
             //
             return response;
@@ -286,8 +295,13 @@ public class AuthService implements IAuthService{
             DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
             if(dsrAccount != null) {
                 response.setSalesCode(dsrAccount.getSalesCode());
+                DSRTeamEntity teamEntity = dsrTeamsRepository.getById(dsrAccount.getTeamId());
+                response.setTeamName(teamEntity.getName());
+                response.setTeamCode(teamEntity.getCode());
             }else{
                 response.setSalesCode("");
+                response.setTeamName("");
+                response.setTeamCode("");
             }
             //
             return response;
