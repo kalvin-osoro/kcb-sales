@@ -195,11 +195,11 @@ public class DbInitializer {
     private void createDefaultProfiles(){
 
         //Vooma
-        String DSR_VOOMA_PROFILE_NAME = "DSR Vooma";
+        String DSR_VOOMA_PROFILE_NAME = "DFS Vooma";
 
         if(!profilesRepository.findByName(DSR_VOOMA_PROFILE_NAME).isPresent()) {
 
-            String DSR_VOOMA_PROFILE_CODE = "dsrVooma";
+            String DSR_VOOMA_PROFILE_CODE = "dfsVooma";
             //
             UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(DSR_VOOMA_PROFILE_NAME);
@@ -220,11 +220,11 @@ public class DbInitializer {
         }
 
         //Agency
-        String DSR_AGENCY_PROFILE_NAME = "DSR AGENCY";
+        String DSR_AGENCY_PROFILE_NAME = "DFS AGENCY";
 
         if(!profilesRepository.findByName(DSR_AGENCY_PROFILE_NAME).isPresent()) {
 
-            String DSR_AGENCY_PROFILE_CODE = "dsrAgency";
+            String DSR_AGENCY_PROFILE_CODE = "dfsAgency";
             //
             UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(DSR_AGENCY_PROFILE_NAME);
@@ -248,11 +248,11 @@ public class DbInitializer {
         }
 
         //Acquiring
-        String DSR_ACQUIRING_PROFILE_NAME = "DSR ACQUIRING";
+        String DSR_ACQUIRING_PROFILE_NAME = "DFS ACQUIRING";
 
         if(!profilesRepository.findByName(DSR_ACQUIRING_PROFILE_NAME).isPresent()) {
 
-            String DSR_ACQUIRING_PROFILE_CODE = "dsrAcquiring";
+            String DSR_ACQUIRING_PROFILE_CODE = "dfsAcquiring";
             //
             UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(DSR_ACQUIRING_PROFILE_NAME);
@@ -348,16 +348,16 @@ public class DbInitializer {
         }
 
 
-        //Cooporate Banking
-        String COOPORATE_BANKING_PROFILE_NAME = "PREMIUM BANKING";
+        //Corporate Banking
+        String CORPORATE_BANKING_PROFILE_NAME = "CORPORATE BANKING";
         //
-        if(!profilesRepository.findByName(COOPORATE_BANKING_PROFILE_NAME).isPresent()) {
+        if(!profilesRepository.findByName(CORPORATE_BANKING_PROFILE_NAME).isPresent()) {
 
-            String COOPORATE_BANKING_PROFILE_CODE = "cooporateBanking";
+            String CORPORATE_BANKING_PROFILE_CODE = "corporateBanking";
             //
             UserProfileEntity userProfile = new UserProfileEntity();
-            userProfile.setName(COOPORATE_BANKING_PROFILE_NAME);
-            userProfile.setCode(COOPORATE_BANKING_PROFILE_CODE);
+            userProfile.setName(CORPORATE_BANKING_PROFILE_NAME);
+            userProfile.setCode(CORPORATE_BANKING_PROFILE_CODE);
 
             //
             profilesRepository.save(userProfile);
@@ -382,6 +382,31 @@ public class DbInitializer {
             UserProfileEntity userProfile = new UserProfileEntity();
             userProfile.setName(TREASURY_BANKING_PROFILE_NAME);
             userProfile.setCode(TREASURY_BANKING_PROFILE_CODE);
+
+            //
+            profilesRepository.save(userProfile);
+
+
+            //map to role
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
+            profileRole.setProfileId(userProfile.getId());
+            profileRole.setRoleId(userRole.getId());
+            //
+            profilesAndRolesRepository.save(profileRole);
+        }
+
+        //Treasury
+        String REVENUE_ASSURANCE_PROFILE_NAME = "REVENUE ASSURANCE";
+        //
+        if(!profilesRepository.findByName(REVENUE_ASSURANCE_PROFILE_NAME).isPresent()) {
+
+            String REVENUE_ASSURANCE_PROFILE_CODE = "revenueAssurance";
+            //
+            UserProfileEntity userProfile = new UserProfileEntity();
+            userProfile.setName(REVENUE_ASSURANCE_PROFILE_NAME);
+            userProfile.setCode(REVENUE_ASSURANCE_PROFILE_CODE);
 
             //
             profilesRepository.save(userProfile);

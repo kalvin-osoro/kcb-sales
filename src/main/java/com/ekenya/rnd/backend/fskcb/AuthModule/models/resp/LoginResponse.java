@@ -23,4 +23,8 @@ public class LoginResponse {
     private String errorMessage;
     private boolean expired = false;
     private ArrayNode profiles;
+    private String name;
+    private String salesCode;
+    private String teamName;
+    private String teamCode;
 }
