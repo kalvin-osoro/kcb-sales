@@ -429,8 +429,10 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringOnboardEntity.setOutletContactPerson(acquiringOnboardRequest.getOutletContactPerson());
             acquiringOnboardEntity.setOutletPhone(acquiringOnboardRequest.getOutletPhone());
             acquiringOnboardEntity.setNumberOfOutlet(acquiringOnboardRequest.getNumberOfOutlet());
+            acquiringOnboardEntity.setRegion(acquiringOnboardRequest.getRegion());
             acquiringOnboardEntity.setLatitude(acquiringOnboardRequest.getLatitude());
             acquiringOnboardEntity.setLongitude(acquiringOnboardRequest.getLongitude());
+            acquiringOnboardEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringOnboardEntity.setStatus(OnboardingStatus.PENDING);
             acquiringOnboardEntity.setTypeOfGoodAndServices(acquiringOnboardRequest.getTypeOfGoodAndServices());
             acquiringOnboardEntity.setBankName(acquiringOnboardRequest.getBankName());

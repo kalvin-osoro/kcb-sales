@@ -447,11 +447,11 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboardEntity.getId());
                 asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
-                asset.put("Region", acquiringOnboardEntity.getRegion());
+                asset.put("region", acquiringOnboardEntity.getRegion());
                 asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
                 asset.put("email", acquiringOnboardEntity.getBusinessEmail());
                 asset.put("status", acquiringOnboardEntity.getStatus().ordinal());
-                asset.put("agent Id", acquiringOnboardEntity.getDsrId());
+                asset.put("agentId", acquiringOnboardEntity.getDsrId());
                 asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
                 list.add(asset);
             }

@@ -275,7 +275,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 node.put("Region", agencyOnboardingEntity.getRegion());
                 node.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
                 node.put("email", agencyOnboardingEntity.getAgentEmail());
-                node.put("status", agencyOnboardingEntity.getStatus().ordinal());
+                node.put("status", agencyOnboardingEntity.getStatus().toString());
                 node.put("agent Id", agencyOnboardingEntity.getDsrId());
                 node.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
                 list.add(node);
