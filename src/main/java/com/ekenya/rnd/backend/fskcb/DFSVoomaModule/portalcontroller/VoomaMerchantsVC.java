@@ -2,11 +2,16 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaMerchantDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +20,8 @@ public class VoomaMerchantsVC {
 
     @Autowired
     IVoomaPortalService acquiringService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @PostMapping("/vooma-get-merchant-by-id")
     public ResponseEntity<?> getMerchantById(@RequestBody VoomaMerchantDetailsRequest model) {
@@ -82,4 +89,25 @@ public class VoomaMerchantsVC {
 //            return ResponseEntity.ok(new AppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
 //        }
 //    }
+
+    @GetMapping("fileupload/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+        System.out.println("filename "+filename);
+        Resource file = fileStorageService.load(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
+    @GetMapping("fileupload2/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
+        System.out.println("filename "+filename);
+        Resource file = fileStorageService.load(filename);
+        MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
+                .body(file);
+    }
 }

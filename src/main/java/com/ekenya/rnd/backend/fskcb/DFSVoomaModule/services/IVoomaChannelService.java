@@ -66,6 +66,6 @@ public interface IVoomaChannelService {
                              MultipartFile backID,
                              MultipartFile kraPinCertificate,
                              MultipartFile businessCertificateOfRegistration,
-                             MultipartFile shopPhoto, MultipartFile[] signatureDoc,
+                             MultipartFile shopPhoto, MultipartFile signatureDoc,
                              MultipartFile businessPermitDoc);
 }

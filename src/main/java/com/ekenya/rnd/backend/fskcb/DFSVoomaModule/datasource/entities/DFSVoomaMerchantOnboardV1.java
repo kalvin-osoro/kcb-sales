@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -50,6 +51,7 @@ public class DFSVoomaMerchantOnboardV1 {
     private String nearestLandmark;
     private String latitude;
     private String longitude;
+    private String dsrName;
     private boolean isApproved=false;
     @Enumerated(EnumType.STRING)
     private OnboardingStatus onboardingStatus;
@@ -58,6 +60,7 @@ public class DFSVoomaMerchantOnboardV1 {
     @Enumerated(EnumType.STRING)
     private SettlmentType settlmentType;
     private String remarks;
+    private Date createdOn;
     @OneToMany(mappedBy = "dfsVoomaMerchantOnboardV1")
     private List<DFSVoomaOwnerDetailsEntity> dfsVoomaOwnerDetailsEntities=new ArrayList<>();
     @OneToMany(mappedBy = "dfsVoomaMerchantOnboardV1")
