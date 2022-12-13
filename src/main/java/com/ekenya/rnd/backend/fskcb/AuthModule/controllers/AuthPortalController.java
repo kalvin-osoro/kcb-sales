@@ -40,6 +40,8 @@ public class AuthPortalController {
                 ObjectNode node = mObjectMapper.createObjectNode();
                 node.put("token",resp.getToken());
                 node.put("type",resp.getType());
+                node.put("name",resp.getName());
+                node.put("sales_code",resp.getSalesCode());
                 node.put("issued",dateFormat.format(resp.getIssued()));
                 node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());
