@@ -24,6 +24,7 @@ public class LoginResponse {
     private boolean expired = false;
     private ArrayNode profiles;
     private String name;
+    private String email;
     private String salesCode;
     private String teamName;
     private String teamCode;

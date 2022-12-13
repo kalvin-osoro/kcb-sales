@@ -41,6 +41,7 @@ public class AuthPortalController {
                 node.put("token",resp.getToken());
                 node.put("type",resp.getType());
                 node.put("name",resp.getName());
+                node.put("email",resp.getEmail());
                 node.put("sales_code",resp.getSalesCode());
                 node.put("team_name",resp.getTeamName());
                 node.put("team_code",resp.getTeamCode());
