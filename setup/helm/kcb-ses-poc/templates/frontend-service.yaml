@@ -28,6 +28,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    image.openshift.io/triggers: >-
+      [
+        {
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "{{ .Values.appName }}-frontend:latest"
+          },
+          "fieldPath": "spec.template.spec.containers[?(@.name==\"{{ .Values.appName }}-frontend\")].image",
+          "pause": "false"
+        }
+      ]
   name: "{{ .Values.appName }}-frontend"
   labels:
     app: "{{ .Values.appName }}-frontend"
@@ -44,8 +56,29 @@ spec:
     spec:
       containers:
         - name: "{{ .Values.appName }}-frontend"
-          image: arokcb.azurecr.io/eclectics/kcb-ses-poc-fe:v1.0.1
+          image: "{{ .Values.appName }}-frontend:latest"
+          env:
+            - name: BACKEND_API_URL
+              value: "{{ .Values.appName }}-backend"
+            - name: BACKEND_API_PORT
+              value: "8080" 
           ports:
             - containerPort: 8081
-      imagePullSecrets:
-        - name: kcb-ses-poc-reg-sec
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8081
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8081
+            initialDelaySeconds: 50 
+            periodSeconds: 5 
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8081
+            initialDelaySeconds: 50 
+            periodSeconds: 5

@@ -1,0 +1,44 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: "{{ .Values.appName }}"
+  name: "{{ .Values.appName }}-backend"
+spec:
+  lookupPolicy:
+    local: false
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "{{ .Values.appName }}-backend"
+spec:
+  failedBuildsHistoryLimit: 2
+  successfulBuildsHistoryLimit: 2
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "{{ .Values.appName }}-backend:latest"
+  runPolicy: "Serial"
+  source:
+    type: Git
+    git:
+      uri: "https://vs.ekenya.co.ke:1126/rnd/kcb-field-sales-poc/kcb-sales-effective-backend"
+      ref: development
+    contextDir: /
+    sourceSecret:
+      name: kcb-ses-poc-git-sec
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  triggers:
+    - type: Gitlab
+      gitlab:
+        secretReference:
+          name: kcb-ses-poc-be-gitlab-webhook-secret
+    - type: Generic
+      generic:
+        secretReference:
+          name: kcb-ses-poc-be-generic-webhook-secret
+    - type: ConfigChange
