@@ -11,6 +11,10 @@ spec:
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
+  annotations:
+    app.openshift.io/vcs-ref: development
+    app.openshift.io/vcs-uri: >-
+      https://vs.ekenya.co.ke:1126/rnd/kcb-field-sales-poc/kcb-sales-effective-backend
   name: "{{ .Values.appName }}-backend"
 spec:
   failedBuildsHistoryLimit: 2

@@ -11,6 +11,10 @@ spec:
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
+  annotations:
+    app.openshift.io/vcs-ref: kcb-dev
+    app.openshift.io/vcs-uri: >-
+      https://vs.ekenya.co.ke:1126/mbugua.michael/kcb-sales-effectiveness-tool-project/
   name: "{{ .Values.appName }}-frontend"
 spec:
   failedBuildsHistoryLimit: 2
