@@ -23,15 +23,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Slf4j
 @Service
 public class VoomaPortalService implements IVoomaPortalService {
     @Autowired
     private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+    @Autowired
+    private DFSVoomaOnboardingKYRepository dfsVoomaOnboardingKYRepository;
     @Autowired
     private DFSVoomaAgentOnboardV1Repository dfsVoomaAgentOnboardV1Repository;
     @Autowired
@@ -286,7 +288,10 @@ public class VoomaPortalService implements IVoomaPortalService {
     public Object getMerchantById(VoomaMerchantDetailsRequest model) {
         //get merchant by id
         try {
+
+
             DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity = dfsVoomaMerchantOnboardV1Repository.findById(model.getMerchantId()).get();
+            List<DFSVoomaOnboardingKYCentity> merchantKYCList =dfsVoomaOnboardEntity.getMerchantKYCList();
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode objectNode = mapper.createObjectNode();
             objectNode.put("id", dfsVoomaOnboardEntity.getId());
@@ -359,6 +364,19 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ownerOrDirector.add(owner);
             }
             objectNode.put("ownerDirector", ownerOrDirector);
+            //get kycfileslist
+            List<Map<String, Object>> fileNameList = new ArrayList<>();
+            Map<String, Object> fileMap = new HashMap<>();
+           for (int i = 0; i < merchantKYCList.size(); i++) {
+                fileMap.put(new File(
+                                merchantKYCList.get(i).getFilePath()).getName().split("_")[0],
+                        new File(merchantKYCList.get(i).getFilePath()).getName());
+                fileNameList.add(fileMap);
+
+            }
+            objectNode.put("kycFiles", String.valueOf(fileNameList));
+
+
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);
@@ -616,7 +634,7 @@ public class VoomaPortalService implements IVoomaPortalService {
         try {
 
             List<ObjectNode> list = new ArrayList<>();
-            List<DFSVoomaMerchantOnboardV1> dfsVoomaOnboardEntityList = dfsVoomaMerchantOnboardV1Repository.findAllByOnboardingStatus(OnboardingStatus.PENDING);
+            List<DFSVoomaMerchantOnboardV1> dfsVoomaOnboardEntityList = dfsVoomaMerchantOnboardV1Repository.findAll();
             for (DFSVoomaMerchantOnboardV1 entity : dfsVoomaOnboardEntityList) {
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode node = mapper.createObjectNode();

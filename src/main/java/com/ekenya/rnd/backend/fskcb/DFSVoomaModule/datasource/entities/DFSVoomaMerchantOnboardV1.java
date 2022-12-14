@@ -3,10 +3,7 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.MerchantType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SettlmentType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -66,4 +63,8 @@ public class DFSVoomaMerchantOnboardV1 {
     private List<DFSVoomaOwnerDetailsEntity> dfsVoomaOwnerDetailsEntities=new ArrayList<>();
     @OneToMany(mappedBy = "dfsVoomaMerchantOnboardV1")
     private List<DFSVoomaContactDetailsEntity>dfsVoomaContactDetailsEntities=new ArrayList<>();
+
+    @OneToMany(mappedBy = "dfsVoomaMerchantOnboardV1")
+    @ToString.Exclude
+    private List<DFSVoomaOnboardingKYCentity> merchantKYCList;
 }

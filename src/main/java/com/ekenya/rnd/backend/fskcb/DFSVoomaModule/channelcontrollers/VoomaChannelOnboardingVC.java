@@ -20,33 +20,33 @@ public class  VoomaChannelOnboardingVC {
     IVoomaChannelService voomaChannelService;
 
     //Channel request
-    @PostMapping("/vooma-onboard-merchant")
-    public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
-                                                @RequestParam("frontID") MultipartFile frontID,
-                                                @RequestParam("backID") MultipartFile backID,
-                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
-                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
-                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
-                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
-        Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
-        boolean success = merchantObj != null;
-
-        System.out.println(merchantObj);
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
+//    @PostMapping("/vooma-onboard-merchant")
+//    public ResponseEntity<?> onboardNewMerchant(@RequestParam("merchDetails") String merchDetails,
+//                                                @RequestParam("frontID") MultipartFile frontID,
+//                                                @RequestParam("backID") MultipartFile backID,
+//                                                @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
+//                                                @RequestParam("shopPhoto") MultipartFile shopPhoto,
+//                                                @RequestParam("signatureDoc") MultipartFile signatureDoc,
+//                                                @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
+//        Object merchantObj=voomaChannelService.onboardNewMerchant(merchDetails,frontID,backID,kraPinCertificate,shopPhoto,signatureDoc,businessPermitDoc);
+//        boolean success = merchantObj != null;
+//
+//        System.out.println(merchantObj);
+//
+//        //Response
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        if(success){
+//            //Object
+//            ObjectNode node = objectMapper.createObjectNode();
+////          node.put("id",0);
+//
+//            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+//        }else{
+//
+//            //Response
+//            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+//        }
+//    }
 
     @PostMapping("/vooma-onboard-agent")
     public ResponseEntity<?> onboardNewAgent(@RequestParam("agentDetails") String agentDetails,

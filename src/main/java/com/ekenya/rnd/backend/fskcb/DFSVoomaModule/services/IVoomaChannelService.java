@@ -19,13 +19,13 @@ public interface IVoomaChannelService {
 
     ArrayList<ObjectNode> getTargetsSummary();
 
-    Object onboardNewMerchant(String merchDetails,
-                              MultipartFile frontID,
-                              MultipartFile backID,
-                              MultipartFile kraPinCertificate,
-                              MultipartFile shopPhoto,
-                              MultipartFile signatureDoc,
-                              MultipartFile businessPermitDoc);
+//    Object onboardNewMerchant(String merchDetails,
+//                              MultipartFile frontID,
+//                              MultipartFile backID,
+//                              MultipartFile kraPinCertificate,
+//                              MultipartFile shopPhoto,
+//                              MultipartFile signatureDoc,
+//                              MultipartFile businessPermitDoc);
 
     Object onboardNewAgent(String agentDetails,
                            MultipartFile frontID,

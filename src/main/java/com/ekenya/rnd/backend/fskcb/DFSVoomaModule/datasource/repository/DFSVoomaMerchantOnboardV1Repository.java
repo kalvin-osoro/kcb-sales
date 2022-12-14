@@ -12,6 +12,6 @@ public interface DFSVoomaMerchantOnboardV1Repository extends JpaRepository<DFSVo
     @Query(value = "SELECT * FROM dbo_dfs_vooma_merchant_onboard WHERE isApproved = true", nativeQuery = true)
     Iterable<DFSVoomaMerchantOnboardV1> findAllByIsApproved();
 
-    List<DFSVoomaMerchantOnboardV1> findAllByOnboardingStatus(OnboardingStatus onboardingStatus);
+//    List<DFSVoomaMerchantOnboardV1> findAllByOnboardingStatus(OnboardingStatus onboardingStatus);
 
 }

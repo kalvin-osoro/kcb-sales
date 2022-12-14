@@ -247,6 +247,7 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyOnboardingEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save the onboarding request
             AgencyOnboardingEntity agentInfo = agencyOnboardingRepository.save(agencyOnboardingEntity);
+            if (agentInfo == null) throw new RuntimeException("Error occurred while saving agent info");
 
             //upload documents
             String folderName = "onboardingAgency";
@@ -270,6 +271,12 @@ public class AgencyChannelService implements IAgencyChannelService {
                     "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto ,folderName);
             String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport,folderName );
+            //check if all the documents were uploaded successfully if not throw an exception
+            if (frontIDPath == null || backIDPath == null || certificateOFGoodConductPath == null
+                    || shopPhotoPath == null || financialStatementPath == null || cvPath == null
+                    || customerPhotoPath == null || crbReportPath == null) {
+                throw new RuntimeException("Error occurred while uploading documents");
+            }
 
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
@@ -285,6 +292,8 @@ public class AgencyChannelService implements IAgencyChannelService {
                 agentKYC.setFilPath(filePath);
                 agentKYC.setAgencyOnboardingEntity(agentInfo);
                 agencyOnboardingKYCRepository.save(agentKYC);
+                //check if the document was saved successfully if not throw an exception
+                if (agentKYC == null) throw new RuntimeException("Error occurred while saving document paths");
             });
             return true;
         } catch (Exception e) {
