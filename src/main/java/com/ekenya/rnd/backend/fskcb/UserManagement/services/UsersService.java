@@ -312,11 +312,13 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public ObjectNode loadUserDetails(long userId) {
+    public ObjectNode loadUserDetails(AdminUserDetailsRequest model) {
 
         try{
 
-            UserAccountEntity account = userRepository.findById(userId).get();
+            UserAccountEntity account = model.getUserId().isPresent() ?
+                    userRepository.findById(model.getUserId().get()).get() :
+                    userRepository.findByStaffNo(model.getStaffNo().get()).orElse(null);
 
             ObjectNode node = mObjectMapper.createObjectNode();
             node.put("id",account.getId());
@@ -324,7 +326,10 @@ public class UsersService implements IUsersService {
             node.put("staffNo",account.getStaffNo());
             node.put("email",account.getEmail());
             node.put("phoneNo",account.getPhoneNumber());
+            node.put("blocked",account.isBlocked());
+            node.put("shouldChangePIN",account.isShouldSetPIN());
             node.put("verified",account.isVerified());
+            node.put("status",account.getStatus().toString());
             node.put("type",account.getAccountType().toString());
             try {
                 if(account.getLastLogin() != null) {
@@ -335,6 +340,17 @@ public class UsersService implements IUsersService {
             }catch (Exception ex){
                 log.error(ex.getMessage(),ex);
                 node.put("lastLogin", "");
+            }
+            //
+            try {
+                if(account.getDateBlocked() != null) {
+                    node.put("dateBlocked", dateFormat.format(account.getDateBlocked()));
+                }else{
+                    node.put("dateBlocked", "");
+                }
+            }catch (Exception ex){
+                log.error(ex.getMessage(),ex);
+                node.put("dateBlocked", "");
             }
             node.put("lastLocation",account.getLastCoords());
 
