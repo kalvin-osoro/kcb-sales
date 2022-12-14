@@ -1,17 +1,18 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown =true)
 public class DFSVoomaAgentOnboardV1Request {
     private String organisationName;
     //business details
@@ -19,9 +20,9 @@ public class DFSVoomaAgentOnboardV1Request {
     private String businessPhoneNumber;
     private String businessEmail;
     private Boolean isKCBAgent;
-    private String numberOfOutlets;
+    private Integer numberOfOutlets;
 //    private String KRAPin;
-    private String VATNumber;
+    private Integer VATNumber;
     private Boolean dealingWithForeignExchange;
     private String remarks;
     private OnboardingStatus onboardingStatus;

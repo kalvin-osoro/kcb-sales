@@ -1,15 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
-import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
-import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface IVoomaPortalService {
@@ -84,4 +80,6 @@ public interface IVoomaPortalService {
     List<ObjectNode> getAllAllQuestionnaireV1();
 
     List<ObjectNode> getOnboardingSummaryv1();
+
+
 }

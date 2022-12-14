@@ -2,10 +2,12 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
@@ -40,26 +42,7 @@ public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingTargetRepository agencyBankingTargetRepository;
     private final AgencyOnboardingRepository agencyOnboardingRepository;
 
-    @Override
-    public List<ObjectNode> getAllCustomerVisits() {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (AgencyBankingVisitEntity agencyBankingVisitEntity : agencyBankingVisitRepository.findAll()) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("id", agencyBankingVisitEntity.getId());
-                node.put("merchantName", agencyBankingVisitEntity.getAgentName());
-                node.put("dsrName", agencyBankingVisitEntity.getDsrName());
-                node.put("reasonForVisit", agencyBankingVisitEntity.getReasonForVisit());
-                node.put("visitDate", agencyBankingVisitEntity.getVisitDate());
-                list.add(node);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading questionnaires", e);
-        }
-        return null;
-    }
+
 
     @Override
     public boolean scheduleCustomerVisit(AgencyCustomerVisitsRequest agencyCustomerVisitsRequest) {
@@ -290,12 +273,12 @@ public class AgencyPortalService implements IAgencyPortalService {
     }
 
     @Override
-    public boolean approveAgentOnboarding(AgencyOnboardingEntity agencyOnboardingEntity) {
+    public boolean approveAgentOnboarding(AcquiringApproveMerchant model) {
         try {
-            if (agencyOnboardingEntity == null) {
+            if (model == null) {
                 return false;
             }
-            AgencyOnboardingEntity agencyOnboardingEntity1 = agencyOnboardingRepository.findById(agencyOnboardingEntity.getId()).orElse(null);
+            AgencyOnboardingEntity agencyOnboardingEntity1 = agencyOnboardingRepository.findById(model.getMerchantId()).orElse(null);
             if (agencyOnboardingEntity1 == null) {
                 return false;
             }
@@ -419,6 +402,45 @@ public class AgencyPortalService implements IAgencyPortalService {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean rejectAgentOnboarding(AcquiringApproveMerchant model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            AgencyOnboardingEntity agencyOnboardingEntity1 = agencyOnboardingRepository.findById(model.getMerchantId()).orElse(null);
+            if (agencyOnboardingEntity1 == null) {
+                return false;
+            }
+            agencyOnboardingEntity1.setStatus(OnboardingStatus.REJECTED);
+            agencyOnboardingEntity1.setIsApproved(false);
+            agencyOnboardingRepository.save(agencyOnboardingEntity1);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while rejected onboarding", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<?> getAllVisitsV2() {
+        try {
+            List<AgencyBankingVisitEntity> dfsVoomaOnboardEntityList = agencyBankingVisitRepository.findAll();
+            List<AgencyBankingVisitEntity> dfsVoomaOnboardEntityList1 = new ArrayList<>();
+            for (AgencyBankingVisitEntity dfsVoomaOnboardEntity : dfsVoomaOnboardEntityList) {
+                dfsVoomaOnboardEntity.getCreatedOn();
+                dfsVoomaOnboardEntity.getId();
+                dfsVoomaOnboardEntityList1.add(dfsVoomaOnboardEntity);
+//                return dfsVoomaOnboardEntityList1;
+            }
+            return dfsVoomaOnboardEntityList;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all onboarding", e);
+        }
+        return null;
+
     }
 
 }

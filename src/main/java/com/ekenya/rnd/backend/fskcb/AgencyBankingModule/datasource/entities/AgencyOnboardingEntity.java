@@ -27,9 +27,7 @@ public class AgencyOnboardingEntity {
     private String region;
     private  String agentIdNumber;
     private String agentEmail;
-    @Column(name="agent_phone_number")
     private String agentPhone;
-    @Column(name = "agent_dob")
     private String agentDob;
     private String agentPbox;
     private String agentPostalCode;
@@ -40,13 +38,9 @@ public class AgencyOnboardingEntity {
     private String latitude;
     private String longitude;
     private String businessName;
-    @Column(name="town")
     private String town;
-    @Column(name="street_name")
     private String streetName;
-    @Column(name="building_name")
     private String buildingName;
-    @Column(name="room_number")
     private String roomNumber;
     @Enumerated(EnumType.STRING)
     private OnboardingStatus status;

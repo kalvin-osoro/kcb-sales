@@ -2,6 +2,8 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryApproveTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAppveNegRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryRateRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +24,7 @@ public class TreasuryForexVC {
 
     @PostMapping(value = "/treasury-get-all-neg-reqs")
     public ResponseEntity<?> getAllNegotiationReqs() {
-        List<?>list = portalService.getAllNegotiationReqs();
+        List<?> list = portalService.getAllNegotiationReqs();
         boolean success = list != null;
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -65,7 +67,7 @@ public class TreasuryForexVC {
 
     @PostMapping(value = "/treasury-get-all-trade-reqs")
     public ResponseEntity<?> getAllTradeReqs() {
-        List<?>list = portalService.getAllTradeReqs();
+        List<?> list = portalService.getAllTradeReqs();
         boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -99,5 +101,82 @@ public class TreasuryForexVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
+    }
+
+    //create a new currency rate
+    @PostMapping("/treasury-create-currency-rate")
+    public ResponseEntity<?> createCurrencyRate(@RequestBody TreasuryRateRequest model) {
+        boolean success = portalService.createCurrencyRate(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping(value = "/treasury-get-all-currency-rates")
+    public ResponseEntity<?> getAllCurrencyRates() {
+        List<?> list = portalService.getAllCurrencyRates();
+        boolean success = list != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List) list);
+            //Object
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    //edit a currency rate
+    @PostMapping("/treasury-edit-currency-rate")
+    public ResponseEntity<?> editCurrencyRate(@RequestBody TreasuryRateRequest model) {
+        boolean success = portalService.editCurrencyRate(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            //          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+    }
+    //update a currency rate by put buy and sell rates
+    @PostMapping("/treasury-update-currency-rate")
+    public ResponseEntity<?> updateCurrencyRate(@RequestBody TreasuryUpdateRequest model) {
+        boolean success = portalService.updateCurrencyRate(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            //          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
     }
 }

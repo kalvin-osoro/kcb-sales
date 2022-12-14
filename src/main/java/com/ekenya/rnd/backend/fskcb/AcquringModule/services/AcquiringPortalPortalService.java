@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
@@ -419,18 +420,17 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
     }
 
     @Override
-    public boolean approveMerchantOnboarding(AcquiringOnboardEntity acquiringOnboardEntity) {
+    public boolean approveMerchantOnboarding(AcquiringApproveMerchant model) {
         try {
-            if (acquiringOnboardEntity == null) {
+            if (model == null) {
                 return false;
             }
             ObjectMapper mapper = new ObjectMapper();
-            AcquiringOnboardEntity acquiringOnboardEntity1 = acquiringOnboardingsRepository.findById(acquiringOnboardEntity.getId()).get();
-            acquiringOnboardEntity.setStatus(OnboardingStatus.APPROVED);
+            AcquiringOnboardEntity acquiringOnboardEntity1 = acquiringOnboardingsRepository.findById(model.getMerchantId()).get();
+            acquiringOnboardEntity1.setStatus(OnboardingStatus.APPROVED);
             acquiringOnboardEntity1.setApproved(true);
             //save
             acquiringOnboardingsRepository.save(acquiringOnboardEntity1);
-            log.info("Merchant onboarding approved successfully");
             return true;
         } catch (Exception e) {
             log.error("Error occurred while approving merchant onboarding", e);
@@ -745,6 +745,25 @@ try {
             log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean rejectMerchantOnboarding(AcquiringApproveMerchant model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AcquiringOnboardEntity acquiringOnboardEntity1 = acquiringOnboardingsRepository.findById(model.getMerchantId()).get();
+            acquiringOnboardEntity1.setStatus(OnboardingStatus.REJECTED);
+            acquiringOnboardEntity1.setApproved(false);
+            //save
+            acquiringOnboardingsRepository.save(acquiringOnboardEntity1);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while reject merchant onboarding", e);
+        }
+        return false;
     }
 
 

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -44,9 +45,27 @@ public class AgencyOnboardingVC {
 
 
     @PostMapping("/agency-approve-onboarding")
-    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AgencyOnboardingEntity agencyOnboardingEntity) {
+    public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AcquiringApproveMerchant model) {
 
-        boolean success = acquiringService.approveAgentOnboarding(agencyOnboardingEntity);
+        boolean success = acquiringService.approveAgentOnboarding(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/agency-reject-onboarding")
+    public ResponseEntity<?> rejectMerchantOnboarding(@RequestBody AcquiringApproveMerchant model) {
+
+        boolean success = acquiringService.rejectAgentOnboarding(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

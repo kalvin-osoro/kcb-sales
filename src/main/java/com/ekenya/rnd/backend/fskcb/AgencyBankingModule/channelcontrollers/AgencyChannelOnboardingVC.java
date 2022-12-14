@@ -41,7 +41,7 @@ public class AgencyChannelOnboardingVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message", "Customer onboarding request sent successfully");
+//            node.put("message", "Customer onboarding request sent successfully");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

@@ -21,8 +21,7 @@ public class DFSVoomaOnboardingKYCentity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private DFSVoomaOnboardEntity dfsVoomaOnboardEntity;
-    @ManyToOne
+    @JoinColumn
     private DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1;
     private String filePath;
 }

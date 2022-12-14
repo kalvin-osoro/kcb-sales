@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringLeadEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
@@ -53,7 +54,7 @@ public interface IAcquiringPortalService {
 
     List<ObjectNode> getAllLeads();
 
-    boolean approveMerchantOnboarding(AcquiringOnboardEntity acquiringOnboardEntity);
+    boolean approveMerchantOnboarding(AcquiringApproveMerchant model);
 
     List<ObjectNode> loadAllOnboardedMerchants();
 
@@ -74,4 +75,6 @@ public interface IAcquiringPortalService {
     Object getTargetById(VoomaTargetByIdRequest model);
 
     List<ObjectNode> loadAllApprovedMerchants();
+
+    boolean rejectMerchantOnboarding(AcquiringApproveMerchant model);
 }

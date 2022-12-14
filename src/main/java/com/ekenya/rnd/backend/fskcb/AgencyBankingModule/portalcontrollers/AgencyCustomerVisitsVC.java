@@ -61,28 +61,7 @@ public class AgencyCustomerVisitsVC {
         }
     }
 
-   //get all customer visits using @postmapping
-    @PostMapping("/agency-get-all-customer-visits")
-    public ResponseEntity<?> getAllCustomerVisits() {
-        //TODO; INSIDE SERVICE
-        List<?> customerVisits = agencyService.getAllCustomerVisits();
-        boolean success = customerVisits != null;
 
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(customerVisits));
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
 
 
     @PostMapping("/agency-get-customer-visit-questionnaire-response")
@@ -99,6 +78,22 @@ public class AgencyCustomerVisitsVC {
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping(value = "/agency-get-all-visits")
+    public ResponseEntity<?> getAllOnboardingV2() {
+        List<?> list = agencyService.getAllVisitsV2();
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list !=null){
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+
         }else{
 
             //Response

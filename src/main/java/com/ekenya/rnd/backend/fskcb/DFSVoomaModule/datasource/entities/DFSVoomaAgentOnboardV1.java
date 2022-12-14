@@ -34,9 +34,9 @@ public class DFSVoomaAgentOnboardV1 {
     private String businessPhoneNumber;
     private String businessEmail;
     private Boolean isKCBAgent=false;
-    private String numberOfOutlets;
+    private Integer numberOfOutlets;
 //    private String KRAPin;
-    private String VATNumber;
+    private Integer VATNumber;
     private Boolean dealingWithForeignExchange=false;
     private Boolean isApproved=false;
     private String remarks;

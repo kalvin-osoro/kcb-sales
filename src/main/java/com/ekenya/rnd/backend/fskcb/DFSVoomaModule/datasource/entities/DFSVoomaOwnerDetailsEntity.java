@@ -26,6 +26,7 @@ public class DFSVoomaOwnerDetailsEntity {
     private String idType;
     private String phoneNumber;
     private String emailAddress;
+    private Long merchantId;
     @ManyToOne
     @JoinColumn(name = "merchantOnboardId")
     private DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1;

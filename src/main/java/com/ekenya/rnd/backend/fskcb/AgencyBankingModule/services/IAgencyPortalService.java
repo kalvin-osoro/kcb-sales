@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface IAgencyPortalService {
 
-    List<ObjectNode> getAllCustomerVisits();
+//    List<ObjectNode> getAllCustomerVisits();
 
     boolean scheduleCustomerVisit(AgencyCustomerVisitsRequest agencyCustomerVisitsRequest);
 
@@ -33,7 +34,7 @@ public interface IAgencyPortalService {
 
     List<ObjectNode> loadAllOnboardedAgents();
 
-    boolean approveAgentOnboarding(AgencyOnboardingEntity agencyOnboardingEntity);
+    boolean approveAgentOnboarding(AcquiringApproveMerchant model);
 
     List<ObjectNode> getAgentOnboardSummary(AgencySummaryRequest filters);
 
@@ -42,4 +43,8 @@ public interface IAgencyPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
+
+    boolean rejectAgentOnboarding(AcquiringApproveMerchant model);
+
+    List<?> getAllVisitsV2();
 }
