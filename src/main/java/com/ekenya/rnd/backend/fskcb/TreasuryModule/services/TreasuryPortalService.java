@@ -37,6 +37,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TreasuryPortalService implements ITreasuryPortalService {
     private final TreasuryTradeRequestRepository treasuryTradeRequestRepository;
+    private final TreasuryCurrencyRepository treasuryCurrencyRepository;
     private final IDSRTeamsRepository dsrTeamsRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private final TreasuryNegotiationRequestRepository negotiationRequestRepository;
@@ -438,6 +439,72 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             log.error("Error occurred while getting target by id", e);
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean createCurrencyRate(TreasuryRateRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            TreasuryCurrencyEntity treasuryRateEntity = new TreasuryCurrencyEntity();
+            treasuryRateEntity.setCurrencyCode(model.getCurrencyCode());
+            treasuryRateEntity.setCurrencyName(model.getCurrencyName());
+            //save
+            treasuryCurrencyRepository.save(treasuryRateEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating currency rate", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<?> getAllCurrencyRates() {
+        try {
+            List<TreasuryCurrencyEntity> treasuryCurrencyEntities = treasuryCurrencyRepository.findAll();
+            return treasuryCurrencyEntities;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all currency rates", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean editCurrencyRate(TreasuryRateRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            TreasuryCurrencyEntity treasuryRateEntity = treasuryCurrencyRepository.findById(model.getCurrencyId()).orElse(null);
+            treasuryRateEntity.setCurrencyCode(model.getCurrencyCode());
+            treasuryRateEntity.setCurrencyName(model.getCurrencyName());
+            //save
+            treasuryCurrencyRepository.save(treasuryRateEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while editing currency rate", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCurrencyRate(TreasuryUpdateRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            TreasuryCurrencyEntity treasuryRateEntity = treasuryCurrencyRepository.findById(model.getCurrencyId()).orElse(null);
+            treasuryRateEntity.setBuyRate(model.getBuyRate());
+            treasuryRateEntity.setSellRate(model.getSellRate());
+            //save
+            treasuryCurrencyRepository.save(treasuryRateEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while updating currency rate", e);
+        }
         return false;
     }
 }

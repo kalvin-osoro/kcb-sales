@@ -43,4 +43,12 @@ public interface ITreasuryPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
+
+    boolean createCurrencyRate(TreasuryRateRequest model);
+
+    List<?> getAllCurrencyRates();
+
+    boolean editCurrencyRate(TreasuryRateRequest model);
+
+    boolean updateCurrencyRate(TreasuryUpdateRequest model);
 }

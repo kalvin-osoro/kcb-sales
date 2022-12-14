@@ -416,9 +416,9 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaCustomerVisitEntity.setReasonForVisit(model.getReasonForVisit());
             dfsVoomaCustomerVisitEntity.setActionPlan(model.getActionPlan());
             dfsVoomaCustomerVisitEntity.setHighlights(model.getHighlights());
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = userDetails.getUsername();
-            dfsVoomaCustomerVisitEntity.setDsrName(username);
+//            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            String username = userDetails.getUsername();
+//            dfsVoomaCustomerVisitEntity.setDsrName(username);
             dfsVoomaCustomerVisitEntity.setAttendance(model.getAttendance());
             dfsVoomaCustomerVisitEntity.setVisitType(model.getVisitType());
             dfsVoomaCustomerVisitEntity.setEntityBrief(model.getEntityBrief());
