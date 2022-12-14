@@ -33,12 +33,12 @@ spec:
     dockerStrategy:
       dockerfilePath: Dockerfile
   triggers:
-    - type: Gitlab
-      gitlab:
-        secretReference:
-          name: kcb-ses-poc-be-gitlab-webhook-secret
     - type: Generic
       generic:
         secretReference:
           name: kcb-ses-poc-be-generic-webhook-secret
+    - type: GitLab
+      gitlab:
+        secretReference:
+          name: kcb-ses-poc-be-gitlab-webhook-secret
     - type: ConfigChange
