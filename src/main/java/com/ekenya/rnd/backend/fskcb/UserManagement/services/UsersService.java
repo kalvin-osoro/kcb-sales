@@ -318,9 +318,9 @@ public class UsersService implements IUsersService {
 
             Optional<UserAccountEntity> account = null;
             if(model.getUserId() != null ) {
-                userRepository.findById(model.getUserId());
+                account = userRepository.findById(model.getUserId());
             }else if(model.getStaffNo() != null ){
-                userRepository.findByStaffNo(model.getStaffNo());
+                account = userRepository.findByStaffNo(model.getStaffNo());
             }
             //
             if(account == null || account.isEmpty()){
