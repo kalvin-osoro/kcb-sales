@@ -1,0 +1,48 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: "{{ .Values.appName }}"
+  name: "{{ .Values.appName }}-frontend"
+spec:
+  lookupPolicy:
+    local: false
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: kcb-dev
+    app.openshift.io/vcs-uri: >-
+      https://vs.ekenya.co.ke:1126/mbugua.michael/kcb-sales-effectiveness-tool-project/
+  name: "{{ .Values.appName }}-frontend"
+spec:
+  failedBuildsHistoryLimit: 2
+  successfulBuildsHistoryLimit: 2
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "{{ .Values.appName }}-frontend:latest"
+  runPolicy: "Serial"
+  source:
+    type: Git
+    git:
+      uri: "https://vs.ekenya.co.ke:1126/mbugua.michael/kcb-sales-effectiveness-tool-project"
+      ref: kcb-dev
+    contextDir: /
+    sourceSecret:
+      name: kcb-ses-poc-git-sec
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  triggers:
+    - type: Generic
+      generic:
+        secretReference:
+          name: kcb-ses-poc-be-generic-webhook-secret
+    - type: GitLab
+      gitlab:
+        secretReference:
+          name: kcb-ses-poc-be-gitlab-webhook-secret
+    - type: ConfigChange
