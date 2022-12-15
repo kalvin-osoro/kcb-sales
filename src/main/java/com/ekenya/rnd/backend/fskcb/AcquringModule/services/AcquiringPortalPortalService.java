@@ -217,6 +217,21 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
         try {
             AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(id).get();
 
+            //display download path for files
+            List<AcquiringAssetFilesEntity> acquiringAssetFilesEntities = acquiringAssetEntity.getAssetFiles();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringAssetEntity.getId());
+            asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
+            asset.put("sno", acquiringAssetEntity.getSerialNumber());
+            //asset.put("type",acquiringAssetEntity.getAssetType());
+            //
+            ArrayNode images = mapper.createArrayNode();
+            acquiringAssetFilesEntities.forEach(acquiringAssetFilesEntity -> {
+                images.add(acquiringAssetFilesEntity.getFilePath());
+            });
+            asset.put("images", images);
+
 
         } catch (Exception e) {
             log.error("Error occurred while fetching asset by id", e);

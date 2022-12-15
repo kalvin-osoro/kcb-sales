@@ -28,8 +28,8 @@ public class FileStorageService implements IFileStorageService {
     Logger log = Logger.getLogger(FileStorageService.class.getName());
     //working directory folder called "uploads"
 
-    public static String pathString ="upload";
-    public static String uploadDirectory =  "upload";
+    public static String pathString = "upload";
+    public static String uploadDirectory = "upload";
     private final Path root = Paths.get(pathString);
     public static String uploadPath = "upload";
 
@@ -66,7 +66,7 @@ public class FileStorageService implements IFileStorageService {
     @Override
     public Resource load(String filename) {
         try {
-            Path file = Paths.get(uploadPath)
+            Path file = Paths.get(uploadDirectory)
                     .resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 
@@ -96,19 +96,15 @@ public class FileStorageService implements IFileStorageService {
     @Override
     public String saveFileWithSpecificFileName(String fileName, MultipartFile file) {
         try {
-            Path subDirectory = Paths.get(uploadDirectory + "/subfolder");
-            if (!Files.exists(subDirectory)) {
-                Files.createDirectories(subDirectory);
-            }
-            //copy file to subdirectory
-            Path copyLocation = Paths.get(subDirectory + File.separator + fileName);
-            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-            return copyLocation.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+            fileName = new File(pathString + fileName).getName();
+            file.transferTo(new File(fileName));
+            log.info("Path is " + fileName);
+            return fileName;
+        } catch (Exception e) {
+            log.info("Could not store the file. Error in saveFileWithSpecificFileName: "
+                    + e.getMessage());
+            return "";
         }
-
 
 
     }
@@ -161,44 +157,34 @@ public class FileStorageService implements IFileStorageService {
     }
 
     //save file
-        public void save(MultipartFile file){
-            try {
-                Files.copy(file.getInputStream(),
-                        this.root.resolve(file.getOriginalFilename()));
-            } catch (Exception e) {
-                throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
-            }
+    public void save(MultipartFile file) {
+        try {
+            Files.copy(file.getInputStream(),
+                    this.root.resolve(file.getOriginalFilename()));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
-
-//    public FileMD store(MultipartFile file, String userName) throws Exception {
-//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-//        try {
-//            if (file.isEmpty()) {
-//                throw new Exception("Sorry ! file empty ");
-//            }
-//            if (fileName.contains("..")) {
-//                throw new Exception("Sorry! Filename contains invalid path sequence " + fileName);
-//            }
-//
-//            Path targetLocation = Paths.get(String.valueOf(Files.createDirectories(Path.of(String.valueOf(this.fileStorageLocation), "/" + userName + "/")))).toAbsolutePath().normalize().resolve(fileName);
-//            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-//            String fileDownLoadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                    //.path("/app/uploads/" + userName + "/")
-//                    .path("/uploads/" + userName + "/").path(fileName).toUriString();
-//            logger.info("file download location ===>" + fileDownLoadUri);
-//            FileMD fileDB = new FileMD();
-//            fileDB.setName(fileName);
-//            fileDB.setSize(file.getSize());
-//            fileDB.setData(file.getBytes());
-//            fileDB.setType(file.getContentType());
-//            fileDB.setUri(fileDownLoadUri);
-//            return fileRepository.save(fileDB);
-//        } catch (Exception e) {
-//            throw new Exception("Could not store file " + fileName + ". Please try again!", e);
-//        }
-//    }
+    }
 
 
+    //load download url for document
+    public String loadFileAsResource(String fileName,String folderName) {
+        try {
+            Path filePath = Paths.get(uploadDirectory + "/" + folderName).resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/downloadFile/")
+                        .path(fileName)
+                        .toUriString();
+                return fileDownloadUri;
+            } else {
+                throw new RuntimeException("File not found " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("File not found " + fileName);
+        }
+    }
 
 }
 

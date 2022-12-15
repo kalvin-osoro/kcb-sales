@@ -21,7 +21,7 @@ import java.util.Date;
 @Table(name = "dbo_treasury_lead")
 @DynamicUpdate
 @DynamicInsert
-public class TreasuryLeadEntity {
+public class  TreasuryLeadEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

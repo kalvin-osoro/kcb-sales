@@ -118,10 +118,11 @@ public class AgencyChannelService implements IAgencyChannelService {
         return false;
     }
 
+
     @Override
-    public List<ObjectNode> getAllLeadsByDsrId(Long dsrId) {
+    public List<ObjectNode> getAllLeadsByDsrId(DSRLeadRequest model) {
         try {
-            List<AgencyBankingLeadEntity> agencyBankingLeadEntities = agencyBankingLeadRepository.findAllByDsrId(dsrId);
+            List<AgencyBankingLeadEntity> agencyBankingLeadEntities = agencyBankingLeadRepository.findAllByDsrId(model.getDsrId());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             agencyBankingLeadEntities.forEach(agencyBankingLeadEntity -> {

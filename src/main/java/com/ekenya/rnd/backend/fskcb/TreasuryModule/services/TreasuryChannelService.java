@@ -64,7 +64,7 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             }
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (TreasuryLeadEntity treasuryLeadEntity : treasuryLeadRepository.findAllByDsrId(model.getDsrId())) {
+            for (TreasuryLeadEntity treasuryLeadEntity : treasuryLeadRepository.findAllByDsrIdAndAssigned(model.getDsrId())) {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("customerName", treasuryLeadEntity.getCustomerName());
 //                node.put("customerID", treasuryLeadEntity.getCustomerId());
@@ -295,7 +295,7 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             }
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (TreasuryLeadEntity treasuryLeadEntity : treasuryLeadRepository.findAllByDsrId(model.getDsrId())) {
+            for (TreasuryLeadEntity treasuryLeadEntity : treasuryLeadRepository.findAllAssignedLeadByDSRId(model.getDsrId())) {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("customerName", treasuryLeadEntity.getCustomerName());
 //                node.put("customerID", treasuryLeadEntity.getCustomerId());

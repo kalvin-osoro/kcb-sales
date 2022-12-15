@@ -24,4 +24,5 @@ public class DFSVoomaOnboardingKYCentity {
     @JoinColumn
     private DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1;
     private String filePath;
+    private String downloadUri;
 }
