@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<UserAccountEntity, Long> {
     Optional<UserAccountEntity> findByStaffNoAndPhoneNumber(String staffNo, String phoneNo);
     //retrieve user by email
     Optional<UserAccountEntity> findByEmail(String email);
-    Optional<UserAccountEntity> findByStaffNo(String name);
+    Optional<UserAccountEntity> findByStaffNo(String staffNo);
     Boolean existsByStaffNo(String staffNo);
     Boolean existsByEmail(String email);
     UserAccountEntity findByResetPasswordToken(String token);

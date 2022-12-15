@@ -29,7 +29,7 @@ public interface IUsersService {
 
     boolean syncUsersWithCRM();
 
-    ObjectNode loadUserDetails(long userId);
+    ObjectNode loadUserDetails(AdminUserDetailsRequest model);
 
     boolean attemptResetPassword(ResetUserPasswordRequest model);
     boolean assignUserToProfiles(AssignUserProfileRequest model);

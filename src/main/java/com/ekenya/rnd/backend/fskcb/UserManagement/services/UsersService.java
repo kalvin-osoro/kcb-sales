@@ -312,23 +312,32 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public ObjectNode loadUserDetails(long userId) {
+    public ObjectNode loadUserDetails(AdminUserDetailsRequest model) {
 
         try{
 
-            UserAccountEntity account = userRepository.findById(userId).get();
-
+            Optional<UserAccountEntity> account = null;
+            if(model.getUserId() != null ) {
+                account = userRepository.findById(model.getUserId());
+            }else if(model.getStaffNo() != null ){
+                account = userRepository.findByStaffNo(model.getStaffNo());
+            }
+            //
+            if(account == null || account.isEmpty()){
+                return  null;
+            }
+            //
             ObjectNode node = mObjectMapper.createObjectNode();
-            node.put("id",account.getId());
-            node.put("name",account.getFullName());
-            node.put("staffNo",account.getStaffNo());
-            node.put("email",account.getEmail());
-            node.put("phoneNo",account.getPhoneNumber());
-            node.put("verified",account.isVerified());
-            node.put("type",account.getAccountType().toString());
+            node.put("id",account.get().getId());
+            node.put("name",account.get().getFullName());
+            node.put("staffNo",account.get().getStaffNo());
+            node.put("email",account.get().getEmail());
+            node.put("phoneNo",account.get().getPhoneNumber());
+            node.put("verified",account.get().isVerified());
+            node.put("type",account.get().getAccountType().toString());
             try {
-                if(account.getLastLogin() != null) {
-                    node.put("lastLogin", dateFormat.format(account.getLastLogin()));
+                if(account.get().getLastLogin() != null) {
+                    node.put("lastLogin", dateFormat.format(account.get().getLastLogin()));
                 }else{
                     node.put("lastLogin", "");
                 }
@@ -336,11 +345,11 @@ public class UsersService implements IUsersService {
                 log.error(ex.getMessage(),ex);
                 node.put("lastLogin", "");
             }
-            node.put("lastLocation",account.getLastCoords());
+            node.put("lastLocation",account.get().getLastCoords());
 
             //Roles
             ArrayNode roles = mObjectMapper.createArrayNode();
-            for (UserRoleEntity role: account.getRoles()) {
+            for (UserRoleEntity role: account.get().getRoles()) {
                 ObjectNode j = mObjectMapper.createObjectNode();
                 j.put("name",role.getName());
                 j.put("desc",role.getInfo());
@@ -351,7 +360,7 @@ public class UsersService implements IUsersService {
             //Profiles
             ArrayNode profiles = mObjectMapper.createArrayNode();
             for (ProfileAndUserEntity userProfiles:
-                 profilesAndUsersRepository.findAllByUserId(account.getId())) {
+                 profilesAndUsersRepository.findAllByUserId(account.get().getId())) {
                 UserProfileEntity profile = userProfilesRepository.findById(userProfiles.getProfileId()).get();
 
                 ObjectNode prof = mObjectMapper.createObjectNode();

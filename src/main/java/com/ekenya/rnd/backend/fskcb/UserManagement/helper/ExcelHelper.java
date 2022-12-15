@@ -29,8 +29,6 @@ public class ExcelHelper {
     static PasswordEncoder passwordEncoder;
     @Autowired
     static RoleRepository roleRepository;
-    @Autowired
-    static IDSRTeamsRepository dsrTeamsRepository;
     public static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String SHEET = "Users";
     public static boolean hasExcelFormat(MultipartFile file) {
@@ -182,7 +180,7 @@ public class ExcelHelper {
     }
 
 
-    public static DSRsExcelImportResult excelToDSRAccounts(InputStream is) {
+    public static DSRsExcelImportResult excelToDSRAccounts(InputStream is,IDSRTeamsRepository dsrTeamsRepository) {
 
 
         final int STAFF_NO_COLUMN_INDEX = 1;
