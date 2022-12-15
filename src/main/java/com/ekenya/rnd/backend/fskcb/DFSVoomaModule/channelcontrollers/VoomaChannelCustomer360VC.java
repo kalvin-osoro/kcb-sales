@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.CustomerRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +42,22 @@ public class VoomaChannelCustomer360VC {
 
     //CUSTOMER360 VIEW
     @PostMapping("/vooma-get-customer-details")
-    public ResponseEntity<?> getCustomerDetails(@RequestParam String account) {
+    public ResponseEntity<?> getCustomerDetails(@RequestBody CustomerRequest model) {
 
 
-        JsonObject resp = null;//channelService.findCustomerByAccNo(account);//
-
+        ObjectNode resp = channelService.getCustomerDetails(model);
+        boolean success = resp != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(resp == null){
-            //Object
+        if(success){
             ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            node.setAll(resp);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 

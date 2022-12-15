@@ -73,4 +73,10 @@ public interface ICBPortalService {
     boolean addConcession(CBConcessionRequest model);
 
     boolean updateOpportunity(CBUpdateOpportunity model);
+
+    boolean approveCBConcession(CBApproveConcessionRequest model);
+
+    boolean sendEmailForApproval(CBApproveConcessionRequest model);
+
+    boolean rejectCBConcession(CBApproveConcessionRequest model);
 }

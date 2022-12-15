@@ -1,11 +1,13 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAgentOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -300,8 +303,12 @@ public class CBPortalService implements ICBPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (CBConcessionEntity cbConcessionEntity : cbConcessionRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
+                node.put("id",cbConcessionEntity.getId());
                 node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().toString());
                 node.put("createdOn", cbConcessionEntity.getCreatedOn().getTime());
+                node.put("submittedBy",cbConcessionEntity.getSubmittedBy());
+                node.put("customerName",cbConcessionEntity.getCustomerName());
+                node.put("submissionDate",cbConcessionEntity.getSubmissionDate());
 
                 List<CBRevenueLineEntity> cbRevenueLineEntityList = cbConcessionEntity.getCbRevenueLineEntityList();
                 ArrayNode arrayNode = mapper.createArrayNode();
@@ -730,6 +737,7 @@ public class CBPortalService implements ICBPortalService {
             cbConcessionEntity.setSubmittedBy(model.getSubmittedBy());
             cbConcessionEntity.setSubmissionDate(model.getSubmissionDate());
             cbConcessionEntity.setConcessionStatus(ConcessionStatus.PENDING);
+            cbConcessionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             cbConcessionRepository.save(cbConcessionEntity);
             List<CBRevenueLineRequest> revenueLineRequestList = model.getCbRevenueLineRequests();
             for (CBRevenueLineRequest revenueLineRequest : revenueLineRequestList) {
@@ -775,4 +783,48 @@ public class CBPortalService implements ICBPortalService {
         }
         return false;
     }
+
+    @Override
+    public boolean approveCBConcession(CBApproveConcessionRequest model) {
+        try {
+            CBConcessionEntity cbConcessionEntity = cbConcessionRepository.findById(model.getConcessionId()).get();
+            cbConcessionEntity.setConcessionStatus(ConcessionStatus.APPROVED);
+            cbConcessionEntity.setApproved(true);
+            cbConcessionRepository.save(cbConcessionEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while approving merchant onboarding", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean sendEmailForApproval(CBApproveConcessionRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBConcessionEntity cbConcessionEntity = cbConcessionRepository.findById(model.getConcessionId()).get();
+            model.getEmailUrl();
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while sending email for approval", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean rejectCBConcession(CBApproveConcessionRequest model) {
+        try {
+            CBConcessionEntity cbConcessionEntity = cbConcessionRepository.findById(model.getConcessionId()).get();
+            cbConcessionEntity.setConcessionStatus(ConcessionStatus.REJECTED);
+            cbConcessionEntity.setApproved(false);
+            cbConcessionRepository.save(cbConcessionEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while rejecting concession", e);
+        }
+        return false;
+    }
+
 }

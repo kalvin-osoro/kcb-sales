@@ -129,7 +129,7 @@ public class  VoomaChannelOnboardingVC {
                                              @RequestParam("kraPinCertificate") MultipartFile kraPinCertificate,
                                              @RequestParam("businessCertificateOfRegistration") MultipartFile businessCertificateOfRegistration,
                                              @RequestParam("shopPhoto") MultipartFile shopPhoto,
-                                             @RequestParam("signatureDoc") MultipartFile signatureDoc,
+                                             @RequestParam("signatureDoc") MultipartFile[] signatureDoc,
                                              @RequestParam("businessPermitDoc") MultipartFile businessPermitDoc) {
         Object agentObj=voomaChannelService.onboardNewAgentV1(agentDetails,frontID,backID,kraPinCertificate,businessCertificateOfRegistration,
                 shopPhoto,signatureDoc,businessPermitDoc);

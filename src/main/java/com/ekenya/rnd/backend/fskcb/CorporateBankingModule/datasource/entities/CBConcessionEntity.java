@@ -31,6 +31,7 @@ public class CBConcessionEntity {
 //    private String customerAccountNumber;
     private String submissionDate;
     private String submittedBy;
+    private boolean isApproved=false;
 
 
     private Date createdOn;
