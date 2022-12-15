@@ -767,7 +767,7 @@ public class DSRPortalService implements IDSRPortalService {
     public ObjectNode attemptImportAccounts(MultipartFile importFile) {
         try{
 
-            DSRsExcelImportResult results = ExcelHelper.excelToDSRAccounts(importFile.getInputStream());
+            DSRsExcelImportResult results = ExcelHelper.excelToDSRAccounts(importFile.getInputStream(),dsrTeamsRepository);
 
             int imported = 0;
             for (DSRAccountEntity account: results.getAccounts()) {
