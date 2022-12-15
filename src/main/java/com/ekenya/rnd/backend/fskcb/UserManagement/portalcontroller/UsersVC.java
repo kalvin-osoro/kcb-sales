@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,13 +101,11 @@ public class UsersVC {
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @ApiOperation(value = "Gets User Account by staffNo or userId",
-            response = AdminUserDetailsRequest.class,
-            notes = "Specify at least either of them. UserID is checked first")
+
     @PostMapping("/users-get-details")
     public ResponseEntity<?> getAdminUserDetails(@RequestBody AdminUserDetailsRequest request) {
         //TODO; INSIDE SERVICE
-        ObjectNode node = usersService.loadUserDetails(request);
+        ObjectNode node = usersService.loadUserDetails(request.getUserId());
 
         //Response
         if(node != null){

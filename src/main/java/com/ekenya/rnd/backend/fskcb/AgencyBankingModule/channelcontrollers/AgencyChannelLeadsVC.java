@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.DSRLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,8 +43,8 @@ public class AgencyChannelLeadsVC {
         }
     }
     @PostMapping(value = "/agency-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody Long dsrId) {
-        List<?> leads = agencyChannelService.getAllLeadsByDsrId(dsrId);
+    public ResponseEntity<?> getAllLeads(@RequestBody DSRLeadRequest model) {
+        List<?> leads = agencyChannelService.getAllLeadsByDsrId(model);
         boolean success = leads != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

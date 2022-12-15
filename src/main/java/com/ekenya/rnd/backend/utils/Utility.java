@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class Utility {
@@ -123,10 +124,10 @@ return new Date();
         return password;
     }
     //generateSubDirectory("onboard");
-    public static String generateSubDirectory(String directory) {
-        String subDirectory = FileStorageService.uploadDirectory + "/" + RandomStringUtils.random(10, true, true);
-        return subDirectory;
-    }
+//    public static String generateSubDirectory(String directory) {
+//        String subDirectory = FileStorageService.uploadDirectory + "/" + RandomStringUtils.random(10, true, true);
+//        return subDirectory;
+//    }
 
     public static String getFileExtension(String originalFilename) {
         String extension = "";
@@ -153,4 +154,6 @@ return new Date();
         String password = RandomStringUtils.random(6, false, true);
         return password;
     }
+
+
 }

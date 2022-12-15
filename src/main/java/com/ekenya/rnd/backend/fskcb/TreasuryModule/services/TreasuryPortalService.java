@@ -153,6 +153,7 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 return false;
             }
             treasuryLeadEntity.setAssigned(true);
+            treasuryLeadEntity.setPriority(model.getPriority());
             //set dsrAccId from dsrAccountsEntity
             treasuryLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
             treasuryLeadRepository.save(treasuryLeadEntity);
@@ -176,9 +177,11 @@ public class TreasuryPortalService implements ITreasuryPortalService {
                 objectNode.put("id", treasuryLeadEntity.getId());
                 objectNode.put("customerId", treasuryLeadEntity.getCustomerId());
                 objectNode.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
-                objectNode.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
-                objectNode.put("topic", treasuryLeadEntity.getTopic());
-                objectNode.put("priority", treasuryLeadEntity.getPriority().ordinal());
+                objectNode.put("leadStatus", treasuryLeadEntity.getLeadStatus().toString());
+                objectNode.put("createdOn",treasuryLeadEntity.getCreatedOn().getTime());
+                objectNode.put("product",treasuryLeadEntity.getProduct());
+                objectNode.put("dsrName",treasuryLeadEntity.getDsrName());
+                objectNode.put("priority", treasuryLeadEntity.getPriority().toString());
 //                objectNode.put("dsrId", treasuryLeadEntity.getDsrId());
                 list.add(objectNode);
             }
@@ -450,6 +453,7 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             }
             TreasuryCurrencyEntity treasuryRateEntity = new TreasuryCurrencyEntity();
             treasuryRateEntity.setCurrencyCode(model.getCurrencyCode());
+            treasuryRateEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             treasuryRateEntity.setCurrencyName(model.getCurrencyName());
             //save
             treasuryCurrencyRepository.save(treasuryRateEntity);

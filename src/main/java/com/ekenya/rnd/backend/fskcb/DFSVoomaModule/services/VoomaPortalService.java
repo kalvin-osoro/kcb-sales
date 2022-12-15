@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.*;
 
 @Slf4j
@@ -291,7 +290,6 @@ public class VoomaPortalService implements IVoomaPortalService {
 
 
             DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity = dfsVoomaMerchantOnboardV1Repository.findById(model.getMerchantId()).get();
-            List<DFSVoomaOnboardingKYCentity> merchantKYCList =dfsVoomaOnboardEntity.getMerchantKYCList();
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode objectNode = mapper.createObjectNode();
             objectNode.put("id", dfsVoomaOnboardEntity.getId());
@@ -364,25 +362,16 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ownerOrDirector.add(owner);
             }
             objectNode.put("ownerDirector", ownerOrDirector);
-            //get kycfileslist
-            List<Map<String, Object>> fileNameList = new ArrayList<>();
-            Map<String, Object> fileMap = new HashMap<>();
-           for (int i = 0; i < merchantKYCList.size(); i++) {
-                fileMap.put(new File(
-                                merchantKYCList.get(i).getFilePath()).getName().split("_")[0],
-                        new File(merchantKYCList.get(i).getFilePath()).getName());
-                fileNameList.add(fileMap);
-
-            }
-            objectNode.put("kycFiles", String.valueOf(fileNameList));
-
-
+            List<Map<String, Object>> kycData = getKycData(dfsVoomaOnboardEntity);
+            objectNode.put("kycData", mapper.valueToTree(kycData));
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);
         }
         return null;
     }
+
+
 
     @Override
     public List<ObjectNode> getAllTargets() {
@@ -1194,6 +1183,16 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     }
 
+
+    public List<Map<String,Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails){
+        Map<String,Object> resp=new LinkedHashMap<>();
+        List<Map<String,Object>>data=new ArrayList<>();
+        customerDetails.getMerchantKYCList().stream()
+                .map(x-> new File(x.getFilePath()).getName())
+                .forEach(x->resp.put(x.split("_")[0],x));
+        data.add(resp);
+        return data ;
+    }
 
 }
 

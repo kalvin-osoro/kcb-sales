@@ -23,99 +23,93 @@ spec:
       targetPort: 8080
   selector:
     app: "{{ .Values.appName }}-backend"
-  clusterIP: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Values.appName }}-uploads-pv-claim"
+  labels:
+    app: "{{ .Values.appName }}-backend"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  annotations:
-    image.openshift.io/triggers: >-
-      [
-        {
-          "from": {
-            "kind":"ImageStreamTag",
-            "name":"{{ .Values.appName }}-backend:latest"
-          },
-          "fieldPath":"spec.template.spec.containers[?(@.name==\"{{ .Values.appName }}-backend\")].image",
-          "pause":"false"
-        }
-      ]
   name: "{{ .Values.appName }}-backend"
   labels:
     app: "{{ .Values.appName }}-backend"
 spec:
+  replicas: 1 
   selector:
     matchLabels:
       app: "{{ .Values.appName }}-backend"
-  serviceName: "{{ .Values.appName }}-backend"
-  replicas: 0
-  minReadySeconds: 20
   template:
     metadata:
       labels:
         app: "{{ .Values.appName }}-backend"
     spec:
-      terminationGracePeriodSeconds: 10
       containers:
-      - name: "{{ .Values.appName }}-backend"
-        image: "{{ .Values.appName }}-backend:latest"
-        env:
-          {{ if eq .Values.db.external false }}
-          - name: DB_HOST
-            value: "{{ .Values.appName }}-mysql"
-          - name: DB_PORT
-            value: "3306"
-          - name: DB_NAME
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.secretName }}" 
-                key: "{{ .Values.db.databaseNameKey }}"
-          - name: DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.secretName }}" 
-                key: "{{ .Values.db.usernameKey }}"
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.secretName }}" 
-                key: "{{ .Values.db.passwordKey }}"
-          {{ else }}
-          - name: DB_HOST
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.externalParams.secretName }}" 
-                key: "{{ .Values.db.externalParams.hostNameKey }}"
-          - name: DB_PORT
-            value: "3306"
-          - name: DB_NAME
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.externalParams.secretName }}" 
-                key: "{{ .Values.db.externalParams.databaseNameKey }}" 
-          - name: DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.externalParams.secretName }}" 
-                key: "{{ .Values.db.externalParams.userKey }}" 
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.db.externalParams.secretName }}" 
-                key: "{{ .Values.db.externalParams.passwordKey }}" 
-          {{ end }}
-        ports:
-        - containerPort: 8080
-          name: web
-        volumeMounts:
-        - name: uploads
-          mountPath: /app/upload
-  volumeClaimTemplates:
-  - metadata:
-      name: uploads
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "managed-premium"
-      resources:
-        requests:
-          storage: 3Gi
+        - name: "{{ .Values.appName }}-backend"
+          image: arokcb.azurecr.io/eclectics/kcb-ses-poc-be:v1.0.3
+          env:
+            {{ if eq .Values.db.external false }}
+            - name: DB_HOST
+              value: "{{ .Values.appName }}-mysql"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.secretName }}" 
+                  key: "{{ .Values.db.databaseNameKey }}"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.secretName }}" 
+                  key: "{{ .Values.db.usernameKey }}"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.secretName }}" 
+                  key: "{{ .Values.db.passwordKey }}"
+            {{ else }}
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.externalParams.secretName }}" 
+                  key: "{{ .Values.db.externalParams.hostNameKey }}"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.externalParams.secretName }}" 
+                  key: "{{ .Values.db.externalParams.databaseNameKey }}" 
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.externalParams.secretName }}" 
+                  key: "{{ .Values.db.externalParams.userKey }}" 
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.db.externalParams.secretName }}" 
+                  key: "{{ .Values.db.externalParams.passwordKey }}" 
+            {{ end }}
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+          - name: uploads-persistent-storage
+            mountPath: /app/upload
+      imagePullSecrets:
+        - name: kcb-ses-poc-reg-sec
+      volumes:
+      - name: uploads-persistent-storage
+        persistentVolumeClaim:
+          claimName: "{{ .Values.appName }}-uploads-pv-claim"

@@ -570,9 +570,10 @@ public class VoomaChannelService implements IVoomaChannelService {
                     "shopPhoto_" + merchantDetails1.getId() + ".PNG", shopPhoto,folderName);
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc,folderName);
+            //save download url from file storage service.loadFileAsResource
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc,folderName);
-            //save file paths to db
+            //save
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
@@ -586,6 +587,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 agentKYC.setDfsVoomaMerchantOnboardV1(merchantDetails1);
                 dfsVoomaOnboardingKYRepository.save(agentKYC);
             });
+
             return true;
 
 

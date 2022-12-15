@@ -25,6 +25,10 @@ public interface TreasuryLeadRepository extends JpaRepository<TreasuryLeadEntity
     int countAllLeadsCreatedLast7DaysCold();
     TreasuryLeadEntity[] findAllByDsrId(long dsrId);
 
+//get all leads by dsrId and assigned false
+    @Query(value = "SELECT * FROM dbo_treasury_lead where dsrId = ?1 AND assigned = false", nativeQuery = true)
+    TreasuryLeadEntity[] findAllByDsrIdAndAssigned(Long dsrId);
 
-
+    @Query(value = "SELECT * FROM dbo_treasury_lead where dsrId = ?1 AND assigned = true", nativeQuery = true)
+    TreasuryLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
 }

@@ -13,6 +13,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,5 +47,9 @@ public class AcquiringAssetEntity {
     @Embedded
     private VisitsReport visitsReport;
     private boolean assigned=false;
+
+    @OneToMany(mappedBy = "acquiringAssetEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+     private List<AcquiringAssetFilesEntity> assetFiles;
+
 
 }

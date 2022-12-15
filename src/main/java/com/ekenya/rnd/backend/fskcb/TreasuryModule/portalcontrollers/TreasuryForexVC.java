@@ -128,18 +128,16 @@ public class TreasuryForexVC {
         boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (success) {
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List) list);
-            //Object
+        if(list !=null){
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
 
-            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
-        } else {
+        }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
 
     //edit a currency rate
     @PostMapping("/treasury-edit-currency-rate")

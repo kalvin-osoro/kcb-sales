@@ -17,7 +17,7 @@ public interface IAgencyChannelService {
 
     boolean createLead(AgencyAddLeadRequest request);
 
-    List<ObjectNode> getAllLeadsByDsrId(Long dsrId);
+    List<ObjectNode> getAllLeadsByDsrId(DSRLeadRequest model);
 
     ArrayList<ObjectNode> getTargetsSummary();
 
