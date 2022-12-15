@@ -105,7 +105,7 @@ public class UsersVC {
     @PostMapping("/users-get-details")
     public ResponseEntity<?> getAdminUserDetails(@RequestBody AdminUserDetailsRequest request) {
         //TODO; INSIDE SERVICE
-        ObjectNode node = usersService.loadUserDetails(request.getUserId());
+        ObjectNode node = usersService.loadUserDetails(request);
 
         //Response
         if(node != null){
