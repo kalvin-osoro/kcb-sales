@@ -72,7 +72,7 @@ public class AcquiringChannelCustomer360VC {
     @GetMapping("/get-crm-customers")
     public ResponseEntity<?> getCRMCustomer() {
         try {
-            String uri="http://keprecrmappde02:8081/api/Values?entity=accounts&paramval=none";
+            String uri="http://keprecrmappde02.kcbad.com:8081/api/Values?entity=accounts&paramval=none";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -84,7 +84,7 @@ public class AcquiringChannelCustomer360VC {
     @PostMapping("/acquiring-get-customer-360-details-by-account")
     public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody CRMRequest model) {
         try {
-            String uri ="http://keprecrmappde02:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+            String uri ="http://keprecrmappde02.kcbad.com:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
             return new ResponseEntity<>(result, HttpStatus.OK);

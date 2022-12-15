@@ -342,6 +342,7 @@ public class ExcelHelper {
                         }
                     }
                 }catch (Exception ex){
+
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
