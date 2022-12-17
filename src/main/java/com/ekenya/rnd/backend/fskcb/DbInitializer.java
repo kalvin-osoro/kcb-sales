@@ -297,30 +297,6 @@ public class DbInitializer {
             profilesAndRolesRepository.save(profileRole);
         }
 
-        //retail Banking
-        String RETAIL_BANKING_PROFILE_NAME = "RETAIL BANKING";
-
-        if(!profilesRepository.findByName(RETAIL_BANKING_PROFILE_NAME).isPresent()) {
-
-            String RETAIL_BANKING_PROFILE_CODE = "retailBanking";
-            //
-            UserProfileEntity userProfile = new UserProfileEntity();
-            userProfile.setName(RETAIL_BANKING_PROFILE_NAME);
-            userProfile.setCode(RETAIL_BANKING_PROFILE_CODE);
-
-            //
-            profilesRepository.save(userProfile);
-
-
-            //map to role
-            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
-
-            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
-            profileRole.setProfileId(userProfile.getId());
-            profileRole.setRoleId(userRole.getId());
-            //
-            profilesAndRolesRepository.save(profileRole);
-        }
 
         //premium Banking
         String PREMIUM_BANKING_PROFILE_NAME = "PREMIUM BANKING";
@@ -347,6 +323,55 @@ public class DbInitializer {
             profilesAndRolesRepository.save(profileRole);
         }
 
+        //retail micro Banking
+        String RETAIL_MICRO_BANKING_PROFILE_NAME = "RETAIL MICRO-BANKING";
+
+        if(!profilesRepository.findByName(RETAIL_MICRO_BANKING_PROFILE_NAME).isPresent()) {
+
+            String RETAIL_MICRO_BANKING_PROFILE_CODE = "retailMicroBanking";
+            //
+            UserProfileEntity userProfile = new UserProfileEntity();
+            userProfile.setName(RETAIL_MICRO_BANKING_PROFILE_NAME);
+            userProfile.setCode(RETAIL_MICRO_BANKING_PROFILE_CODE);
+
+            //
+            profilesRepository.save(userProfile);
+
+
+            //map to role
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
+            profileRole.setProfileId(userProfile.getId());
+            profileRole.setRoleId(userRole.getId());
+            //
+            profilesAndRolesRepository.save(profileRole);
+        }
+
+        //retail sme Banking
+        String RETAIL_SME_BANKING_PROFILE_NAME = "RETAIL SME-BANKING";
+
+        if(!profilesRepository.findByName(RETAIL_SME_BANKING_PROFILE_NAME).isPresent()) {
+
+            String RETAIL_SME_BANKING_PROFILE_CODE = "retailSMEBanking";
+            //
+            UserProfileEntity userProfile = new UserProfileEntity();
+            userProfile.setName(RETAIL_SME_BANKING_PROFILE_NAME);
+            userProfile.setCode(RETAIL_SME_BANKING_PROFILE_CODE);
+
+            //
+            profilesRepository.save(userProfile);
+
+
+            //map to role
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
+            profileRole.setProfileId(userProfile.getId());
+            profileRole.setRoleId(userRole.getId());
+            //
+            profilesAndRolesRepository.save(profileRole);
+        }
 
         //Corporate Banking
         String CORPORATE_BANKING_PROFILE_NAME = "CORPORATE BANKING";
@@ -413,7 +438,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
 
             ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
