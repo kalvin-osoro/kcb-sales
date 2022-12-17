@@ -11,6 +11,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustifi
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBRevenueLineRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
@@ -21,6 +22,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +33,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.ekenya.rnd.backend.utils.Utility.isPointInPolygon;
 
 @Service
 @Slf4j
@@ -192,47 +199,35 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
     @Override
     public List<ObjectNode> getNearbyCustomers(AcquiringNearbyCustomersRequest model) {
-//        try {
-//            double longitude = model.getLongitude();
-//           double latitude = model.getLatitude();
-//            Coordinate coordinate = new Coordinate(longitude, latitude);
-//            List<ObjectNode> list = new ArrayList<>();
-//             ObjectMapper mapper = new ObjectMapper();
-//             for(DSRRegionEntity acquiringDSRRegionEntity : dsrRegionsRepository.findAll()){
-//                 ObjectNode asset = mapper.createObjectNode();
-//                 asset.put("id", acquiringDSRRegionEntity.getId());
-//                 asset.put("name", acquiringDSRRegionEntity.getName());
-//                    asset.put("bounds", acquiringDSRRegionEntity.getGeoJsonBounds());
-//                    //convert bounds to  coordinate
-//                    GeometryFactory geometryFactory = new GeometryFactory();
-//                    WKTReader reader = new WKTReader(geometryFactory);
-//                    Geometry geometry = reader.read(acquiringDSRRegionEntity.getGeoJsonBounds());
-//                 System.out.println("bounds: "+acquiringDSRRegionEntity.getGeoJsonBounds());
-//                 list.add(asset);
-//                 //check if login user latitute and longitude is inside any region bounds
-//                 if(isPointInPolygon(geometry.getCoordinate(),coordinate)){
-//                     System.out.println("inside a region");
-//                     //get all merchant in that region within 5km radius and get region name
-//                        for(AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.getNearbyCustomers(coordinate,acquiringDSRRegionEntity.getName())) {
-//                            ObjectNode asset1 = mapper.createObjectNode();
-//                            asset1.put("id", acquiringOnboardEntity.getId());
-//                            asset1.put("businessType", acquiringOnboardEntity.getBusinessType());
-//                            asset1.put("merchantName", acquiringOnboardEntity.getMerchantName());
-//                            asset1.put("merchantEmail", acquiringOnboardEntity.getMerchantEmail());
-//                            asset1.put("merchantPhone", acquiringOnboardEntity.getMerchantPhone());
-//                            asset1.put("merchantIdNumber", acquiringOnboardEntity.getMerchantIdNumber());
-//                            asset1.put("businessName", acquiringOnboardEntity.getBusinessName());
-//                            asset1.put("businessEmail", acquiringOnboardEntity.getBusinessEmail());
-//                            asset1.put("region", acquiringDSRRegionEntity.getName());
-//                            list.add(asset1);
-//                        }
-//                        return list;
-//                 }
-//                 return null;
-//             }
-//        } catch (Exception e) {
-//            log.error("Error occurred while getting nearby customers", e);
-//        }
+        try {
+            double longitude = model.getLongitude();
+           double latitude = model.getLatitude();
+            Coordinate coordinate = new Coordinate(longitude, latitude);
+            List<ObjectNode> list = new ArrayList<>();
+             ObjectMapper mapper = new ObjectMapper();
+             for(DSRRegionEntity acquiringDSRRegionEntity : dsrRegionsRepository.findAll()){
+                 ObjectNode asset = mapper.createObjectNode();
+                 asset.put("id", acquiringDSRRegionEntity.getId());
+                 asset.put("name", acquiringDSRRegionEntity.getName());
+                    asset.put("bounds", acquiringDSRRegionEntity.getGeoJsonBounds());
+                    //convert bounds to  coordinate
+                    GeometryFactory geometryFactory = new GeometryFactory();
+                    WKTReader reader = new WKTReader(geometryFactory);
+                    Geometry geometry = reader.read(acquiringDSRRegionEntity.getGeoJsonBounds());
+                 System.out.println("bounds: "+acquiringDSRRegionEntity.getGeoJsonBounds());
+                 list.add(asset);
+                 //check if login user latitute and longitude is inside any region bounds
+                 if(isPointInPolygon(geometry.getCoordinate(),coordinate)){
+                     System.out.println("inside a region");
+
+
+                        return list;
+                 }
+                 return null;
+             }
+        } catch (Exception e) {
+            log.error("Error occurred while getting nearby customers", e);
+        }
 
         return null;
     }

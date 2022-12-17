@@ -15,6 +15,7 @@ import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +34,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VoomaChannelService implements IVoomaChannelService {
 
-    private  final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+    private final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     private final DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
     private final DFSVoomaAgentOnboardV1Repository dfsVoomaAgentOnboardV1Repository;
     private final DFSVoomaAgentOwnerDetailsRepository dfsVoomaAgentOwnerDetailsRepository;
     private final DFSVoomaAgentContactDetailsRepository dfsVoomaAgentContactDetailsRepository;
     private final DFSVoomaOwnerDetailsRepository dfsVoomaOwnerDetailsRepository;
     private final DFSVoomaContactDetailsRepository dfsVoomaContactDetailsRepository;
-    private  final DFSVoomaLeadRepository dfsVoomaLeadRepository;
+    private final DFSVoomaLeadRepository dfsVoomaLeadRepository;
     private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
     private final DFSVoomaOnboardingKYRepository dfsVoomaOnboardingKYRepository;
     private final DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
@@ -50,7 +52,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     private final AcquiringAssetRepository acquiringAssetRepository;
 
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
-    
+
     private final FileStorageService fileStorageService;
 
     private final int totalTransaction = (int) (Math.random() * 1000000);
@@ -279,6 +281,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             DFSVoomaAgentOnboardingEntity agentData = dfsVoomaAgentOnboardingRepositor.save(dfsVoomaAgentOnboardEntity);
             //save files to server
             String folderName = "voomaAgentOnboarding";
+            //upload files to directory and create download url based on environment and save to db
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "frontID_" + agentData.getId() + ".PNG", frontID,folderName);
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
@@ -293,8 +296,8 @@ public class VoomaChannelService implements IVoomaChannelService {
                     "signatureDoc_" + agentData.getId() + ".PNG", signatureDoc,folderName);
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "businessPermitDoc_" + agentData.getId() + ".PNG", businessPermitDoc,folderName);
-            //save file paths to db
-            ArrayList<String> filePathList = new ArrayList<>();
+            //convert path to download by ServletUriComponentsBuilder and save to db
+            List<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
             filePathList.add(kraPinCertificatePath);
@@ -302,12 +305,17 @@ public class VoomaChannelService implements IVoomaChannelService {
             filePathList.add(shopPhotoPath);
             filePathList.add(signatureDocPath);
             filePathList.add(businessPermitDocPath);
-            filePathList.forEach(filePath -> {
-                DFSVoomaAgentOnboardingKYCEntity agentKYC = new DFSVoomaAgentOnboardingKYCEntity();
-                agentKYC.setFilePath(filePath);
-                agentKYC.setDfsVoomaAgentOnboardingEntity(agentData);
-                dfsVoomaAgentOnboardingKYCRepository.save(agentKYC);
-            });
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/downloadFile/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+
+            }
+
             return true;
         } catch (Exception e) {
             log.error("Error occurred while Onboarding Agent", e);
@@ -319,12 +327,12 @@ public class VoomaChannelService implements IVoomaChannelService {
     public boolean assignAssetToMerchant(VoomaAssignAssetRequest model) {
         //assign asset to merchant
         try {
-            if (model ==null){
+            if (model == null) {
                 return false;
             }
             DFSVoomaOnboardEntity dfsVoomaMerchantOnboardingEntity = dfsVoomaOnboardRepository.findById(model.getCustomerId()).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (dfsVoomaMerchantOnboardingEntity == null || dfsVoomaAssetEntity == null){
+            if (dfsVoomaMerchantOnboardingEntity == null || dfsVoomaAssetEntity == null) {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(dfsVoomaMerchantOnboardingEntity);
@@ -340,12 +348,12 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public boolean assignAssetToAgent(VoomaAssignAssetRequest model) {
         try {
-            if (model ==null){
+            if (model == null) {
                 return false;
             }
             DFSVoomaAgentOnboardingEntity dfsVoomaAgentOnboardingEntity = dfsVoomaAgentOnboardingRepositor.findById(model.getCustomerId()).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null){
+            if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null) {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(dfsVoomaAgentOnboardingEntity);
@@ -361,7 +369,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public List<ObjectNode> getAllAgentMerchantAssets(CustomerAssetsRequest model) {
         try {
-            if (model == null){
+            if (model == null) {
                 return null;
             }
             //get all assets for merchant
@@ -387,11 +395,11 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public boolean recollectAsset(VoomaCollectAssetRequest model) {
         try {
-            if (model ==null){
+            if (model == null) {
                 return false;
             }
-            DFSVoomaAssetEntity dfsVoomaAssetEntity =dfsVoomaAssetRepository.findById(model.getAssetId()).orElse(null);
-            if (dfsVoomaAssetEntity == null){
+            DFSVoomaAssetEntity dfsVoomaAssetEntity = dfsVoomaAssetRepository.findById(model.getAssetId()).orElse(null);
+            if (dfsVoomaAssetEntity == null) {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(null);
@@ -409,7 +417,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public boolean createCustomerVisit(VoomaCustomerVisitsRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return false;
             }
             DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
@@ -440,7 +448,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public List<ObjectNode> getAllCustomerVisitsByDSR(VoomaCustomerVisitsRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return null;
             }
             List<DFSVoomaCustomerVisitEntity> dfsVoomaCustomerVisitEntityList = dfsVoomaCustomerVisitRepository.findAllByDsrId(model.getDsrId());
@@ -453,7 +461,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 objectNode.put("actionPlan", dfsVoomaCustomerVisitEntity.getActionPlan());
                 objectNode.put("highlights", dfsVoomaCustomerVisitEntity.getHighlights());
                 objectNode.put("dsrName", dfsVoomaCustomerVisitEntity.getDsrName());
-                objectNode.put("customerName",dfsVoomaCustomerVisitEntity.getCustomerName());
+                objectNode.put("customerName", dfsVoomaCustomerVisitEntity.getCustomerName());
                 objectNode.put("createdOn", dfsVoomaCustomerVisitEntity.getCreatedOn().toString());
                 objectNodeList.add(objectNode);
             });
@@ -466,7 +474,7 @@ public class VoomaChannelService implements IVoomaChannelService {
 
     @Override
     public Object getSummary(DSRSummaryRequest model) {
-       return null;
+        return null;
     }
 
     @Override
@@ -532,7 +540,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaOwnerDetailsEntity.setMerchantId(merchantDetails1.getId());
                 dfsVoomaOwnerDetailsRepository.save(dfsVoomaOwnerDetailsEntity);
             }
-           List<DFSVoomaContactDetailsRequest> detailsRequestList =dfsVoomaMerchantOnboardV1Request.getDfsVoomaContactDetailsRequests();
+            List<DFSVoomaContactDetailsRequest> detailsRequestList = dfsVoomaMerchantOnboardV1Request.getDfsVoomaContactDetailsRequests();
             for (DFSVoomaContactDetailsRequest dfsVoomaContactDetailsRequest : detailsRequestList) {
                 DFSVoomaContactDetailsEntity dfsVoomaContactDetailsEntity = new DFSVoomaContactDetailsEntity();
                 dfsVoomaContactDetailsEntity.setContactPersonName(dfsVoomaContactDetailsRequest.getContactPersonName());
@@ -558,36 +566,47 @@ public class VoomaChannelService implements IVoomaChannelService {
             }
             //upload documents
             String folderName = "voomaOnboardingMerchant";
-
+//            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                    .path("/downloadFile/")
+//                    .path(folderName)
+//                    .toUriString();
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "frontID_" + merchantDetails1.getId() + ".PNG", frontID,folderName);
+                    "frontID_" + merchantDetails1.getId() + ".PNG", frontID, folderName);
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + merchantDetails1.getId() + ".PNG", backID,folderName);
+                    "backID_" + merchantDetails1.getId() + ".PNG", backID, folderName);
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "kraPinCertificate_" + merchantDetails1.getId() + ".PNG", kraPinCertificate,folderName);
+                    "kraPinCertificate_" + merchantDetails1.getId() + ".PNG", kraPinCertificate, folderName);
 
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "shopPhoto_" + merchantDetails1.getId() + ".PNG", shopPhoto,folderName);
+                    "shopPhoto_" + merchantDetails1.getId() + ".PNG", shopPhoto, folderName);
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc,folderName);
+                    "signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc, folderName);
             //save download url from file storage service.loadFileAsResource
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc,folderName);
+                    "businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc, folderName);
             //save
-            ArrayList<String> filePathList = new ArrayList<>();
+            List<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
             filePathList.add(kraPinCertificatePath);
             filePathList.add(shopPhotoPath);
             filePathList.add(signatureDocPath);
             filePathList.add(businessPermitDocPath);
-            filePathList.forEach(filePath -> {
-                DFSVoomaOnboardingKYCentity agentKYC = new DFSVoomaOnboardingKYCentity();
-                agentKYC.setFilePath(filePath);
-                agentKYC.setDfsVoomaMerchantOnboardV1(merchantDetails1);
-                dfsVoomaOnboardingKYRepository.save(agentKYC);
-            });
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/"+folderName+"/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+                DFSVoomaOnboardingKYCentity dfsVoomaMerchantDocumentsEntity = new DFSVoomaOnboardingKYCentity();
+                dfsVoomaMerchantDocumentsEntity.setFilePath(downloadUrl);
+                dfsVoomaMerchantDocumentsEntity.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaMerchantDocumentsEntity.setMerchantId(merchantDetails1.getId());
+                dfsVoomaOnboardingKYRepository.save(dfsVoomaMerchantDocumentsEntity);
 
+            }
             return true;
 
 
@@ -604,7 +623,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                                     MultipartFile kraPinCertificate,
                                     MultipartFile businessCertificateOfRegistration,
                                     MultipartFile shopPhoto,
-                                    MultipartFile signatureDoc,
+                                    MultipartFile[] signatureDoc,
                                     MultipartFile businessPermitDoc) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -652,10 +671,10 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaAgentOwnerDetailsEntity.setIdType(dfsVoomaAgentOwnerDetailsRequest.getIdType());
                 dfsVoomaAgentOwnerDetailsEntity.setDob(dfsVoomaAgentOwnerDetailsRequest.getDob());
                 dfsVoomaAgentOwnerDetailsEntity.setDfsVoomaAgentOnboardV1(agentOnboardV1);
-                DFSVoomaAgentOwnerDetailsEntity ownerDetailsEntity=dfsVoomaAgentOwnerDetailsRepository.save(dfsVoomaAgentOwnerDetailsEntity);
+                DFSVoomaAgentOwnerDetailsEntity ownerDetailsEntity = dfsVoomaAgentOwnerDetailsRepository.save(dfsVoomaAgentOwnerDetailsEntity);
 
             }
-            List<DFSVoomaAgentContactDetailsRequest> detailsRequestList =dfsVoomaAgentOnboardV1Request.getDfsVoomaAgentContactDetailsRequests();
+            List<DFSVoomaAgentContactDetailsRequest> detailsRequestList = dfsVoomaAgentOnboardV1Request.getDfsVoomaAgentContactDetailsRequests();
             for (DFSVoomaAgentContactDetailsRequest dfsVoomaContactDetailsRequest : detailsRequestList) {
                 DFSVoomaAgentContactDetailsEntity dfsVoomaContactDetailsEntity = new DFSVoomaAgentContactDetailsEntity();
                 dfsVoomaContactDetailsEntity.setContactPersonName(dfsVoomaContactDetailsRequest.getContactPersonName());
@@ -681,19 +700,19 @@ public class VoomaChannelService implements IVoomaChannelService {
 
             String folderName = "voomaAgentOnboarding";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "frontID_" + agentOnboardV1.getId() + ".PNG", frontID,folderName);
+                    "frontID_" + agentOnboardV1.getId() + ".PNG", frontID, folderName);
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + agentOnboardV1.getId() + ".PNG", backID,folderName);
+                    "backID_" + agentOnboardV1.getId() + ".PNG", backID, folderName);
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "kraPinCertificate_" + agentOnboardV1.getId() + ".PNG", kraPinCertificate,folderName);
+                    "kraPinCertificate_" + agentOnboardV1.getId() + ".PNG", kraPinCertificate, folderName);
             String businessCertificateOfRegistrationPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessCertificateOfRegistration_" + agentOnboardV1.getId() + ".PNG", businessCertificateOfRegistration,folderName);
+                    "businessCertificateOfRegistration_" + agentOnboardV1.getId() + ".PNG", businessCertificateOfRegistration, folderName);
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "shopPhoto_" + agentOnboardV1.getId() + ".PNG", shopPhoto,folderName);
-            String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                 "signatureDoc_" + agentOnboardV1.getId() + ".PNG", signatureDoc,folderName);
+                    "shopPhoto_" + agentOnboardV1.getId() + ".PNG", shopPhoto, folderName);
+//            String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
+//                 "signatureDoc_" + agentOnboardV1.getId() + ".PNG", signatureDoc,folderName);
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessPermitDoc_" + agentOnboardV1.getId() + ".PNG", businessPermitDoc,folderName);
+                    "businessPermitDoc_" + agentOnboardV1.getId() + ".PNG", businessPermitDoc, folderName);
             //save file paths to db
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
@@ -701,7 +720,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             filePathList.add(kraPinCertificatePath);
             filePathList.add(businessCertificateOfRegistrationPath);
             filePathList.add(shopPhotoPath);
-            filePathList.add(signatureDocPath);
+//            filePathList.add(signatureDocPath);
             filePathList.add(businessPermitDocPath);
             filePathList.forEach(filePath -> {
                 DFSVoomaAgentOnboardingKYCEntity agentKYC = new DFSVoomaAgentOnboardingKYCEntity();
@@ -709,17 +728,17 @@ public class VoomaChannelService implements IVoomaChannelService {
                 agentKYC.setDfsVoomaAgentOnboardV1(agentOnboardV1);
                 dfsVoomaAgentOnboardingKYCRepository.save(agentKYC);
             });
-//            List<String> filePathList1 = new ArrayList<>();
-//            //save files
-//
-//            filePathList1 = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_"+agentOnboardV1.getId(), signatureDoc);
-//            //save file paths to db
-//            filePathList1.forEach(filePath -> {
-//                DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
-//                signatureFiles.setDfsVoomaAgentOnboardV1(agentOnboardV1);
-//                signatureFiles.setFilePath(filePath);
-//                dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
-//            });
+            List<String> filePathList1 = new ArrayList<>();
+            //save files
+
+            filePathList1 = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_" + agentOnboardV1.getId(), signatureDoc);
+            //save file paths to db
+            filePathList1.forEach(filePath -> {
+                DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
+                signatureFiles.setDfsVoomaAgentOnboardV1(agentOnboardV1);
+                signatureFiles.setFilePath(filePath);
+                dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
+            });
             return true;
         } catch (Exception e) {
             log.error("Error occurred while Onboarding Agent", e);
@@ -727,4 +746,61 @@ public class VoomaChannelService implements IVoomaChannelService {
         return false;
     }
 
+    @Override
+    public ObjectNode getCustomerDetails(CustomerRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            if (model.getAccountNumber().equals("KCB001")) {
+                ObjectNode addProperty = JsonNodeFactory.instance.objectNode();
+                addProperty.put("accountNumber", "KCB001");
+                addProperty.put("accountNumber", "142876543266");
+                addProperty.put("accountName", "Obadia Lusengeri");
+                addProperty.put("bankName", "Kenya Commercial Bank");
+                addProperty.put("wantTillNumber", "true");
+                addProperty.put("wantPaybillNumber", "true");
+                addProperty.put("dealingWithForeignExchange", "false");
+                addProperty.put("customerName", "Obadia Lusengeri");
+                addProperty.put("customerPhoneNumber", "0712345678");
+                addProperty.put("customerEmailAddress", "obadia@gmail.com");
+                addProperty.put("customerIDNumber", "35189713");
+                addProperty.put("customerIDType", "ID");
+                addProperty.put("customerAddress", "Nairobi");
+                addProperty.put("customerDOB", "1990-01-01");
+                addProperty.put("customerGender", "Male");
+                addProperty.put("customerMaritalStatus", "Single");
+                addProperty.put("customerOccupation", "Developer");
+                addProperty.put("customerEmployer", "Ecclectics Int");
+                addProperty.put("customerEmployerAddress", "Nairobi");
+                addProperty.put("customerEmployerPhoneNumber", "0712345678");
+                addProperty.put("customerEmployerEmailAddress", "info@eclectics.io");
+                addProperty.put("customerEmployerContactPerson", "Jane Mwangi");
+                addProperty.put("customerEmployerContactPersonPhoneNumber", "0712345678");
+                addProperty.put("customerEmployerContactPersonEmailAddress", "mwagi.jane@eclectics.io");
+                //customer next of kin details
+                addProperty.put("customerNextOfKinName", "Patricia Inzagi");
+                addProperty.put("customerNextOfKinPhoneNumber", "0712345678");
+                addProperty.put("customerNextOfKinEmailAddress", "p.inzagi@gmail.com");
+                addProperty.put("VATNumber","765433");
+                addProperty.put("postalCode","001001");
+                addProperty.put("city","Nairobi");
+                addProperty.put("nearestLandMark","Serena Hotel");
+                //paymentDetails
+                addProperty.put("settlmentType","OnDemand");
+                addProperty.put("merchantType","GENERAL");
+                addProperty.put("dateRegistered","15-12-2022");
+                //if not matched return empty object
+                return addProperty;
+
+
+
+
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while getting customer details", e);
+        }
+        return JsonNodeFactory.instance.objectNode();
+
+    }
 }

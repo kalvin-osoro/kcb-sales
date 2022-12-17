@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,6 +67,8 @@ public interface IVoomaChannelService {
                              MultipartFile backID,
                              MultipartFile kraPinCertificate,
                              MultipartFile businessCertificateOfRegistration,
-                             MultipartFile shopPhoto, MultipartFile signatureDoc,
+                             MultipartFile shopPhoto, MultipartFile[] signatureDoc,
                              MultipartFile businessPermitDoc);
+
+    ObjectNode getCustomerDetails(CustomerRequest model);
 }

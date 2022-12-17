@@ -11,7 +11,7 @@ spec:
     name: "{{ .Values.appName }}-backend"
   tls:
     termination: edge
-    insecureEdgeTerminationPolicy: Redirect
+    insecureEdgeTerminationPolicy: Allow
 ---
 apiVersion: v1
 kind: Service
@@ -55,61 +55,75 @@ spec:
         app: "{{ .Values.appName }}-backend"
     spec:
       containers:
-        - name: "{{ .Values.appName }}-backend"
-          image: arokcb.azurecr.io/eclectics/kcb-ses-poc-be:v1.0.3
-          env:
-            {{ if eq .Values.db.external false }}
-            - name: DB_HOST
-              value: "{{ .Values.appName }}-mysql"
-            - name: DB_PORT
-              value: "3306"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.secretName }}" 
-                  key: "{{ .Values.db.databaseNameKey }}"
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.secretName }}" 
-                  key: "{{ .Values.db.usernameKey }}"
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.secretName }}" 
-                  key: "{{ .Values.db.passwordKey }}"
-            {{ else }}
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.externalParams.secretName }}" 
-                  key: "{{ .Values.db.externalParams.hostNameKey }}"
-            - name: DB_PORT
-              value: "3306"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.externalParams.secretName }}" 
-                  key: "{{ .Values.db.externalParams.databaseNameKey }}" 
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.externalParams.secretName }}" 
-                  key: "{{ .Values.db.externalParams.userKey }}" 
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.db.externalParams.secretName }}" 
-                  key: "{{ .Values.db.externalParams.passwordKey }}" 
-            {{ end }}
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-          - name: uploads-persistent-storage
-            mountPath: /app/upload
-      imagePullSecrets:
-        - name: kcb-ses-poc-reg-sec
-      volumes:
-      - name: uploads-persistent-storage
-        persistentVolumeClaim:
-          claimName: "{{ .Values.appName }}-uploads-pv-claim"
+      - name: "{{ .Values.appName }}-backend"
+        image: "{{ .Values.appName }}-backend:latest"
+        env:
+          {{ if eq .Values.db.external false }}
+          - name: DB_HOST
+            value: "{{ .Values.appName }}-mysql"
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.secretName }}" 
+                key: "{{ .Values.db.databaseNameKey }}"
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.secretName }}" 
+                key: "{{ .Values.db.usernameKey }}"
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.secretName }}" 
+                key: "{{ .Values.db.passwordKey }}"
+          {{ else }}
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.externalParams.secretName }}" 
+                key: "{{ .Values.db.externalParams.hostNameKey }}"
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.externalParams.secretName }}" 
+                key: "{{ .Values.db.externalParams.databaseNameKey }}" 
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.externalParams.secretName }}" 
+                key: "{{ .Values.db.externalParams.userKey }}" 
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.externalParams.secretName }}" 
+                key: "{{ .Values.db.externalParams.passwordKey }}" 
+          {{ end }}
+        ports:
+        - containerPort: 8080
+          name: web
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/upload
+        - name: logs
+          mountPath: /app/logs
+  volumeClaimTemplates:
+  - metadata:
+      name: uploads
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "managed-premium"
+      resources:
+        requests:
+          storage: 3Gi
+  - metadata:
+      name: logs
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "managed-premium"
+      resources:
+        requests:
+          storage: 5Gi

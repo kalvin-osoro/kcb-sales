@@ -30,7 +30,7 @@ public class FileStorageService implements IFileStorageService {
 
     public static String pathString = "upload";
     public static String uploadDirectory = "upload";
-    private final Path root = Paths.get(pathString);
+    private final Path root = Paths.get(uploadDirectory);
     public static String uploadPath = "upload";
 
 
@@ -77,6 +77,21 @@ public class FileStorageService implements IFileStorageService {
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Resource loadFileAsResourceByName(String fileName) {
+        try {
+            Path filePath = Paths.get(uploadDirectory).resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new RuntimeException("File not found " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("File not found " + fileName, ex);
         }
     }
 
@@ -146,10 +161,12 @@ public class FileStorageService implements IFileStorageService {
             if (!Files.exists(subDirectory)) {
                 Files.createDirectories(subDirectory);
             }
-            //copy file to subdirectory
-            Path copyLocation = Paths.get(subDirectory + File.separator + fileName);
-            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-            return copyLocation.toString();
+            fileName = new File(subDirectory + "/" + fileName).getName();
+            Path targetLocation = subDirectory.resolve(fileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Path is " + fileName);
+            return fileName;
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
@@ -167,14 +184,13 @@ public class FileStorageService implements IFileStorageService {
     }
 
 
-    //load download url for document
-    public String loadFileAsResource(String fileName,String folderName) {
+    public String loadFileAsResource(String fileName) {
         try {
-            Path filePath = Paths.get(uploadDirectory + "/" + folderName).resolve(fileName).normalize();
+            Path filePath = Paths.get(uploadDirectory).resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/downloadFile/")
+                        .path("/upload/")
                         .path(fileName)
                         .toUriString();
                 return fileDownloadUri;

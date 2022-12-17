@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddConvenantRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBApproveConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaApproveMerchantOnboarindRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddCovenantRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -116,4 +118,64 @@ public class CBConcessionsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+    @PostMapping("/cb-approve-concession")
+    public ResponseEntity<?> approveConcession(@RequestBody CBApproveConcessionRequest model) {
+
+        boolean success = cbService.approveCBConcession(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+  //send email for Approval
+    @PostMapping("/cb-send-email-for-approval")
+    public ResponseEntity<?> sendEmailForApproval(@RequestBody CBApproveConcessionRequest model) {
+
+        boolean success = cbService.sendEmailForApproval(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("message","email sent successful for approver{ "+model.getEmailUrl()+" }");
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            }
+        }
+
+        @PostMapping("/cb-reject-concession")
+        public ResponseEntity<?> rejectConcession(@RequestBody CBApproveConcessionRequest model) {
+
+            boolean success = cbService.rejectCBConcession(model);
+            //Response
+            ObjectMapper objectMapper = new ObjectMapper();
+            if(success){
+                //Object
+                ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+                    return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+                }else{
+
+                    //Response
+                    return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+                }
+            }
+
 }

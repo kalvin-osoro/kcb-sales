@@ -62,6 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/sms/**").permitAll()
+                .antMatchers("/api/merchant/fileupload/**").permitAll()
+                .antMatchers("/api/auth/fileupload/**").permitAll()
                 .antMatchers("/kcb-sales-effective/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 //
@@ -75,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());

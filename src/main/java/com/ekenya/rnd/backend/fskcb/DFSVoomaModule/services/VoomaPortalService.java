@@ -332,17 +332,17 @@ public class VoomaPortalService implements IVoomaPortalService {
                 contactPerson.put("contactPersonNameiIdNumber", dfsVoomaContactPerson.getContactPersonIdNumber());
                 contactPerson.put("contactPersonNameIdType", dfsVoomaContactPerson.getContactPersonIdType());
                 //
-                contactPerson.put("financeContactPersonName",dfsVoomaContactPerson.getFinancialContactPersonIdType());
-                contactPerson.put("financeContactPersonPhone",dfsVoomaContactPerson.getFinancialContactPersonPhoneNumber());
-                contactPerson.put("financeContactPersonEmail",dfsVoomaContactPerson.getFinancialContactPersonEmailAddress());
-                contactPerson.put("financeContactPersonIdNumber",dfsVoomaContactPerson.getFinancialContactPersonIdNumber());
-                contactPerson.put("financeContactPersonIdType",dfsVoomaContactPerson.getFinancialContactPersonIdType());
+                contactPerson.put("financeContactPersonName", dfsVoomaContactPerson.getFinancialContactPersonIdType());
+                contactPerson.put("financeContactPersonPhone", dfsVoomaContactPerson.getFinancialContactPersonPhoneNumber());
+                contactPerson.put("financeContactPersonEmail", dfsVoomaContactPerson.getFinancialContactPersonEmailAddress());
+                contactPerson.put("financeContactPersonIdNumber", dfsVoomaContactPerson.getFinancialContactPersonIdNumber());
+                contactPerson.put("financeContactPersonIdType", dfsVoomaContactPerson.getFinancialContactPersonIdType());
                 //administrative
-                contactPerson.put("nameOfAdministrator",dfsVoomaContactPerson.getAdministrativeContactPersonName());
-                contactPerson.put("administratorPhone",dfsVoomaContactPerson.getAdministrativeContactPersonPhoneNumber());
-                contactPerson.put("administratorEmail",dfsVoomaContactPerson.getAdministrativeContactPersonEmailAddress());
-                contactPerson.put("administratorIdType",dfsVoomaContactPerson.getAdministrativeContactPersonIdType());
-                contactPerson.put("administratorIdNumber",dfsVoomaContactPerson.getAdministrativeContactPersonIdNumber());
+                contactPerson.put("nameOfAdministrator", dfsVoomaContactPerson.getAdministrativeContactPersonName());
+                contactPerson.put("administratorPhone", dfsVoomaContactPerson.getAdministrativeContactPersonPhoneNumber());
+                contactPerson.put("administratorEmail", dfsVoomaContactPerson.getAdministrativeContactPersonEmailAddress());
+                contactPerson.put("administratorIdType", dfsVoomaContactPerson.getAdministrativeContactPersonIdType());
+                contactPerson.put("administratorIdNumber", dfsVoomaContactPerson.getAdministrativeContactPersonIdNumber());
 
 
                 contactPersonArray.add(contactPerson);
@@ -362,15 +362,22 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ownerOrDirector.add(owner);
             }
             objectNode.put("ownerDirector", ownerOrDirector);
-            List<Map<String, Object>> kycData = getKycData(dfsVoomaOnboardEntity);
-            objectNode.put("kycData", mapper.valueToTree(kycData));
+            //list of file paths
+            List<DFSVoomaOnboardingKYCentity> dfsVoomaFileUploadEntities = dfsVoomaOnboardingKYRepository.findByMerchantId(model.getMerchantId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (DFSVoomaOnboardingKYCentity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                fileUpload.put("filePath", dfsVoomaFileUploadEntity.getFilePath());
+                fileUploads.add(fileUpload);
+            }
+            objectNode.put("fileUploads", fileUploads);
+
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);
         }
         return null;
     }
-
 
 
     @Override
@@ -511,13 +518,13 @@ public class VoomaPortalService implements IVoomaPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity : dfsVoomaMerchantOnboardV1Repository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
-                objectNode.put("id",dfsVoomaOnboardEntity.getId());
+                objectNode.put("id", dfsVoomaOnboardEntity.getId());
                 objectNode.put("businessName", dfsVoomaOnboardEntity.getBusinessName());
                 objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
                 objectNode.put("status", dfsVoomaOnboardEntity.getOnboardingStatus().toString());
                 objectNode.put("dateOnborded", dfsVoomaOnboardEntity.getCreatedOn().getTime());
-                objectNode.put("payBillNo",Utility.generateRandomNumber());
-                objectNode.put("tillNo",Utility.generateRandomNumber());
+                objectNode.put("payBillNo", Utility.generateRandomNumber());
+                objectNode.put("tillNo", Utility.generateRandomNumber());
                 objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getOutletPhoneNumber());
                 objectNode.put("email", dfsVoomaOnboardEntity.getBusinessEmailAddress());
 //                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
@@ -1184,15 +1191,16 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
 
-    public List<Map<String,Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails){
-        Map<String,Object> resp=new LinkedHashMap<>();
-        List<Map<String,Object>>data=new ArrayList<>();
+    public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
+        Map<String, Object> resp = new LinkedHashMap<>();
+        List<Map<String, Object>> data = new ArrayList<>();
         customerDetails.getMerchantKYCList().stream()
-                .map(x-> new File(x.getFilePath()).getName())
-                .forEach(x->resp.put(x.split("_")[0],x));
+                .map(x -> new File(x.getFilePath()).getName())
+                .forEach(x -> resp.put(x.split("_")[0], x));
         data.add(resp);
-        return data ;
+        return data;
     }
+
 
 }
 
