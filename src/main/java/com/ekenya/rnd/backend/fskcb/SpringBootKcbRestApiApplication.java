@@ -42,6 +42,9 @@ import java.util.logging.FileHandler;
 //@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @Slf4j
 public class SpringBootKcbRestApiApplication   {
+
+	public static final String  BASE_LOGS_DIR = "logs/kcb-sales-backend";
+
 	@Resource
 	public Environment environment;
 
@@ -273,7 +276,7 @@ public class SpringBootKcbRestApiApplication   {
 		ch.qos.logback.classic.Logger root = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 		root.setLevel(Level.DEBUG);
 		root.addAppender(fileAppender);
-		root.setAdditive(false); /* set to true if root should log too */
+		root.setAdditive(true); /* set to true if root should log too */
 
 		StatusPrinter.print(context);
 	}
