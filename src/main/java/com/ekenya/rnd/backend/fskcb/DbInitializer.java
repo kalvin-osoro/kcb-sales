@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecQuestionOptionEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionEntity;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionType;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionAnswersRepo;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
@@ -617,6 +618,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn1).isPresent()) {
                 SecurityQuestionEntity questionEntity1 = new SecurityQuestionEntity();
                 questionEntity1.setTitle(qn1);
+                questionEntity1.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity1);
 
             }
@@ -624,6 +626,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn2).isPresent()) {
                 SecurityQuestionEntity questionEntity2 = new SecurityQuestionEntity();
                 questionEntity2.setTitle(qn2);
+                questionEntity2.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity2);
             }
 
@@ -631,6 +634,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn3).isPresent()) {
                 SecurityQuestionEntity questionEntity3 = new SecurityQuestionEntity();
                 questionEntity3.setTitle(qn3);
+                questionEntity3.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity3);
             }
 
@@ -638,6 +642,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn4).isPresent()) {
                 SecurityQuestionEntity questionEntity4 = new SecurityQuestionEntity();
                 questionEntity4.setTitle(qn4);
+                questionEntity4.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity4);
             }
 
@@ -646,10 +651,11 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn5).isPresent()) {
                 SecurityQuestionEntity questionEntity5 = new SecurityQuestionEntity();
                 questionEntity5.setTitle(qn5);
+                questionEntity5.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity5);
             }
         }catch (Exception ex){
-
+            log.error(ex.getMessage(),ex);
         }
     }
 }

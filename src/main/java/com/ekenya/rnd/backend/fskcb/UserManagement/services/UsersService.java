@@ -598,6 +598,8 @@ public class UsersService implements IUsersService {
 
                 //
                 securityQuestionsRepo.save(qn);
+            }else{
+                //Qn already exists
             }
             return true;
         }catch (Exception e){
@@ -616,8 +618,12 @@ public class UsersService implements IUsersService {
 
                 node.put("id",qn.getId());
                 node.put("title",qn.getTitle());
-                node.put("type",qn.getType().toString());
-
+                if(qn.getType() != null) {
+                    node.put("type", qn.getType().toString());
+                }else{
+                    node.put("type", "");
+                }
+                //
                 if(!qn.getOptions().isEmpty()) {
                     ArrayNode options = mObjectMapper.createArrayNode();
                     for (SecQuestionOptionEntity opt:
