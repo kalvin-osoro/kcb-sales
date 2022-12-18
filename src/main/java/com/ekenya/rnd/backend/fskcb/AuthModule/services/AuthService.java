@@ -176,7 +176,7 @@ public class AuthService implements IAuthService{
             DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
             if(dsrAccount != null) {
                 response.setSalesCode(dsrAccount.getSalesCode());
-                response.setId(dsrAccount.getId());
+                response.setDsrId(dsrAccount.getId());
                 DSRTeamEntity teamEntity = dsrTeamsRepository.getById(dsrAccount.getTeamId());
                 response.setTeamName(teamEntity.getName());
                 response.setTeamCode(teamEntity.getCode());

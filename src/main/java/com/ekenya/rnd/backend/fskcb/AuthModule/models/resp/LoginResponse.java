@@ -26,7 +26,7 @@ public class LoginResponse {
     private String name;
     private String email;
     private String salesCode;
-    private Long id;
+    private Long dsrId;
     private String teamName;
     private String teamCode;
 }

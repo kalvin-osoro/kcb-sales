@@ -52,7 +52,7 @@ public class AuthChannelController {
                 //
                 ObjectNode node = mObjectMapper.createObjectNode();
                 node.put("token",resp.getToken());
-                node.put("id",resp.getId());
+                node.put("dsrId",resp.getDsrId());
                 node.put("type",resp.getType());
                 node.put("name",resp.getName());
                 node.put("email",resp.getEmail());
