@@ -4,4 +4,5 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.C
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CBBankingConvenantRepository extends JpaRepository<CBBankingConvenantEntity, Long> {
+    Iterable<? extends CBBankingConvenantEntity> findByCustomerId(String customerId);
 }

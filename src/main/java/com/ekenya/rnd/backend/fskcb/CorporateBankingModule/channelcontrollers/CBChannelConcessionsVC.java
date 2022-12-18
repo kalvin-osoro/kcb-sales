@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerConcession;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,7 @@ public class CBChannelConcessionsVC {
     private ICBChannelService channelService;
 
     @PostMapping(value = "/cb-get-customer-concessions")
-    public ResponseEntity<?> getAllCustomerConcessions(@RequestBody CBConcessionRequest model) {
+    public ResponseEntity<?> getAllCustomerConcessions(@RequestBody CBCustomerConcession model) {
         List<?> list = channelService.getAllCustomerConcessions(model);
         boolean success = list != null;
         //Response

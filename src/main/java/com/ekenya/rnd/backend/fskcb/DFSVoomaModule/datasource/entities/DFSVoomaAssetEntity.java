@@ -51,8 +51,8 @@ public class DFSVoomaAssetEntity {
     private boolean assigned=false;
     //relationship of Asset to agent and merchant
   @ManyToOne
-    private DFSVoomaOnboardEntity dfsVoomaOnboardEntity;
+    private DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity;
     @ManyToOne
-    private DFSVoomaAgentOnboardingEntity dfsVoomaAgentOnboardingEntity;
+    private DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardingEntity;
 
 }

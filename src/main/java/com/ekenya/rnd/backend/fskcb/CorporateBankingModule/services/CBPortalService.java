@@ -347,6 +347,7 @@ public class CBPortalService implements ICBPortalService {
 
             cbBankingConvenantEntity.setStartDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             cbBankingConvenantEntity.setStatus(ConcessionTrackingStatus.GREEN);
+            cbBankingConvenantEntity.setReferenceNumber(model.getReferenceNumber());
 
             cbBankingConvenantEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save

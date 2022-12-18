@@ -330,7 +330,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaOnboardEntity dfsVoomaMerchantOnboardingEntity = dfsVoomaOnboardRepository.findById(model.getCustomerId()).orElse(null);
+            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardingEntity = dfsVoomaMerchantOnboardV1Repository.findById(model.getCustomerId()).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
             if (dfsVoomaMerchantOnboardingEntity == null || dfsVoomaAssetEntity == null) {
                 return false;
@@ -351,7 +351,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaAgentOnboardingEntity dfsVoomaAgentOnboardingEntity = dfsVoomaAgentOnboardingRepositor.findById(model.getCustomerId()).orElse(null);
+            DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardingEntity = dfsVoomaAgentOnboardV1Repository.findById(model.getCustomerId()).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
             if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null) {
                 return false;

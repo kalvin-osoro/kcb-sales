@@ -25,6 +25,7 @@ public class CBChannelService implements ICBChannelService {
     private final CBCustomerAppointmentRepository cbCustomerAppointmentRepository;
     private final CBConcessionRepository cbConcessionRepository;
     private final CBCustomerVisitRepository cbCustomerVisitRepository;
+    private final CBBankingConvenantRepository cbBankingConvenantRepository;
     private final CBTargetRepository cbTargetRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
 
@@ -200,25 +201,27 @@ public class CBChannelService implements ICBChannelService {
     }
 
     @Override
-    public List<ObjectNode> getAllCustomerConcessions(CBConcessionRequest model) {
-//        try {
-//            if (model==null){
-//                return null;
-//            }
-//            List<ObjectNode> list = new ArrayList<>();
-//            ObjectMapper mapper = new ObjectMapper();
-//            for (CBConcessionEntity cbCustomerConcessionEntity : cbConcessionRepository.findAllByCustomerAccountNumber(model.getCustomerAccountNumber())) {
-//                ObjectNode node = mapper.createObjectNode();
-//                node.put("customerName", cbCustomerConcessionEntity.getCustomerName());
-//                node.put("concessionStatus", cbCustomerConcessionEntity.getConcessionStatus().ordinal());
-//
-//
-//                list.add(node);
-//            }
-//            return list;
-//        } catch (Exception e) {
-//            log.error("Error occurred while Customer's concession", e);
-//        }
+    public List<ObjectNode> getAllCustomerConcessions(CBCustomerConcession model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBBankingConvenantEntity cbBankingConvenantEntity : cbBankingConvenantRepository.findByCustomerId(model.getCustomerId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("referenceNumber", cbBankingConvenantEntity.getReferenceNumber());
+                node.put("customerName", cbBankingConvenantEntity.getCustomerName());
+                node.put("expiryDate", cbBankingConvenantEntity.getEndDate());
+                node.put("condition", cbBankingConvenantEntity.getCondition());
+                node.put("status", cbBankingConvenantEntity.getStatus().toString());
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
+        }
+
         return null;
     }
 

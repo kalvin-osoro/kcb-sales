@@ -26,7 +26,7 @@ public interface ICBChannelService {
 
     ArrayList<ObjectNode> getTargetsSummary();
 
-    List<ObjectNode> getAllCustomerConcessions(CBConcessionRequest model);
+    List<ObjectNode> getAllCustomerConcessions(CBCustomerConcession model);
 
     boolean createCustomerAppointment(CBAppointmentRequest model);
 

@@ -23,5 +23,6 @@ public class CBAddConvenantRequest {
     private ConcessionTrackingStatus status;
     private Date createdOn;
     private String alertMessage;
+    private String referenceNumber;
     private Integer alertBeforeExpiry;
 }

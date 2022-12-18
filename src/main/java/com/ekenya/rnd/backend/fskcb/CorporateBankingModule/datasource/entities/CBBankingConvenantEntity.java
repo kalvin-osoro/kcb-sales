@@ -24,7 +24,10 @@ public class CBBankingConvenantEntity {
     private String customerId;
     private String startDate;
     private String endDate;
+    private String referenceNumber;
+    private String condition;
     private Integer intervalForCheck;
+    private String customerName;
     private Long dsrId;
     @Enumerated(EnumType.STRING)
     private ConcessionTrackingStatus status;
@@ -32,4 +35,7 @@ public class CBBankingConvenantEntity {
     private Date createdOn;
     private String alertMessage;
     private Integer alertBeforeExpiry;
+//    @OneToOne
+//    @JoinColumn(name = "concessionId")
+//    private CBConcessionEntity concessionEntity;
 }
