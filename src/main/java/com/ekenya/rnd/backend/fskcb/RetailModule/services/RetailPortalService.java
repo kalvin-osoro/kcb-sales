@@ -1,9 +1,12 @@
 package com.ekenya.rnd.backend.fskcb.RetailModule.services;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.entites.RetailLeadEntity;
 import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.repository.RetailLeadRepository;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +21,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RetailPortalService implements IRetailPortalService {
     private final RetailLeadRepository retailLeadRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
+
 
     @Override
-    public boolean assignLead(RetailAssignLeadRequest model) {
+    public boolean assignLead(TreasuryAssignLeadRequest model) {
         try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity dsrAccountsEntity = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
+            if (dsrAccountsEntity == null) {
+                return false;
+            }
             RetailLeadEntity retailLeadEntity = retailLeadRepository.findById(model.getLeadId()).orElse(null);
-            retailLeadEntity.setDsrId(model.getDsrId());
-            //set start date from input
-            retailLeadEntity.setStartDate(model.getStartDate());
-            retailLeadEntity.setEndDate(model.getEndDate());
-            //save
-            retailLeadRepository.save(retailLeadEntity);
-            //update is assigned to true
+            if (retailLeadEntity == null) {
+                return false;
+            }
             retailLeadEntity.setAssigned(true);
+            retailLeadEntity.setPriority(model.getPriority());
+            //set dsrAccId from dsrAccountsEntity
+            retailLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
+            retailLeadRepository.save(retailLeadEntity);
             return true;
 
 
+
         } catch (Exception e) {
-            log.error("Error assigning lead to dsr", e);
+            log.error("Error occurred while assigning lead", e);
         }
         return false;
     }
@@ -50,10 +63,11 @@ public class RetailPortalService implements IRetailPortalService {
                 objectNode.put("id", retailLeadEntity.getId());
                 objectNode.put("customerId", retailLeadEntity.getCustomerId());
                 objectNode.put("businessUnit", retailLeadEntity.getBusinessUnit());
-                objectNode.put("leadStatus", retailLeadEntity.getLeadStatus().ordinal());
-                objectNode.put("topic", retailLeadEntity.getTopic());
-                objectNode.put("priority", retailLeadEntity.getPriority().ordinal());
-                objectNode.put("dsrId", retailLeadEntity.getDsrId());
+                objectNode.put("leadStatus", retailLeadEntity.getLeadStatus().toString());
+                objectNode.put("createdOn",retailLeadEntity.getCreatedOn().getTime());
+                objectNode.put("product",retailLeadEntity.getProduct());
+                objectNode.put("dsrName",retailLeadEntity.getDsrName());
+                objectNode.put("priority", retailLeadEntity.getPriority().toString());
                 list.add(objectNode);
             }
             return list;

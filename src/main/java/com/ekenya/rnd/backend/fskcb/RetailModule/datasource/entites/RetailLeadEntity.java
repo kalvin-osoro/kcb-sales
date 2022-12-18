@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.RetailModule.datasource.entites;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,12 @@ public class RetailLeadEntity {
     private  Integer customerId;
     private String businessUnit;
     private String customerName;
+    private String outcomeOfTheVisit;
     private String remarks;
     private String customerAccountNumber;
+    private String product;
+    private String email;
+    private String phoneNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -36,4 +41,7 @@ public class RetailLeadEntity {
     private String startDate;
     private String endDate;
     private Date createdOn;
+    @ManyToOne
+    @JoinColumn(name = "dsrAccId")
+    private DSRAccountEntity dsrAccountEntity;
 }

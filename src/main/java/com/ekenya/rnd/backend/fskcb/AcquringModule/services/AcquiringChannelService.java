@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -201,36 +202,40 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     public List<ObjectNode> getNearbyCustomers(AcquiringNearbyCustomersRequest model) {
         try {
             double longitude = model.getLongitude();
-           double latitude = model.getLatitude();
+            double latitude = model.getLatitude();
             Coordinate coordinate = new Coordinate(longitude, latitude);
             List<ObjectNode> list = new ArrayList<>();
-             ObjectMapper mapper = new ObjectMapper();
-             for(DSRRegionEntity acquiringDSRRegionEntity : dsrRegionsRepository.findAll()){
-                 ObjectNode asset = mapper.createObjectNode();
-                 asset.put("id", acquiringDSRRegionEntity.getId());
-                 asset.put("name", acquiringDSRRegionEntity.getName());
-                    asset.put("bounds", acquiringDSRRegionEntity.getGeoJsonBounds());
-                    //convert bounds to  coordinate
-                    GeometryFactory geometryFactory = new GeometryFactory();
-                    WKTReader reader = new WKTReader(geometryFactory);
-                    Geometry geometry = reader.read(acquiringDSRRegionEntity.getGeoJsonBounds());
-                 System.out.println("bounds: "+acquiringDSRRegionEntity.getGeoJsonBounds());
-                 list.add(asset);
-                 //check if login user latitute and longitude is inside any region bounds
-                 if(isPointInPolygon(geometry.getCoordinate(),coordinate)){
-                     System.out.println("inside a region");
+            ObjectMapper mapper = new ObjectMapper();
+            for (DSRRegionEntity acquiringDSRRegionEntity : dsrRegionsRepository.findAll()) {
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", acquiringDSRRegionEntity.getId());
+                asset.put("name", acquiringDSRRegionEntity.getName());
+                asset.put("bounds", acquiringDSRRegionEntity.getGeoJsonBounds());
+                //convert bounds to  coordinate
+                GeometryFactory geometryFactory = new GeometryFactory();
+                WKTReader reader = new WKTReader(geometryFactory);
+                Geometry geometry = reader.read(acquiringDSRRegionEntity.getGeoJsonBounds());
+                System.out.println("bounds: " + acquiringDSRRegionEntity.getGeoJsonBounds());
+                list.add(asset);
+                //check if login user latitute and longitude is inside any region bounds
+                if (isPointInPolygon(geometry.getCoordinate(), coordinate)) {
+                    System.out.println("inside a region");
+                    //draw a circle of 5km radius starting from the login user location
+                    //get all customers within the circle
+                    //return the customers
+                }
 
 
-                        return list;
-                 }
-                 return null;
-             }
-        } catch (Exception e) {
-            log.error("Error occurred while getting nearby customers", e);
+                return list;
+            }
+            return null;
+        } catch (ParseException ex) {
+            log.error("Error occurred while getting nearby customers", ex);
         }
-
         return null;
     }
+
+
 
 
     @Override

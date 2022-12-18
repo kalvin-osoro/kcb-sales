@@ -4,10 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Onboardin
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAgentOnboardingEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAssetEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -17,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,6 +236,7 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyOnboardingEntity.setDateOfLoan(agencyOnboardingRequest.getDateOfLoan());
             agencyOnboardingEntity.setPerformanceOfLoan(agencyOnboardingRequest.getPerformanceOfLoan());
             agencyOnboardingEntity.setOtherRemarks(agencyOnboardingRequest.getOtherRemarks());
+            agencyOnboardingEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //yes or no questions
             agencyOnboardingEntity.setIsFundsObtainedFromIllegalSources(agencyOnboardingRequest.getIsFundsObtainedFromIllegalSources());
             agencyOnboardingEntity.setIsAgentConvictedOfAnyOffence(agencyOnboardingRequest.getIsAgentConvictedOfAnyOffence());
@@ -279,23 +278,30 @@ public class AgencyChannelService implements IAgencyChannelService {
                 throw new RuntimeException("Error occurred while uploading documents");
             }
 
-            //save the document paths
-            ArrayList<String> filePathList = new ArrayList<>();
+            List<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
             filePathList.add(certificateOFGoodConductPath);
-            filePathList.add(shopPhotoPath);
             filePathList.add(financialStatementPath);
-            filePathList.add(cvPath);
             filePathList.add(customerPhotoPath);
-            filePathList.forEach(filePath -> {
-                AgencyOnboardingKYCEntity agentKYC = new AgencyOnboardingKYCEntity();
-                agentKYC.setFilPath(filePath);
-                agentKYC.setAgencyOnboardingEntity(agentInfo);
-                agencyOnboardingKYCRepository.save(agentKYC);
-                //check if the document was saved successfully if not throw an exception
-                if (agentKYC == null) throw new RuntimeException("Error occurred while saving document paths");
-            });
+            filePathList.add(cvPath);
+            filePathList.add(crbReportPath);
+            filePathList.add(shopPhotoPath);
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/"+folderName+"/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+                AgencyOnboardingKYCEntity agencyOnboardingKYCEntity = new AgencyOnboardingKYCEntity();
+                agencyOnboardingKYCEntity.setFilPath(downloadUrl);
+                agencyOnboardingKYCEntity.setAgencyOnboardingEntity(agentInfo);
+                agencyOnboardingKYCEntity.setAgentId(agentInfo.getId());
+                agencyOnboardingKYCRepository.save(agencyOnboardingKYCEntity);
+
+            }
             return true;
         } catch (Exception e) {
             log.error("Error occurred while saving agent onboarding request", e);

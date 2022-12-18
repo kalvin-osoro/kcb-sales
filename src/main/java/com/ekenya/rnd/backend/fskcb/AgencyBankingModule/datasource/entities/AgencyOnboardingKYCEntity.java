@@ -24,4 +24,5 @@ public class AgencyOnboardingKYCEntity {
     @ManyToOne
     private AgencyOnboardingEntity agencyOnboardingEntity;
     private String filPath;
+    private  Long agentId;
 }

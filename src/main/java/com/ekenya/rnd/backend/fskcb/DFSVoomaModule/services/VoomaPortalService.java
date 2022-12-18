@@ -362,16 +362,14 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ownerOrDirector.add(owner);
             }
             objectNode.put("ownerDirector", ownerOrDirector);
-            //list of file paths
             List<DFSVoomaOnboardingKYCentity> dfsVoomaFileUploadEntities = dfsVoomaOnboardingKYRepository.findByMerchantId(model.getMerchantId());
             ArrayNode fileUploads = mapper.createArrayNode();
             for (DFSVoomaOnboardingKYCentity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
                 ObjectNode fileUpload = mapper.createObjectNode();
-                fileUpload.put("filePath", dfsVoomaFileUploadEntity.getFilePath());
+                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFilePath());
                 fileUploads.add(fileUpload);
             }
             objectNode.put("fileUploads", fileUploads);
-
             return objectNode;
         } catch (Exception e) {
             log.error("Error occurred while getting merchant by id", e);

@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.files;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
 import java.util.List;
 
 public interface IFileStorageService {
@@ -15,4 +16,5 @@ public interface IFileStorageService {
     String saveFileWithSpecificFileName(String fileName, MultipartFile file);
     List<String>saveMultipleFileWithSpecificFileName(String module, MultipartFile[] files);
     String saveFileWithSpecificFileNameV(String fileName, MultipartFile file,String folderName);
+    public Resource loadFileAsResource(String fileName, String folderName);
 }

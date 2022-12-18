@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-@PreAuthorize("hasAuthority('"+ SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
+//@PreAuthorize("hasAuthority('"+ SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class RetailChannelDashboardVC {
 
     @Autowired

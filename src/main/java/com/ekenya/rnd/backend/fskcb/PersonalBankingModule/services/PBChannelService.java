@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
@@ -68,6 +69,7 @@ public class PBChannelService implements IPBChannelService {
             psBankingOnboardingEntity.setPreferredCurrency(psBankingOnboardingRequest.getPreferredCurrency());
             psBankingOnboardingEntity.setSourceOfFunds(psBankingOnboardingRequest.getSourceOfFunds());
             psBankingOnboardingEntity.setCountry(psBankingOnboardingRequest.getCountry());
+            psBankingOnboardingEntity.setStatus(OnboardingStatus.PENDING);
             //additional details
             psBankingOnboardingEntity.setIsCustomerStudent(psBankingOnboardingRequest.getIsCustomerStudent());
             psBankingOnboardingEntity.setNameofUniversityOrCollege(psBankingOnboardingRequest.getNameofUniversityOrCollege());

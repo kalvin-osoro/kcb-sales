@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.RetailModule.portalcontrollers;//package ek
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailLeadsListRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -21,10 +22,12 @@ public class RetailLeadsVC {
     IRetailPortalService retailService;
 
     //Assign lead to a sales person
-    @PostMapping("/retail-assign-lead")
-    public ResponseEntity<?> assignLead(@RequestBody RetailAssignLeadRequest model) {
-        boolean success = retailService.assignLead(model);
+    @PostMapping("/retail-micro-assign-lead")
+    public ResponseEntity<?> assignLead(@RequestBody TreasuryAssignLeadRequest model) {
 
+
+        //INSIDE SERVICE
+        boolean success = retailService.assignLead(model);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,16 +45,17 @@ public class RetailLeadsVC {
     }
 
     //List all leads
-    @PostMapping(value = "/retail-get-all-leads")
+    @PostMapping(value = "/retail-micro-get-all-leads")
     public ResponseEntity<?> getAllLeads() {
-        List<?> leads = retailService.getAllLeads();
-        boolean success = leads != null;
+        List<?>list=retailService.getAllLeads();
+        boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(leads));
+            node.addAll((ArrayNode) objectMapper.valueToTree(list));
+
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

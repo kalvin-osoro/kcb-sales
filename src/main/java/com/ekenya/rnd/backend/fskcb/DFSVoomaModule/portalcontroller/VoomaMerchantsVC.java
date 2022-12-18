@@ -95,7 +95,7 @@ public class VoomaMerchantsVC {
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         System.out.println("filename " + filename);
-        Resource file = fileStorageService.loadFileAsResourceByName(filename);
+        Resource file = fileStorageService.load(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);

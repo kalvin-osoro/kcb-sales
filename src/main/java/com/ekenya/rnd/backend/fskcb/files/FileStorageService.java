@@ -1,18 +1,16 @@
 package com.ekenya.rnd.backend.fskcb.files;
 
 import com.ekenya.rnd.backend.utils.Utility;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +18,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 @Service
 public class FileStorageService implements IFileStorageService {
@@ -183,23 +180,23 @@ public class FileStorageService implements IFileStorageService {
         }
     }
 
-
-    public String loadFileAsResource(String fileName) {
-        try {
-            Path filePath = Paths.get(uploadDirectory).resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/upload/")
-                        .path(fileName)
-                        .toUriString();
-                return fileDownloadUri;
-            } else {
-                throw new RuntimeException("File not found " + fileName);
-            }
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("File not found " + fileName);
-        }
+    @Override
+    public Resource loadFileAsResource(String fileName, String folderName) {
+       try {
+           Path targetLocation =Paths.get(String.valueOf(Path.of(String.valueOf(uploadDirectory),"/" + folderName + "/")))
+                   .resolve(fileName)
+                   .normalize();
+           Resource resource =new UrlResource(targetLocation.toUri());
+           if (resource.exists()) {
+               return resource;
+           } else {
+               throw new RuntimeException("File not found " + fileName);
+           }
+       } catch (MalformedURLException e) {
+           throw new RuntimeException(e);
+       } catch (IOException e) {
+           throw new RuntimeException(e);
+       }
     }
 
 }
