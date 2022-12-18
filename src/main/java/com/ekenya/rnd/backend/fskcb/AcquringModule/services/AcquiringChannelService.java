@@ -14,6 +14,8 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,18 +99,23 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             AcquiringLeadEntity acquiringLeadEntity = new AcquiringLeadEntity();
             acquiringLeadEntity.setCustomerName(model.getCustomerName());
             acquiringLeadEntity.setBusinessUnit(model.getBusinessUnit());
+            acquiringLeadEntity.setEmail(model.getEmail());
+            acquiringLeadEntity.setPhoneNumber(model.getPhoneNumber());
+            acquiringLeadEntity.setProduct(model.getProduct());
             acquiringLeadEntity.setPriority(model.getPriority());
+            acquiringLeadEntity.setDsrId(model.getDsrId());
             acquiringLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
             acquiringLeadEntity.setTopic(model.getTopic());
+            acquiringLeadEntity.setLeadStatus(LeadStatus.OPEN);
             acquiringLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringLeadsRepository.save(acquiringLeadEntity);
+            return true;
 
         } catch (Exception e) {
             log.error("Error occurred while creating lead", e);
         }
         return false;
     }
-
     @Override
     public List<ObjectNode> getAllLeads() {
         try {
@@ -160,12 +167,12 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
     @Override
-    public Object updateLead(AcquiringAddLeadRequest model) {
+    public Object updateLead(TreasuryUpdateLeadRequest model) {
         //update lead
         try {
-            AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getId()).get();
+            AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getLeadId()).get();
             acquiringLeadEntity.setLeadStatus(model.getLeadStatus());
-            acquiringLeadEntity.setRemarks(model.getRemarks());
+            acquiringLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
             acquiringLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringLeadsRepository.save(acquiringLeadEntity);
             return true;

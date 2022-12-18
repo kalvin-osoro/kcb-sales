@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadReq
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -80,7 +81,7 @@ public class AcquiringChannelLeadsVC {
 
         //update lead
         @PostMapping(value = "/acquiring-update-lead")
-        public ResponseEntity<?> updateLead(@RequestBody AcquiringAddLeadRequest model) {
+        public ResponseEntity<?> updateLead(@RequestBody TreasuryUpdateLeadRequest model) {
             Object updatedLead = acquiringChannelService.updateLead(model);
             boolean success = updatedLead  != null;
             ObjectMapper objectMapper = new ObjectMapper();

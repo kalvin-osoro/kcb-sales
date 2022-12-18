@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,11 @@ public class AcquiringLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
-    private String product;
     private String customerName;
-    private String remarks;
+    private String product;
+    private String email;
     private String customerAccountNumber;
+    private String phoneNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -34,6 +36,10 @@ public class AcquiringLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private String outcomeOfTheVisit;
     private Date createdOn;
+    @ManyToOne
+    @JoinColumn(name = "dsrAccId")
+    private DSRAccountEntity dsrAccountEntity;
 
 }

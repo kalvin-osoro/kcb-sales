@@ -16,7 +16,6 @@ import java.util.Date;
 @NoArgsConstructor
 
 public class AcquiringAddLeadRequest {
-    private long id;
     private  Integer customerId;
     private String businessUnit;
     private String remarks;
@@ -29,5 +28,7 @@ public class AcquiringAddLeadRequest {
     private LeadStatus leadStatus;
     private String startDate;
     private String endDate;
-    private Date createdOn;
+    private String product;
+    private String email;
+    private String phoneNumber;
 }

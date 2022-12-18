@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
@@ -26,7 +27,7 @@ public interface IAcquiringChannelService {
 
     List<ObjectNode> getAllAssignedLeads();
 
-    Object updateLead(AcquiringAddLeadRequest model);
+    Object updateLead(TreasuryUpdateLeadRequest model);
 
     List<ObjectNode> searchCustomers(SearchKeyWordRequest model);
 

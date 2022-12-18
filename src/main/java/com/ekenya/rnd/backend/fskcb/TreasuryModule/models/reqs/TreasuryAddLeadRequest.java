@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TreasuryAddLeadRequest {
-    private Long id;
+//    private Long id;
     private  Integer customerId;
     private String businessUnit;
     private String remarks;
