@@ -75,7 +75,10 @@ public class AcquiringChannelCustomer360VC {
             String uri="http://10.216.2.10:8081/api/Values?entity=accounts&paramval=none";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("customer",result);
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
