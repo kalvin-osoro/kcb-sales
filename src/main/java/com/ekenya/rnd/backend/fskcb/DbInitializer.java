@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb;
 
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecQuestionOptionEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionEntity;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionType;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionAnswersRepo;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
@@ -297,30 +298,6 @@ public class DbInitializer {
             profilesAndRolesRepository.save(profileRole);
         }
 
-        //retail Banking
-        String RETAIL_BANKING_PROFILE_NAME = "RETAIL BANKING";
-
-        if(!profilesRepository.findByName(RETAIL_BANKING_PROFILE_NAME).isPresent()) {
-
-            String RETAIL_BANKING_PROFILE_CODE = "retailBanking";
-            //
-            UserProfileEntity userProfile = new UserProfileEntity();
-            userProfile.setName(RETAIL_BANKING_PROFILE_NAME);
-            userProfile.setCode(RETAIL_BANKING_PROFILE_CODE);
-
-            //
-            profilesRepository.save(userProfile);
-
-
-            //map to role
-            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
-
-            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
-            profileRole.setProfileId(userProfile.getId());
-            profileRole.setRoleId(userRole.getId());
-            //
-            profilesAndRolesRepository.save(profileRole);
-        }
 
         //premium Banking
         String PREMIUM_BANKING_PROFILE_NAME = "PREMIUM BANKING";
@@ -347,6 +324,55 @@ public class DbInitializer {
             profilesAndRolesRepository.save(profileRole);
         }
 
+        //retail micro Banking
+        String RETAIL_MICRO_BANKING_PROFILE_NAME = "RETAIL MICRO-BANKING";
+
+        if(!profilesRepository.findByName(RETAIL_MICRO_BANKING_PROFILE_NAME).isPresent()) {
+
+            String RETAIL_MICRO_BANKING_PROFILE_CODE = "retailMicroBanking";
+            //
+            UserProfileEntity userProfile = new UserProfileEntity();
+            userProfile.setName(RETAIL_MICRO_BANKING_PROFILE_NAME);
+            userProfile.setCode(RETAIL_MICRO_BANKING_PROFILE_CODE);
+
+            //
+            profilesRepository.save(userProfile);
+
+
+            //map to role
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
+            profileRole.setProfileId(userProfile.getId());
+            profileRole.setRoleId(userRole.getId());
+            //
+            profilesAndRolesRepository.save(profileRole);
+        }
+
+        //retail sme Banking
+        String RETAIL_SME_BANKING_PROFILE_NAME = "RETAIL SME-BANKING";
+
+        if(!profilesRepository.findByName(RETAIL_SME_BANKING_PROFILE_NAME).isPresent()) {
+
+            String RETAIL_SME_BANKING_PROFILE_CODE = "retailSMEBanking";
+            //
+            UserProfileEntity userProfile = new UserProfileEntity();
+            userProfile.setName(RETAIL_SME_BANKING_PROFILE_NAME);
+            userProfile.setCode(RETAIL_SME_BANKING_PROFILE_CODE);
+
+            //
+            profilesRepository.save(userProfile);
+
+
+            //map to role
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
+            profileRole.setProfileId(userProfile.getId());
+            profileRole.setRoleId(userRole.getId());
+            //
+            profilesAndRolesRepository.save(profileRole);
+        }
 
         //Corporate Banking
         String CORPORATE_BANKING_PROFILE_NAME = "CORPORATE BANKING";
@@ -413,7 +439,7 @@ public class DbInitializer {
 
 
             //map to role
-            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
 
             ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
             profileRole.setProfileId(userProfile.getId());
@@ -592,6 +618,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn1).isPresent()) {
                 SecurityQuestionEntity questionEntity1 = new SecurityQuestionEntity();
                 questionEntity1.setTitle(qn1);
+                questionEntity1.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity1);
 
             }
@@ -599,6 +626,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn2).isPresent()) {
                 SecurityQuestionEntity questionEntity2 = new SecurityQuestionEntity();
                 questionEntity2.setTitle(qn2);
+                questionEntity2.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity2);
             }
 
@@ -606,6 +634,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn3).isPresent()) {
                 SecurityQuestionEntity questionEntity3 = new SecurityQuestionEntity();
                 questionEntity3.setTitle(qn3);
+                questionEntity3.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity3);
             }
 
@@ -613,6 +642,7 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn4).isPresent()) {
                 SecurityQuestionEntity questionEntity4 = new SecurityQuestionEntity();
                 questionEntity4.setTitle(qn4);
+                questionEntity4.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity4);
             }
 
@@ -621,10 +651,11 @@ public class DbInitializer {
             if(!securityQuestionsRepo.findByTitle(qn5).isPresent()) {
                 SecurityQuestionEntity questionEntity5 = new SecurityQuestionEntity();
                 questionEntity5.setTitle(qn5);
+                questionEntity5.setType(SecurityQuestionType.ONE_LINE);
                 securityQuestionsRepo.save(questionEntity5);
             }
         }catch (Exception ex){
-
+            log.error(ex.getMessage(),ex);
         }
     }
 }
