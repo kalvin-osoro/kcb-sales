@@ -24,4 +24,5 @@ public class PSBankingOnboardingFileEntity {
     @ManyToOne
     private PSBankingOnboardingEntity psBankingOnboardingEntity;
     private String filePath;
+    private Long personId;
 }

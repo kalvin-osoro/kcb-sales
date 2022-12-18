@@ -25,14 +25,11 @@ public class PSBankingOnboardingRequest {
     private String region;
     private  String customerIdNumber;
     private String customerEmail;
-    @Column(name="customer_phone_number")
     private String customerPhone;
-    @Column(name = "customer_dob")
     private String customerDob;
     private Long dsrId;
     private Date createdOn;
     private Boolean isApproved=false;
-    @Enumerated(EnumType.STRING)
     private OnboardingStatus status;
     private String nationality;
     private String maritalStatus;

@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardingKYCentity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,18 +124,27 @@ public class PBChannelService implements IPBChannelService {
             filePathList.add(signaturePath);
             filePathList.add(crbReportPath);
             filePathList.add(customerPhotoPath);
-            filePathList.forEach(filePath -> {
-                PSBankingOnboardingFileEntity customerKYC = new PSBankingOnboardingFileEntity();
-                customerKYC.setFilePath(filePath);
-                customerKYC.setPsBankingOnboardingEntity(savedCustomerDetails);
-                psBankingOnboardingFileRepository.save(customerKYC);
-            });
-            return true;
-        } catch (Exception e) {
-            log.error("Error occurred while scheduling customer visit", e);
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/" + folderName + "/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+                PSBankingOnboardingFileEntity psBankingOnboardingEntity1 = new PSBankingOnboardingFileEntity();
+                psBankingOnboardingEntity1.setFilePath(downloadUrl);
+                psBankingOnboardingEntity1.setPsBankingOnboardingEntity(savedCustomerDetails);
+                psBankingOnboardingEntity1.setPersonId(savedCustomerDetails.getId());
+                psBankingOnboardingFileRepository.save(psBankingOnboardingEntity1);
+                return true;
+            }
+            } catch(Exception e){
+                log.error("Error occurred while scheduling customer visit", e);
+            }
+            return false;
         }
-        return false;
-    }
+
 
     @Override
     public List<ObjectNode> getAllOnboardings(PBDSROnboardingRequest model) {

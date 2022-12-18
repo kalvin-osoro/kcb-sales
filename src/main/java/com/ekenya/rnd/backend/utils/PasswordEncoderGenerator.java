@@ -15,4 +15,5 @@ public class PasswordEncoderGenerator {
         System.out.println(url+length);
     }
 
+
 }
