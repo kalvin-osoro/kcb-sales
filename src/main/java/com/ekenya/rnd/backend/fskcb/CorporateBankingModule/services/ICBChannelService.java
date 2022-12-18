@@ -1,9 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddLeadRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -29,4 +27,10 @@ public interface ICBChannelService {
     ArrayList<ObjectNode> getTargetsSummary();
 
     List<ObjectNode> getAllCustomerConcessions(CBConcessionRequest model);
+
+    boolean createCustomerAppointment(CBAppointmentRequest model);
+
+    List<ObjectNode> getCustomerAppointmentByDSRIdAndDate(CBAppointmentDateRequest model);
+
+    boolean updateCustomerAppointment(CBAppointmentUpdateRequest model);
 }
