@@ -65,6 +65,25 @@ public class RetailChannelDashboardVC {
         }
 
     }
+    @PostMapping("/retail-micro-summary")
+    public ResponseEntity<?> getMicroSummary() {
+        ArrayList<?> list = retailChannelService.loadDSRSummary();
+        boolean success = list != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((ArrayList)list);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+
+    }
 
     @PostMapping("/retail-get-nearby-customers")
     public ResponseEntity<?> getNearbyCustomers(@RequestBody AcquiringNearbyCustomersRequest request) {

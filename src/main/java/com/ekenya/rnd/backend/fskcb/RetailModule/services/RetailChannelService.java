@@ -79,33 +79,47 @@ public class RetailChannelService implements IRetailChannelService {
     @Override
     public ArrayList<ObjectNode> loadDSRSummary() {
         try {
-            ArrayList<ObjectNode>list = new ArrayList<>();
+            ArrayList<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
             ObjectNode deposits = mapper.createObjectNode();
-            //hardcoded for now waiting for the APIs
-            deposits.put("target", 1000);
-            deposits.put("actual", 500);
-            deposits.put("percentage", (deposits.get("actual").asInt() / deposits.get("target").asInt()) * 100);
+            //hardcoded for now waiting for the API
+            node.put("target", 0);
+            node.put("actual", 0);
+            node.put("parcentage", 0);
+            deposits.put("deposits", node);
             list.add(deposits);
+            //loans
             ObjectNode loans = mapper.createObjectNode();
-            loans.put("target", 1000);
-            loans.put("actual", 500);
-            loans.put("percentage", (loans.get("actual").asInt() / loans.get("target").asInt()) * 100);
+            node = mapper.createObjectNode();
+            node.put("target", 0);
+            node.put("actual", 0);
+            node.put("parcentage", 0);
+            loans.put("loans", node);
             list.add(loans);
+            //insurance
             ObjectNode insurance = mapper.createObjectNode();
-            insurance.put("target", 1000);
-            insurance.put("actual", 500);
-            insurance.put("percentage", (insurance.get("actual").asInt() / insurance.get("target").asInt()) * 100);
+            node = mapper.createObjectNode();
+            node.put("target", 0);
+            node.put("actual", 0);
+            node.put("parcentage", 0);
+            insurance.put("insurance", node);
             list.add(insurance);
+            //credit cards
             ObjectNode creditCards = mapper.createObjectNode();
-            creditCards.put("target", 1000);
-            creditCards.put("actual", 500);
-            creditCards.put("percentage", (creditCards.get("actual").asInt() / creditCards.get("target").asInt()) * 100);
+            node = mapper.createObjectNode();
+            node.put("target", 0);
+            node.put("actual", 0);
+            node.put("parcentage", 0);
+            creditCards.put("creditCards", node);
             list.add(creditCards);
+            //vooma
             ObjectNode vooma = mapper.createObjectNode();
-            vooma.put("target", 1000);
-            vooma.put("actual", 500);
-            vooma.put("percentage", (vooma.get("actual").asInt() / vooma.get("target").asInt()) * 100);
+            node = mapper.createObjectNode();
+            node.put("target", 0);
+            node.put("actual", 0);
+            node.put("parcentage", 0);
+            vooma.put("vooma", node);
             list.add(vooma);
             return list;
         } catch (Exception e) {
