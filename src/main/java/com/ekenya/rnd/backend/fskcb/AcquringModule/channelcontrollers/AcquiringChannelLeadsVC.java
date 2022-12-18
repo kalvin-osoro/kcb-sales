@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignLeadReq
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,14 +42,16 @@ public class AcquiringChannelLeadsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @PostMapping(value = "/acquiring-get-all-leads")
-    public ResponseEntity<?> getAllLeads() {
-        List <?> leads = acquiringChannelService.getAllLeads();
-        boolean success = leads  != null;
+    @PostMapping(value = "/acquiring-get-all-created-leads-by-dsr")
+    public ResponseEntity<?> getAllDSRLeads(@RequestBody TreasuryGetDSRLeads model) {
+        List<?>dsrLeads=acquiringChannelService.loadDSRLead(model);
+        boolean success = dsrLeads!=null;
+        //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)dsrLeads);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -61,8 +64,8 @@ public class AcquiringChannelLeadsVC {
 
     //get all assigned leads
     @PostMapping(value = "/acquiring-get-all-assigned-leads")
-    public ResponseEntity<?> getAllAssignedLeads() {
-        List <?> leads = acquiringChannelService.getAllAssignedLeads();
+    public ResponseEntity<?> getAllAssignedLeads(@RequestBody TreasuryGetDSRLeads model) {
+        List <?> leads = acquiringChannelService.getAllAssignedLeads(model);
         boolean success = leads  != null;
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

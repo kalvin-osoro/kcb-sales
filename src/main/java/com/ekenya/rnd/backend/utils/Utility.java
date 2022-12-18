@@ -1,21 +1,24 @@
 package com.ekenya.rnd.backend.utils;
 
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.locationtech.jts.geom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Utility {
     private Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    static
+    IDSRAccountsRepository dsrAccountsRepository;
     public static String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
@@ -153,6 +156,17 @@ return new Date();
     public static String generateRandomNumber() {
         String password = RandomStringUtils.random(6, false, true);
         return password;
+    }
+    //get DsrName from dsrId from DSRAccount entity
+    public static String getDsrNameFromDsrId(Long dsrId) {
+        String dsrName = "";
+        Optional<DSRAccountEntity> dsrAccount = dsrAccountsRepository.findById(dsrId);
+        if (dsrAccount.isPresent()) {
+            dsrName = dsrAccount.get().getFullName();
+        }else {
+            dsrName = "N/A";
+        }
+        return dsrName;
     }
 
 

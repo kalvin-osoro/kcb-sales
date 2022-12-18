@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringLeadEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,10 +30,13 @@ public interface IAcquiringLeadsRepository extends JpaRepository<AcquiringLeadEn
     @Query(value = "SELECT count(*) FROM dbo_aqc_leads where created_on >= current_date at time zone 'UTC' - interval '7 days' AND priority = 'COLD'", nativeQuery = true)
     int countAllLeadsCreatedLast7DaysCold();
 
-    @Query(value = "SELECT * FROM dbo_aqc_leads where assigned = true", nativeQuery = true)
-    AcquiringLeadEntity[] fetchAllAssignedLeads();
+    @Query(value = "SELECT * FROM dbo_aqc_leads where dsrId = ?1 AND assigned = true", nativeQuery = true)
+    AcquiringLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
 
 
     @Query(value = "SELECT count(*) FROM dbo_aqc_leads where assigned = true AND dsrId = ?1", nativeQuery = true)
     int countTotalAssignedLeads(Long dsrId);
+
+    @Query(value = "SELECT * FROM dbo_aqc_leads where dsrId = ?1 AND assigned = false", nativeQuery = true)
+    AcquiringLeadEntity[] findAllByDsrIdAndAssigned(Long dsrId);
 }

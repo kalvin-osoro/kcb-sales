@@ -15,6 +15,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntit
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -116,37 +117,17 @@ public class AcquiringChannelService implements IAcquiringChannelService {
         }
         return false;
     }
-    @Override
-    public List<ObjectNode> getAllLeads() {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringLeadEntity acquiringLeadEntity : acquiringLeadsRepository.findAll()) {
 
-                ObjectNode asset = mapper.createObjectNode();
-                asset.put("id", acquiringLeadEntity.getId());
-                asset.put("customerName", acquiringLeadEntity.getCustomerName());
-                asset.put("businessUnit", acquiringLeadEntity.getBusinessUnit());
-                asset.put("priority", acquiringLeadEntity.getPriority().ordinal());
-                asset.put("customerAccountNumber", acquiringLeadEntity.getCustomerAccountNumber());
-                asset.put("topic", acquiringLeadEntity.getTopic());
-                asset.put("createdOn", acquiringLeadEntity.getCreatedOn().toString());
-                list.add(asset);
+
+    @Override
+    public List<ObjectNode> getAllAssignedLeads(TreasuryGetDSRLeads model) {
+        try {
+            if (model== null){
+                return null;
             }
-            return list;
-
-        } catch (Exception e) {
-            log.error("Error occurred while getting all leads", e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<ObjectNode> getAllAssignedLeads() {
-        try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringLeadEntity acquiringAssignedLeadEntity : acquiringLeadsRepository.fetchAllAssignedLeads()) {
+            for (AcquiringLeadEntity acquiringAssignedLeadEntity : acquiringLeadsRepository.findAllAssignedLeadByDSRId(model.getDsrId())) {
 
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringAssignedLeadEntity.getId());
@@ -542,6 +523,33 @@ try {
 } catch (Exception e) {
     log.error("Error occurred while getting dsr summary", e);
 }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AcquiringLeadEntity treasuryLeadEntity : acquiringLeadsRepository.findAllByDsrIdAndAssigned(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", treasuryLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", treasuryLeadEntity.getPriority().toString());
+                node.put("businessUnit", treasuryLeadEntity.getBusinessUnit());
+                node.put("leadId", treasuryLeadEntity.getId());
+                node.put("leadStatus", treasuryLeadEntity.getLeadStatus().ordinal());
+                node.put("createdOn", treasuryLeadEntity.getCreatedOn().getTime());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
         return null;
     }
 }

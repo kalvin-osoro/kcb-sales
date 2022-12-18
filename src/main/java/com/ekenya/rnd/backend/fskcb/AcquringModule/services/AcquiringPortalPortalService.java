@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.ekenya.rnd.backend.utils.Utility.getDsrNameFromDsrId;
+
 
 @Service
 @RequiredArgsConstructor
@@ -417,6 +419,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("topic", acquiringLeadEntity.getTopic());
                 asset.put("priority", acquiringLeadEntity.getPriority().toString());
                 asset.put("dsrId", acquiringLeadEntity.getDsrId());
+                asset.put("dsrName", getDsrNameFromDsrId(acquiringLeadEntity.getDsrId()));
                 asset.put("createdOn",acquiringLeadEntity.getCreatedOn().getTime());
 
                 //add to list
