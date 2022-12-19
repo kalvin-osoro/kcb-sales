@@ -168,6 +168,17 @@ return new Date();
         }
         return dsrName;
     }
+    //convert json string to json object and remove unwanted keys
+    // response:"\"[{\\\"accountid\\\":\\\"fba0b3d9-e2aa-432a-aa86-000000811101\\\",\\\"name\\\":\\\"BEATRICE ADHIAMBO OKECH\\\",\\\"accno\\\":\\\"111554\\\",\\\"email\\\":\\\"\\\",\\\"telephone\\\":\\\"\\\",\\\"kcbidno\\\":\\\"13634828\\\"}]\"
+    //convert json string to json object and remove line separator
+    public static String convertJsonStringToJson(String response) {
+        String json = response.replace("\\", "");
+        json = json.replace("\"[", "[");
+        json = json.replace("]\"", "]");
+        json = json.replace("\"{", "{");
+        json = json.replace("}\"", "}");
+        return json;
+    }
 
 
 }

@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelSer
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
 import com.ekenya.rnd.backend.fskcb.SpringBootKcbRestApiApplication;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
@@ -93,9 +94,8 @@ public class AcquiringChannelCustomer360VC {
         try {
             String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
-            String response = restTemplate.getForObject(uri, String.class, model.getAccount());
+            String resp = restTemplate.getForObject(uri, String.class, model.getAccount());
             //convert from json string to json object and remove // seperator from json string
-            JsonObject resp = new JsonParser().parse(response).getAsJsonObject();
             //Response
             ObjectMapper objectMapper = new ObjectMapper();
             if (resp != null) {
@@ -124,10 +124,21 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<>(headers);
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
+            //convert from json string to json object and remove // seperator from json string
+            Utility.convertJsonStringToJson(response.getBody());
+            //Response
             ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode node = objectMapper.createObjectNode();
-            node.put("customer", response.getBody());
-            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+            if (response != null) {
+                //Object
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("customer", response.getBody().toString());
+
+                return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+            } else {
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+            }
 
         } catch (Exception e) {
             log.error("Error Occured: " + e.getMessage());
