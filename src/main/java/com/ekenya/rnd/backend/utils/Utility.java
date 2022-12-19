@@ -19,12 +19,14 @@ public class Utility {
     @Autowired
     static
     IDSRAccountsRepository dsrAccountsRepository;
+
     public static String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
     }
-//validate Status
-    public static boolean validateStatus(Status status) throws Exception{
+
+    //validate Status
+    public static boolean validateStatus(Status status) throws Exception {
         status = status;
         ArrayList<String> arrValidStatus = new ArrayList<>();
         arrValidStatus.add("A");
@@ -32,13 +34,13 @@ public class Utility {
         arrValidStatus.add("D");
         return arrValidStatus.contains(status);
     }
-    public static Date getPostgresCurrentTimeStampForInsert() throws Exception{
+
+    public static Date getPostgresCurrentTimeStampForInsert() throws Exception {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = sdf.format(date);
         return sdf.parse(formattedDate);
     }
-
 
 
 //    public static String generateUniqueNoByDate(){
@@ -48,35 +50,37 @@ public class Utility {
 //        return unique;
 //    }
 
-    public static String generateUniqueNoByDate(){
-        SimpleDateFormat formatter1 =new SimpleDateFormat("ddMMyy");
-        String unique =formatter1.format(new Date()) + RandomStringUtils.random(10,false,true);
+    public static String generateUniqueNoByDate() {
+        SimpleDateFormat formatter1 = new SimpleDateFormat("ddMMyy");
+        String unique = formatter1.format(new Date()) + RandomStringUtils.random(10, false, true);
         return unique;
     }
 
     //current date and time
-    public static Date getCurrentDateAndTime(){
-        SimpleDateFormat formatter1 = new SimpleDateFormat ("dd-MM-yyyy HH:mm:ss");
+    public static Date getCurrentDateAndTime() {
+        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String unique = formatter1.format(new java.util.Date());
-return new Date();
+        return new Date();
 
     }
+
     public static String merchantTempAccountId() {
-        SimpleDateFormat formatter = new SimpleDateFormat ("yyMMdd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
 
         String accountId = RandomStringUtils.random(4, false, true) +
                 formatter.format(new java.util.Date());
         return accountId;
     }
 
-    public static boolean validateGender(String status) throws Exception{
+    public static boolean validateGender(String status) throws Exception {
         status = status.trim();
         ArrayList<String> arrValidStatus = new ArrayList<>();
         arrValidStatus.add("M");
         arrValidStatus.add("F");
         return arrValidStatus.contains(status);
     }
-    public static boolean validateUserType(String status) throws Exception{
+
+    public static boolean validateUserType(String status) throws Exception {
         status = status.trim();
         ArrayList<String> arrValidStatus = new ArrayList<>();
         arrValidStatus.add("A"); // Admin
@@ -84,7 +88,8 @@ return new Date();
         arrValidStatus.add("F"); // Field agent
         return arrValidStatus.contains(status);
     }
-    public static boolean validateExpectedResponse(String expectedResponse) throws Exception{
+
+    public static boolean validateExpectedResponse(String expectedResponse) throws Exception {
         expectedResponse = expectedResponse.trim();
         ArrayList<String> arrValidStatus = new ArrayList<>();
         arrValidStatus.add("T");
@@ -136,13 +141,13 @@ return new Date();
         String extension = "";
         int i = originalFilename.lastIndexOf('.');
         if (i > 0) {
-            extension = originalFilename.substring(i+1);
+            extension = originalFilename.substring(i + 1);
         }
         return extension;
     }
 
     public static String getTodayDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat ("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String date = formatter.format(new java.util.Date());
         return date;
     }
@@ -153,32 +158,30 @@ return new Date();
         Date previousDate = new Date(t - (i * 24 * 3600 * 1000));
         return previousDate.toString();
     }
+
     public static String generateRandomNumber() {
         String password = RandomStringUtils.random(6, false, true);
         return password;
     }
+
     //get DsrName from dsrId from DSRAccount entity
     public static String getDsrNameFromDsrId(Long dsrId) {
         String dsrName = "";
         Optional<DSRAccountEntity> dsrAccount = dsrAccountsRepository.findById(dsrId);
         if (dsrAccount.isPresent()) {
             dsrName = dsrAccount.get().getFullName();
-        }else {
+        } else {
             dsrName = "N/A";
         }
         return dsrName;
     }
-    //convert json string to json object and remove unwanted keys
-    // response:"\"[{\\\"accountid\\\":\\\"fba0b3d9-e2aa-432a-aa86-000000811101\\\",\\\"name\\\":\\\"BEATRICE ADHIAMBO OKECH\\\",\\\"accno\\\":\\\"111554\\\",\\\"email\\\":\\\"\\\",\\\"telephone\\\":\\\"\\\",\\\"kcbidno\\\":\\\"13634828\\\"}]\"
-    //convert json string to json object and remove line separator
+
+    // response:"\"[{"accountid":"fba0b3d9-e2aa-432a-aa86-000000811101","name":\\\"BEATRICE ADHIAMBO OKECH\\\",\\\"accno\\\":\\\"111554\\\",\\\"email\\\":\\\"\\\",\\\"telephone\\\":\\\"\\\",\\\"kcbidno\\\":\\\"13634828\\\"}]\"
+
     public static String convertJsonStringToJson(String response) {
-        String json = response.replace("\\", "");
-        json = json.replace("\"[", "[");
-        json = json.replace("]\"", "]");
-        json = json.replace("\\\"{", "");
-        json = json.replace("}\"", "}");
-        return json;
+        //remove line separator /// and replace with empty string
+        response = response.replaceAll("\\\\r\\\\n|\\\\r|\\\\n", "");
+        return response;
+
     }
-
-
 }

@@ -124,14 +124,14 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<>(headers);
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
-            //convert from json string to json object and remove // seperator from json string
-            Utility.convertJsonStringToJson(response.getBody());
+            //remove /// in response and replace with empty string
+            String resp = response.getBody().replace("///", "");
             //Response
             ObjectMapper objectMapper = new ObjectMapper();
-            if (response != null) {
+            if (resp != null) {
                 //Object
                 ObjectNode node = objectMapper.createObjectNode();
-                node.put("customer", response.getBody().toString());
+                node.put("customer", resp.toString());
 
                 return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
             } else {
