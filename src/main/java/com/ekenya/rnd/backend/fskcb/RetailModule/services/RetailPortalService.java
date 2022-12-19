@@ -67,7 +67,7 @@ public class RetailPortalService implements IRetailPortalService {
                 objectNode.put("leadStatus", retailLeadEntity.getLeadStatus().toString());
                 objectNode.put("createdOn",retailLeadEntity.getCreatedOn().getTime());
                 objectNode.put("product",retailLeadEntity.getProduct());
-                objectNode.put("dsrName", Utility.getDsrNameFromDsrId(retailLeadEntity.getDsrId()));
+                objectNode.put("dsrName",retailLeadEntity.getDsrName());
                 objectNode.put("priority", retailLeadEntity.getPriority().toString());
                 list.add(objectNode);
             }
