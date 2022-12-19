@@ -99,7 +99,7 @@ public class RetailChannelService implements IRetailChannelService {
             retailLeadEntity.setProduct(model.getProduct());
             retailLeadEntity.setPriority(model.getPriority());
             retailLeadEntity.setDsrId(model.getDsrId());
-            retailLeadEntity.setDsrName(retailLeadEntity.getDsrName());
+            retailLeadEntity.setDsrName(model.getDsrName());
             retailLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
             retailLeadEntity.setTopic(model.getTopic());
             retailLeadEntity.setLeadStatus(LeadStatus.OPEN);
