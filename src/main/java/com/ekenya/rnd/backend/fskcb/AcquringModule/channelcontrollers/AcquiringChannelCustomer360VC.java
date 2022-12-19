@@ -1,12 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CustomerDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
-import com.ekenya.rnd.backend.fskcb.SpringBootKcbRestApiApplication;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
-import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
@@ -17,7 +14,6 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -90,7 +86,7 @@ public class AcquiringChannelCustomer360VC {
     }
 
     @PostMapping("/acquiring-get-customer-360-details-by-account")
-    public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody CRMRequest model) {
+    public JSONArray getCustomerDetailsByAccount(@RequestBody CRMRequest model) {
         try {
             String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
@@ -100,11 +96,12 @@ public class AcquiringChannelCustomer360VC {
             String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
             System.out.println(removeFirstAndLastQuotes);
             JSONArray json = new JSONArray(removeFirstAndLastQuotes);
-            return ResponseEntity.ok(new BaseAppResponse(1, json, "Request Processed Successfully"));
+            return json;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("error occured");
         }
+        return null;
     }
 
     @PostMapping("/acquiring-get-customer-360-details-by-accountNumber")
