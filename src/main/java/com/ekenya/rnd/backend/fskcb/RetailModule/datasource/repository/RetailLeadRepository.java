@@ -9,9 +9,9 @@ public interface RetailLeadRepository extends JpaRepository<RetailLeadEntity, Lo
  @Query(value = "SELECT * FROM dbo_retail_leads WHERE dsr_id = ?1", nativeQuery = true)
     RetailLeadEntity[] findAllByDsrId(Long dsrId);
 
-    @Query(value = "SELECT * FROM dbo_treasury_lead where dsrId = ?1 AND assigned = false", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_retail_leads where dsrId = ?1 AND assigned = false", nativeQuery = true)
     RetailLeadEntity[] findAllByDsrIdAndAssigned(Long dsrId);
 
-    @Query(value = "SELECT * FROM dbo_treasury_lead where dsrId = ?1 AND assigned = true", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_retail_leads where dsrId = ?1 AND assigned = true", nativeQuery = true)
     RetailLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
 }
