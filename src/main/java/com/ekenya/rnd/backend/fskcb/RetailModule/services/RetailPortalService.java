@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccoun
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
 import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.entites.*;
 import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.repository.*;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
@@ -190,7 +191,7 @@ public class RetailPortalService implements IRetailPortalService {
     }
 
     @Override
-    public boolean setTrackedCovenantStatus(CBAddConvenantRequest model) {
+    public boolean setTrackedCovenantStatus(ChangeConvenantStatus model) {
         try {
             if (model == null) {
                 return false;

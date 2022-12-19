@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddConv
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBApproveConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddCovenantRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.services.IRetailPortalService;
@@ -84,7 +85,7 @@ public class RetailConcessionsVC {
     }
 
     @PostMapping("/cb-change-tracked-covenant-status")
-    public ResponseEntity<?> changeTrackedCovenantStatus(@RequestBody CBAddConvenantRequest model) {
+    public ResponseEntity<?> changeTrackedCovenantStatus(@RequestBody ChangeConvenantStatus model) {
         boolean success = retailService.setTrackedCovenantStatus(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
