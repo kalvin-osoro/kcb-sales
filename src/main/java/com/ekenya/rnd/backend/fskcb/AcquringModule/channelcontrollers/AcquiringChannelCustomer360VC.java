@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
+@Slf4j
 public class AcquiringChannelCustomer360VC {
 
     @Autowired
@@ -108,13 +110,13 @@ public class AcquiringChannelCustomer360VC {
             headers.setContentType(MediaType.APPLICATION_JSON);
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<String>(headers);
-            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
+            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET,request, String.class, model.getAccount());
             String result = response.getBody();
             JsonParser parser = new JsonParser();
             JsonObject json = (JsonObject) parser.parse(result);
             return json;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error Occured: " + e.getMessage());
             return null;
         }
     }
