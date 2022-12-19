@@ -179,12 +179,12 @@ public class RetailChannelService implements IRetailChannelService {
             node5.put("actual", 0);
             node5.put("percentage", 0);
             list.add(node5);
-
-            ObjectNode node6 =mapper.createObjectNode();
-            node5.put("retainer", 0);
-            node5.put("commission", 0);
-            list.add(node6);
-
+            ArrayNode summary = mapper.createArrayNode();
+            ObjectNode summaryNode = mapper.createObjectNode();
+            summaryNode.put("retainer", 0);
+            summaryNode.put("commission", 0);
+            summary.add(summaryNode);
+            list.add(summary);
 
             return list;
         } catch (Exception e) {

@@ -342,10 +342,8 @@ public class CBPortalService implements ICBPortalService {
             cbBankingConvenantEntity.setEndDate(model.getEndDate());
             cbBankingConvenantEntity.setIntervalForCheck(model.getIntervalForCheck());
             cbBankingConvenantEntity.setAlertMessage(model.getAlertMessage());
-            cbBankingConvenantEntity.setDsrId(model.getDsrId());
             cbBankingConvenantEntity.setAlertBeforeExpiry(model.getAlertBeforeExpiry());
 
-            cbBankingConvenantEntity.setStartDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             cbBankingConvenantEntity.setStatus(ConcessionTrackingStatus.GREEN);
             cbBankingConvenantEntity.setReferenceNumber(model.getReferenceNumber());
 
@@ -389,13 +387,11 @@ public class CBPortalService implements ICBPortalService {
                 objectNode.put("id", cbBankingConvenantEntity.getId());
                 objectNode.put("customerId", cbBankingConvenantEntity.getCustomerId());
                 ObjectNode period = mapper.createObjectNode();
-                period.put("startDate", cbBankingConvenantEntity.getStartDate());
                 period.put("endDate", cbBankingConvenantEntity.getEndDate());
+                period.put("createdOn",cbBankingConvenantEntity.getCreatedOn().getTime());
                 objectNode.set("period", period);
                 objectNode.put("intervalForCheck", cbBankingConvenantEntity.getIntervalForCheck());
-                objectNode.put("dsrId", cbBankingConvenantEntity.getDsrId());
                 objectNode.put("status", cbBankingConvenantEntity.getStatus().toString());
-                objectNode.put("createdOn", cbBankingConvenantEntity.getCreatedOn().toString());
                 list.add(objectNode);
             }
             return list;

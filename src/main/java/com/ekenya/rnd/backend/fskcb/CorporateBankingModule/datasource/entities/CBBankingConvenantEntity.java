@@ -22,13 +22,11 @@ public class CBBankingConvenantEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String customerId;
-    private String startDate;
     private String endDate;
     private String referenceNumber;
     private String condition;
     private Integer intervalForCheck;
     private String customerName;
-    private Long dsrId;
     @Enumerated(EnumType.STRING)
     private ConcessionTrackingStatus status;
 

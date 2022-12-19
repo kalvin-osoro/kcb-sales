@@ -16,10 +16,8 @@ import java.util.Date;
 public class CBAddConvenantRequest {
     private Long id;
     private String customerId;
-    private String startDate;
     private String endDate;
     private Integer intervalForCheck;
-    private Long dsrId;
     private ConcessionTrackingStatus status;
     private Date createdOn;
     private String alertMessage;
