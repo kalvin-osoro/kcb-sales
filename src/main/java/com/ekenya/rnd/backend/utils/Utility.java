@@ -175,7 +175,7 @@ return new Date();
         String json = response.replace("\\", "");
         json = json.replace("\"[", "[");
         json = json.replace("]\"", "]");
-        json = json.replace("\"{", "{");
+        json = json.replace("\\\"{", "");
         json = json.replace("}\"", "}");
         return json;
     }
