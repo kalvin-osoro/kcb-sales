@@ -112,9 +112,10 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<>(headers);
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
-            JsonParser parser = new JsonParser();
-            JsonObject json = (JsonObject) parser.parse(response.getBody());
-            return ResponseEntity.ok(new BaseAppResponse(1, json, "Request Processed Successfully"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("customer", response.getBody());
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
 
         } catch (Exception e) {
             log.error("Error Occured: " + e.getMessage());
