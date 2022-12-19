@@ -95,6 +95,7 @@ public class AcquiringChannelCustomer360VC {
             String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
+            String customer1 = result.replaceAll("\\\\", "");
 
             return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
         } catch (Exception e) {
