@@ -77,8 +77,8 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class);
             //convert json string to json object
-            JsonArray jsonArray = new com.google.gson.JsonParser().parse(result).getAsJsonArray();
-            return ResponseEntity.ok(new BaseAppResponse(1,jsonArray,"Request Processed Successfully"));
+            JsonObject jsonObject = new com.google.gson.JsonParser().parse(result).getAsJsonObject();
+            return ResponseEntity.ok(new BaseAppResponse(1,jsonObject,"Request Processed Successfully"));
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
