@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,9 +77,7 @@ public class AcquiringChannelCustomer360VC {
             String uri="http://10.216.2.10:8081/api/Values?entity=accounts&paramval=none";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class);
-            //convert json string to json object
-            JsonObject jsonObject = new com.google.gson.JsonParser().parse(result).getAsJsonObject();
-            return ResponseEntity.ok(new BaseAppResponse(1,jsonObject,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,result,"Request Processed Successfully"));
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -90,11 +89,9 @@ public class AcquiringChannelCustomer360VC {
             String uri ="http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
-            //convert json string to json object
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("customer",result);
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            JsonObject resp = new ObjectMapper().readValue(result, JsonObject.class);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
