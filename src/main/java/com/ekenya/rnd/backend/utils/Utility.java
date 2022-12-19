@@ -175,13 +175,5 @@ public class Utility {
         }
         return dsrName;
     }
-
-    // response:"\"[{"accountid":"fba0b3d9-e2aa-432a-aa86-000000811101","name":\\\"BEATRICE ADHIAMBO OKECH\\\",\\\"accno\\\":\\\"111554\\\",\\\"email\\\":\\\"\\\",\\\"telephone\\\":\\\"\\\",\\\"kcbidno\\\":\\\"13634828\\\"}]\"
-
-    public static String convertJsonStringToJson(String response) {
-        //remove line separator /// and replace with empty string
-        response = response.replaceAll("\\\\r\\\\n|\\\\r|\\\\n", "");
-        return response;
-
-    }
 }
+

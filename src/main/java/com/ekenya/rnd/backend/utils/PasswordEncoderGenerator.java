@@ -13,6 +13,9 @@ public class PasswordEncoderGenerator {
         String encodedPassword = new BCryptPasswordEncoder().encode(password);
         System.out.println(encodedPassword);
         System.out.println(url+length);
+        String customer= "\"[{\\\"accountid\\\":\\\"fba0b3d9-e2aa-432a-aa86-000000811101\\\",\\\"name\\\":\\\"BEATRICE ADHIAMBO OKECH\\\",\\\"accno\\\":\\\"111554\\\",\\\"email\\\":\\\"\\\",\\\"telephone\\\":\\\"\\\",\\\"kcbidno\\\":\\\"13634828\\\"}]\"";
+        String customer1 = customer.replaceAll("\\\\", "");
+        System.out.println(customer1);
     }
 
 

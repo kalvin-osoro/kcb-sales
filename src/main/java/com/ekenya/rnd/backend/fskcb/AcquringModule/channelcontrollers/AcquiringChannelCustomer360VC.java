@@ -124,7 +124,7 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<>(headers);
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
-            String resp = response.getBody().replace("///", "");
+            String resp = response.getBody().replaceAll("\\\\", "");
             //Response
             ObjectMapper objectMapper = new ObjectMapper();
             if (resp != null) {
