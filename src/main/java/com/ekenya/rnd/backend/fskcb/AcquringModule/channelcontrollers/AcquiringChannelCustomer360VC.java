@@ -98,8 +98,8 @@ public class AcquiringChannelCustomer360VC {
             String customer1 = result.trim();
             String newString = customer1.replace("\\", "");
             String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            System.out.println(removeFirstAndLastQuotes);
             JSONArray json = new JSONArray(removeFirstAndLastQuotes);
-
             return ResponseEntity.ok(new BaseAppResponse(1, json, "Request Processed Successfully"));
         } catch (Exception e) {
             e.printStackTrace();
