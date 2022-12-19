@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.utils;
 
+import com.google.gson.Gson;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -17,7 +18,6 @@ public class PasswordEncoderGenerator {
         String customer1 = customer.replace(String.valueOf(92),"");
         System.out.println(customer1);
     }
-
 
 
 }
