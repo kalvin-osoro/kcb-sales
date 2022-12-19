@@ -104,18 +104,18 @@ public class AcquiringChannelCustomer360VC {
     }
 
     @PostMapping("/acquiring-get-customer-360-details-by-accountNumber")
-    public JsonObject getCustomerDetailsById(@RequestBody CRMRequest model) {
+    public ResponseEntity<?> getCustomerDetailsById(@RequestBody CRMRequest model) {
         try {
             String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<String> request = new HttpEntity<String>(headers);
-            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET,request, String.class, model.getAccount());
-            String result = response.getBody();
+            HttpEntity<String> request = new HttpEntity<>(headers);
+            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
             JsonParser parser = new JsonParser();
-            JsonObject json = (JsonObject) parser.parse(result);
-            return json;
+            JsonObject json = (JsonObject) parser.parse(response.getBody());
+            return ResponseEntity.ok(new BaseAppResponse(1, json, "Request Processed Successfully"));
+
         } catch (Exception e) {
             log.error("Error Occured: " + e.getMessage());
             return null;
