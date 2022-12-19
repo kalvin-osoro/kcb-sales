@@ -22,5 +22,6 @@ public class CBAddConvenantRequest {
     private Date createdOn;
     private String alertMessage;
     private String referenceNumber;
+    private String customerName;
     private Integer alertBeforeExpiry;
 }

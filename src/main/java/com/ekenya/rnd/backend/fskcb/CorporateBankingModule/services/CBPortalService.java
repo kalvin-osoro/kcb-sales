@@ -338,7 +338,7 @@ public class CBPortalService implements ICBPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
             CBBankingConvenantEntity cbBankingConvenantEntity = new CBBankingConvenantEntity();
-            cbBankingConvenantEntity.setCustomerId(model.getCustomerId());
+            cbBankingConvenantEntity.setCustomerName(model.getCustomerName());
             cbBankingConvenantEntity.setEndDate(model.getEndDate());
             cbBankingConvenantEntity.setIntervalForCheck(model.getIntervalForCheck());
             cbBankingConvenantEntity.setAlertMessage(model.getAlertMessage());
@@ -385,10 +385,10 @@ public class CBPortalService implements ICBPortalService {
 
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", cbBankingConvenantEntity.getId());
-                objectNode.put("customerId", cbBankingConvenantEntity.getCustomerId());
+                objectNode.put("customerName", cbBankingConvenantEntity.getCustomerName());
                 ObjectNode period = mapper.createObjectNode();
                 period.put("endDate", cbBankingConvenantEntity.getEndDate());
-                period.put("createdOn",cbBankingConvenantEntity.getCreatedOn().getTime());
+                period.put("createdOn",cbBankingConvenantEntity.getCreatedOn().toString());
                 objectNode.set("period", period);
                 objectNode.put("intervalForCheck", cbBankingConvenantEntity.getIntervalForCheck());
                 objectNode.put("status", cbBankingConvenantEntity.getStatus().toString());
