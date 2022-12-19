@@ -13,12 +13,9 @@ import java.util.List;
 public interface IRetailChannelService {
 
 
-    boolean createLead(RetailAddLeadRequest model);
+//    boolean createLead(RetailAddLeadRequest model);
 
     ObjectNode loadDSRAnalytics(String staffNo);
-
-    List<?> getAllLeads(RetailGetDSRLead model);
-
     ArrayList<ObjectNode> loadDSRSummary();
 
     boolean attemptCreateMicroLead(TreasuryAddLeadRequest model);

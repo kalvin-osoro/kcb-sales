@@ -25,48 +25,9 @@ public class RetailChannelLeadsVC {
     @Autowired
     IRetailChannelService retailChannelService;
 
-    //Create new lead
+
+
     @PostMapping("/retail-create-lead")
-    public ResponseEntity<?> createLead(@RequestBody RetailAddLeadRequest model) {
-        boolean success = retailChannelService.createLead(model);
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
-    @PostMapping(value = "/retail-get-all-leads")
-    public ResponseEntity<?> getAllLeads(@RequestBody RetailGetDSRLead model ) {
-        List<?> list = retailChannelService.getAllLeads(model);
-        boolean success = list != null;
-
-
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            //Object
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)list);
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
-    //Retail-Micro Lead
-    @PostMapping("/retail-micro-create-lead")
     public ResponseEntity<?> createLead(@RequestBody TreasuryAddLeadRequest model) {
 
         //TODO;
@@ -87,7 +48,7 @@ public class RetailChannelLeadsVC {
         }
     }
 
-    @PostMapping(value = "/retail-micro-get-all-created-leads-by-dsr")
+    @PostMapping(value = "/retail-get-all-created-leads-by-dsr")
     public ResponseEntity<?> getAllDSRLeads(@RequestBody TreasuryGetDSRLeads model) {
         List<?>dsrLeads=retailChannelService.loadDSRLead(model);
         boolean success = dsrLeads!=null;
@@ -108,7 +69,7 @@ public class RetailChannelLeadsVC {
     }
 
     //get all leads assigned to a dsrId
-    @PostMapping(value = "/retail-micro-get-all-assigned-leads-by-dsr")
+    @PostMapping(value = "/retail-get-all-assigned-leads-by-dsr")
     public ResponseEntity<?> getAllAssignedDSRLeads(@RequestBody TreasuryGetDSRLeads model) {
         List<?>dsrLeads=retailChannelService.loadAssignedDSRLead(model);
         boolean success = dsrLeads!=null;
@@ -128,7 +89,7 @@ public class RetailChannelLeadsVC {
         }
     }
     //update lead
-    @PostMapping(value = "/retail-micro-update-lead")
+    @PostMapping(value = "/retail-update-lead")
     public ResponseEntity<?> updateLead(@RequestBody TreasuryUpdateLeadRequest model) {
         boolean success = retailChannelService.attemptUpdateLead(model);
         //Response

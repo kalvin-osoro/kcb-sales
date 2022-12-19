@@ -29,50 +29,10 @@ public class RetailChannelService implements IRetailChannelService {
     @Autowired
     RetailLeadRepository retailLeadRepository;
 
-    @Override
-    public boolean createLead(RetailAddLeadRequest model) {
-        try {
-            RetailLeadEntity retailLeadEntity = new RetailLeadEntity();
-            retailLeadEntity.setCustomerName(model.getCustomerName());
-            retailLeadEntity.setBusinessUnit(model.getBusinessUnit());
-            retailLeadEntity.setPriority(model.getPriority());
-            retailLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
-            retailLeadEntity.setTopic(model.getTopic());
-            retailLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            //save
-            retailLeadRepository.save(retailLeadEntity);
 
-        } catch (Exception e) {
-            log.error("Error occurred while creating lead", e);
-        }
-        return false;
-    }
 
     @Override
     public ObjectNode loadDSRAnalytics(String staffNo) {
-        return null;
-    }
-
-    @Override
-    public List<?> getAllLeads(RetailGetDSRLead model) {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (RetailLeadEntity retailLeadEntity : retailLeadRepository.findAllByDsrId(model.getDsrId())) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("customerId", retailLeadEntity.getCustomerId());
-                node.put("businessUnit", retailLeadEntity.getBusinessUnit());
-                node.put("leadStatus", String.valueOf(retailLeadEntity.getLeadStatus()));
-                node.put("topic", retailLeadEntity.getTopic());
-                node.put("priority", retailLeadEntity.getPriority().ordinal());
-                node.put("dsrId", retailLeadEntity.getDsrId());
-                //add to list
-                list.add(node);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading Leads", e);
-        }
         return null;
     }
 
