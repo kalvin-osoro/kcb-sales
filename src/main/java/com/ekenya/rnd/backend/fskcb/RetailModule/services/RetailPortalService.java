@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.repository.RetailLea
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,7 @@ public class RetailPortalService implements IRetailPortalService {
                 objectNode.put("leadStatus", retailLeadEntity.getLeadStatus().toString());
                 objectNode.put("createdOn",retailLeadEntity.getCreatedOn().getTime());
                 objectNode.put("product",retailLeadEntity.getProduct());
-                objectNode.put("dsrName",retailLeadEntity.getDsrName());
+                objectNode.put("dsrName", Utility.getDsrNameFromDsrId(retailLeadEntity.getDsrId()));
                 objectNode.put("priority", retailLeadEntity.getPriority().toString());
                 list.add(objectNode);
             }
