@@ -4,16 +4,18 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CustomerDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
+import com.ekenya.rnd.backend.fskcb.SpringBootKcbRestApiApplication;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -34,16 +36,16 @@ public class AcquiringChannelCustomer360VC {
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(resp == null){
+        if (resp == null) {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -74,26 +76,46 @@ public class AcquiringChannelCustomer360VC {
     @GetMapping("/get-crm-customers")
     public ResponseEntity<?> getCRMCustomer() {
         try {
-            String uri="http://10.216.2.10:8081/api/Values?entity=accounts&paramval=none";
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accounts&paramval=none";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class);
-            return ResponseEntity.ok(new BaseAppResponse(1,result,"Request Processed Successfully"));
-        }catch (Exception e){
+            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/acquiring-get-customer-360-details-by-account")
     public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody CRMRequest model) {
         try {
-            String uri ="http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
 
-            return ResponseEntity.ok(new BaseAppResponse(1,result,"Request Processed Successfully"));
-        }catch (Exception e){
+            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/acquiring-get-customer-360-details-by-accountNumber")
+    public JsonObject getCustomerDetailsById(@RequestBody CRMRequest model) {
+        try {
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<String> request = new HttpEntity<String>(headers);
+            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
+            String result = response.getBody();
+            JsonParser parser = new JsonParser();
+            JsonObject json = (JsonObject) parser.parse(result);
+            return json;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
