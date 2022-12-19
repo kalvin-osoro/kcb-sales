@@ -95,9 +95,12 @@ public class AcquiringChannelCustomer360VC {
             String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
-            String customer1 = result.replaceAll("\\\\", "");
+            String customer1 = result.trim();
+            String newString = customer1.replace("\\", "");
+            String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            JSONArray json = new JSONArray(removeFirstAndLastQuotes);
 
-            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1, json, "Request Processed Successfully"));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -114,19 +117,13 @@ public class AcquiringChannelCustomer360VC {
             HttpEntity<String> request = new HttpEntity<>(headers);
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
             String resp = response.getBody().replaceAll("\\\\", "");
-            //Response
-            ObjectMapper objectMapper = new ObjectMapper();
-            if (resp != null) {
-                //Object
-                ObjectNode node = objectMapper.createObjectNode();
-                node.put("customer", resp.toString());
+            JsonParser parser = new JsonParser();
+            JsonObject json = parser.parse(resp).getAsJsonObject();
+            JsonArray jsonArray = json.getAsJsonArray("accounts");
+            JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+            String customer1 = jsonObject.toString();
+            return ResponseEntity.ok(new BaseAppResponse(1, customer1, "Request Processed Successfully"));
 
-                return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
-            } else {
-
-                //Response
-                return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
-            }
 
         } catch (Exception e) {
             log.error("Error Occured: " + e.getMessage());

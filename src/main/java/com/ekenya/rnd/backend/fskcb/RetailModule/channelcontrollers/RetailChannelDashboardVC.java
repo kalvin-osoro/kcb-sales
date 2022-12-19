@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
@@ -48,14 +49,14 @@ public class RetailChannelDashboardVC {
 
     @PostMapping("/retail-summary")
     public ResponseEntity<?> getSummary() {
-        ArrayList<?> list = retailChannelService.loadDSRSummary();
-        boolean success = list != null;
+        ArrayNode objectNode = retailChannelService.loadDSRSummary();
+        boolean success = objectNode != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayList)list);
+            node.add((ArrayNode)objectNode);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
@@ -67,14 +68,14 @@ public class RetailChannelDashboardVC {
     }
     @PostMapping("/retail-micro-summary")
     public ResponseEntity<?> getMicroSummary() {
-        ArrayList<?> list = retailChannelService.loadDSRSummary();
-        boolean success = list != null;
+        ArrayNode objectNode= retailChannelService.loadDSRSummary();
+        boolean success = objectNode != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayList)list);
+            node.add((ArrayNode)objectNode);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

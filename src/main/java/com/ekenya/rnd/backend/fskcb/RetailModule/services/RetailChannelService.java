@@ -13,6 +13,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLea
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,57 +37,6 @@ public class RetailChannelService implements IRetailChannelService {
         return null;
     }
 
-    @Override
-    public ArrayList<ObjectNode> loadDSRSummary() {
-        try {
-            ArrayList<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            ObjectNode deposits = mapper.createObjectNode();
-            //hardcoded for now waiting for the API
-            node.put("target", 0);
-            node.put("actual", 0);
-            node.put("parcentage", 0);
-            deposits.put("deposits", node);
-            list.add(deposits);
-            //loans
-            ObjectNode loans = mapper.createObjectNode();
-            node = mapper.createObjectNode();
-            node.put("target", 0);
-            node.put("actual", 0);
-            node.put("parcentage", 0);
-            loans.put("loans", node);
-            list.add(loans);
-            //insurance
-            ObjectNode insurance = mapper.createObjectNode();
-            node = mapper.createObjectNode();
-            node.put("target", 0);
-            node.put("actual", 0);
-            node.put("parcentage", 0);
-            insurance.put("insurance", node);
-            list.add(insurance);
-            //credit cards
-            ObjectNode creditCards = mapper.createObjectNode();
-            node = mapper.createObjectNode();
-            node.put("target", 0);
-            node.put("actual", 0);
-            node.put("parcentage", 0);
-            creditCards.put("creditCards", node);
-            list.add(creditCards);
-            //vooma
-            ObjectNode vooma = mapper.createObjectNode();
-            node = mapper.createObjectNode();
-            node.put("target", 0);
-            node.put("actual", 0);
-            node.put("parcentage", 0);
-            vooma.put("vooma", node);
-            list.add(vooma);
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading DSR Summary", e);
-        }
-        return null;
-    }
 
     @Override
     public boolean attemptCreateMicroLead(TreasuryAddLeadRequest model) {
@@ -180,5 +130,60 @@ public class RetailChannelService implements IRetailChannelService {
             log.error("Error occurred while updating lead", e);
         }
         return false;
+    }
+
+    @Override
+    public ArrayNode loadDSRSummary() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayNode list = mapper.createArrayNode();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("kpi","Loans");
+            node.put("target", 0);
+            node.put("actual", 0);
+            node.put("percentage", 0);
+            list.add(node);
+            //kpi accounts
+            ObjectNode node1 = mapper.createObjectNode();
+            node1.put("kpi","Accounts");
+            node1.put("target", 0);
+            node1.put("actual", 0);
+            node1.put("percentage", 0);
+            list.add(node1);
+
+            //vooma
+            ObjectNode node2 = mapper.createObjectNode();
+            node2.put("kpi","Vooma");
+            node2.put("target", 0);
+            node2.put("actual", 0);
+            node2.put("percentage", 0);
+            list.add(node2);
+            //insurance
+            ObjectNode node3 = mapper.createObjectNode();
+            node3.put("kpi","Insurance");
+            node3.put("target", 0);
+            node3.put("actual", 0);
+            node3.put("percentage", 0);
+            list.add(node3);
+            //deposit
+            ObjectNode node4 = mapper.createObjectNode();
+            node4.put("kpi","Deposit");
+            node4.put("target", 0);
+            node4.put("actual", 0);
+            node4.put("percentage", 0);
+            list.add(node4);
+            //credit card
+            ObjectNode node5 = mapper.createObjectNode();
+            node5.put("kpi","Credit Card");
+            node5.put("target", 0);
+            node5.put("actual", 0);
+            node5.put("percentage", 0);
+            list.add(node5);
+
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading summary", e);
+        }
+        return null;
     }
 }

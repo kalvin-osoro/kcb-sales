@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailGetDSRLead;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public interface IRetailChannelService {
 //    boolean createLead(RetailAddLeadRequest model);
 
     ObjectNode loadDSRAnalytics(String staffNo);
-    ArrayList<ObjectNode> loadDSRSummary();
 
     boolean attemptCreateMicroLead(TreasuryAddLeadRequest model);
 
@@ -25,4 +25,6 @@ public interface IRetailChannelService {
     List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
 
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
+
+    ArrayNode loadDSRSummary();
 }
