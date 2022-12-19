@@ -16,6 +16,8 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +38,7 @@ public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
     private  final IDSRTeamsRepository teamsRepository;
     private final AgencyBankingLeadRepository agencyBankingLeadRepository;
     private final AgencyBankingQuestionnaireQuestionRepository agencyBankingQuestionnaireQuestionRepository;
@@ -112,45 +115,25 @@ public class AgencyPortalService implements IAgencyPortalService {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             for (AgencyBankingLeadEntity agencyBankingLeadEntity : agencyBankingLeadRepository.findAll()) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("id", agencyBankingLeadEntity.getId());
-                node.put("customerId", agencyBankingLeadEntity.getCustomerId());
-                node.put("businessUnit", agencyBankingLeadEntity.getBusinessUnit());
-                node.put("leadStatus", String.valueOf(agencyBankingLeadEntity.getLeadStatus()));
-                node.put("topic", agencyBankingLeadEntity.getTopic());
-                node.put("priority", agencyBankingLeadEntity.getPriority().toString());
-                node.put("dsrId", agencyBankingLeadEntity.getDsrId());
-                node.put("createdOn",agencyBankingLeadEntity.getCreatedOn().getTime());
-                //add to list
-                list.add(node);
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", agencyBankingLeadEntity.getId());
+                objectNode.put("customerId", agencyBankingLeadEntity.getCustomerId());
+                objectNode.put("businessUnit", agencyBankingLeadEntity.getBusinessUnit());
+                objectNode.put("leadStatus", agencyBankingLeadEntity.getLeadStatus().toString());
+                objectNode.put("createdOn",agencyBankingLeadEntity.getCreatedOn().getTime());
+                objectNode.put("product",agencyBankingLeadEntity.getProduct());
+                objectNode.put("dsrName",Utility.getDsrNameFromDsrId(agencyBankingLeadEntity.getDsrId()));
+                objectNode.put("priority", agencyBankingLeadEntity.getPriority().toString());
+//                objectNode.put("dsrId", treasuryLeadEntity.getDsrId());
+                list.add(objectNode);
             }
             return list;
         } catch (Exception e) {
-            log.error("Error occurred while loading questionnaires", e);
+            log.error("Error occurred while getting all leads", e);
         }
         return null;
     }
 
-    @Override
-    public boolean assignLeadToDsr(AgencyAssignLeadRequest agencyAssignLeadRequest, Long leadId) {
-        try {
-            AgencyBankingLeadEntity agencyBankingLeadEntity = agencyBankingLeadRepository.findById(leadId).get();
-            agencyBankingLeadEntity.setDsrId(agencyAssignLeadRequest.getDsrId());
-            //set start date from input
-            agencyBankingLeadEntity.setStartDate(agencyAssignLeadRequest.getStartDate());
-            agencyBankingLeadEntity.setEndDate(agencyAssignLeadRequest.getEndDate());
-            //save
-            agencyBankingLeadRepository.save(agencyBankingLeadEntity);
-            //update is assigned to true
-            agencyBankingLeadEntity.setAssigned(true);
-            return true;
-
-
-        } catch (Exception e) {
-            log.error("Error assigning lead to dsr", e);
-        }
-        return false;
-    }
 
     @Override
     public boolean createQuestionnaire(AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest agencyBankingQuestionnareQuestionRequest) {
@@ -443,4 +426,34 @@ public class AgencyPortalService implements IAgencyPortalService {
 
     }
 
-}
+    @Override
+    public boolean assignLead(TreasuryAssignLeadRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DSRAccountEntity dsrAccountsEntity = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
+            if (dsrAccountsEntity == null) {
+                return false;
+            }
+            AgencyBankingLeadEntity agencyBankingLeadEntity = agencyBankingLeadRepository.findById(model.getLeadId()).orElse(null);
+            if (agencyBankingLeadEntity == null) {
+                return false;
+            }
+            agencyBankingLeadEntity.setAssigned(true);
+            agencyBankingLeadEntity.setPriority(model.getPriority());
+            //set dsrAccId from dsrAccountsEntity
+            agencyBankingLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
+            agencyBankingLeadRepository.save(agencyBankingLeadEntity);
+            return true;
+
+
+
+        } catch (Exception e) {
+            log.error("Error occurred while assigning lead", e);
+        }
+        return false;
+    }
+    }
+
+

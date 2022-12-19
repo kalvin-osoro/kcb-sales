@@ -1,10 +1,14 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -98,14 +102,22 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public boolean createLead(AgencyAddLeadRequest request) {
+    public boolean createLead(AgencyAddLeadRequest model) {
         try {
+            if (model==null){
+                return false;
+            }
             AgencyBankingLeadEntity agencyBankingLeadEntity = new AgencyBankingLeadEntity();
-            agencyBankingLeadEntity.setCustomerName(request.getCustomerName());
-            agencyBankingLeadEntity.setBusinessUnit(request.getBusinessUnit());
-            agencyBankingLeadEntity.setPriority(request.getPriority());
-            agencyBankingLeadEntity.setCustomerAccountNumber(request.getCustomerAccountNumber());
-            agencyBankingLeadEntity.setTopic(request.getTopic());
+            agencyBankingLeadEntity.setCustomerName(model.getCustomerName());
+            agencyBankingLeadEntity.setBusinessUnit(model.getBusinessUnit());
+            agencyBankingLeadEntity.setEmail(model.getEmail());
+            agencyBankingLeadEntity.setPhoneNumber(model.getPhoneNumber());
+            agencyBankingLeadEntity.setProduct(model.getProduct());
+            agencyBankingLeadEntity.setPriority(model.getPriority());
+            agencyBankingLeadEntity.setDsrId(model.getDsrId());
+            agencyBankingLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
+            agencyBankingLeadEntity.setTopic(model.getTopic());
+            agencyBankingLeadEntity.setLeadStatus(LeadStatus.OPEN);
             agencyBankingLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             agencyBankingLeadRepository.save(agencyBankingLeadEntity);
             return true;
@@ -117,30 +129,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
 
-    @Override
-    public List<ObjectNode> getAllLeadsByDsrId(DSRLeadRequest model) {
-        try {
-            List<AgencyBankingLeadEntity> agencyBankingLeadEntities = agencyBankingLeadRepository.findAllByDsrId(model.getDsrId());
-            List<ObjectNode> objectNodeList = new ArrayList<>();
-            ObjectMapper objectMapper = new ObjectMapper();
-            agencyBankingLeadEntities.forEach(agencyBankingLeadEntity -> {
-                ObjectNode objectNode = objectMapper.createObjectNode();
-                objectNode.put("leadId", agencyBankingLeadEntity.getId());
-                objectNode.put("customerName", agencyBankingLeadEntity.getCustomerName());
-                objectNode.put("businessUnit", agencyBankingLeadEntity.getBusinessUnit());
-                objectNode.put("priority", agencyBankingLeadEntity.getPriority().ordinal());
-                objectNode.put("customerAccountNumber", agencyBankingLeadEntity.getCustomerAccountNumber());
-                objectNode.put("topic", agencyBankingLeadEntity.getTopic());
-                objectNode.put("createdOn", agencyBankingLeadEntity.getCreatedOn().toString());
-                objectNodeList.add(objectNode);
-            });
 
-            return objectNodeList;
-        } catch (Exception e) {
-            log.error("Error occurred while getting all leads for dsr ", e);
-        }
-        return null;
-    }
 
     @Override
     public ArrayList<ObjectNode> getTargetsSummary() {
@@ -418,5 +407,78 @@ public class AgencyChannelService implements IAgencyChannelService {
         }
         return false;
     }
+
+    @Override
+    public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AgencyBankingLeadEntity agencyBankingLeadEntity : agencyBankingLeadRepository.findAllByDsrIdAndAssigned(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", agencyBankingLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", agencyBankingLeadEntity.getPriority().toString());
+                node.put("businessUnit", agencyBankingLeadEntity.getBusinessUnit());
+                node.put("leadId", agencyBankingLeadEntity.getId());
+                node.put("leadStatus", agencyBankingLeadEntity.getLeadStatus().ordinal());
+                node.put("createdOn", agencyBankingLeadEntity.getCreatedOn().getTime());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AgencyBankingLeadEntity agencyBankingLeadEntity : agencyBankingLeadRepository.findAllAssignedLeadByDSRId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", agencyBankingLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", agencyBankingLeadEntity.getPriority().toString());
+                node.put("businessUnit", agencyBankingLeadEntity.getBusinessUnit());
+                node.put("leadId", agencyBankingLeadEntity.getId());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean attemptUpdateLead(TreasuryUpdateLeadRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            AgencyBankingLeadEntity agencyBankingLeadEntity = agencyBankingLeadRepository.findById(model.getLeadId()).orElse(null);
+            agencyBankingLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
+            agencyBankingLeadEntity.setLeadStatus(model.getLeadStatus());
+            agencyBankingLeadRepository.save(agencyBankingLeadEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while updating lead", e);
+        }
+        return false;
+    }
+
 }
+
+
 

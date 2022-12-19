@@ -1,6 +1,8 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +19,6 @@ public interface IAgencyChannelService {
 
     boolean createLead(AgencyAddLeadRequest request);
 
-    List<ObjectNode> getAllLeadsByDsrId(DSRLeadRequest model);
 
     ArrayList<ObjectNode> getTargetsSummary();
 
@@ -27,4 +28,10 @@ public interface IAgencyChannelService {
     List<ObjectNode> getAllOnboardingsByDsr(AgencyAllDSROnboardingsRequest model);
 
     boolean createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto,MultipartFile tariffPhoto);
+
+    List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model);
+
+    List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
+
+    boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 }

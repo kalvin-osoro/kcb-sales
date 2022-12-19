@@ -1,15 +1,20 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetFilesEntity;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,47 +62,6 @@ public class VoomaChannelService implements IVoomaChannelService {
 
     private final int totalTransaction = (int) (Math.random() * 1000000);
 
-    @Override
-    public boolean createLead(VoomaAddLeadRequest model) {
-        try {
-            DFSVoomaLeadEntity dfsVoomaLeadEntity = new DFSVoomaLeadEntity();
-            dfsVoomaLeadEntity.setCustomerName(model.getCustomerName());
-            dfsVoomaLeadEntity.setBusinessUnit(model.getBusinessUnit());
-            dfsVoomaLeadEntity.setPriority(model.getPriority());
-            dfsVoomaLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
-            dfsVoomaLeadEntity.setTopic(model.getTopic());
-            dfsVoomaLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            dfsVoomaLeadRepository.save(dfsVoomaLeadEntity);
-            return true;
-
-        } catch (Exception e) {
-            log.error("Error occurred while creating lead", e);
-        }
-        return false;
-    }
-
-    @Override
-    public List<ObjectNode> getAllLeadsByDsrId(VoomaAddLeadRequest model) {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaLeadEntity dfsVoomaLeadEntity : dfsVoomaLeadRepository.findAllByDsrId(model.getDsrId())) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("customerId", dfsVoomaLeadEntity.getCustomerId());
-                node.put("businessUnit", dfsVoomaLeadEntity.getBusinessUnit());
-                node.put("leadStatus", String.valueOf(dfsVoomaLeadEntity.getLeadStatus()));
-                node.put("topic", dfsVoomaLeadEntity.getTopic());
-                node.put("priority", dfsVoomaLeadEntity.getPriority().ordinal());
-                node.put("dsrId", dfsVoomaLeadEntity.getDsrId());
-                //add to list
-                list.add(node);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading questionnaires", e);
-        }
-        return null;
-    }
 
     @Override
     public ArrayList<ObjectNode> getTargetsSummary() {
@@ -802,5 +766,104 @@ public class VoomaChannelService implements IVoomaChannelService {
         }
         return JsonNodeFactory.instance.objectNode();
 
+    }
+
+    @Override
+    public boolean attemptCreateLead(TreasuryAddLeadRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DFSVoomaLeadEntity dfsVoomaLeadEntity = new DFSVoomaLeadEntity();
+            dfsVoomaLeadEntity.setCustomerName(model.getCustomerName());
+            dfsVoomaLeadEntity.setBusinessUnit(model.getBusinessUnit());
+            dfsVoomaLeadEntity.setEmail(model.getEmail());
+            dfsVoomaLeadEntity.setPhoneNumber(model.getPhoneNumber());
+            dfsVoomaLeadEntity.setProduct(model.getProduct());
+            dfsVoomaLeadEntity.setPriority(model.getPriority());
+            dfsVoomaLeadEntity.setDsrId(model.getDsrId());
+            dfsVoomaLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
+            dfsVoomaLeadEntity.setTopic(model.getTopic());
+            dfsVoomaLeadEntity.setLeadStatus(LeadStatus.OPEN);
+            dfsVoomaLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            dfsVoomaLeadRepository.save(dfsVoomaLeadEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating lead", e);
+        }
+        return false;
+    }
+
+
+    @Override
+    public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaLeadEntity dfsVoomaLeadEntity : dfsVoomaLeadRepository.findAllByDsrIdAndAssigned(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", dfsVoomaLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", dfsVoomaLeadEntity.getPriority().toString());
+                node.put("businessUnit", dfsVoomaLeadEntity.getBusinessUnit());
+                node.put("leadId", dfsVoomaLeadEntity.getId());
+                node.put("leadStatus", dfsVoomaLeadEntity.getLeadStatus().ordinal());
+                node.put("createdOn", dfsVoomaLeadEntity.getCreatedOn().getTime());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+
+    }
+
+
+    @Override
+    public List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaLeadEntity dfsVoomaLeadEntity : dfsVoomaLeadRepository.findAllAssignedLeadByDSRId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", dfsVoomaLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", dfsVoomaLeadEntity.getPriority().toString());
+                node.put("businessUnit", dfsVoomaLeadEntity.getBusinessUnit());
+                node.put("leadId", dfsVoomaLeadEntity.getId());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean attemptUpdateLead(TreasuryUpdateLeadRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            DFSVoomaLeadEntity dfsVoomaLeadEntity = dfsVoomaLeadRepository.findById(model.getLeadId()).orElse(null);
+            dfsVoomaLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
+            dfsVoomaLeadEntity.setLeadStatus(model.getLeadStatus());
+            dfsVoomaLeadRepository.save(dfsVoomaLeadEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while updating lead", e);
+        }
+        return false;
     }
 }

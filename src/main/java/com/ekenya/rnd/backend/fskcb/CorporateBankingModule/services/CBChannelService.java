@@ -1,11 +1,16 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,48 +37,9 @@ public class CBChannelService implements ICBChannelService {
     private final double commission = Math.round(Math.random() * 1000000*1.35)/100.0;
     private final double preCommission = Math.round(Math.random() * 1000000*1.35)/100.0;
 
-    @Override
-    public boolean createCBLead(CBAddLeadRequest model) {
-        try {
-            CBLeadEntity cbLeadEntity = new CBLeadEntity();
-            cbLeadEntity.setCustomerName(model.getCustomerName());
-            cbLeadEntity.setBusinessUnit(model.getBusinessUnit());
-            cbLeadEntity.setPriority(model.getPriority());
-            cbLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
-            cbLeadEntity.setTopic(model.getTopic());
-            cbLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            cbLeadsRepository.save(cbLeadEntity);
-            return true;
 
-        } catch (Exception e) {
-            log.error("Error occurred while creating lead", e);
-        }
-        return false;
-    }
 
-    @Override
-    public List<ObjectNode> getAllLeadsByDsrId(CBGetLeadsByDsrIdRequest model) {
-        //get all leads by dsr id
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (CBLeadEntity cbLeadEntity : cbLeadsRepository.findAllByDsrId(model.getDsrId())) {
-                ObjectNode node = mapper.createObjectNode();
-                node.put("customerId", cbLeadEntity.getCustomerId());
-                node.put("businessUnit", cbLeadEntity.getBusinessUnit());
-                node.put("leadStatus", String.valueOf(cbLeadEntity.getLeadStatus()));
-                node.put("topic", cbLeadEntity.getTopic());
-                node.put("priority", cbLeadEntity.getPriority().ordinal());
-                node.put("dsrId", cbLeadEntity.getDsrId());
-                //add to list
-                list.add(node);
-            }
-            return list;
-        } catch (Exception e) {
-            log.error("Error occurred while loading questionnaires", e);
-        }
-        return null;
-    }
+
 
     @Override
     public boolean createCustomerVisit(CBCustomerVisitsRequest request) {
@@ -296,6 +262,106 @@ public class CBChannelService implements ICBChannelService {
         return false;
     }
 
+    @Override
+    public boolean attemptCreateLead(TreasuryAddLeadRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            CBLeadEntity cbLeadEntity = new CBLeadEntity();
+            cbLeadEntity.setCustomerName(model.getCustomerName());
+            cbLeadEntity.setBusinessUnit(model.getBusinessUnit());
+            cbLeadEntity.setEmail(model.getEmail());
+            cbLeadEntity.setPhoneNumber(model.getPhoneNumber());
+            cbLeadEntity.setProduct(model.getProduct());
+            cbLeadEntity.setPriority(model.getPriority());
+            cbLeadEntity.setDsrId(model.getDsrId());
+            cbLeadEntity.setCustomerAccountNumber(model.getCustomerAccountNumber());
+            cbLeadEntity.setTopic(model.getTopic());
+            cbLeadEntity.setLeadStatus(LeadStatus.OPEN);
+            cbLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            cbLeadsRepository.save(cbLeadEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while creating lead", e);
+        }
+        return false;
+    }
+
+
+    @Override
+    public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBLeadEntity cbLeadEntity : cbLeadsRepository.findAllByDsrIdAndAssigned(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", cbLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", cbLeadEntity.getPriority().toString());
+                node.put("businessUnit", cbLeadEntity.getBusinessUnit());
+                node.put("leadId", cbLeadEntity.getId());
+                node.put("leadStatus", cbLeadEntity.getLeadStatus().ordinal());
+                node.put("createdOn", cbLeadEntity.getCreatedOn().getTime());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+
+    }
+
+
+    @Override
+    public List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (CBLeadEntity cbLeadEntity : cbLeadsRepository.findAllAssignedLeadByDSRId(model.getDsrId())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("customerName", cbLeadEntity.getCustomerName());
+//                node.put("customerID", treasuryLeadEntity.getCustomerId());
+                node.put("priority", cbLeadEntity.getPriority().toString());
+                node.put("businessUnit", cbLeadEntity.getBusinessUnit());
+                node.put("leadId", cbLeadEntity.getId());
+                list.add(node);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while loading assigned leads", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean attemptUpdateLead(TreasuryUpdateLeadRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            CBLeadEntity cbLeadEntity = cbLeadsRepository.findById(model.getLeadId()).orElse(null);
+            cbLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
+            cbLeadEntity.setLeadStatus(model.getLeadStatus());
+            cbLeadsRepository.save(cbLeadEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while updating lead", e);
+        }
+        return false;
+    }
+    }
+
 //    @Override
 //    public List<?> getAllCustomerAppointment() {
 //        return null;
@@ -320,4 +386,4 @@ public class CBChannelService implements ICBChannelService {
 //    public List<?> getAllAppointmentByDsrId(long dsrId) {
 //        return null;
 //    }
-}
+

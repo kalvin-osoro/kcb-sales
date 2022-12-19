@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -21,8 +22,6 @@ public interface IAgencyPortalService {
     List<ObjectNode> getCustomerVisitQuestionnaireResponse(AgencyCustomerVisitQuestionnaireRequest agencyCustomerVisitQuestionnaireRequest);
 
     List<ObjectNode> getAllLeads();
-
-    boolean assignLeadToDsr(AgencyAssignLeadRequest agencyAssignLeadRequest, Long leadId);
 
     boolean createQuestionnaire(AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest agencyBankingQuestionnareQuestionRequest);
 
@@ -47,4 +46,6 @@ public interface IAgencyPortalService {
     boolean rejectAgentOnboarding(AcquiringApproveMerchant model);
 
     List<?> getAllVisitsV2();
+
+    boolean assignLead(TreasuryAssignLeadRequest model);
 }

@@ -1,6 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
@@ -14,9 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IVoomaChannelService {
-    boolean createLead(VoomaAddLeadRequest model);
 
-    List<ObjectNode> getAllLeadsByDsrId(VoomaAddLeadRequest model);
 
     ArrayList<ObjectNode> getTargetsSummary();
 
@@ -71,4 +72,12 @@ public interface IVoomaChannelService {
                              MultipartFile businessPermitDoc);
 
     ObjectNode getCustomerDetails(CustomerRequest model);
+
+    boolean attemptCreateLead(TreasuryAddLeadRequest model);
+
+    List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model);
+
+    List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
+
+    boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 }

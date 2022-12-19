@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository;
 
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,4 +26,10 @@ public interface PSBankingLeadRepository extends JpaRepository<PSBankingLeadEnti
     int countAllLeadsCreatedLast7DaysCold();
     @Query(value = "SELECT * FROM psbanking_leads where dsr_id = ?1", nativeQuery = true)
     PSBankingLeadEntity[] findAllByDsrId(Long dsrId);
+
+    @Query(value = "SELECT * FROM psbanking_leads where dsrId = ?1 AND assigned = false", nativeQuery = true)
+    PSBankingLeadEntity[] findAllByDsrIdAndAssigned(Long dsrId);
+
+    @Query(value = "SELECT * FROM psbanking_leads where dsrId = ?1 AND assigned = true", nativeQuery = true)
+    PSBankingLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
 }

@@ -13,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgencyAddLeadRequest {
-    private Long id;
     private  Integer customerId;
     private String businessUnit;
     private String remarks;
@@ -26,5 +25,7 @@ public class AgencyAddLeadRequest {
     private LeadStatus leadStatus;
     private String startDate;
     private String endDate;
-    private Date createdOn;
+    private String product;
+    private String email;
+    private String phoneNumber;
 }

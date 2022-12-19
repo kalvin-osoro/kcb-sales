@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,11 @@ public class PSBankingLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String customerName;
+    private String product;
+    private String email;
+    private String customerAccountNumber;
+    private String phoneNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -28,8 +34,10 @@ public class PSBankingLeadEntity {
     private LeadStatus leadStatus;
     private boolean assigned=false;
     private String startDate;
-    private String customerAccountNumber;
-    private String customerName;
     private String endDate;
+    private String outcomeOfTheVisit;
     private Date createdOn;
+    @ManyToOne
+    @JoinColumn(name = "dsrAccId")
+    private DSRAccountEntity dsrAccountEntity;
 }

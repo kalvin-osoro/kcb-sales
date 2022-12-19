@@ -4,6 +4,9 @@ import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAddLeadR
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsBYDSRRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBDSROnboardingRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.payload.PersonalAccountTypeRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +27,16 @@ public interface IPBChannelService {
     List<ObjectNode> getAllOnboardings(PBDSROnboardingRequest model);
 
     ArrayList<ObjectNode> getTargetsSummary();
-
-    boolean createLead(PBAddLeadRequest request);
-
-    List<ObjectNode> getAllLeadsByDsrId(PBAddLeadRequest model);
     boolean createCustomerVisit(PBCustomerVisitsRequest model);
 
     List<ObjectNode> getAllCustomerVisitsByDSR(PBCustomerVisitsBYDSRRequest model);
 
+    boolean attemptCreateLead(TreasuryAddLeadRequest model);
 
-//    ResponseEntity<?> getAllAccountTypes();
-//    ResponseEntity<?> createPersonalAccountType( PersonalAccountTypeRequest personalAccountTypeRequest);
-//    ResponseEntity<?> editPersonalAccountType( PersonalAccountTypeRequest personalAccountTypeRequest);
-//    ResponseEntity<?> deletePersonalAccountType( long id);
 
+    List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model);
+
+    List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
+
+    boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 }

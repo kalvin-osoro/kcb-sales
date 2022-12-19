@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,6 +13,9 @@ public interface DFSVoomaLeadRepository extends JpaRepository<DFSVoomaLeadEntity
     @Query("SELECT l FROM DFSVoomaLeadEntity l WHERE l.dsrId = ?1")
     DFSVoomaLeadEntity[] findAllByDsrId(Long dsrId);
 
-    List<DFSVoomaLeadEntity> findByDsrIdAndAssigned(Long dsrId, boolean b);
+    @Query(value = "SELECT * FROM dbo_vooma_leads where dsrId = ?1 AND assigned = false", nativeQuery = true)
+    DFSVoomaLeadEntity[] findAllByDsrIdAndAssigned(Long dsrId);
 
+    @Query(value = "SELECT * FROM dbo_vooma_leads where dsrId = ?1 AND assigned = true", nativeQuery = true)
+    DFSVoomaLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
 }

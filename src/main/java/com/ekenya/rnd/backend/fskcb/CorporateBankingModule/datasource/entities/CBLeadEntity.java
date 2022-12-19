@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Priority;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -23,8 +24,10 @@ public class CBLeadEntity {
     private  Integer customerId;
     private String businessUnit;
     private String customerName;
-    private String remarks;
+    private String product;
+    private String email;
     private String customerAccountNumber;
+    private String phoneNumber;
     private String topic;
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -35,5 +38,9 @@ public class CBLeadEntity {
     private boolean assigned=false;
     private String startDate;
     private String endDate;
+    private String outcomeOfTheVisit;
     private Date createdOn;
+    @ManyToOne
+    @JoinColumn(name = "dsrAccId")
+    private DSRAccountEntity dsrAccountEntity;
 }
