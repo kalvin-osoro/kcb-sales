@@ -27,4 +27,6 @@ public interface IRetailChannelService {
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 
     ArrayNode loadDSRSummary();
+
+    ArrayNode loadMicroDSRSummary();
 }

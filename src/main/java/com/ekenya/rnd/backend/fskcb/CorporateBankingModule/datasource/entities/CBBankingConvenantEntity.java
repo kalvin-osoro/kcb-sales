@@ -1,8 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
-import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
 import com.ekenya.rnd.backend.utils.ConcessionTrackingStatus;
-import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,7 @@ public class CBBankingConvenantEntity {
     private String customerId;
     private String endDate;
     private String referenceNumber;
-    private String condition;
+    private String convenantCondition;
     private Integer intervalForCheck;
     private String customerName;
     @Enumerated(EnumType.STRING)
