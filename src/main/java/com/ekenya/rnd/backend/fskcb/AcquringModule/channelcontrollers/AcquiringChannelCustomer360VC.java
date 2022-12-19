@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,10 +77,8 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
             String result = restTemplate.getForObject(uri, String.class);
             //convert json string to json object
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("customer",result);
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            JsonArray jsonArray = new com.google.gson.JsonParser().parse(result).getAsJsonArray();
+            return ResponseEntity.ok(new BaseAppResponse(1,jsonArray,"Request Processed Successfully"));
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
