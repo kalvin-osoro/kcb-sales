@@ -488,7 +488,11 @@ public class AuthService implements IAuthService{
                 node.put("id",qn.getId());
                 node.put("title",qn.getTitle());
                 node.putPOJO("options", qn.getOptions());
-                node.put("type",qn.getType().toString());
+                if(qn.getType() != null) {
+                    node.put("type", qn.getType().toString());
+                }else{
+                    node.put("type", SecurityQuestionType.ONE_LINE.toString());
+                }
 
                 list.add(node);
 

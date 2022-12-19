@@ -621,7 +621,7 @@ public class UsersService implements IUsersService {
                 if(qn.getType() != null) {
                     node.put("type", qn.getType().toString());
                 }else{
-                    node.put("type", "");
+                    node.put("type", SecurityQuestionType.ONE_LINE.toString());
                 }
                 //
                 if(!qn.getOptions().isEmpty()) {
