@@ -3,7 +3,6 @@ package com.ekenya.rnd.backend.utils;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
-import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.locationtech.jts.geom.*;
 import org.slf4j.Logger;
@@ -106,19 +105,12 @@ public class Utility {
         return polygon.contains(geometryFactory.createPoint(point));//
     }
 
-    public static String generatePassword() {
+    public static String generatePIN() {
         //generate 4 digit random number
         Random rand = new Random();//instance of random class
         int randInt = rand.nextInt(10000);
         String password = String.format("%04d", randInt);
         return password;
-    }
-
-    public static int generateOtp() {
-        //generate 4 digit random number
-        Random rand = new Random();
-        int randInt = rand.nextInt(10000);
-        return randInt;
     }
 
     public static int generateRandomNumber(int i, int i1) {
@@ -127,7 +119,7 @@ public class Utility {
         return randInt;
     }
 
-    public static String generateRandomPassword() {
+    public static String generatePassword() {
         String password = RandomStringUtils.random(8, true, true);
         return password;
     }

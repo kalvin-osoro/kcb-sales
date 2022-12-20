@@ -1,9 +1,7 @@
 package com.ekenya.rnd.backend.fskcb;
 
-import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecQuestionOptionEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityQuestionType;
-import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionAnswersRepo;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
@@ -33,7 +31,7 @@ public class DbInitializer {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository userRepository;
+    private IUserAccountsRepository IUserAccountsRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -95,7 +93,7 @@ public class DbInitializer {
         String adminPass = "Admin@4321";
         try{
             //check if user already exists by username or email
-            if(userRepository.existsByEmail(adminEmail)){
+            if(IUserAccountsRepository.existsByEmail(adminEmail)){
                 log.warn("Admin user already exists, skipping ..");
                 return;
             }
@@ -108,13 +106,13 @@ public class DbInitializer {
             userApp.setPassword(passwordEncoder.encode(adminPass));
             userApp.setPhoneNumber("");
             userApp.setAccountType(AccountType.ADMIN);
-            userRepository.save(userApp);//save user to db
+            IUserAccountsRepository.save(userApp);//save user to db
 
 
             //
             UserRoleEntity userRole = roleRepository.findByName(SystemRoles.SYS_ADMIN).get();//get role from db
             userApp.setRoles(Collections.singleton(userRole));//set role to user
-            userRepository.save(userApp);//save user to db
+            IUserAccountsRepository.save(userApp);//save user to db
 
             //Add admin to all profiles
             for (UserProfileEntity profile: profilesRepository.findAll()) {
@@ -551,12 +549,12 @@ public class DbInitializer {
                 userApp.setPassword(passwordEncoder.encode(DEFAULT_USER_PIN));
                 userApp.setPhoneNumber(dsrDetails.getPhoneNo());
                 userApp.setAccountType(AccountType.DSR);
-                userRepository.save(userApp);//save user to db
+                IUserAccountsRepository.save(userApp);//save user to db
                 //Add to role
                 UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
                 //
                 userApp.setRoles(Collections.singleton(userRole));//set role to user
-                userRepository.save(userApp);//save user to db
+                IUserAccountsRepository.save(userApp);//save user to db
 
                 //Save DSR
                 dSRAccountsRepository.save(dsrDetails);

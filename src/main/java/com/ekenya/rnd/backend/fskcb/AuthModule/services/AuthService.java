@@ -15,7 +15,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
@@ -39,7 +39,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -55,13 +54,16 @@ public class AuthService implements IAuthService{
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository userRepository;
+    private IUserAccountsRepository IUserAccountsRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserProfilesRepository userProfilesRepository;
+
+    @Autowired
+    IUserAccountsRepository userAccountsRepository;
     @Autowired
     IDSRAccountsRepository dsrAccountsRepository;
     @Autowired
@@ -93,7 +95,7 @@ public class AuthService implements IAuthService{
             LoginResponse response = new LoginResponse();
 
 
-            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).orElse(null);
             if(account == null){
                 response.setSuccess(false);
                 response.setErrorMessage("Account NOT Found in the system.");
@@ -141,7 +143,7 @@ public class AuthService implements IAuthService{
             if(model.getLocation() != null) {
                 account.setLastCoords(mObjectMapper.writeValueAsString(model.getLocation()));
             }
-            userRepository.save(account);
+            IUserAccountsRepository.save(account);
 
             //get user roles
             //List<String> roles=userDetails.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList());
@@ -189,7 +191,7 @@ public class AuthService implements IAuthService{
             return response;
         }catch (AuthenticationException ex){
             //
-            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+            Optional<UserAccountEntity> optionalUserAccount = IUserAccountsRepository.findByStaffNo(model.getStaffNo());
             //Update ..
             if(optionalUserAccount.isPresent()){
                 UserAccountEntity userAccount = optionalUserAccount.get();
@@ -200,7 +202,7 @@ public class AuthService implements IAuthService{
                     userAccount.setDateBlocked(Calendar.getInstance().getTime());
                 }
                 //
-                userRepository.save(userAccount);
+                IUserAccountsRepository.save(userAccount);
                 //
                 LoginResponse response = new LoginResponse();
                 response.setSuccess(false);
@@ -226,7 +228,7 @@ public class AuthService implements IAuthService{
             LoginResponse response = new LoginResponse();
 
 
-            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).orElse(null);
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).orElse(null);
             if(account == null){
                 response.setSuccess(false);
                 response.setErrorMessage("Account NOT Found in the system.");
@@ -262,7 +264,7 @@ public class AuthService implements IAuthService{
 
             //Update Login info ..
             account.setLastLogin(Calendar.getInstance().getTime());
-            userRepository.save(account);
+            IUserAccountsRepository.save(account);
 
 
             ArrayNode profiles = mObjectMapper.createArrayNode();
@@ -310,7 +312,7 @@ public class AuthService implements IAuthService{
             return response;
         }catch (AuthenticationException ex){
             //
-            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+            Optional<UserAccountEntity> optionalUserAccount = IUserAccountsRepository.findByStaffNo(model.getStaffNo());
             //Update ..
             if(optionalUserAccount.isPresent()){
                 UserAccountEntity userAccount = optionalUserAccount.get();
@@ -321,7 +323,7 @@ public class AuthService implements IAuthService{
                     userAccount.setDateBlocked(Calendar.getInstance().getTime());
                 }
                 //
-                userRepository.save(userAccount);
+                IUserAccountsRepository.save(userAccount);
                 //
                 LoginResponse response = new LoginResponse();
                 response.setSuccess(false);
@@ -357,10 +359,10 @@ public class AuthService implements IAuthService{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,model.getCurrentPIN()));
 
             //Update Login info ..
-            UserAccountEntity account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(username).get();
 
             account.setPassword(passwordEncoder.encode(model.getNewPIN()));
-            userRepository.save(account);//save user to db
+            IUserAccountsRepository.save(account);//save user to db
 
             return true;
         }catch (Exception ex){
@@ -373,10 +375,15 @@ public class AuthService implements IAuthService{
     public AccountLookupState accountExists(LookupRequest model) {
 
         try {
-            if(userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(), model.getPhoneNo()).isPresent()){
+            Optional<UserAccountEntity> optionalUserAccount = IUserAccountsRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(), model.getPhoneNo());
+            if(optionalUserAccount.isPresent() && optionalUserAccount.get().isVerified()){
                 //Account exists
                 return AccountLookupState.ACTIVE;
-            }else if(dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo()).isPresent()){
+            }else if(optionalUserAccount.isPresent() && !optionalUserAccount.get().isVerified()){
+                //Account exists but not verified by owner, by phone verification code
+                return AccountLookupState.NOT_ACTIVATED;
+            }
+            else if(dsrAccountsRepository.findByStaffNoAndPhoneNo(model.getStaffNo(), model.getPhoneNo()).isPresent()){
                 //Not Active
                 return AccountLookupState.NOT_ACTIVATED;
             }
@@ -441,9 +448,27 @@ public class AuthService implements IAuthService{
                         //
                         dsrAccount.setPhoneNoVerified(true);
                         dsrAccountsRepository.save(dsrAccount);
-
                         //
-                        if(!userRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
+                        Optional<UserAccountEntity> userAccount = IUserAccountsRepository.findByStaffNo(model.getStaffNo());
+                        //
+                        if(userAccount.isPresent()) {
+
+                            if(userAccount.get().isVerified()){
+
+                                mLogger.log(Level.WARNING,"User "+model.getStaffNo()+" already verified");
+
+                                return true;
+                            }
+                            //Create Login Account..
+                            userAccount.get().setIsVerified(true);
+//                            userAccount.get().setBlocked(false);
+//                            userAccount.get().setRemLoginAttempts(3);
+                            userAccount.get().setLastModified(Calendar.getInstance().getTime());
+                            userAccountsRepository.save(userAccount.get());
+                            //
+                            //All is well,
+                            return true;
+                        }else if(dsrAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
 
                             //Create Login Account..
                             AddAdminUserRequest addUserRequest = new AddAdminUserRequest();
@@ -458,14 +483,15 @@ public class AuthService implements IAuthService{
                             } else {
                                 mLogger.log(Level.SEVERE,"Create User Account Failed");
                             }
-                        }else{
-                            mLogger.log(Level.WARNING,"Create User Account Failed. User already exist");
+                        }
+                        else{
+                            mLogger.log(Level.WARNING,"Validate User Account Failed. User "+model.getStaffNo()+". Does NOT Exist");
                             //All is well,
                             return true;
                         }
                     } else {
                         //
-                        mLogger.log(Level.SEVERE,"Device verification code is expired or user with staffNo exists ..");
+                        mLogger.log(Level.SEVERE,"Device verification code is expired or user with staffNo does NOT exists ..");
                     }
                 }
             }
@@ -508,7 +534,7 @@ public class AuthService implements IAuthService{
     public List<ObjectNode> loadUserSecurityQuestions(String staffNo) {
 
         try{
-            UserAccountEntity account = userRepository.findByStaffNo(staffNo).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(staffNo).get();
 
             List<ObjectNode> list = new ArrayList<>();
             for (SecurityQuestionAnswerEntity ans:
@@ -540,7 +566,7 @@ public class AuthService implements IAuthService{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             //
-            UserAccountEntity account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(username).get();
 
             if(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty()) {
                 //
@@ -578,7 +604,7 @@ public class AuthService implements IAuthService{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             //
-            UserAccountEntity account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(username).get();
 
             if(!securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty()) {
                 //Delete all..
@@ -612,7 +638,7 @@ public class AuthService implements IAuthService{
         boolean valid = false;
 
         try{
-            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).get();
 
             //
             for (SecQnAnswerReq prob:  model.getAnswers()) {
@@ -633,7 +659,7 @@ public class AuthService implements IAuthService{
                 //
                 account.setShouldSetPIN(true);
                 //
-                userRepository.save(account);//save user to db
+                IUserAccountsRepository.save(account);//save user to db
             }
         }catch (Exception ex){
             mLogger.log(Level.SEVERE,ex.getMessage(),ex);
@@ -647,7 +673,7 @@ public class AuthService implements IAuthService{
     public boolean attemptCreatePIN(CreatePINRequest model) {
 
         try{
-            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(),model.getPhoneNo());
+            Optional<UserAccountEntity> optionalUserAccount = IUserAccountsRepository.findByStaffNoAndPhoneNumber(model.getStaffNo(),model.getPhoneNo());
 
             if(optionalUserAccount.isPresent()){
 
@@ -658,7 +684,7 @@ public class AuthService implements IAuthService{
                     account.setShouldSetPIN(false);
                     account.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                     account.setLastModified(Calendar.getInstance().getTime());
-                    userRepository.save(account);//save user to db
+                    IUserAccountsRepository.save(account);//save user to db
                     return true;
                // }
             }else{
@@ -687,10 +713,10 @@ public class AuthService implements IAuthService{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,model.getCurrentPassword()));
 
             //Update Login info ..
-            UserAccountEntity account = userRepository.findByStaffNo(username).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(username).get();
 
             account.setPassword(passwordEncoder.encode(model.getNewPassword()));
-            userRepository.save(account);//save user to db
+            IUserAccountsRepository.save(account);//save user to db
 
             return true;
         }catch (Exception ex){
@@ -704,12 +730,12 @@ public class AuthService implements IAuthService{
 
         try {
 
-            Optional<UserAccountEntity> optionalUserAccount = userRepository.findByStaffNo(model.getStaffNo());
+            Optional<UserAccountEntity> optionalUserAccount = IUserAccountsRepository.findByStaffNo(model.getStaffNo());
 
             if(optionalUserAccount.isPresent()){
 
                 UserAccountEntity userAccount = optionalUserAccount.get();
-                String pass = Utility.generatePassword();
+                String pass = Utility.generatePIN();
 
                 //REMOVE BEFORE PRODUCTION
                 if(userAccount.getStaffNo().equalsIgnoreCase("Admin")){
@@ -719,7 +745,7 @@ public class AuthService implements IAuthService{
                     userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                     userAccount.setLastModified(Calendar.getInstance().getTime());
                     //
-                    userRepository.save(userAccount);//save user to db
+                    IUserAccountsRepository.save(userAccount);//save user to db
 
                     return true;
                 }
@@ -736,7 +762,7 @@ public class AuthService implements IAuthService{
                         userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
-                        userRepository.save(userAccount);//save user to db
+                        IUserAccountsRepository.save(userAccount);//save user to db
 
                     }else {
                         //Failed;
@@ -751,7 +777,7 @@ public class AuthService implements IAuthService{
                         userAccount.setRemLoginAttempts(MAX_PIN_LOGIN_ATTEMPTS);
                         userAccount.setLastModified(Calendar.getInstance().getTime());
                         //
-                        userRepository.save(userAccount);//save user to db
+                        IUserAccountsRepository.save(userAccount);//save user to db
 
                         return true;
                     }else{
@@ -771,7 +797,7 @@ public class AuthService implements IAuthService{
 
         try {
 
-            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).get();
 
             String pin = smsService.sendSecurityCode(account.getStaffNo(),AuthCodeType.ONE_TIME_PIN);
             //Send PIN
@@ -781,7 +807,7 @@ public class AuthService implements IAuthService{
                 //
                 account.setPassword(passwordEncoder.encode(pin));
                 //
-                userRepository.save(account);//save user to db
+                IUserAccountsRepository.save(account);//save user to db
 
                 return true;
             }
@@ -797,11 +823,11 @@ public class AuthService implements IAuthService{
 
         try {
 
-            UserAccountEntity account = userRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).get();
 
             account.setPhoneNumber(model.getPhoneNo());
 
-            userRepository.save(account);
+            IUserAccountsRepository.save(account);
 
             return true;
         }catch (Exception ex){

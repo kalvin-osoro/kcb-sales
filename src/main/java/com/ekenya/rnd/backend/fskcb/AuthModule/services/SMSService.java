@@ -5,7 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.SecurityAuthC
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityAuthCodesRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class SMSService implements ISmsService{
     @Autowired
     ISecurityAuthCodesRepository securityAuthCodesRepository;
     @Autowired
-    private UserRepository userRepository;
+    private IUserAccountsRepository IUserAccountsRepository;
 
     @Autowired
     IDSRAccountsRepository dsrAccountsRepository;
