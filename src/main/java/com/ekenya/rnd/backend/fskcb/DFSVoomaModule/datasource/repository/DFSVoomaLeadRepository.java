@@ -18,4 +18,7 @@ public interface DFSVoomaLeadRepository extends JpaRepository<DFSVoomaLeadEntity
 
     @Query(value = "SELECT * FROM dbo_vooma_leads where dsrId = ?1 AND assigned = true", nativeQuery = true)
     DFSVoomaLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
+
+    @Query(value = "SELECT count(*) FROM dbo_vooma_leads where assigned = true AND dsrId = ?1", nativeQuery = true)
+    int countTotalAssignedLeads(Long dsrId);
 }

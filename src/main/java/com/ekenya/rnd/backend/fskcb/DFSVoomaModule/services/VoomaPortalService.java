@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyAssetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
@@ -1187,6 +1189,29 @@ public class VoomaPortalService implements IVoomaPortalService {
 
 
     }
+
+    @Override
+    public Object getAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            //get merchant by id
+            DFSVoomaAssetEntity acquiringOnboardEntity = dfsVoomaAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+
 
 
     public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {

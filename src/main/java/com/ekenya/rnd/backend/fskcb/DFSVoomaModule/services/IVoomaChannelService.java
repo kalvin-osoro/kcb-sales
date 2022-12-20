@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLea
 import com.ekenya.rnd.backend.fskcb.payload.BusinessTypeDto;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationResponse;
 import com.ekenya.rnd.backend.fskcb.payload.LiquidationTypeDto;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import org.springframework.http.ResponseEntity;
@@ -80,4 +81,6 @@ public interface IVoomaChannelService {
     List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
 
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
+
+    ArrayNode getDSRSummary(DSRSummaryRequest model);
 }
