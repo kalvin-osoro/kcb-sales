@@ -341,6 +341,7 @@ public class CBPortalService implements ICBPortalService {
             ObjectMapper mapper = new ObjectMapper();
             CBBankingConvenantEntity cbBankingConvenantEntity = new CBBankingConvenantEntity();
             cbBankingConvenantEntity.setCustomerName(model.getCustomerName());
+            cbBankingConvenantEntity.setCustomerId(model.getCustomerId());
             cbBankingConvenantEntity.setEndDate(model.getEndDate());
             cbBankingConvenantEntity.setIntervalForCheck(model.getIntervalForCheck());
             cbBankingConvenantEntity.setAlertMessage(model.getAlertMessage());

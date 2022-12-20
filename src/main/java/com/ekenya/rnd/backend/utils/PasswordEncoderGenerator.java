@@ -13,7 +13,6 @@ public class PasswordEncoderGenerator {
         String password = "admin";
         String encodedPassword = new BCryptPasswordEncoder().encode(password);
 
-        System.out.println(Utility.generatePassword());
     }
 
 

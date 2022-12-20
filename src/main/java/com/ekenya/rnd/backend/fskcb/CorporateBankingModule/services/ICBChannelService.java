@@ -29,7 +29,7 @@ public interface ICBChannelService {
 
     ArrayList<ObjectNode> getTargetsSummary();
 
-    List<ObjectNode> getAllCustomerConcessions(CBCustomerConcession model);
+    List<ObjectNode> getAllCustomerCovenants(CBCustomerConcession model);
 
     boolean createCustomerAppointment(CBAppointmentRequest model);
 

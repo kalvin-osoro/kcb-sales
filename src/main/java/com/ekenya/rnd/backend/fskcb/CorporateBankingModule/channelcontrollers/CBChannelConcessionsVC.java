@@ -18,9 +18,9 @@ public class CBChannelConcessionsVC {
     @Autowired
     private ICBChannelService channelService;
 
-    @PostMapping(value = "/cb-get-customer-concessions")
+    @PostMapping(value = "/cb-get-customer-covenant")
     public ResponseEntity<?> getAllCustomerConcessions(@RequestBody CBCustomerConcession model) {
-        List<?> list = channelService.getAllCustomerConcessions(model);
+        List<?> list = channelService.getAllCustomerCovenants(model);
         boolean success = list != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
