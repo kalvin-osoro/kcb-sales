@@ -87,11 +87,11 @@ public class SMSService implements ISmsService{
     }
 
     @Override
-    public boolean sendPasswordSMS(String phoneNo,String userName, String password) {
+    public boolean sendPasswordSMS(String phoneNo,String fullName, String password) {
 
         try{
             //
-            String message = "Hello " + userName + ", use this as your Password to login : " + password +"\nRemember to change it after you signin";
+            String message = "Hello " + fullName + ", use this as your Password to login : " + password +"\nRemember to change it after you signin";
             //
             JsonObject smsResponse = attemptSendSMS(message, phoneNo);
             if (smsResponse == null) {
