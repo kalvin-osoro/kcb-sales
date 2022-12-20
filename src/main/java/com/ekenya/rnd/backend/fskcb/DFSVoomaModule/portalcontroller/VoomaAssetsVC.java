@@ -122,21 +122,5 @@ public class VoomaAssetsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @PostMapping("/vooma-get-all-assets-v2")
-    public ResponseEntity<?> getAllAssetsV2() {
-        List<?> assets = voomaService.fetchAllAssetsV2();
 
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(assets != null){
-            //Object
-
-
-            return ResponseEntity.ok(new BaseAppResponse(1,assets,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
 }

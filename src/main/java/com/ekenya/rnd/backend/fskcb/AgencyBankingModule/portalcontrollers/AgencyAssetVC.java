@@ -23,7 +23,7 @@ public class AgencyAssetVC {
     @Autowired
     IAgencyPortalService agencyService;
 
-    @PostMapping("/acquiring-create-asset")
+    @PostMapping("/agency-create-asset")
     public ResponseEntity<?> createAsset(@RequestParam("assetDetails") String assetDetails,
                                          @RequestParam("assetFiles") MultipartFile[] assetFiles) {
 
@@ -46,7 +46,7 @@ public class AgencyAssetVC {
         }
     }
 
-    @PostMapping(value = "/acquiring-get-all-assets")
+    @PostMapping(value = "/agency-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
 
         List<?> acquiringAssetResponse = agencyService.getAllAssets();
@@ -70,7 +70,7 @@ public class AgencyAssetVC {
     }
 
 
-    @PostMapping("/acquiring-sync-crm-asset")
+    @PostMapping("/agency-sync-crm-asset")
     public ResponseEntity<?> syncCRMAssets() {
 
         boolean success = false;//acquiringService..(model);
