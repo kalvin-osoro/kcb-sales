@@ -1,13 +1,13 @@
 package com.ekenya.rnd.backend.fskcb.AdminModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AdminModule.models.reqs.LoadLogFileRequest;
+import com.ekenya.rnd.backend.fskcb.AdminModule.models.resp.LogFileResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -53,7 +53,7 @@ public class AppLogsService implements IAppLogsService{
     }
 
     @Override
-    public ObjectNode loadLogFile(LoadLogFileRequest model) {
+    public LogFileResponse loadLogFile(LoadLogFileRequest model) {
 
 
         try{
@@ -68,10 +68,10 @@ public class AppLogsService implements IAppLogsService{
                 for (File child : directoryListing) {
                     //logback-app.2022-12-07 12.0.log
                     if(child.getName().equalsIgnoreCase(fileName)) {
-                        ObjectNode fobject = mObjectMapper.createObjectNode();
-                        fobject.put("fname", fileName);
-                        fobject.put("content", Files.readString(child.toPath(), Charset.defaultCharset()));
-                        return fobject;
+                        LogFileResponse resp = new LogFileResponse();
+                        resp.setFileName(fileName);
+                        resp.setContent(child);
+                        return resp;
                     }
                 }
             }

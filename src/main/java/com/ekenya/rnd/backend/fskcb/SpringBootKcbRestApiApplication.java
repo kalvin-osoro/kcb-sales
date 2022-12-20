@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -36,6 +37,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -89,7 +91,7 @@ public class SpringBootKcbRestApiApplication   {
 	@PostConstruct
 	public void init(){
 		//
-	//	prepareLogger();
+		//prepareLogger(null);
 	}
 
 //	@Bean
@@ -104,7 +106,6 @@ public class SpringBootKcbRestApiApplication   {
 //
 //		};
 //	}
-
 
 	public static void prepareLogger(String[] args) {
 
@@ -276,10 +277,11 @@ public class SpringBootKcbRestApiApplication   {
 		ch.qos.logback.classic.Logger root = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 		root.setLevel(Level.DEBUG);
 		root.addAppender(fileAppender);
-		root.setAdditive(true); /* set to true if root should log too */
+		root.setAdditive(false); /* set to true if root should log too */
 
 		StatusPrinter.print(context);
 	}
+
 
 	public static String accessToken ;
 	@PostConstruct
