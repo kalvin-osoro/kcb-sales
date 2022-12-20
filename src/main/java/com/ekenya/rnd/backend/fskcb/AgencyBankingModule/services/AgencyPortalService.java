@@ -131,7 +131,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 objectNode.put("leadStatus", agencyBankingLeadEntity.getLeadStatus().toString());
                 objectNode.put("createdOn",agencyBankingLeadEntity.getCreatedOn().getTime());
                 objectNode.put("product",agencyBankingLeadEntity.getProduct());
-                objectNode.put("dsrName",Utility.getDsrNameFromDsrId(agencyBankingLeadEntity.getDsrId()));
+                objectNode.put("dsrName",agencyBankingLeadEntity.getDsrName());
                 objectNode.put("priority", agencyBankingLeadEntity.getPriority().toString());
 //                objectNode.put("dsrId", treasuryLeadEntity.getDsrId());
                 list.add(objectNode);

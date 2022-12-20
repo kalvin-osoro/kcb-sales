@@ -180,7 +180,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("leadStatus", dfsVoomaLeadEntity.getLeadStatus().toString());
                 objectNode.put("topic", dfsVoomaLeadEntity.getTopic());
                 objectNode.put("priority", dfsVoomaLeadEntity.getPriority().toString());
-                objectNode.put("dsrName", Utility.getDsrNameFromDsrId(dfsVoomaLeadEntity.getDsrId()));
+                objectNode.put("dsrName", dfsVoomaLeadEntity.getDsrName());
                 objectNode.put("product", dfsVoomaLeadEntity.getProduct());
                 objectNode.put("createdOn", dfsVoomaLeadEntity.getCreatedOn().getTime());
                 list.add(objectNode);
