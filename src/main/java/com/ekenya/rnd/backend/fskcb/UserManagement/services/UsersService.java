@@ -143,7 +143,13 @@ public class UsersService implements IUsersService {
                     //
                     if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                         //
+                        log.info("OTP send via EMAIL "+account.getEmail());
                         //return true;
+                    }else if(smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password)){
+                        //
+                        log.info("OTP send via PhoneNo "+account.getPhoneNumber());
+                    }else{
+
                     }
                 }else{
                     //DSR Account..
