@@ -375,8 +375,13 @@ public class DSRPortalService implements IDSRPortalService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String createdBy = authentication.getName();
 
+            //Get profile ..
+            UserProfileEntity profileEntity =
+                    userProfilesRepository.findByCode(dsrRequest.getProfileCode()).orElse(null);
+            //
             DSRTeamEntity optionalDSRTeam =
                     dsrTeamsRepository.findById(dsrRequest.getTeamId()).orElse(null);
+            //
             if(optionalDSRTeam != null &&
                     !dsrAccountsRepository.findByStaffNo(dsrRequest.getStaffNo()).isPresent()){
                 //
@@ -395,9 +400,53 @@ public class DSRPortalService implements IDSRPortalService {
                 if(dsrRequest.getExpiry() != null){
                     dsrDetails.setExpiryDate(dsrRequest.getExpiry());
                 }
-                //
-                dsrAccountsRepository.save(dsrDetails);
 
+                //Create inactive user account ..
+                AddAdminUserRequest req = new AddAdminUserRequest();
+                req.setEmail(dsrDetails.getEmail());
+                req.setFullName(dsrDetails.getFullName());
+                req.setPhoneNo(dsrDetails.getPhoneNo());
+                req.setStaffNo(dsrDetails.getStaffNo());
+
+                //Save DSR Account ..
+
+                //
+                if(userAccountsRepository.existsByStaffNo(dsrDetails.getStaffNo())){
+
+                    //
+                    UserAccountEntity userAccount =
+                            userAccountsRepository.findByStaffNo(dsrDetails.getStaffNo()).get();
+                    //
+                    ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
+                    profileAndUserEntity.setProfileId(profileEntity.getId());
+                    profileAndUserEntity.setUserId(userAccount.getId());
+                    profileAndUserEntity.setStatus(Status.ACTIVE);
+
+                    //
+                    dsrAccountsRepository.save(dsrDetails);
+
+                    //Add DSR to profile ..
+                    profilesAndUsersRepository.save(profileAndUserEntity);
+
+                }else if(usersService.attemptCreateUser(req,AccountType.DSR,false)) {
+                    //
+                    UserAccountEntity userAccount =
+                            userAccountsRepository.findByStaffNo(dsrDetails.getStaffNo()).get();
+                    //
+                    ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
+                    profileAndUserEntity.setProfileId(profileEntity.getId());
+                    profileAndUserEntity.setUserId(userAccount.getId());
+                    profileAndUserEntity.setStatus(Status.ACTIVE);
+
+                    //
+                    dsrAccountsRepository.save(dsrDetails);
+
+                    //Add DSR to profile ..
+                    profilesAndUsersRepository.save(profileAndUserEntity);
+                }else{
+                    //User Account not found ..
+                    //Creation also failed,,
+                }
 //                if(!dsrRequest.getProfiles().isEmpty()){
 //
 //                    for (Long profileId:
@@ -846,17 +895,18 @@ public class DSRPortalService implements IDSRPortalService {
                 }
             }
             //
+            ObjectNode node = mObjectMapper.createObjectNode();
+            node.put("imported",imported);
+            //
             if(!results.getErrors().isEmpty()){
                 //
-                ObjectNode node = mObjectMapper.createObjectNode();
-                node.put("imported",imported);
                 node.putPOJO("import-errors",mObjectMapper.convertValue(results.getErrors(),ArrayNode.class));
                 //
-                return node;
             }else{
                 //
-                return mObjectMapper.createObjectNode();
+                node.putPOJO("import-errors",mObjectMapper.createArrayNode());
             }
+            return node;
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
         }
