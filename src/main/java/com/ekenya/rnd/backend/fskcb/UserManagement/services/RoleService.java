@@ -6,7 +6,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleE
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndRolesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleRepository;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AddUserRoleRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.AssignRoleToUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.RemoveUserFromRole;
@@ -33,11 +33,11 @@ public class RoleService implements IRolesService {
     ProfilesAndRolesRepository profilesAndRolesRepository;
 
     private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
+    private final IUserAccountsRepository IUserAccountsRepository;
 
-    public RoleService(RoleRepository roleRepository, UserRepository userRepository) {
+    public RoleService(RoleRepository roleRepository, IUserAccountsRepository IUserAccountsRepository) {
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
+        this.IUserAccountsRepository = IUserAccountsRepository;
     }
 
     public ArrayNode loadAllRoles(){
@@ -166,14 +166,14 @@ public class RoleService implements IRolesService {
     public boolean assignRole(AssignRoleToUserRequest model){
         try{
 
-            UserAccountEntity user = userRepository.findById(model.getUserId()).orElse(null);
+            UserAccountEntity user = IUserAccountsRepository.findById(model.getUserId()).orElse(null);
             UserRoleEntity role = roleRepository.findById(model.getRoleId()).orElse(null);
             if(user != null && role != null){
 
                 Set<UserRoleEntity> userRoles = (Set<UserRoleEntity>) user.getRoles();
                 userRoles.add(role);
                 user.setRoles(userRoles);
-                userRepository.save(user);
+                IUserAccountsRepository.save(user);
 
                 return true;
             }
@@ -187,7 +187,7 @@ public class RoleService implements IRolesService {
 
     public boolean unassignRole(RemoveUserFromRole model){
         try {
-            UserAccountEntity user = userRepository.findById(model.getUserId()).orElse(null);
+            UserAccountEntity user = IUserAccountsRepository.findById(model.getUserId()).orElse(null);
 
             UserRoleEntity role = roleRepository.findById(model.getRoleId()).orElse(null);
 
@@ -196,7 +196,7 @@ public class RoleService implements IRolesService {
                 Set<UserRoleEntity> userRoles = (Set<UserRoleEntity>) user.getRoles();
                 userRoles.removeIf(x -> Objects.equals(x.getId(), model.getRoleId()));
                 user.setRoles(userRoles);
-                userRepository.save(user);
+                IUserAccountsRepository.save(user);
                 //
 
                 return true;
@@ -213,7 +213,7 @@ public class RoleService implements IRolesService {
 
         try{
 
-            Optional<UserAccountEntity> userAccount = userRepository.findById(userId);
+            Optional<UserAccountEntity> userAccount = IUserAccountsRepository.findById(userId);
 
             if(userAccount.isPresent()){
 

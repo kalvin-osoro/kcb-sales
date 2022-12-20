@@ -18,4 +18,6 @@ public interface UserProfilesRepository extends JpaRepository<UserProfileEntity,
     Optional<UserProfileEntity> findByName(String name);
     List<UserProfileEntity> findAllByStatus(Status status);
 
+    Optional<UserProfileEntity> findByCode(String code);
+
 }

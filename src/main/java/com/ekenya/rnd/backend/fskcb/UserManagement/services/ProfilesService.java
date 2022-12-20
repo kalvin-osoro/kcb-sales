@@ -27,7 +27,7 @@ public class ProfilesService implements IProfilesService{
     ProfilesAndUsersRepository profilesAndUsersRepository;
 
     @Autowired
-    UserRepository userRepository;
+    IUserAccountsRepository IUserAccountsRepository;
 
     public final UserProfilesRepository userProfilesRepository;
     
@@ -282,7 +282,7 @@ userProfile.setInfo(model.getDesc());
                      profilesAndUsersRepository.findAllByProfileIdAndStatus(profileId, Status.ACTIVE)) {
 
                     //
-                    Optional<UserAccountEntity> account = userRepository.findById(profileUser.getUserId());
+                    Optional<UserAccountEntity> account = IUserAccountsRepository.findById(profileUser.getUserId());
                     //
                     if(account.isPresent()){
                         //

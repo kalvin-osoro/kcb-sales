@@ -28,14 +28,14 @@ public interface IDSRPortalService {
 
     boolean attemptUpdateTeamMembers(UpdateTeamMembersRequest model);
 
-    ArrayNode getAllDSRAccounts();
+    ArrayNode getAllDSRAccounts(DSRAccountsRequest model);
     boolean deleteDSRById(long id);
 //    ResponseEntity<?> editDSRById(DSRRequest dsrRequest, HttpServletRequest httpServletRequest);
     ObjectNode getDSRProfile(String staffNo);
 //    ResponseEntity<?>assignTarget(Long dsrId, Long targetId);
 //    ResponseEntity<?>unassignTarget(Long dsrId, Long targetId);
 
-    ObjectNode attemptImportAccounts(MultipartFile file);
+    ObjectNode attemptImportAccounts(MultipartFile file,String profileCode);
 
     boolean lockAccount(String staffNo);
     boolean unlockAccount(String staffNo);

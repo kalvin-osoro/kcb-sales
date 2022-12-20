@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 @Repository
-public interface UserRepository extends JpaRepository<UserAccountEntity, Long> {
+public interface IUserAccountsRepository extends JpaRepository<UserAccountEntity, Long> {
     //
+    Optional<UserAccountEntity> findByIdAndStatus(Long id,Status status);
     List<UserAccountEntity> findAllByAccountTypeAndStatus(AccountType type, Status status);
     Optional<UserAccountEntity> findByStaffNoAndPhoneNumber(String staffNo, String phoneNo);
     //retrieve user by email
