@@ -230,6 +230,7 @@ public class CBChannelService implements ICBChannelService {
             ObjectMapper mapper = new ObjectMapper();
             for (CBCustomerAppointment cbAppointmentEntity : cbCustomerAppointmentRepository.findAllByDsrIdAndAppointmentDate(model.getDsrId(), model.getAppointmentDate())) {
                 ObjectNode node = mapper.createObjectNode();
+                node.put("id",cbAppointmentEntity.getId());
                 node.put("customerName", cbAppointmentEntity.getCustomerName());
                 node.put("customerPhoneNumber", cbAppointmentEntity.getCustomerPhoneNumber());
                 node.put("typeOfAppointment", cbAppointmentEntity.getTypeOfAppointment());
