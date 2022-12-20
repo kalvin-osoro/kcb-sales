@@ -48,4 +48,6 @@ public interface IAgencyPortalService {
     List<?> getAllVisitsV2();
 
     boolean assignLead(TreasuryAssignLeadRequest model);
+
+    List<ObjectNode> loadAllApprovedMerchants();
 }

@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -21,6 +22,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLea
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -454,6 +456,36 @@ public class AgencyPortalService implements IAgencyPortalService {
         }
         return false;
     }
+
+    @Override
+    public List<ObjectNode> loadAllApprovedMerchants() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AgencyOnboardingEntity agencyOnboardingEntity : agencyBankingLeadRepository.findAllByIsApproved()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", agencyOnboardingEntity.getId());
+                objectNode.put("customerName", agencyOnboardingEntity.getBusinessName());
+                objectNode.put("region", agencyOnboardingEntity.getRegion());
+                objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
+                objectNode.put("dateOnborded", agencyOnboardingEntity.getCreatedOn().getTime());
+                objectNode.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+                objectNode.put("email", agencyOnboardingEntity.getAgentEmail());
+                objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+
+//                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(agencyOnboardingEntity.getLongitude());
+                arrayNode.add(agencyOnboardingEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting onboarding summary", e);
+        }
+        return null;
     }
+}
 
 

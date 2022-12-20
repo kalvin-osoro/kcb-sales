@@ -495,7 +495,6 @@ try {
     if (model == null) {
         return null;
     }
-    //hard commission for now
     ArrayNode arrayNode = new ObjectMapper().createArrayNode();
     ObjectNode objectNode = new ObjectMapper().createObjectNode();
     short commission=0;
