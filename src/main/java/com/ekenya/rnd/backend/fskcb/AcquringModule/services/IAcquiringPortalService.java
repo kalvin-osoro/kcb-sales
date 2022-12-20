@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -18,7 +19,7 @@ public interface IAcquiringPortalService {
 
     //Leads
     //assign lead to dsrName
-    boolean assignLeadToDsr(AcquiringLeadRequest acquiringLeadRequest);
+    boolean assignLeadToDsr(CBAssignLeadRequest model);
 
 
 

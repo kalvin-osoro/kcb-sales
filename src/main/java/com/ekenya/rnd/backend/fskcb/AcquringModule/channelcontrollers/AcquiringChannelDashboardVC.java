@@ -22,7 +22,7 @@ public class AcquiringChannelDashboardVC {
    private IAcquiringChannelService acquiringService;
 
     @PostMapping("/acquiring-summary")
-    public ResponseEntity<?> getSummary(DSRSummaryRequest model) {
+    public ResponseEntity<?> getSummary(@RequestBody DSRSummaryRequest model) {
 
         //Resp =>
         //{

@@ -69,10 +69,11 @@ public class CBPortalService implements ICBPortalService {
             //set start date from input
             cbLeadEntity.setStartDate(model.getStartDate());
             cbLeadEntity.setEndDate(model.getEndDate());
+            cbLeadEntity.setAssigned(true);
             //save
             cbLeadsRepository.save(cbLeadEntity);
             //update is assigned to true
-            cbLeadEntity.setAssigned(true);
+
             return true;
 
 
@@ -95,7 +96,7 @@ public class CBPortalService implements ICBPortalService {
                 node.put("leadStatus", String.valueOf(cbLeadEntity.getLeadStatus()));
                 node.put("topic", cbLeadEntity.getTopic());
                 node.put("priority", cbLeadEntity.getPriority().ordinal());
-                node.put("dsrName", Utility.getDsrNameFromDsrId(cbLeadEntity.getDsrId()));
+                node.put("dsrName", cbLeadEntity.getDsrName());
                 node.put("createdOn", cbLeadEntity.getCreatedOn().getTime());
                 //add to list
                 list.add(node);

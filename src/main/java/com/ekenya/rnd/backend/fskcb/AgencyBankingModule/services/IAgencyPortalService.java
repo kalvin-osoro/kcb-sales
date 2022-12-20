@@ -8,6 +8,7 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTarget
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,4 +49,12 @@ public interface IAgencyPortalService {
     List<?> getAllVisitsV2();
 
     boolean assignLead(TreasuryAssignLeadRequest model);
+
+    List<ObjectNode> loadAllApprovedMerchants();
+
+    boolean addAsset(String assetDetails, MultipartFile[] assetFiles);
+
+    List<ObjectNode> getAllAssets();
+
+    Object getAssetById(AssetByIdRequest model);
 }

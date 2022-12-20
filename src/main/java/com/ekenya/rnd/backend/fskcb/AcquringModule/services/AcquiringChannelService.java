@@ -495,25 +495,24 @@ try {
     if (model == null) {
         return null;
     }
-    //hard commission for now
     ArrayNode arrayNode = new ObjectMapper().createArrayNode();
     ObjectNode objectNode = new ObjectMapper().createObjectNode();
-    short commission=120;
-    short targetAchieved=300;
+    short commission=0;
+    short targetAchieved=0;
     objectNode.put("commission", commission);
     //get total number of dsr visits by dsr id
     int totalVisits = acquiringCustomerVisitRepository.countTotalVisits(model.getDsrId());
     objectNode.put("customer-visits", totalVisits);
     //if null hard code visits for now
     if (totalVisits == 0) {
-        objectNode.put("customer-visits", 100);
+        objectNode.put("customer-visits", 0);
     }
     //get total number of dsr assigned leads by dsr id
     int totalAssignedLeads = acquiringLeadsRepository.countTotalAssignedLeads(model.getDsrId());
     objectNode.put("assigned-leads", totalAssignedLeads);
     //if null hard code assigned leads for now
     if (totalAssignedLeads == 0) {
-        objectNode.put("assigned-leads", 100);
+        objectNode.put("assigned-leads", 0);
     }
 //    //get total number of dsr targets achieved by dsr id
 //hard code for now since we dont know metrics to messure target achieved

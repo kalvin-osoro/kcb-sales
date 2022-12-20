@@ -51,18 +51,18 @@ public class TreasuryPortalService implements ITreasuryPortalService {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (TreasuryTradeRequestEntity treasuryTradeRequestEntity : treasuryTradeRequestRepository.findAll()) {
+            for (TreasuryNegotiationRequestEntity treasuryNegotiationRequestEntity : negotiationRequestRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
-                node.put("id", treasuryTradeRequestEntity.getId());
-                node.put("customerName", treasuryTradeRequestEntity.getCustomerName());
-                node.put("customerID", treasuryTradeRequestEntity.getCustomerID());
-                node.put("Amount", treasuryTradeRequestEntity.getAmount());
-                node.put("currency", treasuryTradeRequestEntity.getCurrency());
-                node.put("priority", treasuryTradeRequestEntity.getTreasuryPriority().toString());
-                node.put("salesCode", treasuryTradeRequestEntity.getSalesCode());
-                node.put("status", treasuryTradeRequestEntity.getStatus().toString());
-                node.put("refCode",treasuryTradeRequestEntity.getRefCode());
-                node.put("dateBooked", treasuryTradeRequestEntity.getDateBooked());
+                node.put("id", treasuryNegotiationRequestEntity.getId());
+                node.put("customerName", treasuryNegotiationRequestEntity.getCustomerName());
+                node.put("customerID", treasuryNegotiationRequestEntity.getCustomerID());
+                node.put("Amount", treasuryNegotiationRequestEntity.getAmount());
+                node.put("currency", treasuryNegotiationRequestEntity.getCurrency());
+                node.put("priority", treasuryNegotiationRequestEntity.getPriority().toString());
+                node.put("salesCode", treasuryNegotiationRequestEntity.getSalesCode());
+                node.put("status", treasuryNegotiationRequestEntity.getStatus().toString());
+                node.put("refCode",treasuryNegotiationRequestEntity.getRefCode());
+                node.put("dateBooked", treasuryNegotiationRequestEntity.getDateBooked());
 
                 list.add(node);
             }

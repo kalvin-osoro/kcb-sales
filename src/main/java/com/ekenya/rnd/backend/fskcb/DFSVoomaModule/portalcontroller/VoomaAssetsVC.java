@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
@@ -100,19 +101,16 @@ public class VoomaAssetsVC {
     //    }],
     //    "photos":[{"name":"","link":"/jjj.png"}]
     //}
-    @PostMapping("/vooma-get-asset-by-id")
-    public ResponseEntity<?> getAssetById(@RequestParam int id) {
-
-
-
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
-
+    @PostMapping("/dfs-vooma-get-asset-by-id")
+    public ResponseEntity<?> getDFSVoomaById(@RequestBody AssetByIdRequest model  ) {
+        Object asset = voomaService.getAssetById(model);
+        boolean success = asset  != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
+            node.putPOJO("assets",asset);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
@@ -122,21 +120,5 @@ public class VoomaAssetsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @PostMapping("/vooma-get-all-assets-v2")
-    public ResponseEntity<?> getAllAssetsV2() {
-        List<?> assets = voomaService.fetchAllAssetsV2();
 
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(assets != null){
-            //Object
-
-
-            return ResponseEntity.ok(new BaseAppResponse(1,assets,"Request Processed Successfully"));
-        }else{
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
-        }
-    }
 }

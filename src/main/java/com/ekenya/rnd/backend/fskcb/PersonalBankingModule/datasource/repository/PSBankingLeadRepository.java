@@ -32,4 +32,7 @@ public interface PSBankingLeadRepository extends JpaRepository<PSBankingLeadEnti
 
     @Query(value = "SELECT * FROM psbanking_leads where dsrId = ?1 AND assigned = true", nativeQuery = true)
     PSBankingLeadEntity[] findAllAssignedLeadByDSRId(Long dsrId);
+
+    @Query(value = "SELECT count(*) FROM psbanking_leads where assigned = true AND dsrId = ?1", nativeQuery = true)
+    int countTotalAssignedLeads(Long dsrId);
 }

@@ -16,6 +16,8 @@ import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 public class VoomaMerchantsVC {
@@ -111,6 +113,22 @@ public class VoomaMerchantsVC {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
                 .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
                 .body(file);
+    }
+
+    @GetMapping("/dwldFile")
+    public ResponseEntity<Resource> getFileByName(@RequestParam (value="fileName")String fileName)
+    {
+        try {
+            Resource file = fileStorageService.loadFileAsResourceByName(fileName);
+            MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
+                    .body(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

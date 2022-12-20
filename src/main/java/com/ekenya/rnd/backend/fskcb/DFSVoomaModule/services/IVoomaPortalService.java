@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -82,4 +83,5 @@ public interface IVoomaPortalService {
     List<ObjectNode> getOnboardingSummaryv1();
 
 
+    Object getAssetById(AssetByIdRequest model);
 }

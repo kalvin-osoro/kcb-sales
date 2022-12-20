@@ -18,6 +18,7 @@ public class AgencyAssetFilesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
     @ManyToOne
+    @JoinColumn(name = "assetId")
     private AgencyAssetEntity agencyAssetEntity;
     @Column(name="file_path")
     private String filePath;

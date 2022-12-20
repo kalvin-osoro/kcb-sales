@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Onboardin
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardingKYCentity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
@@ -14,6 +15,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLea
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ public class PBChannelService implements IPBChannelService {
     private final PSBankingOnboardingRepossitory psBankingOnboardingRepossitory;
     private final FileStorageService fileStorageService;
     private final PSBankingLeadRepository psBankingLeadRepository;
+    private final PSBankingCustomerVisitRepository psBankingCustomerVisitRepository;
 
     private final PSBankingTargetRepository psBankingTargetRepository;
 
@@ -235,7 +238,6 @@ public class PBChannelService implements IPBChannelService {
         return null;
 
     }
-    private final PSBankingCustomerVisitRepository psBankingCustomerVisitRepository;
 
     @Override
     public boolean createCustomerVisit(PBCustomerVisitsRequest model) {
@@ -387,4 +389,41 @@ public class PBChannelService implements IPBChannelService {
         }
         return false;
     }
-}
+
+    @Override
+    public ArrayNode getDSRSummary(DSRSummaryRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            ArrayNode arrayNode = new ObjectMapper().createArrayNode();
+            ObjectNode objectNode = new ObjectMapper().createObjectNode();
+            short commission=0;
+            short targetAchieved=0;
+            objectNode.put("commission", commission);
+            //get total number of dsr visits by dsr id
+            int totalVisits = psBankingCustomerVisitRepository.countTotalVisits(model.getDsrId());
+            objectNode.put("customer-visits", totalVisits);
+            //if null hard code visits for now
+            if (totalVisits == 0) {
+                objectNode.put("customer-visits", 0);
+            }
+            //get total number of dsr assigned leads by dsr id
+            int totalAssignedLeads = psBankingLeadRepository.countTotalAssignedLeads(model.getDsrId());
+            objectNode.put("assigned-leads", totalAssignedLeads);
+            //if null hard code assigned leads for now
+            if (totalAssignedLeads == 0) {
+                objectNode.put("assigned-leads", 0);
+            }
+//    //get total number of dsr targets achieved by dsr id
+//hard code for now since we dont know metrics to messure target achieved
+            objectNode.put("targetAchieved",targetAchieved);
+            arrayNode.add(objectNode);
+            return arrayNode;
+        } catch (Exception e) {
+            log.error("Error occurred while getting dsr summary", e);
+        }
+        return null;
+    }
+    }
+

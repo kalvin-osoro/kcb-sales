@@ -37,15 +37,14 @@ public class AgencyAssetEntity {
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
-    @Column(name = "asset_condition")
+    @Column(name = "assetCondition")
     private AssetCondition assetCondition;
     private Date lastServiceDate;
     private String longitude;
     private Long customerId;
     private String latitude;
-    private String images;
  @ManyToOne
  private AgencyOnboardingEntity agencyOnboardingEntity;
-    private boolean assigned=false;
+ private boolean assigned=false;
 
 }

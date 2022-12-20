@@ -2,10 +2,12 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
@@ -42,4 +44,6 @@ public interface ICBChannelService {
     List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
 
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
+
+    ArrayNode getDSRSummary(DSRSummaryRequest model);
 }

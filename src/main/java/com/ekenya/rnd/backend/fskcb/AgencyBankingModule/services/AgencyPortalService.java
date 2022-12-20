@@ -1,12 +1,13 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -18,13 +19,18 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccoun
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
+import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +44,10 @@ public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
+    private final FileStorageService fileStorageService;
+    private final AgencyAssetFilesRepository agencyAssetFilesRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
+    private final AgencyAssetRepository agencyAssetRepository;
     private  final IDSRTeamsRepository teamsRepository;
     private final AgencyBankingLeadRepository agencyBankingLeadRepository;
     private final AgencyBankingQuestionnaireQuestionRepository agencyBankingQuestionnaireQuestionRepository;
@@ -454,6 +463,132 @@ public class AgencyPortalService implements IAgencyPortalService {
         }
         return false;
     }
+
+    @Override
+    public List<ObjectNode> loadAllApprovedMerchants() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AgencyOnboardingEntity agencyOnboardingEntity : agencyBankingLeadRepository.findAllByIsApproved()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", agencyOnboardingEntity.getId());
+                objectNode.put("customerName", agencyOnboardingEntity.getBusinessName());
+                objectNode.put("region", agencyOnboardingEntity.getRegion());
+                objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
+                objectNode.put("dateOnborded", agencyOnboardingEntity.getCreatedOn().getTime());
+                objectNode.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+                objectNode.put("email", agencyOnboardingEntity.getAgentEmail());
+                objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+
+//                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(agencyOnboardingEntity.getLongitude());
+                arrayNode.add(agencyOnboardingEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting onboarding summary", e);
+        }
+        return null;
     }
+
+    @Override
+    public boolean addAsset(String assetDetails, MultipartFile[] assetFiles) {
+        try {
+            if (assetDetails == null) {
+                return false;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+
+            AcquiringAddAssetRequest acquiringAddAssetRequest =
+                    mapper.readValue(assetDetails, AcquiringAddAssetRequest.class);
+            AgencyAssetEntity acquiringAssetEntity = new AgencyAssetEntity();
+            acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
+            acquiringAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
+            AgencyAssetEntity savedAsset = agencyAssetRepository.save(acquiringAssetEntity);
+            String subFolder = "agency-assets";
+
+            List<String> filePathList = new ArrayList<>();
+            //save files
+
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
+            //save file paths to db
+            filePathList.forEach(filePath -> {
+                AgencyAssetFilesEntity assetFilesEntity = new AgencyAssetFilesEntity();
+                assetFilesEntity.setAgencyAssetEntity(savedAsset);
+                assetFilesEntity.setFilePath(filePath);
+                agencyAssetFilesRepository.save(assetFilesEntity);
+            });
+            return true;
+
+        } catch (JsonMappingException e) {
+            //return ResponseEntity.badRequest().body("Invalid asset details");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllAssets() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (AgencyAssetEntity acquiringAssetEntity : agencyAssetRepository.findAll()) {
+
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", acquiringAssetEntity.getId());
+                asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
+                asset.put("sno", acquiringAssetEntity.getSerialNumber());
+                //asset.put("type",acquiringAssetEntity.getAssetType());
+                //
+                ArrayNode images = mapper.createArrayNode();
+
+                //"http://10.20.2.12:8484/"
+
+                // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
+
+
+                asset.put("images", images);
+
+
+                //
+                list.add(asset);
+            }
+
+
+            return list;
+
+        } catch (Exception e) {
+            log.error("Error occurred while fetching all assets", e);
+        }
+        return null;
+    }
+
+    @Override
+    public Object getAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Merchant id is null");
+                return null;
+            }
+            //get merchant by id
+            AgencyAssetEntity acquiringOnboardEntity = agencyAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+}
 
 

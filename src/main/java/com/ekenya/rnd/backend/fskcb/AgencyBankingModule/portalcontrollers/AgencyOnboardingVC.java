@@ -18,12 +18,12 @@ import java.util.List;
 public class AgencyOnboardingVC {
 
     @Autowired
-    IAgencyPortalService acquiringService;
+    IAgencyPortalService agencyPortalService;
 
     //List all onboarded merchants
     @PostMapping(value = "/agency-get-all-onboarded-customers")
     public ResponseEntity<?> getAllOnboardings() {
-        List<?> list = acquiringService.loadAllOnboardedAgents();
+        List<?> list = agencyPortalService.loadAllOnboardedAgents();
         boolean success = list != null;
 
 
@@ -47,7 +47,7 @@ public class AgencyOnboardingVC {
     @PostMapping("/agency-approve-onboarding")
     public ResponseEntity<?> approveMerchantOnboarding(@RequestBody AcquiringApproveMerchant model) {
 
-        boolean success = acquiringService.approveAgentOnboarding(model);
+        boolean success = agencyPortalService.approveAgentOnboarding(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -65,7 +65,7 @@ public class AgencyOnboardingVC {
     @PostMapping("/agency-reject-onboarding")
     public ResponseEntity<?> rejectMerchantOnboarding(@RequestBody AcquiringApproveMerchant model) {
 
-        boolean success = acquiringService.rejectAgentOnboarding(model);
+        boolean success = agencyPortalService.rejectAgentOnboarding(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
@@ -78,6 +78,23 @@ public class AgencyOnboardingVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping(value = "/agency-get-all-approved-merchant")
+    public ResponseEntity<?> getAllCustomerApprovals() {
+        List<?> list = agencyPortalService.loadAllApprovedMerchants();
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list != null){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

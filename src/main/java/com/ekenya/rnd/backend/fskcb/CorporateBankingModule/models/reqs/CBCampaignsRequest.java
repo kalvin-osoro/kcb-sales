@@ -21,5 +21,4 @@ public class CBCampaignsRequest {
     private Integer customerTargeted;
     private Integer customerAchieved;
     private String source;
-    private Date createdOn;
 }

@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringLeadRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -20,8 +21,8 @@ public class AcquiringLeadsVC {
 
     //Assign lead to dsr
     @PostMapping("/acquiring-assign-lead/{leadId}")
-    public ResponseEntity<?> assignLead(@RequestBody AcquiringLeadRequest acquiringLeadRequest) {
-        boolean success = acquiringService.assignLeadToDsr(acquiringLeadRequest);
+    public ResponseEntity<?> assignLead(@RequestBody CBAssignLeadRequest model) {
+        boolean success = acquiringService.assignLeadToDsr(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

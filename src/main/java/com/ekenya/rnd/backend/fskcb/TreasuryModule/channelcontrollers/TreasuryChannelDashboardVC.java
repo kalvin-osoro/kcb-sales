@@ -1,9 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class TreasuryChannelDashboardVC {
     ITreasuryChannelService channelService;
 
     @PostMapping("/treasury-summary")
-    public ResponseEntity<?> getSummary() {
+    public ResponseEntity<?> getSummary(@RequestBody DSRSummaryRequest model) {
 
         //Resp =>
         //{
@@ -27,17 +29,17 @@ public class TreasuryChannelDashboardVC {
         //    "customer-visits":9 //Total assigned customer visits
         //}
 
-        //
-        ObjectNode resp = channelService.loadSummary();
+        ArrayNode dsrSummary= channelService.getDSRSummary(model);
+        boolean success = dsrSummary!=null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(resp != null){
+        if(success){
             //Object
-            //ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("dsrSummary",dsrSummary);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 
             //Response
