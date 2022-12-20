@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequestID;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CustomerDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
@@ -105,27 +106,19 @@ public class AcquiringChannelCustomer360VC {
         }
     }
 
-    @PostMapping("/acquiring-get-customer-360-details-by-accountNumber")
-    public ResponseEntity<?> getCustomerDetailsById(@RequestBody CRMRequest model) {
+    @PostMapping("/acquiring-get-customer-360-details-by-idNumber")
+    public ResponseEntity<?> getCustomerDetailsByIdNumber(@RequestBody CRMRequestID model) {
         try {
-            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyid&paramval={idNumber}";
             RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<String> request = new HttpEntity<>(headers);
-            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class, model.getAccount());
-            String resp = response.getBody().replaceAll("\\\\", "");
-            JsonParser parser = new JsonParser();
-            JsonObject json = parser.parse(resp).getAsJsonObject();
-            JsonArray jsonArray = json.getAsJsonArray("accounts");
-            JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
-            String customer1 = jsonObject.toString();
-            return ResponseEntity.ok(new BaseAppResponse(1, customer1, "Request Processed Successfully"));
-
-
+            String result = restTemplate.getForObject(uri, String.class, model.getIdNumber());
+            String customer1 = result.trim();
+            String newString = customer1.replace("\\", "");
+            String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
         } catch (Exception e) {
-            log.error("Error Occured: " + e.getMessage());
-            return null;
+            e.printStackTrace();
+            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

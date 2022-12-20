@@ -14,15 +14,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CBAddConvenantRequest {
-    private Long id;
-    private String customerId;
-    private String startDate;
     private String endDate;
     private Integer intervalForCheck;
-    private Long dsrId;
     private ConcessionTrackingStatus status;
-    private Date createdOn;
     private String alertMessage;
     private String referenceNumber;
+    private String customerName;
     private Integer alertBeforeExpiry;
 }

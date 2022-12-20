@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBApprove
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddCovenantRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -24,7 +25,7 @@ public class CBConcessionsVC {
     private ICBPortalService cbService;
 
 
-    @PostMapping("/cb-add-concession")
+    @PostMapping("/retail-add-concession")
     public ResponseEntity<?> addConcession(@RequestBody CBConcessionRequest model) {
         boolean success = cbService.addConcession(model);
 
@@ -43,7 +44,7 @@ public class CBConcessionsVC {
         }
     }
 
-    @PostMapping(value = "/cb-get-all-concessions")
+    @PostMapping(value = "/retail-get-all-concessions")
     public ResponseEntity<?> getAllConcessions() {
         List<?> response = cbService.getAllConcessions();
         boolean success = response != null;
@@ -63,7 +64,7 @@ public class CBConcessionsVC {
         }
     }
 
-    @PostMapping("/cb-add-tracked-covenant")
+    @PostMapping("/retail-add-tracked-covenant")
     public ResponseEntity<?> addTrackedCovenant(@RequestBody CBAddConvenantRequest model) {
         boolean success = cbService.addTrackedCovenant(model);
         //Response
@@ -81,8 +82,8 @@ public class CBConcessionsVC {
         }
     }
 
-    @PostMapping("/cb-change-tracked-covenant-status")
-    public ResponseEntity<?> changeTrackedCovenantStatus(@RequestBody CBAddConvenantRequest model) {
+    @PostMapping("/retail-change-tracked-covenant-status")
+    public ResponseEntity<?> changeTrackedCovenantStatus(@RequestBody ChangeConvenantStatus model) {
         boolean success = cbService.setTrackedCovenantStatus(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
@@ -99,7 +100,7 @@ public class CBConcessionsVC {
         }
     }
 
-    @PostMapping(value = "/cb-get-all-tracked-covenants")
+    @PostMapping(value = "/retail-get-all-tracked-covenants")
     public ResponseEntity<?> getAllTracked() {
         List<?> response = cbService.getAllTrackedCovenants();
         boolean success = response != null;
@@ -119,7 +120,7 @@ public class CBConcessionsVC {
         }
     }
 
-    @PostMapping("/cb-approve-concession")
+    @PostMapping("/retail-approve-concession")
     public ResponseEntity<?> approveConcession(@RequestBody CBApproveConcessionRequest model) {
 
         boolean success = cbService.approveCBConcession(model);
@@ -139,7 +140,7 @@ public class CBConcessionsVC {
     }
 
   //send email for Approval
-    @PostMapping("/cb-send-email-for-approval")
+    @PostMapping("/retail-send-email-for-approval")
     public ResponseEntity<?> sendEmailForApproval(@RequestBody CBApproveConcessionRequest model) {
 
         boolean success = cbService.sendEmailForApproval(model);
@@ -159,7 +160,7 @@ public class CBConcessionsVC {
             }
         }
 
-        @PostMapping("/cb-reject-concession")
+        @PostMapping("/retail-reject-concession")
         public ResponseEntity<?> rejectConcession(@RequestBody CBApproveConcessionRequest model) {
 
             boolean success = cbService.rejectCBConcession(model);

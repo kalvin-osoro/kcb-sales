@@ -179,7 +179,7 @@ public class CBChannelService implements ICBChannelService {
                 node.put("referenceNumber", cbBankingConvenantEntity.getReferenceNumber());
                 node.put("customerName", cbBankingConvenantEntity.getCustomerName());
                 node.put("expiryDate", cbBankingConvenantEntity.getEndDate());
-                node.put("condition", cbBankingConvenantEntity.getCondition());
+                node.put("condition", cbBankingConvenantEntity.getConvenantCondition());
                 node.put("status", cbBankingConvenantEntity.getStatus().toString());
                 list.add(node);
             }

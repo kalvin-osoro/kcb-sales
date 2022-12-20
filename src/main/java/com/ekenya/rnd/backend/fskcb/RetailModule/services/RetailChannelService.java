@@ -180,16 +180,25 @@ public class RetailChannelService implements IRetailChannelService {
             node5.put("percentage", 0);
             list.add(node5);
 
-            ObjectNode node6 =mapper.createObjectNode();
-            node5.put("retainer", 0);
-            node5.put("commission", 0);
-            list.add(node6);
-
-
             return list;
         } catch (Exception e) {
             log.error("Error occurred while loading summary", e);
         }
         return null;
+    }
+
+    @Override
+    public ArrayNode loadMicroDSRSummary() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayNode list = mapper.createArrayNode();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("retainer", 0);
+            node.put("commission", 0);
+            list.add(node);
+            return list;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

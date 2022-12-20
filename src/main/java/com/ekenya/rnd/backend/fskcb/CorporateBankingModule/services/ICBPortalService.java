@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.RetailAddConcessionRequest;
 import com.ekenya.rnd.backend.fskcb.payload.CustomerAppointementRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,7 +41,7 @@ public interface ICBPortalService {
 
     boolean addTrackedCovenant(CBAddConvenantRequest model);
 
-    boolean setTrackedCovenantStatus(CBAddConvenantRequest model);
+    boolean setTrackedCovenantStatus(ChangeConvenantStatus model);
 
     List<ObjectNode> getAllTrackedCovenants();
 
