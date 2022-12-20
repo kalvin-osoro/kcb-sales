@@ -13,6 +13,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -89,15 +92,23 @@ public class AuditLogsVC {
         //Response
         if(resp != null){
             //Object
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "attachment; filename="+resp.getFileName());
             try {
-                IOUtils.copy(new FileInputStream(resp.getContent()), response.getOutputStream());
-                response.flushBuffer();
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+                headers.add("Pragma", "no-cache");
+                headers.add("Expires", "0");
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resp.getFileName() + "\"");
+                //
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(resp.getContent()));
+                //
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .contentLength(resp.getContent().length())
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .body(resource);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
         }
         //Response
         return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
