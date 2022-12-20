@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.AddDSRAccountRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.DSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
@@ -45,10 +46,10 @@ public class DSRAccountsVC {
         }
     }
     @PostMapping(value = "/dsr-get-accounts-all")
-    public ResponseEntity<?> getAllAccounts() {
+    public ResponseEntity<?> getAllAccounts(DSRAccountsRequest request) {
 
         //INSIDE SERVICE
-        ArrayNode list = dsrPortalService.getAllDSRAccounts();
+        ArrayNode list = dsrPortalService.getAllDSRAccounts(request);
 
         //Response
         if(list != null){
@@ -64,10 +65,11 @@ public class DSRAccountsVC {
         }
     }
     @PostMapping("/dsr-accounts-import")
-    public ResponseEntity<?> importAccounts(@RequestBody MultipartFile file ) {
+    public ResponseEntity<?> importAccounts(@RequestParam("file")  MultipartFile file,
+                                            @RequestParam("profileCode") String  profileCode ) {
 
         //INSIDE SERVICE
-        ObjectNode resp = dsrPortalService.attemptImportAccounts(file);
+        ObjectNode resp = dsrPortalService.attemptImportAccounts(file,profileCode);
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

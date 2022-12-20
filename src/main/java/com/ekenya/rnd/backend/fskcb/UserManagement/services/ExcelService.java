@@ -4,7 +4,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccou
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.UsersListRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppDto;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.UserAppResponse;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.exception.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -28,7 +28,7 @@ public class ExcelService {
     @Autowired
     ModelMapper modelMapper;
     @Autowired
-    UserRepository userRepository;
+    IUserAccountsRepository IUserAccountsRepository;
 
 
     public void save(MultipartFile file) {
@@ -47,7 +47,7 @@ public class ExcelService {
         Sort sort = model.sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(model.sortBy).ascending() : Sort.by(model.sortBy).descending();
         Pageable pageable = PageRequest.of(model.pageNo, model.pageSize, sort);
         //create a pageable instance
-        Page<UserAccountEntity> user = userRepository.findAll(pageable);
+        Page<UserAccountEntity> user = IUserAccountsRepository.findAll(pageable);
         //get content from pageable instance
         List<UserAccountEntity> users = user.getContent();
         List<UserAppDto> content = users.stream().map(this::mapToDto).collect(Collectors.toList());
@@ -63,22 +63,22 @@ public class ExcelService {
     //update user
     public UserAppDto updateUser(UserAppDto userAppDto, Long id) {
         log.info("Updating user by id {}", id);
-        UserAccountEntity userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        UserAccountEntity userAccount = IUserAccountsRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         userAccount.setFullName(userAppDto.getFirstName()+" "+userAppDto.getLastName());
         userAccount.setEmail(userAppDto.getEmail());
         userAccount.setPhoneNumber(userAppDto.getPhoneNumber());
         userAccount.setStaffNo(userAppDto.getStaffId());
-        userRepository.save(userAccount);
+        IUserAccountsRepository.save(userAccount);
         return mapToDto(userAccount);
     }
 //test for pdf
     public List<UserAccountEntity> listAll() {
-        return userRepository.findAll(Sort.by("email").ascending());
+        return IUserAccountsRepository.findAll(Sort.by("email").ascending());
     }
 
     public UserAppDto getUserById(Long id) {
         log.info("Getting user by id {}", id);
-        UserAccountEntity userAccount = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));//get user by id if exists
+        UserAccountEntity userAccount = IUserAccountsRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));//get user by id if exists
         return mapToDto(userAccount);//map user to dto
     }
     //delete user
@@ -94,9 +94,9 @@ public class ExcelService {
         LinkedHashMap<String, Object> responseObject = new LinkedHashMap<>();
         LinkedHashMap<String, Object> responseParams = new LinkedHashMap<>();
         try {
-            Optional<UserAccountEntity> systemUserOptional = userRepository.findById(id);
+            Optional<UserAccountEntity> systemUserOptional = IUserAccountsRepository.findById(id);
             UserAccountEntity systemUser = systemUserOptional.get();
-            userRepository.save(systemUser);
+            IUserAccountsRepository.save(systemUser);
             responseObject.put("status", "success");
             responseObject.put("message", "Agent "
                     +systemUser.getStaffNo()+" successfully deleted");

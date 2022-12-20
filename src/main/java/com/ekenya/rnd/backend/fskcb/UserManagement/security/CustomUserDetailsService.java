@@ -3,7 +3,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.security;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfileEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserRoleEntity;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserRepository;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,18 +20,18 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository; //repository for user
+    private final IUserAccountsRepository IUserAccountsRepository; //repository for user
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(IUserAccountsRepository IUserAccountsRepository) {
 
-        this.userRepository = userRepository;
+        this.IUserAccountsRepository = IUserAccountsRepository;
     }
 
     //implementation of UserDetailsService
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String staffNo) throws UsernameNotFoundException {
-        UserAccountEntity userAccount = userRepository.findByStaffNo(staffNo).orElseThrow(() ->
+        UserAccountEntity userAccount = IUserAccountsRepository.findByStaffNo(staffNo).orElseThrow(() ->
                 new UsernameNotFoundException("User not found with email : " + staffNo));
         return new User(userAccount.getStaffNo(), userAccount.getPassword(), getAuthorities(userAccount.getRoles()));
     }

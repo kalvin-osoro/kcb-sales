@@ -11,13 +11,16 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.ProfileAndUserEntity;
-import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserProfileEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
+import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
+import com.ekenya.rnd.backend.fskcb.UserManagement.services.UsersService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,6 +59,11 @@ public class DSRPortalService implements IDSRPortalService {
     @Autowired
     ProfilesAndUsersRepository profilesAndUsersRepository;
 
+    @Autowired
+    IUserAccountsRepository userAccountsRepository;
+
+    @Autowired
+    IUsersService usersService;
     @Autowired
     IAuthService authService;
 
@@ -603,13 +611,40 @@ public class DSRPortalService implements IDSRPortalService {
     }
 
     @Override
-    public ArrayNode getAllDSRAccounts() {
+    public ArrayNode getAllDSRAccounts(DSRAccountsRequest model) {
 
         try{
 
             ArrayNode list = mObjectMapper.createArrayNode();
-
-            for (DSRAccountEntity entity: dsrAccountsRepository.findAll()) {
+            //
+            List<DSRAccountEntity> dsrAccountEntities = new ArrayList<>();
+            if(model.getProfileCode() != null) {
+                //Get profile ..
+                UserProfileEntity profileEntity = userProfilesRepository.findByCode(model.getProfileCode()).orElse(null);
+                //
+                if(profileEntity != null) {
+                    //Each user in profile ..
+                    for (ProfileAndUserEntity pu :
+                            profilesAndUsersRepository.findAllByProfileId(profileEntity.getId())) {
+                        //Get User Account ..
+                        UserAccountEntity userAccount = userAccountsRepository
+                                .findByIdAndStatus(pu.getProfileId(),Status.ACTIVE).orElse(null);
+                        if(userAccount != null){
+                            //Get Linked DSR Account
+                            DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(userAccount.getStaffNo()).orElse(null);
+                            //
+                            if(dsrAccount != null){
+                                //Add this one ..
+                                dsrAccountEntities.add(dsrAccount);
+                            }
+                        }
+                    }
+                }
+            }else {
+                dsrAccountEntities = dsrAccountsRepository.findAll();
+            }
+            //Add them to response ..
+            for (DSRAccountEntity entity:dsrAccountEntities) {
                 //
                 ObjectNode node = mObjectMapper.createObjectNode();
                 node.put("id",entity.getId());
@@ -648,6 +683,7 @@ public class DSRPortalService implements IDSRPortalService {
                 }
                 //
                 list.add(node);
+
             }
             return list;
         }catch (Exception e){
@@ -764,18 +800,45 @@ public class DSRPortalService implements IDSRPortalService {
     }
 
     @Override
-    public ObjectNode attemptImportAccounts(MultipartFile importFile) {
+    public ObjectNode attemptImportAccounts(MultipartFile importFile, String profileCode) {
         try{
-
+            //
+            UserProfileEntity profileEntity = userProfilesRepository.findByCode(profileCode).get();
+            //
             DSRsExcelImportResult results = ExcelHelper.excelToDSRAccounts(importFile.getInputStream(),dsrTeamsRepository);
-
+            //
             int imported = 0;
             for (DSRAccountEntity account: results.getAccounts()) {
                 //
                 if(!dsrAccountsRepository.findByStaffNo(account.getStaffNo()).isPresent()){
 
+                    //Create inactive user account ..
+                    AddAdminUserRequest req = new AddAdminUserRequest();
+                    req.setEmail(account.getEmail());
+                    req.setFullName(account.getFullName());
+                    req.setPhoneNo(account.getPhoneNo());
+                    req.setStaffNo(account.getStaffNo());
+
                     //
-                    dsrAccountsRepository.save(account);
+                    if(usersService.attemptCreateUser(req,AccountType.DSR,false)) {
+                        //
+                        UserAccountEntity userAccount =
+                                userAccountsRepository.findByStaffNo(account.getStaffNo()).get();
+                        //
+                        ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
+                        profileAndUserEntity.setProfileId(profileEntity.getId());
+                        profileAndUserEntity.setUserId(userAccount.getId());
+                        profileAndUserEntity.setStatus(Status.ACTIVE);
+
+                        //
+
+                        //Save DSR Account ..
+                        dsrAccountsRepository.save(account);
+
+
+                        //Add DSR to profile ..
+                        profilesAndUsersRepository.save(profileAndUserEntity);
+                    }
                     //
                     imported ++;
                 }else{
