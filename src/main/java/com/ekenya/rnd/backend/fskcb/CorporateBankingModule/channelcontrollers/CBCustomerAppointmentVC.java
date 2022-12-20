@@ -52,7 +52,6 @@ public class CBCustomerAppointmentVC {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
             node.addAll((List)appointments);
-//          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
