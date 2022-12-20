@@ -169,7 +169,7 @@ public class CBChannelService implements ICBChannelService {
     }
 
     @Override
-    public List<ObjectNode> getAllCustomerConcessions(CBCustomerConcession model) {
+    public List<ObjectNode> getAllCustomerCovenants(CBCustomerConcession model) {
         try {
             if (model==null){
                 return null;
@@ -182,6 +182,7 @@ public class CBChannelService implements ICBChannelService {
                 node.put("customerName", cbBankingConvenantEntity.getCustomerName());
                 node.put("expiryDate", cbBankingConvenantEntity.getEndDate());
                 node.put("condition", cbBankingConvenantEntity.getConvenantCondition());
+                node.put("baseAmount", 789000);
                 node.put("status", cbBankingConvenantEntity.getStatus().toString());
                 list.add(node);
             }
