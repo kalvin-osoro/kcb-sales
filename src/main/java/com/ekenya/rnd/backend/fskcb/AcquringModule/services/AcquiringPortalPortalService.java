@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.ekenya.rnd.backend.utils.Utility.getDsrNameFromDsrId;
 
 
 @Service
@@ -100,7 +99,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 objectNode.put("id", acquiringTargetEntity.getId());
                 objectNode.put("targetName", acquiringTargetEntity.getTargetName());
                 objectNode.put("targetSource", acquiringTargetEntity.getTargetSource());
-                objectNode.put("agencyTargetType", acquiringTargetEntity.getTargetType().ordinal());
+                objectNode.put("agencyTargetType", acquiringTargetEntity.getTargetType().toString());
                 objectNode.put("targetDesc", acquiringTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", acquiringTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", acquiringTargetEntity.getTargetValue());
@@ -421,7 +420,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("topic", acquiringLeadEntity.getTopic());
                 asset.put("priority", acquiringLeadEntity.getPriority().toString());
                 asset.put("dsrId", acquiringLeadEntity.getDsrId());
-                asset.put("dsrName", getDsrNameFromDsrId(acquiringLeadEntity.getDsrId()));
+                asset.put("dsrName", acquiringLeadEntity.getDsrName());
                 asset.put("createdOn",acquiringLeadEntity.getCreatedOn().getTime());
 
                 //add to list

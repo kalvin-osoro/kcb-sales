@@ -345,7 +345,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 ObjectNode objectNode = objectMapper.createObjectNode();
                 objectNode.put("assetId", dfsVoomaAssetEntity.getId());
                 objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
-                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
+                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().toString());
                 objectNode.put("totalTransaction", totalTransaction);
                 objectNodeList.add(objectNode);
             });
@@ -812,7 +812,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 node.put("priority", dfsVoomaLeadEntity.getPriority().toString());
                 node.put("businessUnit", dfsVoomaLeadEntity.getBusinessUnit());
                 node.put("leadId", dfsVoomaLeadEntity.getId());
-                node.put("leadStatus", dfsVoomaLeadEntity.getLeadStatus().ordinal());
+                node.put("leadStatus", dfsVoomaLeadEntity.getLeadStatus().toString());
                 node.put("createdOn", dfsVoomaLeadEntity.getCreatedOn().getTime());
                 list.add(node);
             }

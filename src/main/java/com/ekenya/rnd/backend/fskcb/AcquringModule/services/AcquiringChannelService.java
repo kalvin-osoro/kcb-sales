@@ -133,7 +133,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 asset.put("id", acquiringAssignedLeadEntity.getId());
                 asset.put("customerName", acquiringAssignedLeadEntity.getCustomerName());
                 asset.put("businessUnit", acquiringAssignedLeadEntity.getBusinessUnit());
-                asset.put("priority", acquiringAssignedLeadEntity.getPriority().ordinal());
+                asset.put("priority", acquiringAssignedLeadEntity.getPriority().toString());
                 asset.put("customerAccountNumber", acquiringAssignedLeadEntity.getCustomerAccountNumber());
                 asset.put("topic", acquiringAssignedLeadEntity.getTopic());
                 asset.put("createdOn", acquiringAssignedLeadEntity.getCreatedOn().toString());
@@ -388,7 +388,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringAssetEntity.getId());
                 asset.put("SerialNumber", acquiringAssetEntity.getSerialNumber());
-                asset.put("condition", acquiringAssetEntity.getAssetCondition().ordinal());
+                asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
                 //hard code total transactions for now
                 asset.put("totalTransactions", totalTransactions);
                 list.add(asset);

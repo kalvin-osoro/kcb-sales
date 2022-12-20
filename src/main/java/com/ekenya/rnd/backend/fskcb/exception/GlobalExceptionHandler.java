@@ -140,7 +140,6 @@ public class GlobalExceptionHandler{
 
     @ExceptionHandler(value = AccessDeniedException.class)
     public void handleConflict(final Exception ex, HttpServletResponse response) throws IOException {
-        //response.sendError(HttpStatus.BAD_REQUEST.ordinal());
         log.error("Authentication Failed for User", ex);
         ObjectNode node = objectMapper.createObjectNode();
         node.put("status",0);
