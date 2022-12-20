@@ -151,10 +151,11 @@ public class VoomaPortalService implements IVoomaPortalService {
             //set start date from input
 //            dfsVoomaLeadEntity.setStartDate(model.getStartDate());
 //            dfsVoomaLeadEntity.setEndDate(model.getEndDate());
+            dfsVoomaLeadEntity.setAssigned(true);
             //save
             dfsVoomaLeadRepository.save(dfsVoomaLeadEntity);
             //update is assigned to true
-            dfsVoomaLeadEntity.setAssigned(true);
+
             return true;
 
 

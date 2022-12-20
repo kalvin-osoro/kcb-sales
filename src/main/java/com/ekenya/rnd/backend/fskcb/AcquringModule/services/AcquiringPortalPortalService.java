@@ -75,10 +75,11 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             //set start date from input
             acquiringLeadEntity.setStartDate(acquiringLeadRequest.getStartDate());
             acquiringLeadEntity.setEndDate(acquiringLeadRequest.getEndDate());
+            acquiringLeadEntity.setAssigned(true);
             //save
             acquiringLeadsRepository.save(acquiringLeadEntity);
             //update is assigned to true
-            acquiringLeadEntity.setAssigned(true);
+
             return true;
 
 

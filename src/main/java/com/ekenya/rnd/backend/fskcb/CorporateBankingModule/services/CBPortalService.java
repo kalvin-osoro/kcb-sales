@@ -69,10 +69,11 @@ public class CBPortalService implements ICBPortalService {
             //set start date from input
             cbLeadEntity.setStartDate(model.getStartDate());
             cbLeadEntity.setEndDate(model.getEndDate());
+            cbLeadEntity.setAssigned(true);
             //save
             cbLeadsRepository.save(cbLeadEntity);
             //update is assigned to true
-            cbLeadEntity.setAssigned(true);
+
             return true;
 
 

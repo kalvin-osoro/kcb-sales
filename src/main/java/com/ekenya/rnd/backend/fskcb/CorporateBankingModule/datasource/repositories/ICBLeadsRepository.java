@@ -22,4 +22,6 @@ public interface ICBLeadsRepository extends JpaRepository<CBLeadEntity,Long> {
 //    AcquiringLeadEntity[] findAllByDsrIdAndAssigned(Long dsrId);
     @Query(value = "SELECT count(*) FROM dbo_cb_leads where assigned = true AND dsrId = ?1", nativeQuery = true)
     int countTotalAssignedLeads(Long dsrId);
+
+//    @Query("SELECT l FROM CBLeadEntity l WHERE l.dsrId = ?1 AND l.assigned = true")//jpql
 }
