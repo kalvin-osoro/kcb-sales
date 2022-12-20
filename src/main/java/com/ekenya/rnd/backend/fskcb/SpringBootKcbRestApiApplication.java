@@ -283,6 +283,7 @@ public class SpringBootKcbRestApiApplication   {
 	}
 
 
+
 	public static String accessToken ;
 	@PostConstruct
 	void processToken(){

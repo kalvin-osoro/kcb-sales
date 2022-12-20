@@ -42,7 +42,7 @@ import java.util.*;
 @Transactional
 public class UsersService implements IUsersService {
     @Autowired
-    private IUserAccountsRepository IUserAccountsRepository;
+    private IUserAccountsRepository userAccountsRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -66,10 +66,10 @@ public class UsersService implements IUsersService {
     private ObjectMapper mObjectMapper = new ObjectMapper();
 
     public boolean updateResetPasswordToken(String token, String email) throws UserNotFoundException {
-        UserAccountEntity userAccount = IUserAccountsRepository.findByEmail(email).get();
+        UserAccountEntity userAccount = userAccountsRepository.findByEmail(email).get();
         if (userAccount != null) {
             userAccount.setResetPasswordToken(token);
-            IUserAccountsRepository.save(userAccount);
+            userAccountsRepository.save(userAccount);
 
             return true;
         } else {
@@ -79,13 +79,13 @@ public class UsersService implements IUsersService {
     }
 
     public UserAccountEntity getByResetPasswordToken(String token) {
-        return IUserAccountsRepository.findByResetPasswordToken(token);
+        return userAccountsRepository.findByResetPasswordToken(token);
     }
 
     public boolean attemptUpdatePassword(UpdatePasswordRequest model) {
 
         try {
-            UserAccountEntity account = IUserAccountsRepository.findById(model.getUserId()).get();
+            UserAccountEntity account = userAccountsRepository.findById(model.getUserId()).get();
             //
             //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(model.getNewPassword());
@@ -93,7 +93,7 @@ public class UsersService implements IUsersService {
             account.setPassword(encodedPassword);
 
             account.setResetPasswordToken(null);
-            IUserAccountsRepository.save(account);
+            userAccountsRepository.save(account);
 
             return true;
         }catch (Exception ex){
@@ -103,12 +103,12 @@ public class UsersService implements IUsersService {
         return false;
     }
     public UserAccountEntity findById(Long id) {
-        return IUserAccountsRepository.findById(id).orElse(null);//.orElseThrow(() -> new ResourceNotFoundException("UseApp","id", + id));
+        return userAccountsRepository.findById(id).orElse(null);//.orElseThrow(() -> new ResourceNotFoundException("UseApp","id", + id));
     }
 
     @Override
     public UserAccountEntity findByStaffNo(String staffNo) {
-        return IUserAccountsRepository.findByStaffNo(staffNo).orElse(null);//
+        return userAccountsRepository.findByStaffNo(staffNo).orElse(null);//
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UsersService implements IUsersService {
 
         try{
 
-            if(!IUserAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            if(!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
 
                 //
                 String password = Utility.generatePIN();
@@ -138,7 +138,7 @@ public class UsersService implements IUsersService {
                     //CAN ACCESS PORTAL
                     UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
                     account.setRoles(Collections.singleton(userRole));//set role to user
-                    IUserAccountsRepository.save(account);//save user to db
+                    userAccountsRepository.save(account);//save user to db
 
                     //
                     if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
@@ -155,7 +155,7 @@ public class UsersService implements IUsersService {
                     //DSR Account..
                     UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
                     account.setRoles(Collections.singleton(userRole));//set role to user
-                    IUserAccountsRepository.save(account);//save user to db
+                    userAccountsRepository.save(account);//save user to db
                 }
                 //
                 return true;
@@ -179,22 +179,27 @@ public class UsersService implements IUsersService {
             int imported = 0;
             for (UserAccountEntity account: results.getAccounts()) {
                 //
-                if(!IUserAccountsRepository.findByStaffNo(account.getStaffNo()).isPresent()){
+                if(!userAccountsRepository.findByStaffNo(account.getStaffNo()).isPresent()){
+                    //
+                    account.setAccountType(AccountType.ADMIN);
                     //
                     String password = Utility.generatePIN();
                     //
                     account.setPassword(passwordEncoder.encode(password));
                     //add user to db and assign default  role
-                    Optional<UserRoleEntity> role = roleRepository.findByName(SystemRoles.ADMIN);
-                    //set role
-                    account.setRoles(new HashSet<>(Arrays.asList(role.get())));
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
                     //
-                    IUserAccountsRepository.save(account);
+                    userAccountsRepository.save(account);
                     //
                     if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                         //
+                        log.info("OTP Send Via Email ..");
+                    }else if(smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password)){
+                        //
+                        log.info("OTP Send Via SMS ..");
                     }else{
-                        results.getErrors().add(new ExcelImportError("Send password for "+account.getEmail()+" failed."));
+                        results.getErrors().add(new ExcelImportError("Send OTP for "+account.getEmail()+" failed."));
                     }
                     imported ++;
                 }else{
@@ -202,17 +207,19 @@ public class UsersService implements IUsersService {
                 }
             }
             //
+            ObjectNode node = mObjectMapper.createObjectNode();
+            node.put("imported",imported);
+            //
             if(!results.getErrors().isEmpty()){
                 //
-                ObjectNode node = mObjectMapper.createObjectNode();
-                node.put("imported",imported);
                 node.putPOJO("import-errors",mObjectMapper.convertValue(results.getErrors(),ArrayNode.class));
                 //
-                return node;
             }else{
                 //
-                return mObjectMapper.createObjectNode();
+                node.putPOJO("import-errors",mObjectMapper.createArrayNode());
+                //
             }
+            return node;
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
         }
@@ -224,7 +231,7 @@ public class UsersService implements IUsersService {
 
         try{
             List<ObjectNode> list = new ArrayList<>();
-            for(UserAccountEntity account : IUserAccountsRepository.findAllByAccountTypeAndStatus(AccountType.ADMIN,Status.ACTIVE)){
+            for(UserAccountEntity account : userAccountsRepository.findAllByAccountTypeAndStatus(AccountType.ADMIN,Status.ACTIVE)){
                 ObjectNode node = mObjectMapper.createObjectNode();
 
                 node.put("id",account.getId());
@@ -285,7 +292,7 @@ public class UsersService implements IUsersService {
 
                 String staffNo = crmUser.get("staff-no").getAsString();
 
-                if(!IUserAccountsRepository.findByStaffNo(staffNo).isPresent()){
+                if(!userAccountsRepository.findByStaffNo(staffNo).isPresent()){
                     //
                     UserAccountEntity account = new UserAccountEntity();
                     account.setStaffNo(staffNo);
@@ -302,7 +309,7 @@ public class UsersService implements IUsersService {
                     //set role
                     account.setRoles(new HashSet<>(Arrays.asList(role.get())));
                     //
-                    IUserAccountsRepository.save(account);
+                    userAccountsRepository.save(account);
                     //
                     if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
                         //
@@ -324,9 +331,9 @@ public class UsersService implements IUsersService {
 
             Optional<UserAccountEntity> account = null;
             if(model.getUserId() != null ) {
-                account = IUserAccountsRepository.findById(model.getUserId());
+                account = userAccountsRepository.findById(model.getUserId());
             }else if(model.getStaffNo() != null ){
-                account = IUserAccountsRepository.findByStaffNo(model.getStaffNo());
+                account = userAccountsRepository.findByStaffNo(model.getStaffNo());
             }
             //
             if(account == null || account.isEmpty()){
@@ -391,14 +398,14 @@ public class UsersService implements IUsersService {
 
         try{
             //
-            Optional<UserAccountEntity> account = IUserAccountsRepository.findByStaffNo(model.getStaffNo());
+            Optional<UserAccountEntity> account = userAccountsRepository.findByStaffNo(model.getStaffNo());
             if(account.isPresent()){
                 //
                 String password = Utility.generatePIN();
 
                 account.get().setPassword(passwordEncoder.encode(password));
 
-                IUserAccountsRepository.save(account.get());
+                userAccountsRepository.save(account.get());
 
                 if(smsService.sendPasswordEmail(account.get().getEmail(),account.get().getFullName(),password)){
                     //
@@ -416,7 +423,7 @@ public class UsersService implements IUsersService {
 
         try{
             //
-            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = userAccountsRepository.findByStaffNo(model.getStaffNo()).get();
             //
             for (long pid: model.getProfiles()) {
                 //
@@ -451,7 +458,7 @@ public class UsersService implements IUsersService {
     public boolean updateUserProfiles(UpdateUserProfilesRequest model) {
         try{
             //
-            UserAccountEntity account = IUserAccountsRepository.findByStaffNo(model.getStaffNo()).get();
+            UserAccountEntity account = userAccountsRepository.findByStaffNo(model.getStaffNo()).get();
             //Selected
             for (long pid: model.getProfiles()) {
                 //
@@ -509,12 +516,12 @@ public class UsersService implements IUsersService {
 
         try{
 
-            UserAccountEntity account = IUserAccountsRepository.findById(userId).get();
+            UserAccountEntity account = userAccountsRepository.findById(userId).get();
             //
             account.setBlocked(true);
             account.setRemLoginAttempts(0);
             account.setLastModified(Calendar.getInstance().getTime());
-            IUserAccountsRepository.save(account);
+            userAccountsRepository.save(account);
             //
             return false;
         }catch (Exception e){
@@ -528,12 +535,12 @@ public class UsersService implements IUsersService {
 
         try{
 
-            UserAccountEntity account = IUserAccountsRepository.findById(userId).get();
+            UserAccountEntity account = userAccountsRepository.findById(userId).get();
             //
             account.setBlocked(false);
             account.setRemLoginAttempts(3);
             account.setLastModified(Calendar.getInstance().getTime());
-            IUserAccountsRepository.save(account);
+            userAccountsRepository.save(account);
             //
             return false;
         }catch (Exception e){
@@ -546,7 +553,7 @@ public class UsersService implements IUsersService {
     public ArrayNode loadUserAuditTrail(Long userId) {
         try{
 
-            UserAccountEntity account = IUserAccountsRepository.findById(userId).get();
+            UserAccountEntity account = userAccountsRepository.findById(userId).get();
             //
 
             ArrayNode list = mObjectMapper.createArrayNode();

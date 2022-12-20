@@ -18,5 +18,6 @@ public class AddDSRAccountRequest {
     private String email;
     private Date expiry;
     private String gender;
+    private String profileCode;
     //private List<Long> profiles = new ArrayList<>();
 }

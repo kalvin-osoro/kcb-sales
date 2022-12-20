@@ -24,8 +24,10 @@ public class SecurityQuestionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "type", nullable = false)
     private SecurityQuestionType type;
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)

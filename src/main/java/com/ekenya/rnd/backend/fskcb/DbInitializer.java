@@ -591,8 +591,8 @@ public class DbInitializer {
                 //
                 optionalDSRRegion = dsrRegionsRepository.findByName(regionName);
             }
-            String teamName = "DFS KASARANI";
-            String teamCode = "6756";
+            String teamName = "KASARANI TEAM";
+            String teamCode = "NBO-017";
             String teamLoc = "KASARANI";
 
             if(!dsrTeamsRepository.findByName(teamName).isPresent()){
@@ -605,6 +605,7 @@ public class DbInitializer {
             }
         }catch (Exception ex){
             //
+            log.error(ex.getMessage(),ex);
         }
     }
 

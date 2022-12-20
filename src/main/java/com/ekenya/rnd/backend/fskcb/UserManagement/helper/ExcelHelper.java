@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ExcelHelper {
     @Autowired
@@ -36,6 +38,7 @@ public class ExcelHelper {
         return TYPE.equals(file.getContentType());
     }
 
+    private static Logger mLogger = Logger.getLogger(UsersExcelImportResult.class.getName());
     public static UsersExcelImportResult excelToUserAccounts(InputStream is) {
 
 
@@ -229,6 +232,7 @@ public class ExcelHelper {
                         dsrAccount.setStaffNo(staffNo);
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
@@ -253,6 +257,7 @@ public class ExcelHelper {
                         dsrAccount.setFullName(name);
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
@@ -283,6 +288,7 @@ public class ExcelHelper {
                         dsrAccount.setPhoneNo(phoneNo);
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
@@ -306,6 +312,7 @@ public class ExcelHelper {
                         dsrAccount.setEmail(email);
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
@@ -323,7 +330,7 @@ public class ExcelHelper {
                         importError.setRow(rowNumber);
                         importError.setColumn(TEAM_COLUMN_INDEX);
                         //
-                        result.getErrors().add(importError);
+                        //result.getErrors().add(importError);
                     }else{
                         Optional<DSRTeamEntity> teamEntity = dsrTeamsRepository.findByName(team);
                         if(teamEntity.isPresent()){
@@ -336,16 +343,17 @@ public class ExcelHelper {
                             importError.setRow(rowNumber);
                             importError.setColumn(TEAM_COLUMN_INDEX);
                             //
-                            result.getErrors().add(importError);
+                            //result.getErrors().add(importError);
                         }
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
                     importError.setColumn(TEAM_COLUMN_INDEX);
                     //
-                    result.getErrors().add(importError);
+                    //result.getErrors().add(importError); //Uncomment to skip row
                 }
                 //Sales Code
                 try{
@@ -357,17 +365,18 @@ public class ExcelHelper {
                         importError.setRow(rowNumber);
                         importError.setColumn(SALES_CODE_COLUMN_INDEX);
                         //
-                        result.getErrors().add(importError);
+                        //result.getErrors().add(importError);
                     }else{
                         dsrAccount.setSalesCode(email);
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
                     importError.setColumn(SALES_CODE_COLUMN_INDEX);
                     //
-                    result.getErrors().add(importError);
+                    //result.getErrors().add(importError);
                 }
 
                 //Sales Code
@@ -380,17 +389,18 @@ public class ExcelHelper {
                         importError.setRow(rowNumber);
                         importError.setColumn(GENDER_COLUMN_INDEX);
                         //
-                        result.getErrors().add(importError);
+                        //result.getErrors().add(importError);
                     }else{
                         dsrAccount.setGender(gender);
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
                     importError.setColumn(GENDER_COLUMN_INDEX);
                     //
-                    result.getErrors().add(importError);
+                    //result.getErrors().add(importError);
                 }
 
                 //Account Expiry
@@ -401,9 +411,10 @@ public class ExcelHelper {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
                         dsrAccount.setExpiryDate(dateFormat.parse(expiry));
                     }else{
-                        //Not set
+                        //Not set, ignore..
                     }
                 }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
                     ExcelImportError importError = new ExcelImportError();
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
