@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsBYDSRRequest;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.PBCustomerVisitsRequest;
@@ -8,6 +9,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRe
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.payload.PersonalAccountTypeRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,4 +41,6 @@ public interface IPBChannelService {
     List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
 
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
+
+    ArrayNode getDSRSummary(DSRSummaryRequest model);
 }

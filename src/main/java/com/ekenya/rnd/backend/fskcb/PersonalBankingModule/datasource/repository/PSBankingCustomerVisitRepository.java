@@ -11,4 +11,7 @@ public interface PSBankingCustomerVisitRepository extends JpaRepository<PSBankin
     PSBankingVisitEntity[] fetchAllVisitsCreatedLast7Days();
 @Query(value = "SELECT * FROM psbanking_visits where dsr_id = ?1", nativeQuery = true)
     List<PSBankingVisitEntity> findAllByDsrId(Long dsrId);
+
+    @Query(value = "SELECT COUNT(*) FROM psbanking_visits WHERE dsrId=?1", nativeQuery = true)
+    int countTotalVisits(Long dsrId);
 }
