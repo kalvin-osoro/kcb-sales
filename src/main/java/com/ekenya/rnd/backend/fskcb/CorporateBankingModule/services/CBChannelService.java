@@ -307,7 +307,7 @@ public class CBChannelService implements ICBChannelService {
                 node.put("priority", cbLeadEntity.getPriority().toString());
                 node.put("businessUnit", cbLeadEntity.getBusinessUnit());
                 node.put("leadId", cbLeadEntity.getId());
-                node.put("leadStatus", cbLeadEntity.getLeadStatus().ordinal());
+                node.put("leadStatus", cbLeadEntity.getLeadStatus().toString());
                 node.put("createdOn", cbLeadEntity.getCreatedOn().getTime());
                 list.add(node);
             }

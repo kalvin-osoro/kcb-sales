@@ -78,7 +78,7 @@ public class RetailChannelService implements IRetailChannelService {
                 node.put("priority", retailLeadEntity.getPriority().toString());
                 node.put("businessUnit", retailLeadEntity.getBusinessUnit());
                 node.put("leadId", retailLeadEntity.getId());
-                node.put("leadStatus", retailLeadEntity.getLeadStatus().ordinal());
+                node.put("leadStatus", retailLeadEntity.getLeadStatus().toString());
                 node.put("createdOn", retailLeadEntity.getCreatedOn().getTime());
                 list.add(node);
             }

@@ -19,8 +19,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE acquiring_asset SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
 @Entity
 @Table(name = "acquiring_asset")
 @DynamicInsert
@@ -31,21 +29,15 @@ public class AcquiringAssetEntity {
     private Long id;
     private String serialNumber;
     private Long agentId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dsr_id")
-    private DSRAccountEntity dsrDetails;
     private Date dateAssigned;
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status= Status.ACTIVE;
-    @Column(name = "asset_condition")
+    @Column(name = "assetCondition")
     private AssetCondition assetCondition;
     private Date lastServiceDate;
     private String longitude;
     private String latitude;
-
-    @Embedded
-    private VisitsReport visitsReport;
     private boolean assigned=false;
 
     @OneToMany(mappedBy = "acquiringAssetEntity", cascade = CascadeType.ALL, orphanRemoval = true)

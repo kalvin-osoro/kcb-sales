@@ -95,7 +95,7 @@ public class CBPortalService implements ICBPortalService {
                 node.put("businessUnit", cbLeadEntity.getBusinessUnit());
                 node.put("leadStatus", String.valueOf(cbLeadEntity.getLeadStatus()));
                 node.put("topic", cbLeadEntity.getTopic());
-                node.put("priority", cbLeadEntity.getPriority().ordinal());
+                node.put("priority", cbLeadEntity.getPriority().toString());
                 node.put("dsrName", cbLeadEntity.getDsrName());
                 node.put("createdOn", cbLeadEntity.getCreatedOn().getTime());
                 //add to list
@@ -414,7 +414,7 @@ public class CBPortalService implements ICBPortalService {
                 for (CBOnboardingEntity cbOnboardingEntity : cbOnboardingRepository.fetchAllOnboardingCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
                     asset.put("customerName", cbOnboardingEntity.getCustomerName());
-                    asset.put("onboarding-status", cbOnboardingEntity.getStatus().ordinal());
+                    asset.put("onboarding-status", cbOnboardingEntity.getStatus().toString());
                     asset.put("agent Id", cbOnboardingEntity.getDsrId());
                     asset.put("date_onboarded", cbOnboardingEntity.getCreatedOn().getTime());
                     asset.put("latitude", cbOnboardingEntity.getLatitude());
@@ -474,7 +474,7 @@ public class CBPortalService implements ICBPortalService {
                 objectNode.put("id", cbTargetEntity.getId());
                 objectNode.put("targetName", cbTargetEntity.getTargetName());
                 objectNode.put("targetSource", cbTargetEntity.getTargetSource());
-                objectNode.put("agencyTargetType", cbTargetEntity.getTargetType().ordinal());
+                objectNode.put("agencyTargetType", cbTargetEntity.getTargetType().toString());
                 objectNode.put("targetDesc", cbTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", cbTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", cbTargetEntity.getTargetValue());
@@ -746,7 +746,9 @@ public class CBPortalService implements ICBPortalService {
                 cbRevenueLineEntity.setRevenueLineType(revenueLineRequest.getRevenueLineType());
                 cbRevenueLineEntity.setBaseAmount(revenueLineRequest.getBaseAmount());
                 cbRevenueLineEntity.setDuration(revenueLineRequest.getDuration());
+                cbRevenueLineEntity.setForgoneRevenue(revenueLineRequest.getForgoneRevenue());
                 cbRevenueLineEntity.setCbConcessionEntity(cbConcessionEntity);//
+
                 cbRevenueLineRepository.save(cbRevenueLineEntity);
             }
             List<CBJustificationRequest> justificationRequestList = model.getCbJustificationRequests();
