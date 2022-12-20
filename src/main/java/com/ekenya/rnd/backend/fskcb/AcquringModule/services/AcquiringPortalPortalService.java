@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaOnboardRepository;
@@ -68,13 +69,13 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
 
     @Override
-    public boolean assignLeadToDsr(AcquiringLeadRequest acquiringLeadRequest) {
+    public boolean assignLeadToDsr(CBAssignLeadRequest model) {
         try {
-            AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(acquiringLeadRequest.getLeadId()).get();
-            acquiringLeadEntity.setDsrId(acquiringLeadRequest.getDsrId());
+            AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getLeadId()).get();
+            acquiringLeadEntity.setDsrId(model.getDsrId());
             //set start date from input
-            acquiringLeadEntity.setStartDate(acquiringLeadRequest.getStartDate());
-            acquiringLeadEntity.setEndDate(acquiringLeadRequest.getEndDate());
+            acquiringLeadEntity.setStartDate(model.getStartDate());
+            acquiringLeadEntity.setEndDate(model.getEndDate());
             acquiringLeadEntity.setAssigned(true);
             //save
             acquiringLeadsRepository.save(acquiringLeadEntity);

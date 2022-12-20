@@ -96,7 +96,7 @@ public class CBPortalService implements ICBPortalService {
                 node.put("leadStatus", String.valueOf(cbLeadEntity.getLeadStatus()));
                 node.put("topic", cbLeadEntity.getTopic());
                 node.put("priority", cbLeadEntity.getPriority().ordinal());
-                node.put("dsrName", Utility.getDsrNameFromDsrId(cbLeadEntity.getDsrId()));
+                node.put("dsrName", cbLeadEntity.getDsrName());
                 node.put("createdOn", cbLeadEntity.getCreatedOn().getTime());
                 //add to list
                 list.add(node);
