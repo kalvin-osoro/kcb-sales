@@ -14,11 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -47,6 +51,9 @@ public class SMSService implements ISmsService{
     ISecurityAuthCodesRepository securityAuthCodesRepository;
     @Autowired
     private IUserAccountsRepository IUserAccountsRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
 
     @Autowired
     IDSRAccountsRepository dsrAccountsRepository;
@@ -87,6 +94,40 @@ public class SMSService implements ISmsService{
     }
 
     @Override
+    public boolean sendPasswordEmail(String receiverEmail, String fullName, String password) {
+        try {
+            String message = "Hello " + fullName + ", your password is " + password + "\nPlease change it immediately after login";
+            JsonObject smsResponse = sendEmail(message, receiverEmail);
+            if (smsResponse == null) {
+                throw new RuntimeException("Unable to send sms");
+            }
+            int responseCode = smsResponse.get("ResultCode").getAsInt();
+            if (responseCode != 0) {
+                log.error("Send CODE failed. => "+smsResponse.get("ResultDesc").getAsString());
+                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return false;
+    }
+
+    private JsonObject sendEmail(String message, String receiverEmail) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(receiverEmail);
+            helper.setSubject("First Time Password");
+            helper.setText(message);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
     public boolean sendPasswordSMS(String phoneNo,String fullName, String password) {
 
         try{
@@ -110,18 +151,7 @@ public class SMSService implements ISmsService{
         return false;
     }
 
-    @Override
-    public boolean sendPasswordEmail(String receiverEmail, String name, String password) {
 
-        try{
-
-            //TODO Send email ..
-        } catch (Exception e) {
-            logger.log(Level.ALL,e.getMessage(),e);
-        }
-
-        return false;
-    }
 
     @Scheduled(fixedRate = 1)
 

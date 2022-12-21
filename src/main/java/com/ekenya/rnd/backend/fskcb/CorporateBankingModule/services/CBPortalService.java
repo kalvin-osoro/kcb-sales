@@ -1,13 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAgentOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -26,14 +24,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -812,8 +807,9 @@ public class CBPortalService implements ICBPortalService {
                 log.error("please provide email address");
             }
             CBConcessionEntity cbConcessionEntity = cbConcessionRepository.findById(model.getConcessionId()).get();
-            sendEmail(model.getEmailUrl() );
+            sendEmail(model.getEmailUrl(), cbConcessionEntity);
             return true;
+
 
         } catch (Exception e) {
             log.error("Error occurred while sending email for approval", e);
@@ -821,7 +817,7 @@ public class CBPortalService implements ICBPortalService {
         return false;
     }
 
-    public void sendEmail(String email) {
+    public void sendEmail(String email, CBConcessionEntity cbConcessionEntity) {
       try {
           MimeMessage message1 = javaMailSender.createMimeMessage();
           MimeMessageHelper helper = new MimeMessageHelper(message1);
