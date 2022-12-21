@@ -388,6 +388,7 @@ public class CBPortalService implements ICBPortalService {
 
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", cbBankingConvenantEntity.getId());
+                objectNode.put("customerId",cbBankingConvenantEntity.getCustomerId());
                 objectNode.put("customerName", cbBankingConvenantEntity.getCustomerName());
                 ObjectNode period = mapper.createObjectNode();
                 period.put("endDate", cbBankingConvenantEntity.getEndDate());
