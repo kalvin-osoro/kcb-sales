@@ -26,6 +26,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
@@ -42,6 +45,7 @@ import java.util.Set;
 public class CBPortalService implements ICBPortalService {
 
     private final ICBLeadsRepository cbLeadsRepository;
+    private final JavaMailSender javaMailSender;
     private final QuestionTypeRepository questionTypeRepository;
     private final QuestionnareQuestionRepository questionnareQuestionRepository;
     private final QuestionnaireResponseRepository questionnaireResponseRepository;
@@ -805,15 +809,36 @@ public class CBPortalService implements ICBPortalService {
     public boolean sendEmailForApproval(CBApproveConcessionRequest model) {
         try {
             if (model == null) {
-                return false;
+                log.error("please provide email address");
             }
             CBConcessionEntity cbConcessionEntity = cbConcessionRepository.findById(model.getConcessionId()).get();
-            model.getEmailUrl();
+            sendEmail(model.getEmailUrl() );
             return true;
+
         } catch (Exception e) {
             log.error("Error occurred while sending email for approval", e);
         }
         return false;
+    }
+
+    public void sendEmail(String email) {
+      try {
+          MimeMessage message1 = javaMailSender.createMimeMessage();
+          MimeMessageHelper helper = new MimeMessageHelper(message1);
+          helper.setFrom("kcb@test.com", "KCB");
+            helper.setTo(email);
+            String subject1 = "Concession Approval";
+            String content = "<p>Hello,</p>"
+                    + "<p>You have a new concession request.</p>"
+                    + "<p>Please login to the system to approve</p>"
+                    + "<p>Regards,</p>"
+                    + "<p>KCB</p>";
+            helper.setSubject(subject1);
+            helper.setText(content, true);
+            javaMailSender.send(message1);
+      } catch (Exception e) {
+          log.error("Error occurred while sending email", e);
+      }
     }
 
     @Override
