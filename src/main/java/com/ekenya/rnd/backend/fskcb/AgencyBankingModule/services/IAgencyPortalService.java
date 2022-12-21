@@ -57,4 +57,6 @@ public interface IAgencyPortalService {
     List<ObjectNode> getAllAssets();
 
     Object getAssetById(AssetByIdRequest model);
+
+    ObjectNode attemptImportAgents(MultipartFile file);
 }

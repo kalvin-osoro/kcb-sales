@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class AgencyOnboardingVC {
 
     @Autowired
     IAgencyPortalService agencyPortalService;
+    @Autowired
+    ObjectMapper mObjectMapper;
 
     //List all onboarded merchants
     @PostMapping(value = "/agency-get-all-onboarded-customers")
@@ -95,6 +98,20 @@ public class AgencyOnboardingVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/Agency-import-agents")
+    public ResponseEntity<?> importAgent(@RequestBody MultipartFile file ) {
+        //T
+        ObjectNode resp = agencyPortalService.attemptImportAgents(file);
+        if(resp != null){
+            //Object
+
+            return ResponseEntity.ok(new BaseAppResponse(1,resp,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

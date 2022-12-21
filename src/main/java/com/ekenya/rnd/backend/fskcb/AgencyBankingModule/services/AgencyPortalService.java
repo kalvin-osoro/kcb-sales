@@ -5,6 +5,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetReque
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.helper.AgentExcelHelper;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgentExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
@@ -29,9 +31,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,16 +49,17 @@ public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
+    @Autowired
+    ObjectMapper mapper;
     private final FileStorageService fileStorageService;
     private final AgencyAssetFilesRepository agencyAssetFilesRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private final AgencyAssetRepository agencyAssetRepository;
-    private  final IDSRTeamsRepository teamsRepository;
+    private final IDSRTeamsRepository teamsRepository;
     private final AgencyBankingLeadRepository agencyBankingLeadRepository;
     private final AgencyBankingQuestionnaireQuestionRepository agencyBankingQuestionnaireQuestionRepository;
     private final AgencyBankingTargetRepository agencyBankingTargetRepository;
     private final AgencyOnboardingRepository agencyOnboardingRepository;
-
 
 
     @Override
@@ -129,9 +135,9 @@ public class AgencyPortalService implements IAgencyPortalService {
                 objectNode.put("customerId", agencyBankingLeadEntity.getCustomerId());
                 objectNode.put("businessUnit", agencyBankingLeadEntity.getBusinessUnit());
                 objectNode.put("leadStatus", agencyBankingLeadEntity.getLeadStatus().toString());
-                objectNode.put("createdOn",agencyBankingLeadEntity.getCreatedOn().getTime());
-                objectNode.put("product",agencyBankingLeadEntity.getProduct());
-                objectNode.put("dsrName",agencyBankingLeadEntity.getDsrName());
+                objectNode.put("createdOn", agencyBankingLeadEntity.getCreatedOn().getTime());
+                objectNode.put("product", agencyBankingLeadEntity.getProduct());
+                objectNode.put("dsrName", agencyBankingLeadEntity.getDsrName());
                 objectNode.put("priority", agencyBankingLeadEntity.getPriority().toString());
 //                objectNode.put("dsrId", treasuryLeadEntity.getDsrId());
                 list.add(objectNode);
@@ -285,8 +291,6 @@ public class AgencyPortalService implements IAgencyPortalService {
     }
 
 
-
-
     @Override
     public List<ObjectNode> getAgentOnboardSummary(AgencySummaryRequest filters) {
         try {
@@ -325,7 +329,8 @@ public class AgencyPortalService implements IAgencyPortalService {
             AgencyBankingTargetEntity target = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
-            } if (target.getTargetType().equals(TargetType.LEADS)) {
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
@@ -365,7 +370,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 teamEntity.setVisitsTargetValue(model.getTargetValue());
             }
-            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 teamEntity.setOnboardTargetValue(model.getTargetValue());
             }
 
@@ -384,8 +389,8 @@ public class AgencyPortalService implements IAgencyPortalService {
     @Override
     public Object getTargetById(VoomaTargetByIdRequest model) {
         try {
-            if (model==null){
-                return  false;
+            if (model == null) {
+                return false;
             }
             AgencyBankingTargetEntity agencyBankingTargetEntity = agencyBankingTargetRepository.findById(model.getId()).orElse(null);
             return agencyBankingTargetEntity;
@@ -455,7 +460,6 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
             agencyBankingLeadRepository.save(agencyBankingLeadEntity);
             return true;
-
 
 
         } catch (Exception e) {
@@ -586,6 +590,41 @@ public class AgencyPortalService implements IAgencyPortalService {
             return asset;
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ObjectNode attemptImportAgents(MultipartFile file) {
+        try {
+            AgentExcelImportResult results = AgentExcelHelper.excelToAgents(file.getInputStream());
+            int imported = 0;
+            for (AgencyOnboardingEntity agent : results.getAgents()) {
+                agent.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                agent.setStatus(OnboardingStatus.PENDING);
+                agent.setIsApproved(false);
+                //save agent
+                agencyOnboardingRepository.save(agent);
+                imported++;
+//            result.getAgents().add(agent);
+
+
+            }
+            ObjectNode node = mapper.createObjectNode();
+            node.put("imported", imported);
+            //
+            if (!results.getErrors().isEmpty()) {
+                //
+                node.putPOJO("import-errors", mapper.convertValue(results.getErrors(), ArrayNode.class));
+                //
+            } else {
+                //
+                node.putPOJO("import-errors", mapper.createArrayNode());
+                //
+            }
+            return node;
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
         }
         return null;
     }

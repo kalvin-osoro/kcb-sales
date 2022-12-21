@@ -25,10 +25,12 @@ public class AgencyOnboardingEntity {
     private String agentName;
     private String agentCode;
     private String region;
+    private String branch;
     private  String agentIdNumber;
     private String agentEmail;
     private String agentPhone;
     private String agentDob;
+    private String dsrName;
     private String agentPbox;
     private String agentPostalCode;
     private Long dsrId;
@@ -43,7 +45,7 @@ public class AgencyOnboardingEntity {
     private String buildingName;
     private String roomNumber;
     @Enumerated(EnumType.STRING)
-    private OnboardingStatus status;
+    private OnboardingStatus status=OnboardingStatus.PENDING;
     //agency onboarding details
     private String nameOfProposiedAgent;
     private String businessType;
