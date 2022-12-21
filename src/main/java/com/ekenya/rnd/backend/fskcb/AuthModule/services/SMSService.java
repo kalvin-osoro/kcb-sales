@@ -29,9 +29,8 @@ import java.util.logging.Logger;
 @Slf4j
 public class SMSService implements ISmsService{
 
-    //
-//    @Value("ECLECTICS")
-    @Value("CMCOM")
+    //  @Value("CMCOM")
+    @Value("ECLECTICS")
     private String SMS_SENDER_ID;
     @Value("5094")
     private String client_id;
