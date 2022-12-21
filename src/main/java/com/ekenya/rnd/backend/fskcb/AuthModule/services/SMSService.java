@@ -134,13 +134,13 @@ public class SMSService implements ISmsService{
             //
             String message = "Hello " + fullName + ", use this as your Password to login : " + password +"\nRemember to change it after you signin";
             //
-            JsonObject smsResponse = attemptSendSMS(message, phoneNo);
-            if (smsResponse == null) {
+            JsonObject emailResponse = attemptSendSMS(message, phoneNo);
+            if (emailResponse == null) {
                 throw new RuntimeException("Unable to send sms");
             }
-            int responseCode = smsResponse.get("ResultCode").getAsInt();
+            int responseCode = emailResponse.get("ResultCode").getAsInt();
             if (responseCode != 0) {
-                log.error("Send CODE failed. => "+smsResponse.get("ResultDesc").getAsString());
+                log.error("Send CODE failed. => "+emailResponse.get("ResultDesc").getAsString());
                 //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
             }
             return true;
