@@ -107,7 +107,7 @@ public class VoomaMerchantsVC {
     @ResponseBody
     public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
         System.out.println("filename " + filename);
-        Resource file = fileStorageService.loadFileAsResourceByName(filename);
+        Resource file = fileStorageService.load(filename);
         MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")

@@ -2,7 +2,6 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaCustomerVisitEntity;
 import com.ekenya.rnd.backend.utils.Status;
-import com.ekenya.rnd.backend.utils.Utility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,8 +18,8 @@ class DFSVoomaCustomerVisitRepositoryTest {
         //given
         DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = new DFSVoomaCustomerVisitEntity();
         dfsVoomaCustomerVisitEntity.setDsrId(1L);
-        dfsVoomaCustomerVisitEntity.setDsrName("John Doe");
-        dfsVoomaCustomerVisitEntity.setVisitDate("2020-01-01");
+        dfsVoomaCustomerVisitEntity.setDsrName("David Ccharo");
+        dfsVoomaCustomerVisitEntity.setVisitDate("2023-01-01");
         dfsVoomaCustomerVisitEntity.setVisitType("New");
         dfsVoomaCustomerVisitEntity.setStatus(Status.ACTIVE);
         dfsVoomaCustomerVisitEntity.setHighlights("This is a highlight");
@@ -32,11 +31,5 @@ class DFSVoomaCustomerVisitRepositoryTest {
         //then
         assertThat(underTest.findAllByDsrId(1L)).isEqualTo(1);
 
-
-
-    }
-
-    @Test
-    void countTotalVisits() {
     }
 }

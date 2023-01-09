@@ -530,25 +530,25 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaContactDetailsRepository.save(dfsVoomaContactDetailsEntity);
             }
             //upload documents
-            String folderName = "voomaOnboardingMerchant";
+//            String folderName = "voomaOnboardingMerchant";
 //            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 //                    .path("/downloadFile/")
 //                    .path(folderName)
 //                    .toUriString();
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "frontID_" + merchantDetails1.getId() + ".PNG", frontID, folderName);
+                    "vooma_merchant_frontID_" + merchantDetails1.getId() + ".PNG", frontID, Utility.getSubFolder());
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + merchantDetails1.getId() + ".PNG", backID, folderName);
+                    "vooma_merchant_backID_" + merchantDetails1.getId() + ".PNG", backID, Utility.getSubFolder());
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "kraPinCertificate_" + merchantDetails1.getId() + ".PNG", kraPinCertificate, folderName);
+                    "vooma_merchant_kraPinCertificate_" + merchantDetails1.getId() + ".PNG", kraPinCertificate, Utility.getSubFolder());
 
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "shopPhoto_" + merchantDetails1.getId() + ".PNG", shopPhoto, folderName);
+                    "vooma_merchant_shopPhoto_" + merchantDetails1.getId() + ".PNG", shopPhoto, Utility.getSubFolder());
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc, folderName);
+                    "vooma_merchant_signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc, Utility.getSubFolder());
             //save download url from file storage service.loadFileAsResource
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc, folderName);
+                    "vooma_merchant_businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc, Utility.getSubFolder());
             //save
             List<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
@@ -560,7 +560,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/upload/" + folderName + "/")
+                        .path("/upload/" + Utility.getSubFolder() + "/")
                         .path(filePath)
                         .toUriString();
                 downloadUrlList.add(downloadUrl);
@@ -568,6 +568,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 DFSVoomaOnboardingKYCentity dfsVoomaMerchantDocumentsEntity = new DFSVoomaOnboardingKYCentity();
                 dfsVoomaMerchantDocumentsEntity.setFilePath(downloadUrl);
                 dfsVoomaMerchantDocumentsEntity.setDfsVoomaMerchantOnboardV1(merchantDetails1);
+                dfsVoomaMerchantDocumentsEntity.setFileName(filePath);
                 dfsVoomaMerchantDocumentsEntity.setMerchantId(merchantDetails1.getId());
                 dfsVoomaOnboardingKYRepository.save(dfsVoomaMerchantDocumentsEntity);
 

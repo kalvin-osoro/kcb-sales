@@ -369,7 +369,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             ArrayNode fileUploads = mapper.createArrayNode();
             for (DFSVoomaOnboardingKYCentity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
                 ObjectNode fileUpload = mapper.createObjectNode();
-                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFilePath());
+                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFileName());
                 fileUploads.add(fileUpload);
             }
             objectNode.put("fileUploads", fileUploads);

@@ -25,4 +25,5 @@ public class DFSVoomaOnboardingKYCentity {
     private DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1;
     private String filePath;
     private Long merchantId;
+    private String fileName;
 }

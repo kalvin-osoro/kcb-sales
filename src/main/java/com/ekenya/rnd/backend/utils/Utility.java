@@ -167,5 +167,10 @@ public class Utility {
         }
         return dsrName;
     }
+
+    public static String getSubFolder() {
+        String folderName = "salesEffective";
+        return folderName;
+    }
 }
 

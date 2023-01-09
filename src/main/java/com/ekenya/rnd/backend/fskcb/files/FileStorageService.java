@@ -80,7 +80,8 @@ public class FileStorageService implements IFileStorageService {
     @Override
     public Resource loadFileAsResourceByName(String fileName) {
         try {
-            Path filePath = Paths.get(uploadDirectory).resolve(fileName).normalize();
+//            Path filePath = Paths.get(uploadDirectory +"/voomaOnboardingMerchant/").resolve(fileName).normalize();
+            Path filePath = Paths.get(uploadDirectory + "/" + Utility.getSubFolder() + "/").resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
