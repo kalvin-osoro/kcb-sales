@@ -97,14 +97,13 @@ public class SMSService implements ISmsService{
     public boolean sendPasswordEmail(String receiverEmail, String fullName, String password) {
         try {
             String message = "Hello " + fullName + ", your password is " + password + "\nPlease change it immediately after login";
-            JsonObject smsResponse = sendEmail(message, receiverEmail);
-            if (smsResponse == null) {
-                throw new RuntimeException("Unable to send sms");
+            JsonObject emailResponse = sendEmail(message, receiverEmail);
+            if (emailResponse == null) {
+                throw new RuntimeException("Unable to send email");
             }
-            int responseCode = smsResponse.get("ResultCode").getAsInt();
+            int responseCode = emailResponse.get("ResultCode").getAsInt();
             if (responseCode != 0) {
-                log.error("Send CODE failed. => "+smsResponse.get("ResultDesc").getAsString());
-                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+                log.error("Send CODE failed. => "+emailResponse.get("ResultDesc").getAsString());
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE,e.getMessage(),e);
@@ -115,7 +114,7 @@ public class SMSService implements ISmsService{
     private JsonObject sendEmail(String message, String receiverEmail) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false);
             helper.setTo(receiverEmail);
             helper.setSubject("First Time Password");
             helper.setText(message);

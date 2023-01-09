@@ -551,8 +551,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
 
-            DFSVoomaAddAssetRequest dfsVoomaAddAssetRequest =
-                    mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
+            DFSVoomaAddAssetRequest dfsVoomaAddAssetRequest = mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = new DFSVoomaAssetEntity();
             dfsVoomaAssetEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
 //            dfsVoomaAssetEntity.setAssetCondition(dfsVoomaAddAssetRequest.getAssetCondition());
@@ -663,8 +662,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             if (model == null) {
                 return null;
             }
-            DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity =
-                    dfsVoomaCustomerVisitRepository.findById(model.getVisitId()).orElse(null);
+            DFSVoomaCustomerVisitEntity dfsVoomaCustomerVisitEntity = dfsVoomaCustomerVisitRepository.findById(model.getVisitId()).orElse(null);
 
             //  //region,branch,dsrName,customerName,visitDate,latitude,longitude
             ObjectMapper mapper = new ObjectMapper();
@@ -1214,13 +1212,10 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
 
-
     public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
         Map<String, Object> resp = new LinkedHashMap<>();
         List<Map<String, Object>> data = new ArrayList<>();
-        customerDetails.getMerchantKYCList().stream()
-                .map(x -> new File(x.getFilePath()).getName())
-                .forEach(x -> resp.put(x.split("_")[0], x));
+        customerDetails.getMerchantKYCList().stream().map(x -> new File(x.getFilePath()).getName()).forEach(x -> resp.put(x.split("_")[0], x));
         data.add(resp);
         return data;
     }

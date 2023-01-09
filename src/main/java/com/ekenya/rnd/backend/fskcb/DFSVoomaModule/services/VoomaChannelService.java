@@ -248,19 +248,19 @@ public class VoomaChannelService implements IVoomaChannelService {
             String folderName = "voomaAgentOnboarding";
             //upload files to directory and create download url based on environment and save to db
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "frontID_" + agentData.getId() + ".PNG", frontID,folderName);
+                    "frontID_" + agentData.getId() + ".PNG", frontID, folderName);
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + agentData.getId() + ".PNG", backID,folderName);
+                    "backID_" + agentData.getId() + ".PNG", backID, folderName);
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "kraPinCertificate_" + agentData.getId() + ".PNG", kraPinCertificate,folderName);
+                    "kraPinCertificate_" + agentData.getId() + ".PNG", kraPinCertificate, folderName);
             String businessCertificateOfRegistrationPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessCertificateOfRegistration_" + agentData.getId() + ".PNG", businessCertificateOfRegistration,folderName);
+                    "businessCertificateOfRegistration_" + agentData.getId() + ".PNG", businessCertificateOfRegistration, folderName);
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "shopPhoto_" + agentData.getId() + ".PNG", shopPhoto,folderName);
+                    "shopPhoto_" + agentData.getId() + ".PNG", shopPhoto, folderName);
             String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "signatureDoc_" + agentData.getId() + ".PNG", signatureDoc,folderName);
+                    "signatureDoc_" + agentData.getId() + ".PNG", signatureDoc, folderName);
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessPermitDoc_" + agentData.getId() + ".PNG", businessPermitDoc,folderName);
+                    "businessPermitDoc_" + agentData.getId() + ".PNG", businessPermitDoc, folderName);
             //convert path to download by ServletUriComponentsBuilder and save to db
             List<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
@@ -560,7 +560,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/upload/"+folderName+"/")
+                        .path("/upload/" + folderName + "/")
                         .path(filePath)
                         .toUriString();
                 downloadUrlList.add(downloadUrl);
@@ -747,18 +747,16 @@ public class VoomaChannelService implements IVoomaChannelService {
                 addProperty.put("customerNextOfKinName", "Patricia Inzagi");
                 addProperty.put("customerNextOfKinPhoneNumber", "0712345678");
                 addProperty.put("customerNextOfKinEmailAddress", "p.inzagi@gmail.com");
-                addProperty.put("VATNumber","765433");
-                addProperty.put("postalCode","001001");
-                addProperty.put("city","Nairobi");
-                addProperty.put("nearestLandMark","Serena Hotel");
+                addProperty.put("VATNumber", "765433");
+                addProperty.put("postalCode", "001001");
+                addProperty.put("city", "Nairobi");
+                addProperty.put("nearestLandMark", "Serena Hotel");
                 //paymentDetails
-                addProperty.put("settlmentType","OnDemand");
-                addProperty.put("merchantType","GENERAL");
-                addProperty.put("dateRegistered","15-12-2022");
+                addProperty.put("settlmentType", "OnDemand");
+                addProperty.put("merchantType", "GENERAL");
+                addProperty.put("dateRegistered", "15-12-2022");
                 //if not matched return empty object
                 return addProperty;
-
-
 
 
             }
@@ -800,7 +798,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return null;
             }
             List<ObjectNode> list = new ArrayList<>();
@@ -829,7 +827,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return null;
             }
             List<ObjectNode> list = new ArrayList<>();
@@ -854,7 +852,7 @@ public class VoomaChannelService implements IVoomaChannelService {
     @Override
     public boolean attemptUpdateLead(TreasuryUpdateLeadRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return false;
             }
             DFSVoomaLeadEntity dfsVoomaLeadEntity = dfsVoomaLeadRepository.findById(model.getLeadId()).orElse(null);
@@ -876,8 +874,8 @@ public class VoomaChannelService implements IVoomaChannelService {
             }
             ArrayNode arrayNode = new ObjectMapper().createArrayNode();
             ObjectNode objectNode = new ObjectMapper().createObjectNode();
-            short commission=0;
-            short targetAchieved=0;
+            short commission = 0;
+            short targetAchieved = 0;
             objectNode.put("commission", commission);
             //get total number of dsr visits by dsr id
             int totalVisits = dfsVoomaCustomerVisitRepository.countTotalVisits(model.getDsrId());
@@ -895,7 +893,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             }
 //    //get total number of dsr targets achieved by dsr id
 //hard code for now since we dont know metrics to messure target achieved
-            objectNode.put("targetAchieved",targetAchieved);
+            objectNode.put("targetAchieved", targetAchieved);
             arrayNode.add(objectNode);
             return arrayNode;
         } catch (Exception e) {
@@ -903,4 +901,4 @@ public class VoomaChannelService implements IVoomaChannelService {
         }
         return null;
     }
-    }
+}
