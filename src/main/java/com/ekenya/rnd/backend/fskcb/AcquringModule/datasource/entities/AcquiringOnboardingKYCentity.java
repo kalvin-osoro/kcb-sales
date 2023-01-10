@@ -22,4 +22,6 @@ public class AcquiringOnboardingKYCentity {
     @ManyToOne
     private AcquiringOnboardEntity acquiringOnboardEntity;
     private String filePath;
+    private String fileName;
+    private Long merchantId;
 }

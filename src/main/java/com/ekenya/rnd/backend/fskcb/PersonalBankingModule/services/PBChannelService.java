@@ -109,20 +109,19 @@ public class PBChannelService implements IPBChannelService {
             if (savedCustomerDetails == null) throw new RuntimeException("Failed to save customer details");
             //save file
 //            String folderName = "customerDetails" + File.separator + savedCustomerDetails.getId();
-            String folderName = "personalBanking";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
                     "frontID_" + savedCustomerDetails.getId() + ".PNG", frontID);
 
-            String backIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID);
-            String kraPath = fileStorageService.saveFileWithSpecificFileName(
-                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin);
-            String signaturePath = fileStorageService.saveFileWithSpecificFileName(
-                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature);
-            String crbReportPath = fileStorageService.saveFileWithSpecificFileName(
-                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport);
-            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto);
+            String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID,Utility.getSubFolder());
+            String kraPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin,Utility.getSubFolder());
+            String signaturePath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature,Utility.getSubFolder());
+            String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport,Utility.getSubFolder());
+            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto,Utility.getSubFolder());
 
             //save file path
             ArrayList<String> filePathList = new ArrayList<>();
@@ -135,7 +134,7 @@ public class PBChannelService implements IPBChannelService {
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/upload/" + folderName + "/")
+                        .path("/upload/" + Utility.getSubFolder() + "/")
                         .path(filePath)
                         .toUriString();
                 downloadUrlList.add(downloadUrl);
@@ -144,6 +143,7 @@ public class PBChannelService implements IPBChannelService {
                 psBankingOnboardingEntity1.setFilePath(downloadUrl);
                 psBankingOnboardingEntity1.setPsBankingOnboardingEntity(savedCustomerDetails);
                 psBankingOnboardingEntity1.setPersonId(savedCustomerDetails.getId());
+                psBankingOnboardingEntity1.setFileName(filePath);
                 psBankingOnboardingFileRepository.save(psBankingOnboardingEntity1);
                 return true;
             }

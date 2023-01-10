@@ -3,10 +3,8 @@ package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingVisitEntity;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
-import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyById;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaFeedBackEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -23,6 +21,7 @@ import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSApproveMe
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +38,7 @@ public class PBPortalService implements IPBPortalService {
     private final PSBankingLeadRepository psBankingLeadRepository;
 
     private final IDSRTeamsRepository dsrTeamsRepository;
+    private  final PSBankingOnboardingFileRepository psBankingOnboardingFileRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private  final PSBankingFeedBackRepository psBankingFeedBackRepository;
     private final PSBankingTargetRepository psBankingTargetRepository;
@@ -548,6 +548,44 @@ public class PBPortalService implements IPBPortalService {
         }
 
         return false;
+    }
+
+    @Override
+    public Object getCustomerById(AgencyById model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            PSBankingOnboardingEntity agencyOnboardingEntity = psBankingOnboardingRepository.findById(model.getAgentId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", agencyOnboardingEntity.getId());
+            objectNode.put("phoneNumber", agencyOnboardingEntity.getCustomerPhone());
+            objectNode.put("surname", agencyOnboardingEntity.getSurname());
+            objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
+            objectNode.put("customerName", agencyOnboardingEntity.getCustomerName());
+            objectNode.put("email", agencyOnboardingEntity.getCustomerEmail());
+            objectNode.put("gender", agencyOnboardingEntity.getGender());
+            objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+            objectNode.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+            objectNode.put("idNumber", agencyOnboardingEntity.getCustomerIdNumber());
+            objectNode.put("region", agencyOnboardingEntity.getRegion());
+            objectNode.put("region", agencyOnboardingEntity.getRegion());
+
+
+            List<PSBankingOnboardingFileEntity> dfsVoomaFileUploadEntities = psBankingOnboardingFileRepository.findCustomerById(model.getAgentId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (PSBankingOnboardingFileEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFileName());
+                fileUploads.add(fileUpload);
+            }
+            objectNode.put("fileUploads", fileUploads);
+            return objectNode;
+        } catch (Exception e) {
+            log.error("An error have occured,please try again later");
+        }
+        return null;
     }
 }
 

@@ -1,11 +1,13 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyById;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services.IPBPortalService;
 import com.ekenya.rnd.backend.fskcb.files.IFileStorageService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,5 +70,27 @@ public class PBOnboardingVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
+    }
+    @PostMapping("/personal-get-customer-by-id")
+    public ResponseEntity<?> getAgentById(@RequestBody AgencyById model) {
+        Object merchant = pbService.getCustomerById(model);
+        boolean success = merchant != null;
+
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("customer").add(objectMapper.valueToTree(merchant));
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
     }
 }

@@ -529,12 +529,6 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaContactDetailsEntity.setMerchantId(merchantDetails1.getId());
                 dfsVoomaContactDetailsRepository.save(dfsVoomaContactDetailsEntity);
             }
-            //upload documents
-//            String folderName = "voomaOnboardingMerchant";
-//            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                    .path("/downloadFile/")
-//                    .path(folderName)
-//                    .toUriString();
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "vooma_merchant_frontID_" + merchantDetails1.getId() + ".PNG", frontID, Utility.getSubFolder());
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
@@ -664,21 +658,18 @@ public class VoomaChannelService implements IVoomaChannelService {
                 dfsVoomaAgentContactDetailsRepository.save(dfsVoomaContactDetailsEntity);
             }
 
-            String folderName = "voomaAgentOnboarding";
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "frontID_" + agentOnboardV1.getId() + ".PNG", frontID, folderName);
+                    "frontID_" + agentOnboardV1.getId() + ".PNG", frontID, Utility.getSubFolder());
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + agentOnboardV1.getId() + ".PNG", backID, folderName);
+                    "backID_" + agentOnboardV1.getId() + ".PNG", backID, Utility.getSubFolder());
             String kraPinCertificatePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "kraPinCertificate_" + agentOnboardV1.getId() + ".PNG", kraPinCertificate, folderName);
+                    "kraPinCertificate_" + agentOnboardV1.getId() + ".PNG", kraPinCertificate, Utility.getSubFolder());
             String businessCertificateOfRegistrationPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessCertificateOfRegistration_" + agentOnboardV1.getId() + ".PNG", businessCertificateOfRegistration, folderName);
+                    "businessCertificateOfRegistration_" + agentOnboardV1.getId() + ".PNG", businessCertificateOfRegistration, Utility.getSubFolder());
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "shopPhoto_" + agentOnboardV1.getId() + ".PNG", shopPhoto, folderName);
-//            String signatureDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-//                 "signatureDoc_" + agentOnboardV1.getId() + ".PNG", signatureDoc,folderName);
+                    "shopPhoto_" + agentOnboardV1.getId() + ".PNG", shopPhoto, Utility.getSubFolder());
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "businessPermitDoc_" + agentOnboardV1.getId() + ".PNG", businessPermitDoc, folderName);
+                    "businessPermitDoc_" + agentOnboardV1.getId() + ".PNG", businessPermitDoc, Utility.getSubFolder());
             //save file paths to db
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
@@ -688,23 +679,21 @@ public class VoomaChannelService implements IVoomaChannelService {
             filePathList.add(shopPhotoPath);
 //            filePathList.add(signatureDocPath);
             filePathList.add(businessPermitDocPath);
-            filePathList.forEach(filePath -> {
-                DFSVoomaAgentOnboardingKYCEntity agentKYC = new DFSVoomaAgentOnboardingKYCEntity();
-                agentKYC.setFilePath(filePath);
-                agentKYC.setDfsVoomaAgentOnboardV1(agentOnboardV1);
-                dfsVoomaAgentOnboardingKYCRepository.save(agentKYC);
-            });
-            List<String> filePathList1 = new ArrayList<>();
-            //save files
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/" + Utility.getSubFolder() + "/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+                DFSVoomaAgentOnboardingKYCEntity dfsVoomaAgentOnboardingKYCEntity = new DFSVoomaAgentOnboardingKYCEntity();
+                dfsVoomaAgentOnboardingKYCEntity.setFilePath(downloadUrl);
+                dfsVoomaAgentOnboardingKYCEntity.setDfsVoomaAgentOnboardV1(agentOnboardV1);
+                dfsVoomaAgentOnboardingKYCEntity.setFileName(filePath);
+                dfsVoomaAgentOnboardingKYCRepository.save(dfsVoomaAgentOnboardingKYCEntity);
 
-            filePathList1 = fileStorageService.saveMultipleFileWithSpecificFileName("Signature_" + agentOnboardV1.getId(), signatureDoc);
-            //save file paths to db
-            filePathList1.forEach(filePath -> {
-                DFSVoomaAgentOnboardingKYCEntity signatureFiles = new DFSVoomaAgentOnboardingKYCEntity();
-                signatureFiles.setDfsVoomaAgentOnboardV1(agentOnboardV1);
-                signatureFiles.setFilePath(filePath);
-                dfsVoomaAgentOnboardingKYCRepository.save(signatureFiles);
-            });
+            }
             return true;
         } catch (Exception e) {
             log.error("Error occurred while Onboarding Agent", e);

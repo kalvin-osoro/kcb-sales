@@ -32,6 +32,7 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -448,19 +449,27 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 acquiringPrincipalEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);
                 acquiringPrincipalRepository.save(acquiringPrincipalEntity);
             }
-            //allow several signatures to be uploaded to uploadDir
             List<String> filePathList = new ArrayList<>();
-            //
-            //save files
 
             filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("SignatoriesSignatures_", signatureDoc);
-            //save file paths to db
-            filePathList.forEach(filePath -> {
-                AcquiringOnboardingKYCentity signatureFilesEntity = new AcquiringOnboardingKYCentity();
-                signatureFilesEntity.setAcquiringOnboardEntity(acquiringOnboard);
-                signatureFilesEntity.setFilePath(filePath);
-                acquiringOnboardingKYCRepository.save(signatureFilesEntity);
-            });
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/"+Utility.getSubFolder()+"/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+                AcquiringOnboardingKYCentity acquiringSignatoryEntity = new AcquiringOnboardingKYCentity();
+                acquiringSignatoryEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);
+                acquiringSignatoryEntity.setFilePath(downloadUrl);
+                acquiringSignatoryEntity.setFileName(filePath);
+                acquiringSignatoryEntity.setMerchantId(acquiringOnboard.getId());
+                acquiringOnboardingKYCRepository.save(acquiringSignatoryEntity);
+
+            }
+
+
             return true;
 
         } catch (Exception e) {

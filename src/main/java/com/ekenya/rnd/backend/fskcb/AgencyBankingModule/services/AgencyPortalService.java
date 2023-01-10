@@ -9,9 +9,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.helper.AgentExcelHelper;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgentExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -49,6 +47,7 @@ public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
+    private final AgencyOnboardingKYCRepository agencyOnboardingKYCRepository;
     @Autowired
     ObjectMapper mapper;
     private final FileStorageService fileStorageService;
@@ -625,6 +624,54 @@ public class AgencyPortalService implements IAgencyPortalService {
             return node;
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    @Override
+    public Object getAgentById(AgencyById model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findById(model.getAgentId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", agencyOnboardingEntity.getId());
+            objectNode.put("businessName", agencyOnboardingEntity.getBusinessName());
+//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
+            objectNode.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+            objectNode.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
+            objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
+            objectNode.put("remarks", agencyOnboardingEntity.getRemarks());
+            objectNode.put("branchName", agencyOnboardingEntity.getBranch());
+            objectNode.put("accountName", agencyOnboardingEntity.getAgentName());
+            objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+            objectNode.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+            ObjectNode cordinates = mapper.createObjectNode();
+            cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+            cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+            objectNode.set("cordinates", cordinates);
+            ObjectNode businessDetails = mapper.createObjectNode();
+            businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
+            businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
+            businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
+            businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
+            businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
+            businessDetails.put("city", agencyOnboardingEntity.getTown());
+            objectNode.set("businessDetails", businessDetails);
+
+            List<AgencyOnboardingKYCEntity> dfsVoomaFileUploadEntities = agencyOnboardingKYCRepository.findByAgentId(model.getAgentId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AgencyOnboardingKYCEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFilename());
+                fileUploads.add(fileUpload);
+            }
+            objectNode.put("fileUploads", fileUploads);
+            return objectNode;
+        } catch (Exception e) {
+            log.error("An error have occured,please try again later");
         }
         return null;
     }

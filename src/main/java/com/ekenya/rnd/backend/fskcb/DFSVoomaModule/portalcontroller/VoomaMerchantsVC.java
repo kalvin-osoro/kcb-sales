@@ -93,27 +93,27 @@ public class VoomaMerchantsVC {
 //        }
 //    }
 
-    @GetMapping("fileupload/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        System.out.println("filename " + filename);
-        Resource file = fileStorageService.load(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
-    }
-
-    @GetMapping("fileupload2/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
-        System.out.println("filename " + filename);
-        Resource file = fileStorageService.load(filename);
-        MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
-                .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
-                .body(file);
-    }
+//    @GetMapping("fileupload/{filename:.+}")
+//    @ResponseBody
+//    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+//        System.out.println("filename " + filename);
+//        Resource file = fileStorageService.load(filename);
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+//                .body(file);
+//    }
+//
+//    @GetMapping("fileupload2/{filename:.+}")
+//    @ResponseBody
+//    public ResponseEntity<Resource> getFile2(@PathVariable String filename) {
+//        System.out.println("filename " + filename);
+//        Resource file = fileStorageService.load(filename);
+//        MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+//                .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
+//                .body(file);
+//    }
 
     @GetMapping("/dwldFile")
     public ResponseEntity<Resource> getFileByName(@RequestParam (value="fileName")String fileName)

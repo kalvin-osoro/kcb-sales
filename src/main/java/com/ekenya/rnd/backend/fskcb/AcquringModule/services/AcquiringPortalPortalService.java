@@ -9,6 +9,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCu
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardingKYCentity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaOnboardRepository;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -61,6 +62,8 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final AcquiringQuestionerResponseRepository acquiringQuestionerResponseRepository;
     private final IAcquiringLeadsRepository acquiringLeadsRepository;
+
+    private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
 
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
 
@@ -534,7 +537,16 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             ObjectNode businessDetails = mapper.createObjectNode();
             businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
             businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
+
             asset.set("businessDetails", businessDetails);
+            List<AcquiringOnboardingKYCentity> dfsVoomaFileUploadEntities = acquiringOnboardingKYCRepository.findByMerchantId(acquiringMerchantDetailsRequest.getMerchantId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AcquiringOnboardingKYCentity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFileName());
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
             return asset;
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);

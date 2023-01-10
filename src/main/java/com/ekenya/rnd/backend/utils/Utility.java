@@ -42,12 +42,7 @@ public class Utility {
     }
 
 
-//    public static String generateUniqueNoByDate(){
-//        SimpleDateFormat formatter1 = new SimpleDateFormat ("ddMMyy");
-//        String unique = formatter1.format(new java.util.Date())	+
-//                RandomStringUtils.random(10, false, true);
-//        return unique;
-//    }
+
 
     public static String generateUniqueNoByDate() {
         SimpleDateFormat formatter1 = new SimpleDateFormat("ddMMyy");
@@ -106,8 +101,7 @@ public class Utility {
     }
 
     public static String generatePIN() {
-        //generate 4 digit random number
-        Random rand = new Random();//instance of random class
+        Random rand = new Random();
         int randInt = rand.nextInt(10000);
         String password = String.format("%04d", randInt);
         return password;
@@ -123,11 +117,7 @@ public class Utility {
         String password = RandomStringUtils.random(8, true, true);
         return password;
     }
-    //generateSubDirectory("onboard");
-//    public static String generateSubDirectory(String directory) {
-//        String subDirectory = FileStorageService.uploadDirectory + "/" + RandomStringUtils.random(10, true, true);
-//        return subDirectory;
-//    }
+
 
     public static String getFileExtension(String originalFilename) {
         String extension = "";
@@ -156,7 +146,6 @@ public class Utility {
         return password;
     }
 
-    //get DsrName from dsrId from DSRAccount entity
     public static String getDsrNameFromDsrId(Long dsrId) {
         String dsrName = "";
         Optional<DSRAccountEntity> dsrAccount = dsrAccountsRepository.findById(dsrId);

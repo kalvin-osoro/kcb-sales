@@ -25,4 +25,5 @@ public class PSBankingOnboardingFileEntity {
     private PSBankingOnboardingEntity psBankingOnboardingEntity;
     private String filePath;
     private Long personId;
+    private String fileName;
 }

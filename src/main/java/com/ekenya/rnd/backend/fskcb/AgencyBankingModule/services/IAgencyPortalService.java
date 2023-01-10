@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.Agen
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaMerchantDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -59,4 +60,6 @@ public interface IAgencyPortalService {
     Object getAssetById(AssetByIdRequest model);
 
     ObjectNode attemptImportAgents(MultipartFile file);
+
+    Object getAgentById(AgencyById model);
 }

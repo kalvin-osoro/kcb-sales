@@ -2,7 +2,9 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyById;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaMerchantDetailsRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -113,5 +115,28 @@ public class AgencyOnboardingVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
+    }
+
+    @PostMapping("/agency-get-agent-by-id")
+    public ResponseEntity<?> getAgentById(@RequestBody AgencyById model) {
+        Object merchant = agencyPortalService.getAgentById(model);
+        boolean success = merchant != null;
+
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("agent").add(objectMapper.valueToTree(merchant));
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
     }
 }

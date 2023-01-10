@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyById;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -59,4 +60,6 @@ public interface IPBPortalService {
     boolean assignTargetToTeam(TeamTAssignTargetRequest model);
 
     Object getTargetById(VoomaTargetByIdRequest model);
+
+    Object getCustomerById(AgencyById model);
 }

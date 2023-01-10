@@ -25,4 +25,5 @@ public class AgencyOnboardingKYCEntity {
     private AgencyOnboardingEntity agencyOnboardingEntity;
     private String filPath;
     private  Long agentId;
+    private String filename;
 }
