@@ -374,25 +374,26 @@ public class CBChannelService implements ICBChannelService {
             ArrayNode arrayNode = new ObjectMapper().createArrayNode();
             ObjectNode objectNode = new ObjectMapper().createObjectNode();
             short commission=0;
-            short targetAchieved=0;
+            short targetVolumes=0;
+            short volumesDone=0;
             objectNode.put("commission", commission);
-            //get total number of dsr visits by dsr id
             int totalVisits = cbCustomerVisitRepository.countTotalVisits(model.getDsrId());
             objectNode.put("customer-visits", totalVisits);
-            //if null hard code visits for now
             if (totalVisits == 0) {
                 objectNode.put("customer-visits", 0);
             }
-            //get total number of dsr assigned leads by dsr id
             int totalAssignedLeads = cbLeadsRepository.countTotalAssignedLeads(model.getDsrId());
             objectNode.put("assigned-leads", totalAssignedLeads);
-            //if null hard code assigned leads for now
             if (totalAssignedLeads == 0) {
                 objectNode.put("assigned-leads", 0);
             }
-//    //get total number of dsr targets achieved by dsr id
-//hard code for now since we dont know metrics to messure target achieved
-            objectNode.put("targetAchieved",targetAchieved);
+            objectNode.put("targetVolumes",targetVolumes);
+            objectNode.put("actualVolumes",volumesDone);
+            if (targetVolumes==0){
+                objectNode.put("percentage",0);
+            }else {
+                objectNode.put("percentage", (volumesDone/targetVolumes)*100);
+            }
             arrayNode.add(objectNode);
             return arrayNode;
         } catch (Exception e) {
