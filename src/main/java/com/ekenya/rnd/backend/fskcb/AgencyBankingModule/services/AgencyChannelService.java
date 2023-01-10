@@ -240,25 +240,25 @@ public class AgencyChannelService implements IAgencyChannelService {
 
             //upload documents
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "frontID_" + agentInfo.getId() + ".PNG", frontID,Utility.getSubFolder() );
+                    "agency_frontID_" + agentInfo.getId() + ".PNG", frontID,Utility.getSubFolder() );
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + agentInfo.getId() + ".PNG", backID,Utility.getSubFolder() );
+                    "agency_backID_" + agentInfo.getId() + ".PNG", backID,Utility.getSubFolder() );
 
 
             String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct,Utility.getSubFolder() );
+                    "agency_certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct,Utility.getSubFolder() );
 
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto,Utility.getSubFolder() );
+                    "agency_shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto,Utility.getSubFolder() );
             String financialStatementPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "financialStatement_" + agentInfo.getId() + ".PNG", financialStatement,Utility.getSubFolder() );
+                    "agency_financialStatement_" + agentInfo.getId() + ".PNG", financialStatement,Utility.getSubFolder() );
             String cvPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "cv_" + agentInfo.getId() + ".PNG", cv,Utility.getSubFolder() );
+                    "agency_cv_" + agentInfo.getId() + ".PNG", cv,Utility.getSubFolder() );
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto ,Utility.getSubFolder());
+                    "agency_customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto ,Utility.getSubFolder());
             String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport,Utility.getSubFolder() );
+                    "agency_crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport,Utility.getSubFolder() );
             //check if all the documents were uploaded successfully if not throw an exception
             if (frontIDPath == null || backIDPath == null || certificateOFGoodConductPath == null
                     || shopPhotoPath == null || financialStatementPath == null || cvPath == null

@@ -110,18 +110,18 @@ public class PBChannelService implements IPBChannelService {
             //save file
 //            String folderName = "customerDetails" + File.separator + savedCustomerDetails.getId();
             String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "frontID_" + savedCustomerDetails.getId() + ".PNG", frontID);
+                    "personal_frontID_" + savedCustomerDetails.getId() + ".PNG", frontID);
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "backID_" + savedCustomerDetails.getId() + ".PNG", backID,Utility.getSubFolder());
+                    "personal_backID_" + savedCustomerDetails.getId() + ".PNG", backID,Utility.getSubFolder());
             String kraPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "kra_" + savedCustomerDetails.getId() + ".PNG", kraPin,Utility.getSubFolder());
+                    "personal_kra_" + savedCustomerDetails.getId() + ".PNG", kraPin,Utility.getSubFolder());
             String signaturePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "signature_" + savedCustomerDetails.getId() + ".PNG", signature,Utility.getSubFolder());
+                    "personal_signature_" + savedCustomerDetails.getId() + ".PNG", signature,Utility.getSubFolder());
             String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport,Utility.getSubFolder());
+                    "personal_crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport,Utility.getSubFolder());
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto,Utility.getSubFolder());
+                    "personal_customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto,Utility.getSubFolder());
 
             //save file path
             ArrayList<String> filePathList = new ArrayList<>();
