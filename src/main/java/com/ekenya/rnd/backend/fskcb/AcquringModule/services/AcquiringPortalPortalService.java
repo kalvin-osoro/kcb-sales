@@ -200,27 +200,22 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringAssetEntity acquiringAssetEntity : acquiringAssetRepository.findAll()) {
-
+            for (AcquiringAssetEntity dfsVoomaOnboardEntity : acquiringAssetRepository.findAll()) {
                 ObjectNode asset = mapper.createObjectNode();
-                asset.put("id", acquiringAssetEntity.getId());
-                asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
-                asset.put("sno", acquiringAssetEntity.getSerialNumber());
-                ArrayNode images = mapper.createArrayNode();
-
-
-                asset.put("images", images);
-
-
-                //
+                asset.put("id", dfsVoomaOnboardEntity.getId());
+                asset.put("condition", dfsVoomaOnboardEntity.getAssetCondition().toString());
+                asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
+                asset.put("createdOn", dfsVoomaOnboardEntity.getSerialNumber());
+                asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+                asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
+                asset.put("location", dfsVoomaOnboardEntity.getLocation());
+                asset.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
+                asset.put("status", dfsVoomaOnboardEntity.getStatus().toString());
                 list.add(asset);
             }
-
-
             return list;
-
         } catch (Exception e) {
-            log.error("Error occurred while fetching all assets", e);
+            log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
     }
