@@ -94,17 +94,7 @@ public class FileStorageService implements IFileStorageService {
     }
 
 
-//    @Override
-//    public List<String> multipleFilesWithDifferentParams(MultipartFile file1, MultipartFile file2, MultipartFile file3) {
-//        try {
-//            saveFileWithSpecificFileName("file1.PNG", file1);
-//            saveFileWithSpecificFileName("file2.PNG", file2);
-//            saveFileWithSpecificFileName("file3.PNG", file3);
-//        } catch (Exception e) {
-//            log.info("Error in method " + e.getMessage());
-//        }
-//        return null;
-//    }
+
 
     @Override
     public String saveFileWithSpecificFileName(String fileName, MultipartFile file) {
@@ -170,6 +160,40 @@ public class FileStorageService implements IFileStorageService {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
     }
+
+    @Override
+    public List<String> saveMultipleFileWithSpecificFileNameV(String module, MultipartFile[] files, String folderName) {
+        List<String> listFilePath = new ArrayList<>();
+        try {
+            Arrays.stream(files).forEach(file -> {
+                String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+                String fileName = module.concat(Utility.generateUniqueNoByDate()).
+                        concat(".").concat(fileExtension);
+                byte[] bytes = new byte[0];
+                Path path = null;
+                try {
+                    bytes = file.getBytes();
+                    Path subDirectory = Paths.get(uploadDirectory + "/" + folderName);
+                    if (!Files.exists(subDirectory)) {
+                        Files.createDirectories(subDirectory);
+                    }
+                    path = Files.write(Paths.get(subDirectory + "/" + fileName), bytes);
+                } catch (IOException e) {
+                    log.info("Error is ");
+                }
+                String filePath = path.toString();
+                listFilePath.add(filePath);
+//                log.info("Path is " + filePath);
+
+                });
+                return listFilePath;
+            } catch (Exception e) {
+                log.info("Could not store the file. Error in saveFileWithSpecificFileName: "
+                        + e.getMessage());
+                return listFilePath;
+
+            }
+        }
 
     //save file
     public void save(MultipartFile file) {

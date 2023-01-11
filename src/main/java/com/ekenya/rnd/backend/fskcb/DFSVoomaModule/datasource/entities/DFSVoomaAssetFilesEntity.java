@@ -19,6 +19,7 @@ public class DFSVoomaAssetFilesEntity {
     private  Long id;
     @ManyToOne
     private DFSVoomaAssetEntity dfsVoomaAssetEntity;
-    @Column(name="file_path")
     private String filePath;
+    private String fileName;
+    private Long assetId;
 }

@@ -451,7 +451,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             }
             List<String> filePathList = new ArrayList<>();
 
-            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("SignatoriesSignatures_", signatureDoc);
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("Signature_" , signatureDoc,Utility.getSubFolder());
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()

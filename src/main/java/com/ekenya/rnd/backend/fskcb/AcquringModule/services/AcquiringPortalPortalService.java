@@ -156,10 +156,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                     mapper.readValue(assetDetails, AcquiringAddAssetRequest.class);
             AcquiringAssetEntity acquiringAssetEntity = new AcquiringAssetEntity();
             acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
-            acquiringAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(acquiringAssetEntity);
-            String subFolder = "acquiring-assets";
-
             List<String> filePathList = new ArrayList<>();
             //save files
 
@@ -193,13 +190,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("id", acquiringAssetEntity.getId());
                 asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
                 asset.put("sno", acquiringAssetEntity.getSerialNumber());
-                //asset.put("type",acquiringAssetEntity.getAssetType());
-                //
                 ArrayNode images = mapper.createArrayNode();
-
-                //"http://10.20.2.12:8484/"
-
-                // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
 
 
                 asset.put("images", images);
@@ -543,7 +534,8 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             ArrayNode fileUploads = mapper.createArrayNode();
             for (AcquiringOnboardingKYCentity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
                 ObjectNode fileUpload = mapper.createObjectNode();
-                fileUpload.put("fileName", dfsVoomaFileUploadEntity.getFileName());
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("\\\\");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
                 fileUploads.add(fileUpload);
             }
             asset.put("fileUploads", fileUploads);

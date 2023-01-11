@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.util.*;
@@ -558,21 +559,28 @@ public class VoomaPortalService implements IVoomaPortalService {
             dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
-            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
+//            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
-            String subFolder = "vooma-assets";
 
             List<String> filePathList = new ArrayList<>();
-            //save files
 
-            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
-            //save file paths to db
-            filePathList.forEach(filePath -> {
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("voomaAsset_", assetFiles);
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/"+Utility.getSubFolder()+"/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
                 DFSVoomaAssetFilesEntity dfsVoomaAssetFilesEntity = new DFSVoomaAssetFilesEntity();
-                dfsVoomaAssetFilesEntity.setDfsVoomaAssetEntity(savedAsset);
-                dfsVoomaAssetFilesEntity.setFilePath(filePath);
+                dfsVoomaAssetFilesEntity.setDfsVoomaAssetEntity(dfsVoomaAssetEntity);
+                dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
+                dfsVoomaAssetFilesEntity.setFileName(filePath);
+                dfsVoomaAssetFilesEntity.setAssetId(savedAsset.getId());
                 dfsVoomaAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
-            });
+
+            }
             return true;
 
 
