@@ -10,6 +10,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgentExcelImportR
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -505,34 +507,47 @@ public class AgencyPortalService implements IAgencyPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
 
-            AcquiringAddAssetRequest acquiringAddAssetRequest =
-                    mapper.readValue(assetDetails, AcquiringAddAssetRequest.class);
-            AgencyAssetEntity acquiringAssetEntity = new AgencyAssetEntity();
-            acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
-            acquiringAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
-            AgencyAssetEntity savedAsset = agencyAssetRepository.save(acquiringAssetEntity);
+            DFSVoomaAddAssetRequest dfsVoomaAddAssetRequest = mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
+            AgencyAssetEntity dfsVoomaAssetEntity = new AgencyAssetEntity();
+            dfsVoomaAssetEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+//            dfsVoomaAssetEntity.setAssetCondition(dfsVoomaAddAssetRequest.getAssetCondition());
+            dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+//            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
+            AgencyAssetEntity savedAsset = agencyAssetRepository.save(dfsVoomaAssetEntity);
 
             List<String> filePathList = new ArrayList<>();
-            //save files
 
-            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
-            //save file paths to db
-            filePathList.forEach(filePath -> {
-                AgencyAssetFilesEntity assetFilesEntity = new AgencyAssetFilesEntity();
-                assetFilesEntity.setAgencyAssetEntity(savedAsset);
-                assetFilesEntity.setFilePath(filePath);
-                agencyAssetFilesRepository.save(assetFilesEntity);
-            });
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("AgencyAsset_" , assetFiles,Utility.getSubFolder());
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/"+Utility.getSubFolder()+"/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);;
+                //save to db
+                AgencyAssetFilesEntity dfsVoomaAssetFilesEntity = new AgencyAssetFilesEntity();
+                dfsVoomaAssetFilesEntity.setAgencyAssetEntity(dfsVoomaAssetEntity);
+                dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
+                dfsVoomaAssetFilesEntity.setFileName(filePath);
+                dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
+                agencyAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
+
+            }
             return true;
 
+
         } catch (JsonMappingException e) {
-            //return ResponseEntity.badRequest().body("Invalid asset details");
+            throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        return false;
     }
+
 
     @Override
     public List<ObjectNode> getAllAssets() {

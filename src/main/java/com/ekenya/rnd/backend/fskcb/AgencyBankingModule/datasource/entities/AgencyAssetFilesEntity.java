@@ -22,4 +22,6 @@ public class AgencyAssetFilesEntity {
     private AgencyAssetEntity agencyAssetEntity;
     @Column(name="file_path")
     private String filePath;
+    private String fileName;
+    private Long idAsset;
 }

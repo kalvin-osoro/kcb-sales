@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AssetCondition;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.VisitsReport;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.AssetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.utils.Status;
@@ -31,20 +32,27 @@ public class AgencyAssetEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String serialNumber;
-    private Long agentId;
-    private Date dateAssigned;
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
-    private Status status= Status.ACTIVE;
-    @Column(name = "assetCondition")
-    private AssetCondition assetCondition;
-    private Date lastServiceDate;
-    private String longitude;
-    private Long customerId;
-    private String latitude;
+ private String serialNumber;
+ private Long agentId;
+ private Date dateAssigned;
+ @Column(name="status")
+ @Enumerated(EnumType.STRING)
+ private Status status= Status.ACTIVE;
+ private AssetCondition assetCondition=AssetCondition.WORKING;
+ private Date lastServiceDate;
+ private String deviceId;
+ private String location;
+ private String longitude;
+ private String latitude;
+ @Enumerated(EnumType.STRING)
+ private AssetType assetType;
+ private String assetNumber;
+ private Date createdOn;
+ private Long dsrId;
+ private Long merchantName;
+ private String visitDate;
+ private boolean assigned=false;
  @ManyToOne
  private AgencyOnboardingEntity agencyOnboardingEntity;
- private boolean assigned=false;
 
 }
