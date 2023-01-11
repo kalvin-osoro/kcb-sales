@@ -598,34 +598,22 @@ public class VoomaPortalService implements IVoomaPortalService {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (DFSVoomaAssetEntity dfsVoomaAssetEntity : dfsVoomaAssetRepository.findAll()) {
-
+            for (DFSVoomaAssetEntity dfsVoomaOnboardEntity : dfsVoomaAssetRepository.findAll()) {
                 ObjectNode asset = mapper.createObjectNode();
-                asset.put("id", dfsVoomaAssetEntity.getId());
-                asset.put("condition", dfsVoomaAssetEntity.getAssetCondition().toString());
-                asset.put("sno", dfsVoomaAssetEntity.getSerialNumber());
-                asset.put("lastServiceDate", dfsVoomaAssetEntity.getLastServiceDate().getTime());
-                asset.put("assigned", dfsVoomaAssetEntity.isAssigned());
-                asset.put("deviceId", dfsVoomaAssetEntity.getDeviceId());
-                asset.put("assetType", dfsVoomaAssetEntity.getAssetType().ordinal());
-                //
-                ArrayNode images = mapper.createArrayNode();
-
-
-
-
-                asset.put("images", images);
-
-
-                //
+                asset.put("id", dfsVoomaOnboardEntity.getId());
+                asset.put("condition", dfsVoomaOnboardEntity.getAssetCondition().toString());
+                asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
+                asset.put("createdOn", dfsVoomaOnboardEntity.getSerialNumber());
+                asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+                asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
+                asset.put("location", dfsVoomaOnboardEntity.getLocation());
+                asset.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
+                asset.put("status", dfsVoomaOnboardEntity.getStatus().toString());
                 list.add(asset);
             }
-
-
             return list;
-
         } catch (Exception e) {
-            log.error("Error occurred while fetching all assets", e);
+            log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
     }
