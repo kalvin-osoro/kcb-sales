@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
@@ -33,7 +34,6 @@ public interface IAcquiringPortalService {
       //get all assets
       List<ObjectNode> getAllAssets();
 
-      ObjectNode getAssetById(Long id);
 
       boolean deleteAssetById(Long id);
 
@@ -78,4 +78,6 @@ public interface IAcquiringPortalService {
     List<ObjectNode> loadAllApprovedMerchants();
 
     boolean rejectMerchantOnboarding(AcquiringApproveMerchant model);
+
+    Object getAssetById(AssetByIdRequest model);
 }

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "acquiring_asset_files")
+@Table(name = "dfs_vooma_asset_files")
 
 public class DFSVoomaAssetFilesEntity {
     @Id
@@ -21,5 +21,5 @@ public class DFSVoomaAssetFilesEntity {
     private DFSVoomaAssetEntity dfsVoomaAssetEntity;
     private String filePath;
     private String fileName;
-    private Long assetId;
+    private Long idAsset;
 }

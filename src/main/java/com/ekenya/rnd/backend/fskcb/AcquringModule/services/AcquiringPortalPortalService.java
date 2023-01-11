@@ -7,11 +7,11 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardEntity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardingKYCentity;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaOnboardRepository;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,27 +153,42 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             }
             ObjectMapper mapper = new ObjectMapper();
 
-            AcquiringAddAssetRequest acquiringAddAssetRequest =
-                    mapper.readValue(assetDetails, AcquiringAddAssetRequest.class);
-            AcquiringAssetEntity acquiringAssetEntity = new AcquiringAssetEntity();
-            acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
-            AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(acquiringAssetEntity);
-            List<String> filePathList = new ArrayList<>();
-            //save files
+            DFSVoomaAddAssetRequest dfsVoomaAddAssetRequest = mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
+            AcquiringAssetEntity dfsVoomaAssetEntity = new AcquiringAssetEntity();
+            dfsVoomaAssetEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+//            dfsVoomaAssetEntity.setAssetCondition(dfsVoomaAddAssetRequest.getAssetCondition());
+            dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+//            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
+            AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(dfsVoomaAssetEntity);
 
-            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("Asset_", assetFiles);
-            //save file paths to db
-            filePathList.forEach(filePath -> {
-                AcquiringAssetFilesEntity assetFilesEntity = new AcquiringAssetFilesEntity();
-                assetFilesEntity.setAcquiringAssetEntity(savedAsset);
-                assetFilesEntity.setFilePath(filePath);
-                acquiringAssetFileRepository.save(assetFilesEntity);
-            });
+            List<String> filePathList = new ArrayList<>();
+
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("AcquiringAsset" , assetFiles,Utility.getSubFolder());
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/"+Utility.getSubFolder()+"/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);;
+                //save to db
+                AcquiringAssetFilesEntity dfsVoomaAssetFilesEntity = new AcquiringAssetFilesEntity();
+                dfsVoomaAssetFilesEntity.setAcquiringAssetEntity(dfsVoomaAssetEntity);
+                dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
+                dfsVoomaAssetFilesEntity.setFileName(filePath);
+                dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
+                acquiringAssetFileRepository.save(dfsVoomaAssetFilesEntity);
+
+            }
             return true;
 
         } catch (JsonMappingException e) {
             //return ResponseEntity.badRequest().body("Invalid asset details");
         } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -209,32 +225,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
         return null;
     }
 
-    @Override
-    public ObjectNode getAssetById(Long id) {
-        try {
-            AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(id).get();
 
-            //display download path for files
-            List<AcquiringAssetFilesEntity> acquiringAssetFilesEntities = acquiringAssetEntity.getAssetFiles();
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode asset = mapper.createObjectNode();
-            asset.put("id", acquiringAssetEntity.getId());
-            asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
-            asset.put("sno", acquiringAssetEntity.getSerialNumber());
-            //asset.put("type",acquiringAssetEntity.getAssetType());
-            //
-            ArrayNode images = mapper.createArrayNode();
-            acquiringAssetFilesEntities.forEach(acquiringAssetFilesEntity -> {
-                images.add(acquiringAssetFilesEntity.getFilePath());
-            });
-            asset.put("images", images);
-
-
-        } catch (Exception e) {
-            log.error("Error occurred while fetching asset by id", e);
-        }
-        return null;
-    }
 
     @Override
     public boolean deleteAssetById(Long id) {
@@ -787,6 +778,42 @@ try {
             log.error("Error occurred while reject merchant onboarding", e);
         }
         return false;
+    }
+
+    @Override
+    public Object getAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            //get merchant by id
+            AcquiringAssetEntity acquiringOnboardEntity = acquiringAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+            asset.put("createdOn", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<AcquiringAssetFilesEntity> dfsVoomaFileUploadEntities = acquiringAssetFileRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AcquiringAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("\\\\");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
     }
 
 

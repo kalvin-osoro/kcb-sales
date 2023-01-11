@@ -39,15 +39,16 @@ public class DFSVoomaAssetEntity {
     private AssetCondition assetCondition=AssetCondition.WORKING;
     private Date lastServiceDate;
     private String deviceId;
+    private String location;
     private String longitude;
     private String latitude;
     @Enumerated(EnumType.STRING)
     private AssetType assetType;
     private String assetNumber;
     private Date createdOn;
-    @Embedded
-    private VisitsReport visitsReport;
-    private String images;
+    private Long dsrId;
+    private Long merchantName;
+    private String visitDate;
     private boolean assigned=false;
     //relationship of Asset to agent and merchant
   @ManyToOne

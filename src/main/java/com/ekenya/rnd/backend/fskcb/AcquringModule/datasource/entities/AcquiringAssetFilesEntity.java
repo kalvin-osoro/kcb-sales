@@ -18,6 +18,7 @@ public class AcquiringAssetFilesEntity {
     private  Long id;
     @ManyToOne
     private AcquiringAssetEntity acquiringAssetEntity;
-    @Column(name="file_path")
     private String filePath;
+    private String fileName;
+    private Long idAsset;
 }

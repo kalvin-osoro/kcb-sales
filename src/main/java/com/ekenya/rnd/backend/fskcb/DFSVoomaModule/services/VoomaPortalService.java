@@ -564,20 +564,20 @@ public class VoomaPortalService implements IVoomaPortalService {
 
             List<String> filePathList = new ArrayList<>();
 
-            filePathList = fileStorageService.saveMultipleFileWithSpecificFileName("voomaAsset_", assetFiles);
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("VoomaAsset" , assetFiles,Utility.getSubFolder());
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                         .path("/upload/"+Utility.getSubFolder()+"/")
                         .path(filePath)
                         .toUriString();
-                downloadUrlList.add(downloadUrl);
+                downloadUrlList.add(downloadUrl);;
                 //save to db
                 DFSVoomaAssetFilesEntity dfsVoomaAssetFilesEntity = new DFSVoomaAssetFilesEntity();
                 dfsVoomaAssetFilesEntity.setDfsVoomaAssetEntity(dfsVoomaAssetEntity);
                 dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
                 dfsVoomaAssetFilesEntity.setFileName(filePath);
-                dfsVoomaAssetFilesEntity.setAssetId(savedAsset.getId());
+                dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
                 dfsVoomaAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
 
             }
@@ -608,13 +608,10 @@ public class VoomaPortalService implements IVoomaPortalService {
                 asset.put("assigned", dfsVoomaAssetEntity.isAssigned());
                 asset.put("deviceId", dfsVoomaAssetEntity.getDeviceId());
                 asset.put("assetType", dfsVoomaAssetEntity.getAssetType().ordinal());
-                //asset.put("type",acquiringAssetEntity.getAssetType());
                 //
                 ArrayNode images = mapper.createArrayNode();
 
-                //"http://10.20.2.12:8484/"
 
-                // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
 
 
                 asset.put("images", images);
@@ -1211,7 +1208,21 @@ public class VoomaPortalService implements IVoomaPortalService {
             asset.put("id", acquiringOnboardEntity.getId());
             asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
             asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
-
+            asset.put("createdOn", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<DFSVoomaAssetFilesEntity> dfsVoomaFileUploadEntities = dfsVoomaAssetFilesRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (DFSVoomaAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("\\\\");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
             return asset;
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);

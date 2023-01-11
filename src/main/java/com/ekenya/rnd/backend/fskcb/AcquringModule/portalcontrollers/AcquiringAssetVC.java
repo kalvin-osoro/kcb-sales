@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -106,28 +107,22 @@ public class AcquiringAssetVC {
     //    "photos":[{"name":"","link":"/jjj.png"}]
     //}
     @PostMapping("/acquiring-get-asset-by-id")
-    public ResponseEntity<?> getAssetById(@RequestParam long id) {
-        LinkedHashMap<String,Object> responseParams = new LinkedHashMap<>();
-        LinkedHashMap<String,Object> responseObject = new LinkedHashMap<>();
+    public ResponseEntity<?> getDFSVoomaById(@RequestBody AssetByIdRequest model  ) {
+        Object asset = acquiringService.getAssetById(model);
+        boolean success = asset  != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putPOJO("assets",asset);
+//          node.put("id",0);
 
-        try {
-            ObjectNode acquiringAssetResponse = acquiringService.getAssetById(id);
-            responseParams.put("asset",acquiringAssetResponse);
-            responseObject.put("status",1);
-            responseObject.put("message","Asset fetched successfully");
-            responseObject.put("data",responseParams);
-            return BaseAppResponse.build(responseObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-            responseObject.put("status",0);
-            responseObject.put("message","Asset fetching failed");
-            responseObject.put("data",responseParams);
-            return BaseAppResponse.build(responseObject);
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
-
-
-
-
-
     }
 }

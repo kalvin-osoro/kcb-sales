@@ -511,7 +511,6 @@ public class AgencyPortalService implements IAgencyPortalService {
             acquiringAssetEntity.setSerialNumber(acquiringAddAssetRequest.getSerialNumber());
             acquiringAssetEntity.setAssetCondition(acquiringAddAssetRequest.getAssetCondition());
             AgencyAssetEntity savedAsset = agencyAssetRepository.save(acquiringAssetEntity);
-            String subFolder = "agency-assets";
 
             List<String> filePathList = new ArrayList<>();
             //save files

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.AssetType;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
@@ -27,18 +28,26 @@ public class AcquiringAssetEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String serialNumber;
-    private Long agentId;
-    private Date dateAssigned;
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
-    private Status status= Status.ACTIVE;
-    @Column(name = "assetCondition")
-    private AssetCondition assetCondition;
-    private Date lastServiceDate;
-    private String longitude;
-    private String latitude;
-    private boolean assigned=false;
+ private String serialNumber;
+ private Long agentId;
+ private Date dateAssigned;
+ @Column(name="status")
+ @Enumerated(EnumType.STRING)
+ private Status status= Status.ACTIVE;
+ private AssetCondition assetCondition=AssetCondition.WORKING;
+ private Date lastServiceDate;
+ private String deviceId;
+ private String location;
+ private String longitude;
+ private String latitude;
+ @Enumerated(EnumType.STRING)
+ private AssetType assetType;
+ private String assetNumber;
+ private Date createdOn;
+ private Long dsrId;
+ private String visitDate;
+ private String merchantName;
+ private boolean assigned=false;
 
     @OneToMany(mappedBy = "acquiringAssetEntity", cascade = CascadeType.ALL, orphanRemoval = true)
      private List<AcquiringAssetFilesEntity> assetFiles;
