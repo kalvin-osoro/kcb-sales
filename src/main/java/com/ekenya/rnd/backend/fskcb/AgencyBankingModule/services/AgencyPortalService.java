@@ -554,33 +554,22 @@ public class AgencyPortalService implements IAgencyPortalService {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AgencyAssetEntity acquiringAssetEntity : agencyAssetRepository.findAll()) {
-
+            for (AgencyAssetEntity dfsVoomaOnboardEntity : agencyAssetRepository.findAll()) {
                 ObjectNode asset = mapper.createObjectNode();
-                asset.put("id", acquiringAssetEntity.getId());
-                asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
-                asset.put("sno", acquiringAssetEntity.getSerialNumber());
-                //asset.put("type",acquiringAssetEntity.getAssetType());
-                //
-                ArrayNode images = mapper.createArrayNode();
-
-                //"http://10.20.2.12:8484/"
-
-                // "/files/acquiring/asset-23-324767234.png;/files/acquiring/asset-23-3247672ewqee8.png"
-
-
-                asset.put("images", images);
-
-
-                //
+                asset.put("id", dfsVoomaOnboardEntity.getId());
+                asset.put("condition", dfsVoomaOnboardEntity.getAssetCondition().toString());
+                asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
+                asset.put("createdOn", dfsVoomaOnboardEntity.getSerialNumber());
+                asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+                asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
+                asset.put("location", dfsVoomaOnboardEntity.getLocation());
+                asset.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
+                asset.put("status", dfsVoomaOnboardEntity.getStatus().toString());
                 list.add(asset);
             }
-
-
             return list;
-
         } catch (Exception e) {
-            log.error("Error occurred while fetching all assets", e);
+            log.error("Error occurred while getting onboarding summary", e);
         }
         return null;
     }
@@ -589,7 +578,7 @@ public class AgencyPortalService implements IAgencyPortalService {
     public Object getAssetById(AssetByIdRequest model) {
         try {
             if (model.getAssetId() == null) {
-                log.error("Merchant id is null");
+                log.error("Asset id is null");
                 return null;
             }
             //get merchant by id
@@ -599,7 +588,21 @@ public class AgencyPortalService implements IAgencyPortalService {
             asset.put("id", acquiringOnboardEntity.getId());
             asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
             asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
-
+            asset.put("createdOn", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<AgencyAssetFilesEntity> dfsVoomaFileUploadEntities = agencyAssetFilesRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AgencyAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("\\\\");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
             return asset;
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);

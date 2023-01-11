@@ -22,8 +22,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE acquiring_asset SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
 @Entity
 @Table(name = "agency_asset")
 @DynamicInsert

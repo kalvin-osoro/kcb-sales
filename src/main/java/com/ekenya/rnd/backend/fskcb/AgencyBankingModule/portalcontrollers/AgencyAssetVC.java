@@ -48,24 +48,21 @@ public class AgencyAssetVC {
 
     @PostMapping(value = "/agency-get-all-assets")
     public ResponseEntity<?> getAllAsset() {
-
-        List<?> acquiringAssetResponse = agencyService.getAllAssets();
-
-
-        boolean success = acquiringAssetResponse == null;//
+        List<?> assets = agencyService.getAllAssets();
+        boolean success = assets != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if (success) {
+        if(success){
             //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)assets);
 
-            return ResponseEntity.ok(new BaseAppResponse(1, acquiringAssetResponse, "Request Processed Successfully"));
-        } else {
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 
