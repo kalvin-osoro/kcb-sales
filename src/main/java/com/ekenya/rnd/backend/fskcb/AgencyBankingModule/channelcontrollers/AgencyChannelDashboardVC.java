@@ -1,9 +1,13 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencyChannelService;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1/ch")
 public class AgencyChannelDashboardVC {
 
+    @Autowired
+    private AgencyChannelService agencyChannelService;
+
 
     @PostMapping("/agency-summary")
-    public ResponseEntity<?> getSummary() {
+    public ResponseEntity<?> getSummary(@RequestBody DSRSummaryRequest model) {
 
         //Resp =>
         //{
@@ -23,15 +30,15 @@ public class AgencyChannelDashboardVC {
         //    "customer-visits":9 //Total assigned customer visits
         //}
 
-        //TODO; INSIDE SERVICE
-        boolean success = false;//acquiringService..(model);
+        ArrayNode dsrSummary= agencyChannelService.getDSRSummary(model);
+        boolean success = dsrSummary!=null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
+            node.put("dsrSummary",dsrSummary);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

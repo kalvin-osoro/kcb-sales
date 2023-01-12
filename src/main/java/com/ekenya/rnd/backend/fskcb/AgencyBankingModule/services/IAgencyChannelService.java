@@ -1,8 +1,10 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,4 +36,6 @@ public interface IAgencyChannelService {
     List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model);
 
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
+
+    ArrayNode getDSRSummary(DSRSummaryRequest model);
 }

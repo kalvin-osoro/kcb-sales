@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
@@ -13,6 +14,7 @@ import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -489,7 +491,45 @@ public class AgencyChannelService implements IAgencyChannelService {
         return false;
     }
 
-}
+    @Override
+    public ArrayNode getDSRSummary(DSRSummaryRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            ArrayNode arrayNode = new ObjectMapper().createArrayNode();
+            ObjectNode objectNode = new ObjectMapper().createObjectNode();
+            short commission=0;
+            short targetAchieved=0;
+            objectNode.put("commission", commission);
+            //get total number of dsr visits by dsr id
+            int totalVisits = agencyBankingVisitRepository.countTotalVisits(model.getDsrId());
+            objectNode.put("customer-visits", totalVisits);
+            //if null hard code visits for now
+            if (totalVisits == 0) {
+                objectNode.put("customer-visits", 0);
+            }
+            //get total number of dsr assigned leads by dsr id
+            int totalAssignedLeads = agencyBankingLeadRepository.countTotalAssignedLeads(model.getDsrId());
+            objectNode.put("assigned-leads", totalAssignedLeads);
+            //if null hard code assigned leads for now
+            if (totalAssignedLeads == 0) {
+                objectNode.put("assigned-leads", 0);
+            }
+//    //get total number of dsr targets achieved by dsr id
+//hard code for now since we dont know metrics to messure target achieved
+            objectNode.put("targetAchieved",targetAchieved);
+            arrayNode.add(objectNode);
+            return arrayNode;
+        } catch (Exception e) {
+            log.error("Error occurred while getting dsr summary", e);
+        }
+        return null;
+    }
+
+    }
+
+
 
 
 

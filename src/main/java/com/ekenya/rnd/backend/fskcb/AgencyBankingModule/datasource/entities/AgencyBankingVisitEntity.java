@@ -28,6 +28,7 @@ public class AgencyBankingVisitEntity {
     private String dsrName;
     private String agentName;
     private String reasonForVisit;
+    private String branch;
     private String visitDate;
     @Enumerated(EnumType.STRING)
     private Status status=Status.ACTIVE;
@@ -39,7 +40,7 @@ public class AgencyBankingVisitEntity {
     private String scheduled;
     private String location;
     private String latitude;
-    private String longititude;
+    private String longitude;
     private String pdqVersionCorrect;
 //    status
     private String chargesUpfront;

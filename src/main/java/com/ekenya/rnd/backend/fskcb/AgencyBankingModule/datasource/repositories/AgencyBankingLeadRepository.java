@@ -21,4 +21,8 @@ public interface AgencyBankingLeadRepository extends JpaRepository<AgencyBanking
 
     @Query(value = "SELECT * FROM dbo_agency_bank_onboarding WHERE isApproved = true", nativeQuery = true)
     Iterable<AgencyOnboardingEntity> findAllByIsApproved();
+
+    @Query(value = "SELECT count(*) FROM agency_leads where assigned = true AND dsrId = ?1", nativeQuery = true)
+    int countTotalAssignedLeads(Long dsrId);
+
 }

@@ -702,6 +702,31 @@ public class AgencyPortalService implements IAgencyPortalService {
             asset.put("agentName", agencyBankingVisitEntity.getAgentName());
             asset.put("visitDate", agencyBankingVisitEntity.getVisitDate());
             asset.put("dsrId", agencyBankingVisitEntity.getDsrId());
+            asset.put("chargesUpfront", agencyBankingVisitEntity.getChargesUpfront());
+            asset.put("maintainsOpenedAcctRecords", agencyBankingVisitEntity.getMaintainsOpenedAcctRecords());
+            asset.put("usesManualReceiptBook", agencyBankingVisitEntity.getUsesManualReceiptBook());
+            asset.put("reconcileFloatAcctStat", agencyBankingVisitEntity.getReconcileFloatAcctStat());
+            asset.put("moreThanXTransactions", agencyBankingVisitEntity.getMoreThanXTransactions());
+            asset.put("branchCollectsRegisters", agencyBankingVisitEntity.getBranchCollectsRegisters());
+            asset.put("tariffPosterWellDisplayed", agencyBankingVisitEntity.getTariffPosterWellDisplayed());
+            asset.put("customersSignRegister", agencyBankingVisitEntity.getCustomersSignRegister());
+            asset.put("registerReflected", agencyBankingVisitEntity.getRegisterReflected());
+            asset.put("outletWellBranded", agencyBankingVisitEntity.getOutletWellBranded());
+            asset.put("registerCompleted", agencyBankingVisitEntity.getRegisterCompleted());
+            asset.put("visitedByStaff", agencyBankingVisitEntity.getVisitedByStaff());
+            asset.put("locatedStrategically", agencyBankingVisitEntity.getLocatedStrategically());
+            asset.put("csLevel", agencyBankingVisitEntity.getCsLevel());
+            asset.put("outletPresentable", agencyBankingVisitEntity.getOutletPresentable());
+            asset.put("hasFloat", agencyBankingVisitEntity.getHasFloat());
+            asset.put("customerInflow", agencyBankingVisitEntity.getCustomerInflow());
+            asset.put("agentTrxInForeignCur", agencyBankingVisitEntity.getAgentTrxInForeignCur());
+            asset.put("comments", agencyBankingVisitEntity.getComments());
+            asset.put("hasMaterials", agencyBankingVisitEntity.getHasMaterials());
+            asset.put("branch", agencyBankingVisitEntity.getBranch());
+
+            asset.put("longitude", agencyBankingVisitEntity.getLongitude());
+            asset.put("latitude", agencyBankingVisitEntity.getLatitude());
+            asset.put("pdqVersionCorrect", agencyBankingVisitEntity.getPdqVersionCorrect());
             List<AgencyBankingVisitFileEntity> dfsVoomaFileUploadEntities = agencyBankingVisitFileRepository.findByIdVisit(model.getVisitId());
             ArrayNode fileUploads = mapper.createArrayNode();
             for (AgencyBankingVisitFileEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
