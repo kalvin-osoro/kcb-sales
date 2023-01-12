@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
@@ -9,7 +8,6 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.helper.AgentExcelHelper;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.AgentExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyRescheduleVisitsRequest;
-import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
@@ -18,7 +16,6 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -35,8 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +42,8 @@ import java.util.Set;
 @Service
 public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
+    private final AgencyBankingVisitFileRepository  agencyBankingVisitFileRepository;
+
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
     private final AgencyOnboardingKYCRepository agencyOnboardingKYCRepository;
@@ -598,7 +595,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             ArrayNode fileUploads = mapper.createArrayNode();
             for (AgencyAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
                 ObjectNode fileUpload = mapper.createObjectNode();
-                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("\\\\");
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("/");
                 fileUpload.put("fileName", fileName[fileName.length - 1]);
                 fileUploads.add(fileUpload);
             }
@@ -687,6 +684,36 @@ public class AgencyPortalService implements IAgencyPortalService {
             return objectNode;
         } catch (Exception e) {
             log.error("An error have occured,please try again later");
+        }
+        return null;
+    }
+
+    @Override
+    public Object getCustomerVisitById(AgencyVisitRequest model) {
+        try {
+            if (model.getVisitId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            AgencyBankingVisitEntity agencyBankingVisitEntity = agencyBankingVisitRepository.findById(model.getVisitId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", agencyBankingVisitEntity.getId());
+            asset.put("agentName", agencyBankingVisitEntity.getAgentName());
+            asset.put("visitDate", agencyBankingVisitEntity.getVisitDate());
+            asset.put("dsrId", agencyBankingVisitEntity.getDsrId());
+            List<AgencyBankingVisitFileEntity> dfsVoomaFileUploadEntities = agencyBankingVisitFileRepository.findByIdVisit(model.getVisitId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AgencyBankingVisitFileEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                fileUpload.put("fileName",dfsVoomaFileUploadEntity.getFileName());
+
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
         }
         return null;
     }

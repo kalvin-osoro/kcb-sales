@@ -799,7 +799,7 @@ try {
             ArrayNode fileUploads = mapper.createArrayNode();
             for (AcquiringAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
                 ObjectNode fileUpload = mapper.createObjectNode();
-                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("\\\\");
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("/");
                 fileUpload.put("fileName", fileName[fileName.length - 1]);
                 fileUploads.add(fileUpload);
             }

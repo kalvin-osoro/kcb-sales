@@ -25,4 +25,6 @@ public class AgencyBankingVisitFileEntity {
     @JoinColumn(name = "visitId")
     private AgencyBankingVisitEntity agencyBankingVisitEntity;
     private String filePath;
+    private String fileName;
+    private Long idVisit;
 }

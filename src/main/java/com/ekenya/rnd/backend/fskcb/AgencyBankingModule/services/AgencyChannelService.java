@@ -382,27 +382,36 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getTerminalId());
           AgencyBankingVisitEntity  visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
 
-            String folderName = "agencyBankingVisit_" + visitInfo.getId();
-            String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto );
-            String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto );
-            String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto );
-            String tariffPhotoPath = fileStorageService.saveFileWithSpecificFileName(
-                    "tariffPhoto_" + visitInfo.getId() + ".PNG", tariffPhoto );
+            String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto,Utility.getSubFolder() );
+            String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto ,Utility.getSubFolder());
+            String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,Utility.getSubFolder() );
+            String tariffPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "tariffPhoto_" + visitInfo.getId() + ".PNG", tariffPhoto,Utility.getSubFolder() );
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(premiseInsidePhotoPath);
             filePathList.add(premiseOutsidePhotoPath);
             filePathList.add(cashRegisterPhotoPath);
             filePathList.add(tariffPhotoPath);
-            filePathList.forEach(filePath -> {
-                AgencyBankingVisitFileEntity visitKYC = new AgencyBankingVisitFileEntity();
-                visitKYC.setFilePath(filePath);
-                visitKYC.setAgencyBankingVisitEntity(visitInfo);
-                agencyBankingVisitFilesRepository.save(visitKYC);
-            });
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/upload/" + Utility.getSubFolder() + "/")
+                        .path(filePath)
+                        .toUriString();
+                downloadUrlList.add(downloadUrl);
+                //save to db
+                AgencyBankingVisitFileEntity agencyBankingVisitFileEntity = new AgencyBankingVisitFileEntity();
+                agencyBankingVisitFileEntity.setFilePath(downloadUrl);
+                agencyBankingVisitFileEntity.setAgencyBankingVisitEntity(visitInfo);
+                agencyBankingVisitFileEntity.setFileName(filePath);
+                agencyBankingVisitFileEntity.setIdVisit(visitInfo.getId());
+                agencyBankingVisitFilesRepository.save(agencyBankingVisitFileEntity);
+
+            }
             return true;
         } catch (Exception e) {
             log.error("Error occurred while scheduling customer visit", e);
