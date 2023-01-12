@@ -528,7 +528,7 @@ try {
     objectNode.put("targetVolumes",targetVolumes);
     objectNode.put("actualVolumes",actualVolume);
     objectNode.put("idleTerminal",idleTerminal);
-
+    arrayNode.add(objectNode);
     return arrayNode;
 } catch (Exception e) {
     log.error("Error occurred while getting dsr summary", e);
