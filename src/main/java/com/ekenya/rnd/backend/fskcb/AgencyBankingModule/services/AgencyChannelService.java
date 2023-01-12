@@ -377,6 +377,8 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyBankingVisitEntity.setAssetNumber(agencyCustomerVisitsRequest.getAssetNumber());
             agencyBankingVisitEntity.setAssetCondition(agencyCustomerVisitsRequest.getAssetCondition());
             agencyBankingVisitEntity.setSerialNumber(agencyCustomerVisitsRequest.getSerialNumber());
+            agencyBankingVisitEntity.setSerialNumber(agencyCustomerVisitsRequest.getLongitude());
+            agencyBankingVisitEntity.setSerialNumber(agencyCustomerVisitsRequest.getLatitude());
             agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getTerminalId());
           AgencyBankingVisitEntity  visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
 

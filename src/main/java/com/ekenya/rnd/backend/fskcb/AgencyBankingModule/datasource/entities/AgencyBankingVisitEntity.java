@@ -38,6 +38,8 @@ public class AgencyBankingVisitEntity {
     //yes or no question
     private String scheduled;
     private String location;
+    private String latitude;
+    private String longititude;
     private String pdqVersionCorrect;
 //    status
     private String chargesUpfront;

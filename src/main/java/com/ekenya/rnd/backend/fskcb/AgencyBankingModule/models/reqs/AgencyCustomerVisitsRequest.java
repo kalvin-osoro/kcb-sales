@@ -32,6 +32,8 @@ public class AgencyCustomerVisitsRequest {
     private String chargesUpfront;
     private String maintainsOpenedAcctRecords;
     private String trained;
+    private String longitude;
+    private String latitude;
     private String usesManualReceiptBook;
     private String reconcileFloatAcctStat;
     private String moreThanXTransactions;
