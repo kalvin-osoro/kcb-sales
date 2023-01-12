@@ -24,7 +24,7 @@ public class TreasuryCallReportEntity {
     private String supplierName;
     private String theirCustomers;
     private String frequency;
-    private String dsrId;
+    private Long dsrId;
     private String  monthlyFx;
     private String currencyOfExpense;
     private String currencyOfRelivable;

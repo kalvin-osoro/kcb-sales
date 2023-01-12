@@ -336,7 +336,9 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             ArrayNode arrayNode = new ObjectMapper().createArrayNode();
             ObjectNode objectNode = new ObjectMapper().createObjectNode();
             short commission=0;
-            short targetAchieved=0;
+            short volumeInFx=0;
+            short margin=0;
+            short revenue=0;
             objectNode.put("commission", commission);
             //get total number of dsr visits by dsr id
             int totalVisits = treasuryCallReportRepository.countTotalVisits(model.getDsrId());
@@ -354,7 +356,9 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             }
 //    //get total number of dsr targets achieved by dsr id
 //hard code for now since we dont know metrics to messure target achieved
-            objectNode.put("targetAchieved",targetAchieved);
+            objectNode.put("volumeInFx",volumeInFx);
+            objectNode.put("revenue",revenue);
+            objectNode.put("margins",margin);
             arrayNode.add(objectNode);
             return arrayNode;
         } catch (Exception e) {
