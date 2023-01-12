@@ -507,7 +507,9 @@ try {
     ArrayNode arrayNode = new ObjectMapper().createArrayNode();
     ObjectNode objectNode = new ObjectMapper().createObjectNode();
     short commission=0;
-    short targetAchieved=0;
+    short targetVolumes=0;
+    short actualVolume=0;
+    short idleTerminal=0;
     objectNode.put("commission", commission);
     //get total number of dsr visits by dsr id
     int totalVisits = acquiringCustomerVisitRepository.countTotalVisits(model.getDsrId());
@@ -523,10 +525,10 @@ try {
     if (totalAssignedLeads == 0) {
         objectNode.put("assigned-leads", 0);
     }
-//    //get total number of dsr targets achieved by dsr id
-//hard code for now since we dont know metrics to messure target achieved
-    objectNode.put("targetAchieved",targetAchieved);
-    arrayNode.add(objectNode);
+    objectNode.put("targetVolumes",targetVolumes);
+    objectNode.put("actualVolumes",actualVolume);
+    objectNode.put("idleTerminal",idleTerminal);
+
     return arrayNode;
 } catch (Exception e) {
     log.error("Error occurred while getting dsr summary", e);
