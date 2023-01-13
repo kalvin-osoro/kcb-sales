@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface DFSVoomaAssetRepository extends JpaRepository<DFSVoomaAssetEntity, Long> {
@@ -14,4 +15,8 @@ public interface DFSVoomaAssetRepository extends JpaRepository<DFSVoomaAssetEnti
     List<DFSVoomaAssetEntity> findAllByDfsVoomaOnboardingEntityId(Long customerId);
 
     Optional<Object> findBySerialNumber(String serialNumber);
+
+    List<DFSVoomaAssetEntity> findByMerchantAccNo(Integer merchantAccNo);
+    //merchantAccNo
+
 }

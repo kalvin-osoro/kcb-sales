@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
@@ -41,7 +42,7 @@ public interface IAcquiringChannelService {
 
     List<?> getAllCustomerVisitsByDSR(int dsrId);
 
-    boolean assignAssetToMerchant(Long assetId, Long agentId);
+    boolean assignAssetToMerchant(AcquiringAssignAssetRequest model);
 
     List<ObjectNode> getAllAgentsAssets(Long agentId);
 

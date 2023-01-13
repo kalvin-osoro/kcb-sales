@@ -27,7 +27,7 @@ public class AcquiringChannelAssetsVC {
 
     @PostMapping("/acquiring-assign-asset")
     public ResponseEntity<?> assignAssetToMerchant(@RequestBody AcquiringAssignAssetRequest request) {
-        boolean success = acquiringChannelService.assignAssetToMerchant(request.getAssetId(), request.getAgentId());
+        boolean success = acquiringChannelService.assignAssetToMerchant(request);
         //Response
         ObjectMapper objectMapper= new ObjectMapper();
         if(success){

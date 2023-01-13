@@ -523,7 +523,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                         .path("/upload/"+Utility.getSubFolder()+"/")
                         .path(filePath)
                         .toUriString();
-                downloadUrlList.add(downloadUrl);;
+                downloadUrlList.add(downloadUrl);
                 //save to db
                 AgencyAssetFilesEntity dfsVoomaAssetFilesEntity = new AgencyAssetFilesEntity();
                 dfsVoomaAssetFilesEntity.setAgencyAssetEntity(dfsVoomaAssetEntity);
@@ -723,10 +723,16 @@ public class AgencyPortalService implements IAgencyPortalService {
             asset.put("comments", agencyBankingVisitEntity.getComments());
             asset.put("hasMaterials", agencyBankingVisitEntity.getHasMaterials());
             asset.put("branch", agencyBankingVisitEntity.getBranch());
-
             asset.put("longitude", agencyBankingVisitEntity.getLongitude());
             asset.put("latitude", agencyBankingVisitEntity.getLatitude());
             asset.put("pdqVersionCorrect", agencyBankingVisitEntity.getPdqVersionCorrect());
+            asset.put("cashDeposit", agencyBankingVisitEntity.getCashDeposit());
+            asset.put("isAgentActive", agencyBankingVisitEntity.getIsAgentActive());
+            asset.put("shylocking", agencyBankingVisitEntity.getShylockingActivities());
+            asset.put("chargeCustomerUpfront", agencyBankingVisitEntity.getChargeCustomerUpfront());
+            asset.put("countyLicence", agencyBankingVisitEntity.getCountyLicence());
+            asset.put("transactionOnRegisterReflectOnT24", agencyBankingVisitEntity.getTransactionOnRegisterReflectOnT24());
+            asset.put("coreBusinessViable", agencyBankingVisitEntity.getCoreBusinessViable());
             List<AgencyBankingVisitFileEntity> dfsVoomaFileUploadEntities = agencyBankingVisitFileRepository.findByIdVisit(model.getVisitId());
             ArrayNode fileUploads = mapper.createArrayNode();
             for (AgencyBankingVisitFileEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {

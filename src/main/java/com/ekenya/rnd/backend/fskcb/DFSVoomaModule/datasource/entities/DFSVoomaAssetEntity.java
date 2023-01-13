@@ -44,11 +44,14 @@ public class DFSVoomaAssetEntity {
     private String latitude;
     @Enumerated(EnumType.STRING)
     private AssetType assetType;
-    private String assetNumber;
+    private Long assetNumber;
     private Date createdOn;
     private Long dsrId;
     private Long merchantName;
+    private Integer merchantAccNo;
     private String visitDate;
+    private String terminalId;
+
     private boolean assigned=false;
     //relationship of Asset to agent and merchant
   @ManyToOne

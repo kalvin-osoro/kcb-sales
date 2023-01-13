@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Onboardin
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
@@ -42,6 +43,7 @@ public class VoomaChannelService implements IVoomaChannelService {
 
     private final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     private final DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
+    private final DFSVoomaAssetFilesRepository dfsVoomaAssetFilesRepository;
     private final DFSVoomaAgentOnboardV1Repository dfsVoomaAgentOnboardV1Repository;
     private final DFSVoomaAgentOwnerDetailsRepository dfsVoomaAgentOwnerDetailsRepository;
     private final DFSVoomaAgentContactDetailsRepository dfsVoomaAgentContactDetailsRepository;
@@ -295,12 +297,14 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardingEntity = dfsVoomaMerchantOnboardV1Repository.findById(model.getCustomerId()).orElse(null);
+            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardingEntity = (DFSVoomaMerchantOnboardV1) dfsVoomaMerchantOnboardV1Repository.findByAccountNumber((model.getAccountNumber())).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
             if (dfsVoomaMerchantOnboardingEntity == null || dfsVoomaAssetEntity == null) {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(dfsVoomaMerchantOnboardingEntity);
+            dfsVoomaAssetEntity.setMerchantAccNo(model.getAccountNumber());
+            dfsVoomaAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssigned(true);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
@@ -316,7 +320,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardingEntity = dfsVoomaAgentOnboardV1Repository.findById(model.getCustomerId()).orElse(null);
+            DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardingEntity = (DFSVoomaAgentOnboardV1) dfsVoomaAgentOnboardV1Repository.findByAccountNumber(Long.valueOf(model.getAccountNumber())).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
             if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null) {
                 return false;
@@ -338,13 +342,14 @@ public class VoomaChannelService implements IVoomaChannelService {
                 return null;
             }
             //get all assets for merchant
-            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findAllByDfsVoomaOnboardingEntityId(model.getCustomerId());
+            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findByMerchantAccNo(model.getMerchantAccNo());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             dfsVoomaAssetEntityList.forEach(dfsVoomaAssetEntity -> {
                 ObjectNode objectNode = objectMapper.createObjectNode();
                 objectNode.put("assetId", dfsVoomaAssetEntity.getId());
                 objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
+                objectNode.put("assetNumber",dfsVoomaAssetEntity.getAssetNumber());
                 objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().toString());
                 objectNode.put("totalTransaction", totalTransaction);
                 objectNodeList.add(objectNode);
@@ -363,11 +368,12 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaAssetEntity dfsVoomaAssetEntity = dfsVoomaAssetRepository.findById(model.getAssetId()).orElse(null);
+            DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber(model.getSerialNumber()).orElse(null);
             if (dfsVoomaAssetEntity == null) {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(null);
+            dfsVoomaAssetEntity.setMerchantAccNo(null);
             dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(null);
             dfsVoomaAssetEntity.setAssigned(false);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
@@ -891,4 +897,45 @@ public class VoomaChannelService implements IVoomaChannelService {
         }
         return null;
     }
+
+    @Override
+    public Object getAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            //get merchant by id
+            DFSVoomaAssetEntity acquiringOnboardEntity = dfsVoomaAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dateIssued", acquiringOnboardEntity.getDateAssigned().getTime());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("terminalId", acquiringOnboardEntity.getTerminalId());
+            asset.put("assetNumber", acquiringOnboardEntity.getAssetNumber());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("totalTransaction", 0);
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<DFSVoomaAssetFilesEntity> dfsVoomaFileUploadEntities = dfsVoomaAssetFilesRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (DFSVoomaAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("/");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+
+
 }

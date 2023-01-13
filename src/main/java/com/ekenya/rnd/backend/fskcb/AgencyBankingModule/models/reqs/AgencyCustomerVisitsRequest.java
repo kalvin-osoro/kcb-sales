@@ -56,5 +56,12 @@ public class AgencyCustomerVisitsRequest {
     private String assetNumber;
     private String serialNumber;
     private String terminalId;
+    private String cashDeposit;
+    private String coreBusinessViable;
+    private String isAgentActive;
+    private String shylockingActivities;
+    private String chargeCustomerUpfront;
+    private String transactionOnRegisterReflectOnT24;
+    private String countyLicence;
     private AssetCondition assetCondition;
 }

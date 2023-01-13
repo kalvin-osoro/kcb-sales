@@ -30,27 +30,25 @@ public class AcquiringAssetEntity {
     private Long id;
  private String serialNumber;
  private Long agentId;
- private Date dateAssigned;
- @Column(name="status")
+ private String dateAssigned;
  @Enumerated(EnumType.STRING)
  private Status status= Status.ACTIVE;
  private AssetCondition assetCondition=AssetCondition.WORKING;
- private Date lastServiceDate;
+ private String lastServiceDate;
  private String deviceId;
  private String location;
  private String longitude;
  private String latitude;
  @Enumerated(EnumType.STRING)
  private AssetType assetType;
- private String assetNumber;
+ private Long assetNumber;
  private Date createdOn;
  private Long dsrId;
  private String visitDate;
  private String merchantName;
+ private String merchantAccNo;
  private boolean assigned=false;
 
-    @OneToMany(mappedBy = "acquiringAssetEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-     private List<AcquiringAssetFilesEntity> assetFiles;
 
 
 }

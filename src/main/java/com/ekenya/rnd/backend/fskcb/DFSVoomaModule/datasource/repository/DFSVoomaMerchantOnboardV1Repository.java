@@ -7,11 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DFSVoomaMerchantOnboardV1Repository extends JpaRepository<DFSVoomaMerchantOnboardV1, Long> {
     @Query(value = "SELECT * FROM dbo_dfs_vooma_merchant_onboard WHERE isApproved = true", nativeQuery = true)
     Iterable<DFSVoomaMerchantOnboardV1> findAllByIsApproved();
 
-//    List<DFSVoomaMerchantOnboardV1> findAllByOnboardingStatus(OnboardingStatus onboardingStatus);
+    Optional<Object> findByAccountNumber(Integer accountNumber);
+//    @Query(value = "SELECT * FROM dbo_dfs_vooma_merchant_onboard where accountNumber  = ?1", nativeQuery = true)
+
 
 }

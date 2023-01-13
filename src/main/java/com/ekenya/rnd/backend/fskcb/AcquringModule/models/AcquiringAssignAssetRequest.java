@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AcquiringAssignAssetRequest {
 
+    private String merchantAccNo;
     private Long assetId;
-    private Long agentId;
 }

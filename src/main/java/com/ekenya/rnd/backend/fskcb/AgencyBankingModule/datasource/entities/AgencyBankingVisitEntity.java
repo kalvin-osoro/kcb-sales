@@ -52,8 +52,9 @@ public class AgencyBankingVisitEntity {
    private String  branchCollectsRegisters;
    private String tariffPosterWellDisplayed;
    private String  customersSignRegister;
+
    private String  registerReflected;
-   private String      outletWellBranded;
+   private String  outletWellBranded;
    private String registerCompleted;
    private String    visitedByStaff;
    private String locatedStrategically;
@@ -66,6 +67,14 @@ public class AgencyBankingVisitEntity {
    private String  hasMaterials;
    private String assetNumber;
    private String serialNumber;
+   private String cashDeposit;
+   private String coreBusinessViable;
+   private String isAgentActive;
+   private String shylockingActivities;
+   private String chargeCustomerUpfront;
+   private String transactionOnRegisterReflectOnT24;
+   private String countyLicence;
+
    private String terminalId;
    @Enumerated(EnumType.STRING)
    private AssetCondition assetCondition;

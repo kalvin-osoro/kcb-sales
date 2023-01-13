@@ -31,7 +31,7 @@ public class DFSVoomaMerchantOnboardV1Request {
     //settlement Details
     private String branchName;
     private String accountName;
-    private String accountNumber;
+    private Integer accountNumber;
     private String date;
     //pysical address
     private String postalAddress;

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
@@ -83,4 +84,6 @@ public interface IVoomaChannelService {
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 
     ArrayNode getDSRSummary(DSRSummaryRequest model);
+
+    Object getAssetById(AssetByIdRequest model);
 }

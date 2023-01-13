@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
@@ -360,17 +361,19 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
     @Override
-    public boolean assignAssetToMerchant(Long assetId, Long agentId) {
-        //assign asset to merchant
+    public boolean assignAssetToMerchant(AcquiringAssignAssetRequest model) {
         try {
-            if (assetId == null || agentId == null) {
+            if (model==null) {
                 return false;
             }
-            AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(assetId).get();
-            if (acquiringAssetEntity == null) {
+            AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(model.getAssetId()).get();
+            if (acquiringAssetEntity==null) {
                 return false;
             }
-            acquiringAssetEntity.setAgentId(agentId);
+            acquiringAssetEntity.setMerchantAccNo(model.getMerchantAccNo());
+
+            acquiringAssetEntity.setAssigned(true);
+//            acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetRepository.save(acquiringAssetEntity);
             return true;
         } catch (Exception e) {

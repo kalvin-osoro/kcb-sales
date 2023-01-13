@@ -19,7 +19,7 @@ public class DFSVoomaAddAssetRequest {
     private String serialNumber;
     private AssetCondition assetCondition;
     private AssetType assetType;
-    private String assetNumber;
+    private Long assetNumber;
     private String lastServiceDate;
     private String visitDate;
     private String dsrId;

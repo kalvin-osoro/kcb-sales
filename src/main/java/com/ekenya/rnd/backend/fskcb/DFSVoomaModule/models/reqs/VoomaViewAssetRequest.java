@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerAssetsRequest {
-    private Integer merchantAccNo;
+public class VoomaViewAssetRequest {
+    private Long assetNumber;
 }

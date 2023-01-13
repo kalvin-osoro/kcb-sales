@@ -382,6 +382,13 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyBankingVisitEntity.setSerialNumber(agencyCustomerVisitsRequest.getLongitude());
             agencyBankingVisitEntity.setSerialNumber(agencyCustomerVisitsRequest.getLatitude());
             agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getTerminalId());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getCashDeposit());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getIsAgentActive());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getShylockingActivities());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getChargeCustomerUpfront());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getTransactionOnRegisterReflectOnT24());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getCountyLicence());
+            agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getCoreBusinessViable());
           AgencyBankingVisitEntity  visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
 
             String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
