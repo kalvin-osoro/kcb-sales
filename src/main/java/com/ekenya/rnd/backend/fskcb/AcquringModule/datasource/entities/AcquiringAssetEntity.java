@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.AssetType;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
@@ -30,11 +31,12 @@ public class AcquiringAssetEntity {
     private Long id;
  private String serialNumber;
  private Long agentId;
- private String dateAssigned;
+ private Date dateAssigned;
+ @Column(name="status")
  @Enumerated(EnumType.STRING)
  private Status status= Status.ACTIVE;
  private AssetCondition assetCondition=AssetCondition.WORKING;
- private String lastServiceDate;
+ private Date lastServiceDate;
  private String deviceId;
  private String location;
  private String longitude;
@@ -44,10 +46,15 @@ public class AcquiringAssetEntity {
  private Long assetNumber;
  private Date createdOn;
  private Long dsrId;
+ private Long merchantName;
+ private Integer merchantAccNo;
  private String visitDate;
- private String merchantName;
- private String merchantAccNo;
+ private String terminalId;
+
  private boolean assigned=false;
+ //relationship of Asset to agent and merchant
+ @ManyToOne
+ private AcquiringOnboardEntity acquiringOnboardEntity;
 
 
 

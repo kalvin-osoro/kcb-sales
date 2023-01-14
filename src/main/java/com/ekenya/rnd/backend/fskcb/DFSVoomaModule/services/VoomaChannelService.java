@@ -887,8 +887,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (totalAssignedLeads == 0) {
                 objectNode.put("assigned-leads", 0);
             }
-//    //get total number of dsr targets achieved by dsr id
-//hard code for now since we dont know metrics to messure target achieved
+//    //get total number of dsr targets achieved by dsr
             objectNode.put("targetAchieved", targetAchieved);
             arrayNode.add(objectNode);
             return arrayNode;

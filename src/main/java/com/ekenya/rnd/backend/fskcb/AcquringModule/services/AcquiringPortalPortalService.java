@@ -288,7 +288,9 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             acquiringCustomerVisitEntity.setMerchantName(customerVisitsRequest.getMerchantName());
             acquiringCustomerVisitEntity.setVisitDate(customerVisitsRequest.getVisitDate());
             acquiringCustomerVisitEntity.setReasonForVisit(customerVisitsRequest.getReasonForVisit());
-            acquiringCustomerVisitEntity.setStatus(Status.ACTIVE);
+            acquiringCustomerVisitEntity.setActionPlan(customerVisitsRequest.getActionPlan());
+            acquiringCustomerVisitEntity.setLongitude(customerVisitsRequest.getLongitude());
+            acquiringCustomerVisitEntity.setLatitude(customerVisitsRequest.getLatitude());
             acquiringCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringCustomerVisitEntity.setDsrName(customerVisitsRequest.getDsrName());
             //save

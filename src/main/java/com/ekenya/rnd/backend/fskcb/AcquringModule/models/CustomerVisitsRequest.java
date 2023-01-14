@@ -17,6 +17,9 @@ public class CustomerVisitsRequest {
     private String merchantName;
     private String dsrName;
     private String reasonForVisit;
+    private String actionPlan;
+    private String longitude;
+    private String latitude;
     private String visitDate;
     private Status status;
     private Zone zone;

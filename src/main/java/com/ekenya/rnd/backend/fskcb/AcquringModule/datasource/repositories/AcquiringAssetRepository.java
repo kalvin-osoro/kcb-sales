@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface AcquiringAssetRepository extends JpaRepository<AcquiringAssetEntity, Long> {
     @Query(value = "SELECT * FROM acquiring_asset where created_on >= current_date at time zone 'UTC' - interval '7 days'", nativeQuery = true)
@@ -25,5 +26,9 @@ public interface AcquiringAssetRepository extends JpaRepository<AcquiringAssetEn
 
     @Query(value = "SELECT * FROM acquiring_asset where assetNumber  = ?1", nativeQuery = true)
     AcquiringAssetEntity findByAssetNumber(Long assetNumber);
+
+    Optional<Object> findBySerialNumber(String serialNumber);
+
+    List<AcquiringAssetEntity> findByMerchantAccNo(Integer merchantAccNo);
 }
 

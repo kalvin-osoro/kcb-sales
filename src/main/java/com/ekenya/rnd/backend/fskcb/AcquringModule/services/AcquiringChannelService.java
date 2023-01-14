@@ -6,11 +6,18 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRe
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBRevenueLineEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBRevenueLineRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAssetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAssetFilesEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.CustomerAssetsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAssignAssetRequest;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCollectAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
@@ -49,6 +56,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
     private final AcquiringPrincipalRepository acquiringPrincipalRepository;
+    private final AcquiringAssetFileRepository acquiringAssetFileRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private final CustomerFeedBackRepository customerFeedBackRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
@@ -360,50 +368,6 @@ public class AcquiringChannelService implements IAcquiringChannelService {
         return null;
     }
 
-    @Override
-    public boolean assignAssetToMerchant(AcquiringAssignAssetRequest model) {
-        try {
-            if (model==null) {
-                return false;
-            }
-            AcquiringAssetEntity acquiringAssetEntity = acquiringAssetRepository.findById(model.getAssetId()).get();
-            if (acquiringAssetEntity==null) {
-                return false;
-            }
-            acquiringAssetEntity.setMerchantAccNo(model.getMerchantAccNo());
-
-            acquiringAssetEntity.setAssigned(true);
-//            acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
-            acquiringAssetRepository.save(acquiringAssetEntity);
-            return true;
-        } catch (Exception e) {
-            log.error("Error occurred while assigning asset to merchant", e);
-        }
-        return false;
-    }
-
-    @Override
-    public List<ObjectNode> getAllAgentsAssets(Long agentId) {
-        try {
-            List<ObjectNode> list = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            for (AcquiringAssetEntity acquiringAssetEntity : acquiringAssetRepository.getAllAgentsAssets(agentId)) {
-
-                ObjectNode asset = mapper.createObjectNode();
-                asset.put("id", acquiringAssetEntity.getId());
-                asset.put("SerialNumber", acquiringAssetEntity.getSerialNumber());
-                asset.put("condition", acquiringAssetEntity.getAssetCondition().toString());
-                //hard code total transactions for now
-                asset.put("totalTransactions", totalTransactions);
-                list.add(asset);
-            }
-            return list;
-
-        } catch (Exception e) {
-            log.error("Error occurred while getting all agents assets", e);
-        }
-        return null;
-    }
 
     @Override
     public Object onboardNewMerchant(String merchDetails, MultipartFile[] signatureDoc) {
@@ -565,5 +529,117 @@ try {
         }
         return null;
     }
+
+    @Override
+    public boolean assignAssetToMerchant(VoomaAssignAssetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            AcquiringOnboardEntity acquiringOnboardingEntity = (AcquiringOnboardEntity) acquiringOnboardingsRepository.findByAccountNumber((model.getAccountNumber())).orElse(null);
+            AcquiringAssetEntity acquiringAssetEntity = (AcquiringAssetEntity) acquiringAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
+            if (acquiringOnboardingEntity == null || acquiringAssetEntity == null) {
+                return false;
+            }
+            acquiringAssetEntity.setAcquiringOnboardEntity(acquiringOnboardingEntity);
+            acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
+            acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
+            acquiringAssetEntity.setAssigned(true);
+            acquiringAssetRepository.save(acquiringAssetEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning asset to agent", e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllAgentMerchantAssets(CustomerAssetsRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            //get all assets for merchant
+            List<AcquiringAssetEntity> acquiringAssetEntity = acquiringAssetRepository.findByMerchantAccNo(model.getMerchantAccNo());
+            List<ObjectNode> objectNodeList = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper();
+            acquiringAssetEntity.forEach(acquiringAssetEntity1 -> {
+                ObjectNode objectNode = objectMapper.createObjectNode();
+                objectNode.put("assetId", acquiringAssetEntity1.getId());
+                objectNode.put("serialNumber", acquiringAssetEntity1.getSerialNumber());
+                objectNode.put("assetNumber",acquiringAssetEntity1.getAssetNumber());
+                objectNode.put("assetCondition", acquiringAssetEntity1.getAssetCondition().toString());
+                objectNode.put("totalTransaction", 0);
+                objectNodeList.add(objectNode);
+            });
+
+            return objectNodeList;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all agent merchant assets", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean recollectAsset(VoomaCollectAssetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            AcquiringAssetEntity dfsVoomaAssetEntity = (AcquiringAssetEntity) acquiringAssetRepository.findBySerialNumber(model.getSerialNumber()).orElse(null);
+            if (dfsVoomaAssetEntity == null) {
+                return false;
+            }
+            dfsVoomaAssetEntity.setMerchantAccNo(null);
+            dfsVoomaAssetEntity.setAcquiringOnboardEntity(null);
+            dfsVoomaAssetEntity.setAssigned(false);
+            acquiringAssetRepository.save(dfsVoomaAssetEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while recollecting asset", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            //get merchant by id
+            AcquiringAssetEntity acquiringOnboardEntity = acquiringAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dateIssued", acquiringOnboardEntity.getDateAssigned().getTime());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("terminalId", acquiringOnboardEntity.getTerminalId());
+            asset.put("assetNumber", acquiringOnboardEntity.getAssetNumber());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("totalTransaction", 0);
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<AcquiringAssetFilesEntity> dfsVoomaFileUploadEntities = acquiringAssetFileRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AcquiringAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("/");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+
 }
 

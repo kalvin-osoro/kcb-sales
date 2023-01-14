@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public interface IAcquiringOnboardingsRepository extends JpaRepository<AcquiringOnboardEntity, Long> {
@@ -19,4 +20,6 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
     AcquiringOnboardEntity[] findAllByIsApproved();
     @Query(value = "SELECT * FROM dbo_aqc_onboarding WHERE clientLegalName LIKE %?1% OR businessName LIKE %?1% OR  businessPhoneNumber LIKE %?1%  ", nativeQuery = true)
     AcquiringOnboardEntity[] searchCustomers(String keyword);
+
+    Optional<Object> findByAccountNumber(Integer accountNumber);
 }
