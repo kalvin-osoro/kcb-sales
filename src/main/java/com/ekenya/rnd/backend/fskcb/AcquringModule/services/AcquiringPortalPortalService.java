@@ -76,9 +76,8 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
         try {
             AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getLeadId()).get();
             acquiringLeadEntity.setDsrId(model.getDsrId());
+            acquiringLeadEntity.setPriority(model.getPriority());
             //set start date from input
-            acquiringLeadEntity.setStartDate(model.getStartDate());
-            acquiringLeadEntity.setEndDate(model.getEndDate());
             acquiringLeadEntity.setAssigned(true);
             //save
             acquiringLeadsRepository.save(acquiringLeadEntity);

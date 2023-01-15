@@ -12,15 +12,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CBAssignLeadRequest {
-    private  Integer customerId;
-    private String businessUnit;
-    private String topic;
+//    private  Integer customerId;
+//    private String businessUnit;
+//    private String topic;
     private Priority priority;
     private Long dsrId;
     private Long leadId;
-    private String dsrName;
-    private LeadStatus leadStatus;
-    private boolean assigned=false;
-    private String startDate;
-    private String endDate;
+//    private String dsrName;
+//    private LeadStatus leadStatus;
+//    private boolean assigned=false;
+//    private String startDate;
+//    private String endDate;
 }
