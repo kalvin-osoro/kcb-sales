@@ -20,7 +20,7 @@ public class AcquiringLeadsVC {
     IAcquiringPortalService acquiringService;
 
     //Assign lead to dsr
-    @PostMapping("/acquiring-assign-lead/{leadId}")
+    @PostMapping("/acquiring-assign-lead/")
     public ResponseEntity<?> assignLead(@RequestBody CBAssignLeadRequest model) {
         boolean success = acquiringService.assignLeadToDsr(model);
         //Response
