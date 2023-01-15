@@ -1,7 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
@@ -48,40 +47,46 @@ public class AgencyChannelService implements IAgencyChannelService {
             if (model == null) {
                 return false;
             }
-            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findById(model.getCustomerId()).orElse(null);
-            AgencyAssetEntity agencyAssetEntity = agencyAssetRepository.findById(model.getAssetId()).orElse(null);
-            if (agencyOnboardingEntity == null || agencyAssetEntity == null) {
+            AgencyOnboardingEntity acquiringOnboardingEntity = (AgencyOnboardingEntity) agencyOnboardingRepository.findByAccountNumber((model.getAccountNumber())).orElse(null);
+            AgencyAssetEntity agencyAssetEntity = (AgencyAssetEntity) agencyAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
+            if (acquiringOnboardingEntity == null || agencyAssetEntity == null) {
                 return false;
             }
-            agencyAssetEntity.setAgencyOnboardingEntity(agencyOnboardingEntity);
+            agencyAssetEntity.setAgencyOnboardingEntity(acquiringOnboardingEntity);
+            agencyAssetEntity.setAgentAccNumber(model.getAccountNumber());
+            agencyAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             agencyAssetEntity.setAssigned(true);
             agencyAssetRepository.save(agencyAssetEntity);
             return true;
         } catch (Exception e) {
-            log.error("Error occurred while assigning asset to agent ", e);
+            log.error("Error occurred while assigning asset to agent", e);
         }
         return false;
     }
 
     @Override
-    public List<ObjectNode> getAllAgentAssets(Long agentId) {
+    public List<ObjectNode> getAllAgentAssets(AgencyAgentAssetRequest model) {
         try {
+            if (model == null) {
+                return null;
+            }
             //get all assets for merchant
-            List<AgencyAssetEntity> agencyAssetEntities = agencyAssetRepository.findAllByAgentId(agentId);
+            List<AgencyAssetEntity> acquiringAssetEntity = agencyAssetRepository.findByAgentAccNumber(model.getAgentAccNumber());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
-            agencyAssetEntities.forEach(dfsVoomaAssetEntity -> {
+            acquiringAssetEntity.forEach(acquiringAssetEntity1 -> {
                 ObjectNode objectNode = objectMapper.createObjectNode();
-                objectNode.put("assetId", dfsVoomaAssetEntity.getId());
-                objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
-                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().ordinal());
-                objectNode.put("totalTransaction", totalTransaction);
+                objectNode.put("assetId", acquiringAssetEntity1.getId());
+                objectNode.put("serialNumber", acquiringAssetEntity1.getSerialNumber());
+                objectNode.put("assetNumber",acquiringAssetEntity1.getAssetNumber());
+                objectNode.put("assetCondition", acquiringAssetEntity1.getAssetCondition().toString());
+                objectNode.put("totalTransaction", 0);
                 objectNodeList.add(objectNode);
             });
 
             return objectNodeList;
         } catch (Exception e) {
-            log.error("Error occurred while getting all agent assets ", e);
+            log.error("Error occurred while getting all agent agent assets", e);
         }
         return null;
     }
@@ -92,13 +97,18 @@ public class AgencyChannelService implements IAgencyChannelService {
             if (model == null) {
                 return false;
             }
-            AgencyAssetEntity agencyAssetEntity = agencyAssetRepository.findById(model.getAssetId()).orElse(null);
-            agencyAssetEntity.setAgencyOnboardingEntity(null);
-            agencyAssetEntity.setAssigned(false);
-            agencyAssetRepository.save(agencyAssetEntity);
+            AgencyAssetEntity dfsVoomaAssetEntity = (AgencyAssetEntity) agencyAssetRepository.findBySerialNumber(model.getSerialNumber()).orElse(null);
+            if (dfsVoomaAssetEntity == null) {
+                return false;
+            }
+            dfsVoomaAssetEntity.setAgentAccNumber(null);
+            dfsVoomaAssetEntity.setAgencyOnboardingEntity(null);
+            dfsVoomaAssetEntity.setAssigned(false);
+            agencyAssetRepository.save(dfsVoomaAssetEntity);
             return true;
+
         } catch (Exception e) {
-            log.error("Error occurred while recollecting asset from agent ", e);
+            log.error("Error occurred while recollecting asset", e);
         }
         return false;
     }
@@ -534,7 +544,46 @@ public class AgencyChannelService implements IAgencyChannelService {
         return null;
     }
 
+    @Override
+    public Object getAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            //get merchant by id
+            AgencyAssetEntity acquiringOnboardEntity = agencyAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dateIssued", acquiringOnboardEntity.getDateAssigned().getTime());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("terminalId", acquiringOnboardEntity.getTerminalId());
+            asset.put("assetNumber", acquiringOnboardEntity.getAssetNumber());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("totalTransaction", 0);
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("merchantName", acquiringOnboardEntity.getAgentName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<AgencyAssetFilesEntity> dfsVoomaFileUploadEntities = agencyAssetFilesRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (AgencyAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("/");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
     }
+
+}
 
 
 

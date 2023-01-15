@@ -47,8 +47,11 @@ public class AgencyAssetEntity {
  private Long assetNumber;
  private Date createdOn;
  private Long dsrId;
- private Long merchantName;
+ private Long agentName;
+ private Integer agentAccNumber;
  private String visitDate;
+ private String terminalId;
+
  private boolean assigned=false;
  @ManyToOne
  private AgencyOnboardingEntity agencyOnboardingEntity;

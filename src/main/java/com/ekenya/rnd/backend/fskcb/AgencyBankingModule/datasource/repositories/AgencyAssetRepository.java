@@ -4,9 +4,13 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.Agen
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AgencyAssetRepository extends JpaRepository<AgencyAssetEntity, Long> {
 
-    List<AgencyAssetEntity> findAllByAgentId(Long agentId);
+
+    Optional<Object> findBySerialNumber(String serialNumber);
+
+    List<AgencyAssetEntity> findByAgentAccNumber(Integer agentAccNumber);
 }
 

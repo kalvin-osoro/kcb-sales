@@ -560,7 +560,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
                 asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
                 asset.put("location", dfsVoomaOnboardEntity.getLocation());
-                asset.put("merchantName", dfsVoomaOnboardEntity.getMerchantName());
+                asset.put("agentName", dfsVoomaOnboardEntity.getAgentName());
                 asset.put("status", dfsVoomaOnboardEntity.getStatus().toString());
                 list.add(asset);
             }
@@ -589,7 +589,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             asset.put("dsrId", acquiringOnboardEntity.getDsrId());
             asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
             asset.put("location", acquiringOnboardEntity.getLocation());
-            asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("agentName", acquiringOnboardEntity.getAgentName());
             asset.put("status", acquiringOnboardEntity.getStatus().toString());
             List<AgencyAssetFilesEntity> dfsVoomaFileUploadEntities = agencyAssetFilesRepository.findByIdAsset(model.getAssetId());
             ArrayNode fileUploads = mapper.createArrayNode();

@@ -15,7 +15,7 @@ public interface IAgencyChannelService {
 
     boolean assignAsset(AgencyAssignAssetRequest model);
 
-    List <ObjectNode>getAllAgentAssets(Long agentId);
+    List <ObjectNode>getAllAgentAssets(AgencyAgentAssetRequest model);
 
     boolean recollectAsset(AssetRecollectRequest model);
 
@@ -38,4 +38,6 @@ public interface IAgencyChannelService {
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 
     ArrayNode getDSRSummary(DSRSummaryRequest model);
+
+    Object getAssetById(AssetByIdRequest model);
 }

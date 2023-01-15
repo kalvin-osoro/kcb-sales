@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgencyAssignAssetRequest {
-    private String serialNumber;
-    private Integer accountNumber;
+public class AgencyAgentAssetRequest {
+    private Integer agentAccNumber;
 }

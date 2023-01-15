@@ -25,6 +25,7 @@ public class AgencyOnboardingEntity {
     private String agentName;
     private String agentCode;
     private String region;
+    private Integer accountNumber;
     private String branch;
     private  String agentIdNumber;
     private String agentEmail;
