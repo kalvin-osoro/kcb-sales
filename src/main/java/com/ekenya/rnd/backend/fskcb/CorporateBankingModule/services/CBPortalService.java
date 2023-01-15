@@ -65,9 +65,8 @@ public class CBPortalService implements ICBPortalService {
         try {
             CBLeadEntity cbLeadEntity = cbLeadsRepository.findById(model.getLeadId()).orElse(null);
             cbLeadEntity.setDsrId(model.getDsrId());
+            cbLeadEntity.setPriority(model.getPriority());
             //set start date from input
-            cbLeadEntity.setStartDate(model.getStartDate());
-            cbLeadEntity.setEndDate(model.getEndDate());
             cbLeadEntity.setAssigned(true);
             //save
             cbLeadsRepository.save(cbLeadEntity);
