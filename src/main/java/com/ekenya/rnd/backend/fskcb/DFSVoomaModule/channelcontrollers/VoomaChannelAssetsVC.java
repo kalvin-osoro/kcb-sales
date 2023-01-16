@@ -140,4 +140,61 @@ public class VoomaChannelAssetsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+//    @PostMapping(value = "/vooma-get-all-agent-assets")
+//    public ResponseEntity<?> getAllAgentAssets(@RequestBody CustomerAssetsRequest model) {
+//        List<?> assets = voomaChannelService.getAllAgentAsset(model);
+//        boolean success = assets != null;
+//        //Response
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        if(success){
+//            //Object
+//            ArrayNode node = objectMapper.createArrayNode();
+//            node.addAll((ArrayNode) objectMapper.valueToTree(assets));
+//
+//            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+//        }else{
+//
+//            //Response
+//            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+//        }
+//    }
+
+    @PostMapping("/vooma-recollect-agent-asset")
+    public ResponseEntity<?> recollectAgentAsset(@RequestBody VoomaCollectAssetRequest model) {
+        boolean success = voomaChannelService.recollectAgentAsset(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/vooma-get-agent-asset-by-id")
+    public ResponseEntity<?> viewVoomaAgentAsset(@RequestBody AssetByIdRequest model  ) {
+        Object asset = voomaChannelService.getAgentAssetById(model);
+        boolean success = asset  != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putPOJO("assets",asset);
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 }

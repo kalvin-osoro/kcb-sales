@@ -17,6 +17,8 @@ public interface DFSVoomaAssetRepository extends JpaRepository<DFSVoomaAssetEnti
     Optional<Object> findBySerialNumber(String serialNumber);
 
     List<DFSVoomaAssetEntity> findByMerchantAccNo(Integer merchantAccNo);
+
+//    List<DFSVoomaAssetEntity> findByAgentAccNo(Integer merchantAccNo);
     //merchantAccNo
 
 }

@@ -326,6 +326,8 @@ public class VoomaChannelService implements IVoomaChannelService {
                 return false;
             }
             dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(dfsVoomaAgentOnboardingEntity);
+            dfsVoomaAssetEntity.setAgentAccNumber(model.getAccountNumber());
+            dfsVoomaAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssigned(true);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
@@ -342,7 +344,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 return null;
             }
             //get all assets for merchant
-            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findByMerchantAccNo(model.getMerchantAccNo());
+            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findByMerchantAccNo(model.getAccNo());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             dfsVoomaAssetEntityList.forEach(dfsVoomaAssetEntity -> {
@@ -919,6 +921,95 @@ public class VoomaChannelService implements IVoomaChannelService {
             asset.put("totalTransaction", 0);
             asset.put("location", acquiringOnboardEntity.getLocation());
             asset.put("merchantName", acquiringOnboardEntity.getMerchantName());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            List<DFSVoomaAssetFilesEntity> dfsVoomaFileUploadEntities = dfsVoomaAssetFilesRepository.findByIdAsset(model.getAssetId());
+            ArrayNode fileUploads = mapper.createArrayNode();
+            for (DFSVoomaAssetFilesEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
+                ObjectNode fileUpload = mapper.createObjectNode();
+                String[] fileName = dfsVoomaFileUploadEntity.getFileName().split("/");
+                fileUpload.put("fileName", fileName[fileName.length - 1]);
+                fileUploads.add(fileUpload);
+            }
+            asset.put("fileUploads", fileUploads);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+
+//    @Override
+//    public List<ObjectNode> getAllAgentAsset(CustomerAssetsRequest model) {
+//        try {
+//            if (model == null) {
+//                return null;
+//            }
+//            //get all assets for merchant
+//            List<DFSVoomaAssetEntity> dfsVoomaAssetEntityList = dfsVoomaAssetRepository.findByAgentAccNo(model.getAccNo());
+//            List<ObjectNode> objectNodeList = new ArrayList<>();
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            dfsVoomaAssetEntityList.forEach(dfsVoomaAssetEntity -> {
+//                ObjectNode objectNode = objectMapper.createObjectNode();
+//                objectNode.put("assetId", dfsVoomaAssetEntity.getId());
+//                objectNode.put("serialNumber", dfsVoomaAssetEntity.getSerialNumber());
+//                objectNode.put("assetNumber",dfsVoomaAssetEntity.getAssetNumber());
+//                objectNode.put("assetCondition", dfsVoomaAssetEntity.getAssetCondition().toString());
+//                objectNode.put("totalTransaction", totalTransaction);
+//                objectNodeList.add(objectNode);
+//            });
+//
+//            return objectNodeList;
+//        } catch (Exception e) {
+//            log.error("Error occurred while getting all agent merchant assets", e);
+//        }
+//        return null;
+//    }
+
+    @Override
+    public boolean recollectAgentAsset(VoomaCollectAssetRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber(model.getSerialNumber()).orElse(null);
+            if (dfsVoomaAssetEntity == null) {
+                return false;
+            }
+            dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(null);
+            dfsVoomaAssetEntity.setAgentAccNumber(null);
+//            dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(null);
+            dfsVoomaAssetEntity.setAssigned(false);
+            dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while recollecting asset", e);
+        }
+        return false;
+    }
+
+    @Override
+    public Object getAgentAssetById(AssetByIdRequest model) {
+        try {
+            if (model.getAssetId() == null) {
+                log.error("Asset id is null");
+                return null;
+            }
+            //get merchant by id
+            DFSVoomaAssetEntity acquiringOnboardEntity = dfsVoomaAssetRepository.findById(model.getAssetId()).get();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("condition", acquiringOnboardEntity.getAssetCondition().toString());
+            asset.put("serialNo", acquiringOnboardEntity.getSerialNumber());
+            asset.put("dateIssued", acquiringOnboardEntity.getDateAssigned().getTime());
+            asset.put("dsrId", acquiringOnboardEntity.getDsrId());
+            asset.put("terminalId", acquiringOnboardEntity.getTerminalId());
+            asset.put("assetNumber", acquiringOnboardEntity.getAssetNumber());
+            asset.put("visitDate", acquiringOnboardEntity.getVisitDate());
+            asset.put("totalTransaction", 0);
+            asset.put("location", acquiringOnboardEntity.getLocation());
+            asset.put("AgentName", acquiringOnboardEntity.getMerchantName());
             asset.put("status", acquiringOnboardEntity.getStatus().toString());
             List<DFSVoomaAssetFilesEntity> dfsVoomaFileUploadEntities = dfsVoomaAssetFilesRepository.findByIdAsset(model.getAssetId());
             ArrayNode fileUploads = mapper.createArrayNode();

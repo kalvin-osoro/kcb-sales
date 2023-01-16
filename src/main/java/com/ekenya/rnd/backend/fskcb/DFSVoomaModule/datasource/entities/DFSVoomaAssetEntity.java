@@ -49,6 +49,7 @@ public class DFSVoomaAssetEntity {
     private Long dsrId;
     private Long merchantName;
     private Integer merchantAccNo;
+    private Integer agentAccNumber;
     private String visitDate;
     private String terminalId;
 

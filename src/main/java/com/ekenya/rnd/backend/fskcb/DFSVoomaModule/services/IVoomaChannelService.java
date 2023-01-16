@@ -86,4 +86,10 @@ public interface IVoomaChannelService {
     ArrayNode getDSRSummary(DSRSummaryRequest model);
 
     Object getAssetById(AssetByIdRequest model);
+
+//    List<ObjectNode> getAllAgentAsset(CustomerAssetsRequest model);
+
+    boolean recollectAgentAsset(VoomaCollectAssetRequest model);
+
+    Object getAgentAssetById(AssetByIdRequest model);
 }

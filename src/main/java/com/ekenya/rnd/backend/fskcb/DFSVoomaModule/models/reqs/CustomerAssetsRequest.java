@@ -10,5 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerAssetsRequest {
-    private Integer merchantAccNo;
+    private Integer AccNo;
 }

@@ -560,7 +560,7 @@ try {
                 return null;
             }
             //get all assets for merchant
-            List<AcquiringAssetEntity> acquiringAssetEntity = acquiringAssetRepository.findByMerchantAccNo(model.getMerchantAccNo());
+            List<AcquiringAssetEntity> acquiringAssetEntity = acquiringAssetRepository.findByMerchantAccNo(model.getAccNo());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             acquiringAssetEntity.forEach(acquiringAssetEntity1 -> {

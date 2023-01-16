@@ -82,10 +82,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             //save
             acquiringLeadsRepository.save(acquiringLeadEntity);
             //update is assigned to true
-
             return true;
-
-
         } catch (Exception e) {
             log.error("Error assigning lead to dsr", e);
         }
