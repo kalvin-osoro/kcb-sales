@@ -20,9 +20,9 @@ import java.util.List;
 public interface IPBChannelService {
     Object onboardNewCustomer(String customerDetails,
                               MultipartFile signature,
-                              MultipartFile customerPhoto,
-                              MultipartFile kraPin,
-                              MultipartFile crbReport,
+//                              MultipartFile customerPhoto,
+//                              MultipartFile kraPin,
+//                              MultipartFile crbReport,
                               MultipartFile frontID,
                               MultipartFile backID);
 

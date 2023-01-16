@@ -42,9 +42,9 @@ public class PBChannelService implements IPBChannelService {
     @Override
     public Object onboardNewCustomer(String customerDetails,
                                      MultipartFile signature,
-                                     MultipartFile customerPhoto,
-                                     MultipartFile kraPin,
-                                     MultipartFile crbReport,
+//                                     MultipartFile customerPhoto,
+//                                     MultipartFile kraPin,
+//                                     MultipartFile crbReport,
                                      MultipartFile frontID,
                                      MultipartFile backID) {
         try {
@@ -114,23 +114,23 @@ public class PBChannelService implements IPBChannelService {
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "personal_backID_" + savedCustomerDetails.getId() + ".PNG", backID,Utility.getSubFolder());
-            String kraPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "personal_kra_" + savedCustomerDetails.getId() + ".PNG", kraPin,Utility.getSubFolder());
+//            String kraPath = fileStorageService.saveFileWithSpecificFileNameV(
+//                    "personal_kra_" + savedCustomerDetails.getId() + ".PNG", kraPin,Utility.getSubFolder());
             String signaturePath = fileStorageService.saveFileWithSpecificFileNameV(
                     "personal_signature_" + savedCustomerDetails.getId() + ".PNG", signature,Utility.getSubFolder());
-            String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "personal_crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport,Utility.getSubFolder());
-            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "personal_customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto,Utility.getSubFolder());
+//            String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
+//                    "personal_crbReport_" + savedCustomerDetails.getId() + ".PNG", crbReport,Utility.getSubFolder());
+//            String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
+//                    "personal_customerPhoto_" + savedCustomerDetails.getId() + ".PNG", customerPhoto,Utility.getSubFolder());
 
             //save file path
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
             filePathList.add(backIDPath);
-            filePathList.add(kraPath);
+//            filePathList.add(kraPath);
             filePathList.add(signaturePath);
-            filePathList.add(crbReportPath);
-            filePathList.add(customerPhotoPath);
+//            filePathList.add(crbReportPath);
+//            filePathList.add(customerPhotoPath);
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()

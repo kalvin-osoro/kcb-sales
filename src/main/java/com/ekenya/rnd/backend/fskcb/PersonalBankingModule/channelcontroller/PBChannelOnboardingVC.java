@@ -24,13 +24,13 @@ public class PBChannelOnboardingVC {
     @PostMapping("/pb-create-account")
     public ResponseEntity<?> onboardNewCustomer(@RequestParam("customerDetails") String customerDetails,
                                                 @RequestParam("signature") MultipartFile signature,
-                                                @RequestParam("customerPhoto") MultipartFile customerPhoto,
-                                                @RequestParam("KRAPin") MultipartFile KRAPin,
-                                                @RequestParam("CRBReport") MultipartFile CRBReport,
+//                                                @RequestParam("customerPhoto") MultipartFile customerPhoto,
+//                                                @RequestParam("KRAPin") MultipartFile KRAPin,
+//                                                @RequestParam("CRBReport") MultipartFile CRBReport,
                                                 @RequestParam("frontID") MultipartFile frontID,
                                                 @RequestParam("backID") MultipartFile backID) {
 
-        Object customer = channelService.onboardNewCustomer(customerDetails, signature, customerPhoto, KRAPin, CRBReport, frontID, backID);
+        Object customer = channelService.onboardNewCustomer(customerDetails, signature, frontID, backID);
         boolean success = customer != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
