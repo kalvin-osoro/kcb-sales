@@ -150,6 +150,8 @@ public class FileStorageService implements IFileStorageService {
                 Files.createDirectories(subDirectory);
             }
             fileName = new File(subDirectory + "/" + fileName).getName();
+//            file.transferTo(new File(fileName));
+//            log.info("Path is " + fileName);
             Path targetLocation = subDirectory.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             log.info("Path is " + fileName);

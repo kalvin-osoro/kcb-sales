@@ -109,8 +109,8 @@ public class PBChannelService implements IPBChannelService {
             if (savedCustomerDetails == null) throw new RuntimeException("Failed to save customer details");
             //save file
 //            String folderName = "customerDetails" + File.separator + savedCustomerDetails.getId();
-            String frontIDPath = fileStorageService.saveFileWithSpecificFileName(
-                    "personal_frontID_" + savedCustomerDetails.getId() + ".PNG", frontID);
+            String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "personal_frontID_" + savedCustomerDetails.getId() + ".PNG", frontID,Utility.getSubFolder());
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
                     "personal_backID_" + savedCustomerDetails.getId() + ".PNG", backID,Utility.getSubFolder());

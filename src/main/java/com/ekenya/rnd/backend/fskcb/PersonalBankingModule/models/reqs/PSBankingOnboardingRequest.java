@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,22 +16,19 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown =true)
 public class PSBankingOnboardingRequest {
     private String customerTitle;
     private String surname;
     private String otherNames;
     private String gender;
     private String customerName;
-    private String customerCode;
+    private String custCode;
     private String region;
     private  String customerIdNumber;
     private String customerEmail;
     private String customerPhone;
     private String customerDob;
-    private Long dsrId;
-    private Date createdOn;
-    private Boolean isApproved=false;
-    private OnboardingStatus status;
     private String nationality;
     private String maritalStatus;
     private String countryOfResidence;

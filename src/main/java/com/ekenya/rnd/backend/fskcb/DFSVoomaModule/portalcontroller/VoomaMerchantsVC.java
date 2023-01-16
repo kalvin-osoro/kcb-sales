@@ -120,6 +120,7 @@ public class VoomaMerchantsVC {
     {
         try {
             Resource file = fileStorageService.loadFileAsResourceByName(fileName);
+           //take all file extensions including png, jpeg, jpg, pdf, docx, doc, xls, xlsx, csv, txt
             MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")

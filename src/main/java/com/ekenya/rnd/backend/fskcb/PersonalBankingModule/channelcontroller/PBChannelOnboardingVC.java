@@ -37,13 +37,14 @@ public class PBChannelOnboardingVC {
         if(success){
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("customer", customer.toString());
+//          node.put("id",0);
+
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
-
-        //Response
-        return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-
     }
 
     //List all onboarded merchants
