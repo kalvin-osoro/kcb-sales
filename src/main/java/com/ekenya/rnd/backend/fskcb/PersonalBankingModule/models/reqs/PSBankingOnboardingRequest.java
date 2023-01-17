@@ -22,7 +22,7 @@ public class PSBankingOnboardingRequest {
     private String surname;
     private String otherNames;
     private String gender;
-    private String customerName;
+    private String custName;
     private String custCode;
     private String region;
     private  String customerIdNumber;
@@ -80,6 +80,7 @@ public class PSBankingOnboardingRequest {
     private String salaryAlerts;
     private String allCredit;
     private String allDebit;
+    private Long dsrId;
     private String isCustomerWantToGetCreditCard;
     private String KCBcreditCardType;
     private String isCustomerWantToRegisterInternetBanking;

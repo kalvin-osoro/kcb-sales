@@ -31,7 +31,7 @@ public class PSBankingOnboardingEntity {
 
     private String gender;
 
-    private String customerName;
+    private String custName;
     private String custCode;
 
     private String region;

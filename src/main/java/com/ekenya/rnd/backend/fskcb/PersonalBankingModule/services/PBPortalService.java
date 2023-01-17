@@ -277,11 +277,11 @@ public class PBPortalService implements IPBPortalService {
             for (PSBankingOnboardingEntity psBankingOnboardingEntity : psBankingOnboardingRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", psBankingOnboardingEntity.getId());
-                node.put("customerName", psBankingOnboardingEntity.getCustomerName());
+                node.put("customerName", psBankingOnboardingEntity.getCustName());
                 node.put("Region", psBankingOnboardingEntity.getRegion());
                 node.put("phoneNumber", psBankingOnboardingEntity.getCustomerPhone());
                 node.put("email", psBankingOnboardingEntity.getCustomerEmail());
-                node.put("status", psBankingOnboardingEntity.getStatus().ordinal());
+                node.put("status", psBankingOnboardingEntity.getStatus().toString());
                 node.put("agent Id", psBankingOnboardingEntity.getDsrId());
                 node.put("createdOn", psBankingOnboardingEntity.getCreatedOn().getTime());
                 list.add(node);
@@ -324,7 +324,7 @@ public class PBPortalService implements IPBPortalService {
             {
                 for (PSBankingOnboardingEntity psBankingOnboardingEntity : psBankingOnboardingRepository.fetchAllOnboardingCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
-                    asset.put("customerName", psBankingOnboardingEntity.getCustomerName());
+                    asset.put("customerName", psBankingOnboardingEntity.getCustName());
                     asset.put("onboarding-status", psBankingOnboardingEntity.getStatus().ordinal());
                     asset.put("agent Id", psBankingOnboardingEntity.getDsrId());
                     asset.put("date_onboarded", psBankingOnboardingEntity.getCreatedOn().getTime());
@@ -563,13 +563,12 @@ public class PBPortalService implements IPBPortalService {
             objectNode.put("phoneNumber", agencyOnboardingEntity.getCustomerPhone());
             objectNode.put("surname", agencyOnboardingEntity.getSurname());
             objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
-            objectNode.put("customerName", agencyOnboardingEntity.getCustomerName());
+            objectNode.put("customerName", agencyOnboardingEntity.getCustName());
             objectNode.put("email", agencyOnboardingEntity.getCustomerEmail());
             objectNode.put("gender", agencyOnboardingEntity.getGender());
             objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
             objectNode.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
             objectNode.put("idNumber", agencyOnboardingEntity.getCustomerIdNumber());
-            objectNode.put("region", agencyOnboardingEntity.getRegion());
             objectNode.put("region", agencyOnboardingEntity.getRegion());
 
 

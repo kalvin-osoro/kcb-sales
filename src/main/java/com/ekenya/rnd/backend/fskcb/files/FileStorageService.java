@@ -23,8 +23,6 @@ import java.util.logging.Logger;
 public class FileStorageService implements IFileStorageService {
 
     Logger log = Logger.getLogger(FileStorageService.class.getName());
-    //working directory folder called "uploads"
-
     public static String pathString = "upload";
     public static String uploadDirectory = "upload";
     private final Path root = Paths.get(uploadDirectory);

@@ -55,6 +55,8 @@ public class PBChannelService implements IPBChannelService {
             PSBankingOnboardingEntity psBankingOnboardingEntity = new PSBankingOnboardingEntity();
             psBankingOnboardingEntity.setCustomerTitle(psBankingOnboardingRequest.getCustomerTitle());
             psBankingOnboardingEntity.setSurname(psBankingOnboardingRequest.getSurname());
+            psBankingOnboardingEntity.setCustName(psBankingOnboardingRequest.getCustName());
+            psBankingOnboardingEntity.setRegion(psBankingOnboardingRequest.getRegion());
             psBankingOnboardingEntity.setOtherNames(psBankingOnboardingRequest.getOtherNames());
             psBankingOnboardingEntity.setCustomerIdNumber(psBankingOnboardingRequest.getCustomerIdNumber());
             psBankingOnboardingEntity.setCustomerDob(psBankingOnboardingRequest.getCustomerDob());
@@ -103,6 +105,10 @@ public class PBChannelService implements IPBChannelService {
             psBankingOnboardingEntity.setAllDebit(psBankingOnboardingRequest.getAllDebit());
             psBankingOnboardingEntity.setIsCustomerWantToGetCreditCard(psBankingOnboardingRequest.getIsCustomerWantToGetCreditCard());
             psBankingOnboardingEntity.setKCBcreditCardType(psBankingOnboardingRequest.getKCBcreditCardType());
+            psBankingOnboardingEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            psBankingOnboardingEntity.setCustomerEmail(psBankingOnboardingRequest.getCustomerEmail());
+            psBankingOnboardingEntity.setCustomerPhone(psBankingOnboardingRequest.getCustomerPhone());
+            psBankingOnboardingEntity.setDsrId(psBankingOnboardingRequest.getDsrId());
 //            psBankingOnboardingEntity.setIsCustomerWantToRegisterInternetBanking(psBankingOnboardingRequest.getIsCustomerWantToRegisterInternetBanking());
 //            psBankingOnboardingEntity.setReceiveTransactionAuthorizationVia(psBankingOnboardingRequest.getReceiveTransactionAuthorizationVia());
             PSBankingOnboardingEntity savedCustomerDetails = psBankingOnboardingRepossitory.save(psBankingOnboardingEntity);
