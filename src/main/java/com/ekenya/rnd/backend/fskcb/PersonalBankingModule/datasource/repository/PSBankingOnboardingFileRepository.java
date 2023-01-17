@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PSBankingOnboardingFileRepository extends JpaRepository<PSBankingOnboardingFileEntity, Long> {
-    List<PSBankingOnboardingFileEntity> findCustomerById(Long agentId);
+    List<PSBankingOnboardingFileEntity> findByCustId(Long agentId);
 }

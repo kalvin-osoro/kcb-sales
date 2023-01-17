@@ -148,7 +148,7 @@ public class PBChannelService implements IPBChannelService {
                 PSBankingOnboardingFileEntity psBankingOnboardingEntity1 = new PSBankingOnboardingFileEntity();
                 psBankingOnboardingEntity1.setFilePath(downloadUrl);
                 psBankingOnboardingEntity1.setPsBankingOnboardingEntity(savedCustomerDetails);
-                psBankingOnboardingEntity1.setPersonId(savedCustomerDetails.getId());
+                psBankingOnboardingEntity1.setCustId(savedCustomerDetails.getId());
                 psBankingOnboardingEntity1.setFileName(filePath);
                 psBankingOnboardingFileRepository.save(psBankingOnboardingEntity1);
                 return true;

@@ -85,14 +85,12 @@ public class AcquiringChannelLeadsVC {
         //update lead
         @PostMapping(value = "/acquiring-update-lead")
         public ResponseEntity<?> updateLead(@RequestBody TreasuryUpdateLeadRequest model) {
-            Object updatedLead = acquiringChannelService.updateLead(model);
-            boolean success = updatedLead  != null;
+            boolean success = acquiringChannelService.updateLead(model);
+//            boolean success = updatedLead  != null;
             ObjectMapper objectMapper = new ObjectMapper();
             if(success){
                 //Object
                 ObjectNode node = objectMapper.createObjectNode();
-                node.putArray("lead").add((ObjectNode) updatedLead);
-
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
             }else{
 

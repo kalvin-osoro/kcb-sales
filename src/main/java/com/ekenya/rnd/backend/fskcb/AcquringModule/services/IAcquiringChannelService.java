@@ -32,7 +32,7 @@ public interface IAcquiringChannelService {
 
     List<ObjectNode> getAllAssignedLeads(TreasuryGetDSRLeads model);
 
-    Object updateLead(TreasuryUpdateLeadRequest model);
+    Boolean updateLead(TreasuryUpdateLeadRequest model);
 
     List<ObjectNode> searchCustomers(SearchKeyWordRequest model);
 

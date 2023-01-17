@@ -158,11 +158,18 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     }
 
     @Override
-    public Object updateLead(TreasuryUpdateLeadRequest model) {
+    public Boolean updateLead(TreasuryUpdateLeadRequest model) {
         //update lead
         try {
+            if (model== null){
+                return  false;
+            }
+
             AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getLeadId()).get();
             acquiringLeadEntity.setLeadStatus(model.getLeadStatus());
+//            if (model.getLeadStatus() != LeadStatus.OPEN && model.getLeadStatus() != LeadStatus.CLOSED || model.getLeadStatus() != LeadStatus.PENDING) {
+//                return false;
+//            }
             acquiringLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
             acquiringLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringLeadsRepository.save(acquiringLeadEntity);

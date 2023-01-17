@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionna
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyById;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaFeedBackEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardingKYCentity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
@@ -572,7 +573,7 @@ public class PBPortalService implements IPBPortalService {
             objectNode.put("region", agencyOnboardingEntity.getRegion());
 
 
-            List<PSBankingOnboardingFileEntity> dfsVoomaFileUploadEntities = psBankingOnboardingFileRepository.findCustomerById(model.getAgentId());
+            List<PSBankingOnboardingFileEntity> dfsVoomaFileUploadEntities = psBankingOnboardingFileRepository.findByCustId(model.getAgentId());
             ArrayNode fileUploads = mapper.createArrayNode();
             for (PSBankingOnboardingFileEntity dfsVoomaFileUploadEntity : dfsVoomaFileUploadEntities) {
                 ObjectNode fileUpload = mapper.createObjectNode();
