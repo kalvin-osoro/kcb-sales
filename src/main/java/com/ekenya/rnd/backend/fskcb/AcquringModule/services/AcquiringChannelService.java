@@ -167,9 +167,9 @@ public class AcquiringChannelService implements IAcquiringChannelService {
 
             AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getLeadId()).get();
             acquiringLeadEntity.setLeadStatus(model.getLeadStatus());
-//            if (model.getLeadStatus() != LeadStatus.OPEN && model.getLeadStatus() != LeadStatus.CLOSED || model.getLeadStatus() != LeadStatus.PENDING) {
-//                return false;
-//            }
+            if (acquiringLeadEntity.getLeadStatus() != LeadStatus.CLOSED && acquiringLeadEntity.getLeadStatus() != LeadStatus.OPEN && acquiringLeadEntity.getLeadStatus() != LeadStatus.PENDING) {
+                return false;
+            }
             acquiringLeadEntity.setOutcomeOfTheVisit(model.getOutcomeOfTheVisit());
             acquiringLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringLeadsRepository.save(acquiringLeadEntity);
