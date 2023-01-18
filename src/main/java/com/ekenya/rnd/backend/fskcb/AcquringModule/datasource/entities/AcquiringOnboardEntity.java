@@ -49,7 +49,7 @@ public class AcquiringOnboardEntity {
     private String accountName;
     private Integer accountNumber;
     private String accountNumberInUSD;
-    private String accountNumberInKES;
+//    private String accountNumberInKES;
     private String feesAndCommission;
     @OneToMany(mappedBy="acquiringOnboardEntity", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<AcquiringPrincipalInfoEntity> acquiringPrincipalInfoEntityList = new ArrayList<>();

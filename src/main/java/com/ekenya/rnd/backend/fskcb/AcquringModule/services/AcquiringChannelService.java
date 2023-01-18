@@ -400,9 +400,9 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringOnboardEntity.setTypeOfGoodAndServices(acquiringOnboardRequest.getTypeOfGoodAndServices());
             acquiringOnboardEntity.setBankName(acquiringOnboardRequest.getBankName());
             acquiringOnboardEntity.setAccountName(acquiringOnboardRequest.getAccountName());
-            acquiringOnboardEntity.setAccountNumberInKES(acquiringOnboardRequest.getAccountNumberInKES());
             acquiringOnboardEntity.setAccountNumberInUSD(acquiringOnboardRequest.getAccountNumberInUSD());
             acquiringOnboardEntity.setBranchName(acquiringOnboardRequest.getBranchName());
+            acquiringOnboardEntity.setAccountNumber(acquiringOnboardRequest.getAccountNumber());
             acquiringOnboardEntity.setFeesAndCommission(acquiringOnboardRequest.getFeesAndCommission());
             AcquiringOnboardEntity acquiringOnboard = acquiringOnboardingsRepository.save(acquiringOnboardEntity);
             //
@@ -442,8 +442,6 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 acquiringOnboardingKYCRepository.save(acquiringSignatoryEntity);
 
             }
-
-
             return true;
 
         } catch (Exception e) {
@@ -543,12 +541,12 @@ try {
             if (model == null) {
                 return false;
             }
-            AcquiringOnboardEntity acquiringOnboardingEntity = (AcquiringOnboardEntity) acquiringOnboardingsRepository.findByAccountNumber((model.getAccountNumber())).orElse(null);
+            AcquiringOnboardEntity acquiringOnboardEntity = (AcquiringOnboardEntity) acquiringOnboardingsRepository.findByAccountNumber((model.getAccountNumber())).orElse(null);
             AcquiringAssetEntity acquiringAssetEntity = (AcquiringAssetEntity) acquiringAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (acquiringOnboardingEntity == null || acquiringAssetEntity == null) {
+            if (acquiringOnboardEntity == null || acquiringAssetEntity == null) {
                 return false;
             }
-            acquiringAssetEntity.setAcquiringOnboardEntity(acquiringOnboardingEntity);
+            acquiringAssetEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);
             acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
             acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetEntity.setAssigned(true);

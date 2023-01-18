@@ -37,8 +37,6 @@ public class AcquiringChannelOnboardingVC {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
             //success message
-            node.put("message","Merchant onboarded successfully");
-
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{
 

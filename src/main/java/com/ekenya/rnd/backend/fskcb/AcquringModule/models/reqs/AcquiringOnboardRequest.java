@@ -37,8 +37,9 @@ public class AcquiringOnboardRequest {
     private String bankName;
     private String branchName;
     private String accountName;
+    private Integer accountNumber;
     private String accountNumberInUSD;
-    private String accountNumberInKES;
+//    private String accountNumberInKES;
     private String feesAndCommission;
     private List<AcquiringPrincipalInfoRequest> acquiringPrincipalInfoRequests;
     private List<AcquiringPrincipalRequest> acquiringPrincipalRequests;

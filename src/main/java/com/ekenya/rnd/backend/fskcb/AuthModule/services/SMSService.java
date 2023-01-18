@@ -34,7 +34,8 @@ import java.util.logging.Logger;
 public class SMSService implements ISmsService{
 
     //  @Value("CMCOM")
-    @Value("ECLECTICS")
+//    @Value("ECLECTICS")
+    @Value("CMCOM")
     private String SMS_SENDER_ID;
     @Value("5094")
     private String client_id;

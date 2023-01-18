@@ -30,7 +30,7 @@ public class AcquiringChannelAssetsVC {
 
 
     @Autowired
-    private IAcquiringPortalService acquiringService;
+     IAcquiringPortalService acquiringService;
 
     @PostMapping("/acquiring-assign-asset-merchant")
     public ResponseEntity<?> assignAssetMerchant1(@RequestBody VoomaAssignAssetRequest model) {
