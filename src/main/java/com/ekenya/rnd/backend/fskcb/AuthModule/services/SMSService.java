@@ -117,7 +117,7 @@ public class SMSService implements ISmsService{
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false);
             helper.setTo(receiverEmail);
-            helper.setSubject("First Time Password");
+            helper.setSubject("Account Created");
             helper.setText(message);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

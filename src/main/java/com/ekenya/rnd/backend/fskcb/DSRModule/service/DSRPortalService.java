@@ -27,16 +27,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Slf4j
@@ -46,6 +52,8 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Autowired
     private IDSRTeamsRepository dsrTeamsRepository;
+    @Autowired
+    JavaMailSender javaMailSender;
 
     @Autowired
     private IDSRRegionsRepository dsrRegionsRepository;
@@ -423,7 +431,13 @@ public class DSRPortalService implements IDSRPortalService {
                     profileAndUserEntity.setStatus(Status.ACTIVE);
 
                     //
-                    dsrAccountsRepository.save(dsrDetails);
+                    DSRAccountEntity savedDsr=dsrAccountsRepository.save(dsrDetails);
+                    //send email if user saved successfully
+                    if(savedDsr != null){
+                        //send email
+                        sendAccountCreatedEmail(savedDsr.getEmail(),savedDsr.getFullName());
+                        return true;
+                    }
 
                     //Add DSR to profile ..
                     profilesAndUsersRepository.save(profileAndUserEntity);
@@ -882,7 +896,18 @@ public class DSRPortalService implements IDSRPortalService {
                         //
 
                         //Save DSR Account ..
-                        dsrAccountsRepository.save(account);
+                        DSRAccountEntity savedUser =dsrAccountsRepository.save(account);
+                        //if saved  send email to notify user
+                        if(savedUser != null){
+                            imported++;
+                            sendAccountCreatedEmail(account.getEmail(),account.getFullName());
+                        }
+
+
+
+
+
+
 
 
                         //Add DSR to profile ..
@@ -912,6 +937,20 @@ public class DSRPortalService implements IDSRPortalService {
         }
         return null;
     }
+
+//    private JsonObject sendEmail(String message, String receiverEmail) {
+//        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//        try {
+//            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false);
+//            helper.setTo(receiverEmail);
+//            helper.setSubject("Account Created");
+//            helper.setText(message);
+//            javaMailSender.send(mimeMessage);
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @Override
     public boolean lockAccount(String staffNo) {
@@ -962,6 +1001,37 @@ public class DSRPortalService implements IDSRPortalService {
         ResetDSRPINRequest model= new ResetDSRPINRequest();
         model.setStaffNo(staffNo);
         return authService.resetDSRPIN(model);
+    }
+
+    @Override
+    public boolean sendAccountCreatedEmail(String email,String fullName) {
+        try{
+            String message= " Dear " + fullName + ",\n" +
+                    "\n" +
+                    "Your account has been created successfully.\n" +
+                    "\n" +
+                    "Please use the following Link to download the app\n" +
+                    "\n" +
+                    "https://play.google.com/apps/internaltest/4701657927919684045" +
+
+                    "Regards,\n" +
+                    "Team";
+            JsonObject emailResponse = sendEmail(email,message);
+            if (emailResponse == null) {
+                throw new RuntimeException("Unable to send sms");
+            }
+            int responseCode = emailResponse.get("ResultCode").getAsInt();
+            if (responseCode != 0) {
+                log.error("Send CODE failed. => "+emailResponse.get("ResultDesc").getAsString());
+                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+            }
+            return true;
+        } catch (Exception e) {
+            logger.log(Level.ALL,e.getMessage(),e);
+        }
+
+
+        return false;
     }
 
 
@@ -1017,4 +1087,19 @@ public class DSRPortalService implements IDSRPortalService {
 //        return modelMapper.map(dsrDto, DSR.class);
 //
 //    }
+
+    private JsonObject sendEmail(String receiverEmail, String message) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false);
+            helper.setTo(receiverEmail);
+            helper.setSubject("Account Created");
+            helper.setText(message);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
 }
