@@ -433,11 +433,8 @@ public class DSRPortalService implements IDSRPortalService {
                     //
                     DSRAccountEntity savedDsr=dsrAccountsRepository.save(dsrDetails);
                     //send email if user saved successfully
-                    if(savedDsr != null){
-                        //send email
-                        sendAccountCreatedEmail(savedDsr.getEmail(),savedDsr.getFullName());
-                        return true;
-                    }
+                    sendAccountCreatedEmail(savedDsr.getEmail(),savedDsr.getFullName());
+
 
                     //Add DSR to profile ..
                     profilesAndUsersRepository.save(profileAndUserEntity);
@@ -898,10 +895,7 @@ public class DSRPortalService implements IDSRPortalService {
                         //Save DSR Account ..
                         DSRAccountEntity savedUser =dsrAccountsRepository.save(account);
                         //if saved  send email to notify user
-                        if(savedUser != null){
-                            imported++;
-                            sendAccountCreatedEmail(account.getEmail(),account.getFullName());
-                        }
+                        sendAccountCreatedEmail(account.getEmail(),account.getFullName());
 
 
 
@@ -1015,7 +1009,7 @@ public class DSRPortalService implements IDSRPortalService {
                     "https://play.google.com/apps/internaltest/4701657927919684045" +
 
                     "Regards,\n" +
-                    "Team";
+                    "KCB Team";
             JsonObject emailResponse = sendEmail(email,message);
             if (emailResponse == null) {
                 throw new RuntimeException("Unable to send sms");
