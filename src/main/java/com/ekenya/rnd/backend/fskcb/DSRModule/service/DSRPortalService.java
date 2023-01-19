@@ -924,15 +924,24 @@ public class DSRPortalService implements IDSRPortalService {
 
                         //Save DSR Account ..
                         dsrAccountsRepository.save(account);
-                        //if saved  send email to notify user
-                        if (account.getId() > 0) {
-                            imported++;
-                            //Send email to notify user
-//                            String subject = "DSR Account Created";
-//                            String message = "Your DSR account has been created successfully. " +
-//                                    "Please login to your account to complete your profile";
-                            smsService.sendDsrCreatedEmail(account.getEmail(),account.getFullName());
+                        //send email
+
+                        if (account.getEmail() != null && !account.getEmail().isEmpty()) {
+                            String subject = "DSR Account Created";
+                            String message = "Dear " + account.getFullName() + ",\n\n" +
+                                    "Your DSR account has been created successfully.\n" +
+                                    "Your account details are as follows:\n" +
+                                    "Staff No: " + account.getStaffNo() + "\n" +
+                                    "Phone No: " + account.getPhoneNo() + "\n" +
+                                    "Sales Code: " + account.getSalesCode() + "\n" +
+                                    "Expiry Date: " + account.getExpiryDate() + "\n\n" +
+                                    "Please use this link to download the app:\n" +
+                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                    "Thank you.";
+                            sendEmail(account.getEmail(), subject, message);
                         }
+
+
 
 
 
