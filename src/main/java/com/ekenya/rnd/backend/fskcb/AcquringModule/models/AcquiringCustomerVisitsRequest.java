@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.models;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AssetCondition;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,4 +29,9 @@ public class AcquiringCustomerVisitsRequest {
     private String entityBrief;
     private String longitude;
     private String latitude;
+    private String assetNumber;
+    private String serialNumber;
+    private String terminalId;
+    private String remarks;
+    private AssetCondition assetCondition;
 }

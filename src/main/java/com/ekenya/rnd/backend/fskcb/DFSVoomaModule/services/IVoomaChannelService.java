@@ -92,4 +92,7 @@ public interface IVoomaChannelService {
     boolean recollectAgentAsset(VoomaCollectAssetRequest model);
 
     Object getAgentAssetById(AssetByIdRequest model);
+
+    boolean updateMerchant(VoomaAddAssetReportRequest model);
+
 }

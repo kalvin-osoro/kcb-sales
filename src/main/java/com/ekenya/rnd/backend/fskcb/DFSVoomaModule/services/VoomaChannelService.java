@@ -297,12 +297,10 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardingEntity = (DFSVoomaMerchantOnboardV1) dfsVoomaMerchantOnboardV1Repository.findByAccountNumber((model.getAccountNumber())).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (dfsVoomaMerchantOnboardingEntity == null || dfsVoomaAssetEntity == null) {
+            if ( dfsVoomaAssetEntity == null) {
                 return false;
             }
-            dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(dfsVoomaMerchantOnboardingEntity);
             dfsVoomaAssetEntity.setMerchantAccNo(model.getAccountNumber());
             dfsVoomaAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssigned(true);
@@ -320,12 +318,10 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return false;
             }
-            DFSVoomaAgentOnboardV1 dfsVoomaAgentOnboardingEntity = (DFSVoomaAgentOnboardV1) dfsVoomaAgentOnboardV1Repository.findByAccountNumber(Long.valueOf(model.getAccountNumber())).orElse(null);
             DFSVoomaAssetEntity dfsVoomaAssetEntity = (DFSVoomaAssetEntity) dfsVoomaAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (dfsVoomaAgentOnboardingEntity == null || dfsVoomaAssetEntity == null) {
+            if (  dfsVoomaAssetEntity == null) {
                 return false;
             }
-            dfsVoomaAssetEntity.setDfsVoomaAgentOnboardingEntity(dfsVoomaAgentOnboardingEntity);
             dfsVoomaAssetEntity.setAgentAccNumber(model.getAccountNumber());
             dfsVoomaAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssigned(true);
@@ -1026,6 +1022,30 @@ public class VoomaChannelService implements IVoomaChannelService {
         }
         return null;
     }
+
+    @Override
+    public boolean updateMerchant(VoomaAddAssetReportRequest model) {
+        try {
+            if (model == null){
+                return false;
+            }
+            DFSVoomaAssetEntity acquiringOnboardEntity = dfsVoomaAssetRepository.findById(model.getAssetId()).get();
+            if (acquiringOnboardEntity == null){
+                return false;
+            }
+            acquiringOnboardEntity.setAssetCondition(model.getAssetCondition());
+            acquiringOnboardEntity.setRemarks(model.getRemarks());
+            //save
+            dfsVoomaAssetRepository.save(acquiringOnboardEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while updating merchant", e);
+        }
+        return false;
+    }
+
+
 
 
 }

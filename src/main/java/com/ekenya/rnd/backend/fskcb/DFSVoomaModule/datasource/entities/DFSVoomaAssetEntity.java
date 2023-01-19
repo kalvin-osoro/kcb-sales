@@ -48,10 +48,11 @@ public class DFSVoomaAssetEntity {
     private Date createdOn;
     private Long dsrId;
     private Long merchantName;
-    private Integer merchantAccNo;
-    private Integer agentAccNumber;
+    private String merchantAccNo;
+    private String agentAccNumber;
     private String visitDate;
     private String terminalId;
+    private String remarks;
 
     private boolean assigned=false;
     //relationship of Asset to agent and merchant

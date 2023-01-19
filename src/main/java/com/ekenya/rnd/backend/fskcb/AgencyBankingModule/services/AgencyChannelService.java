@@ -47,12 +47,10 @@ public class AgencyChannelService implements IAgencyChannelService {
             if (model == null) {
                 return false;
             }
-            AgencyOnboardingEntity acquiringOnboardingEntity = (AgencyOnboardingEntity) agencyOnboardingRepository.findByAccountNumber((model.getAccountNumber())).orElse(null);
             AgencyAssetEntity agencyAssetEntity = (AgencyAssetEntity) agencyAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (acquiringOnboardingEntity == null || agencyAssetEntity == null) {
+            if ( agencyAssetEntity == null) {
                 return false;
             }
-            agencyAssetEntity.setAgencyOnboardingEntity(acquiringOnboardingEntity);
             agencyAssetEntity.setAgentAccNumber(model.getAccountNumber());
             agencyAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             agencyAssetEntity.setAssigned(true);

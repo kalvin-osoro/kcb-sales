@@ -11,6 +11,6 @@ public interface AgencyAssetRepository extends JpaRepository<AgencyAssetEntity, 
 
     Optional<Object> findBySerialNumber(String serialNumber);
 
-    List<AgencyAssetEntity> findByAgentAccNumber(Integer agentAccNumber);
+    List<AgencyAssetEntity> findByAgentAccNumber(String agentAccNumber);
 }
 

@@ -334,7 +334,12 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringCustomerVisitsEntity.setLatitude(model.getLatitude());
             acquiringCustomerVisitsEntity.setLongitude(model.getLongitude());
             acquiringCustomerVisitsEntity.setAttendance(model.getAttendance());
-            acquiringCustomerVisitsEntity.setDsrName("test");
+            acquiringCustomerVisitsEntity.setAssetNumber(model.getAssetNumber());
+            acquiringCustomerVisitsEntity.setSerialNumber(model.getSerialNumber());
+            acquiringCustomerVisitsEntity.setTerminalId(model.getTerminalId());
+            acquiringCustomerVisitsEntity.setRemarks(model.getRemarks());
+            acquiringCustomerVisitsEntity.setAssetCondition(model.getAssetCondition());
+//            acquiringCustomerVisitsEntity.setDsrName("test");
             acquiringCustomerVisitsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             //save customer visit
             acquiringCustomerVisitRepository.save(acquiringCustomerVisitsEntity);
@@ -541,12 +546,10 @@ try {
             if (model == null) {
                 return false;
             }
-            AcquiringOnboardEntity acquiringOnboardEntity = (AcquiringOnboardEntity) acquiringOnboardingsRepository.findByAccountNumber((model.getAccountNumber())).orElse(null);
             AcquiringAssetEntity acquiringAssetEntity = (AcquiringAssetEntity) acquiringAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if (acquiringOnboardEntity == null || acquiringAssetEntity == null) {
+            if ( acquiringAssetEntity == null) {
                 return false;
             }
-            acquiringAssetEntity.setAcquiringOnboardEntity(acquiringOnboardEntity);
             acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
             acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetEntity.setAssigned(true);

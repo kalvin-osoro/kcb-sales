@@ -48,7 +48,7 @@ public class AgencyAssetEntity {
  private Date createdOn;
  private Long dsrId;
  private Long agentName;
- private Integer agentAccNumber;
+ private String agentAccNumber;
  private String visitDate;
  private String terminalId;
 

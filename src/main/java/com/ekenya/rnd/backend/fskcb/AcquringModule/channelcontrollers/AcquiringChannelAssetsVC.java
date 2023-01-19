@@ -25,12 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/v1/ch")
 public class AcquiringChannelAssetsVC {
-    IAcquiringChannelService acquiringChannelService;
-//    @Autowired
-
-
     @Autowired
-     IAcquiringPortalService acquiringService;
+    IAcquiringChannelService acquiringChannelService;
 
     @PostMapping("/acquiring-assign-asset-merchant")
     public ResponseEntity<?> assignAssetMerchant1(@RequestBody VoomaAssignAssetRequest model) {

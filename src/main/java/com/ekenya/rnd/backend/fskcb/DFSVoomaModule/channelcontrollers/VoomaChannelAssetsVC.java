@@ -83,9 +83,9 @@ public class VoomaChannelAssetsVC {
 
 
     @PostMapping("/vooma-create-asset-report")
-    public ResponseEntity<?> createAssetReport(@RequestBody VoomaAddAssetReportRequest request) {
+    public ResponseEntity<?> createAssetReport(@RequestBody VoomaAddAssetReportRequest model) {
 
-        boolean success = false;//acquiringService..(model);
+        boolean success = voomaChannelService.updateMerchant(model);
         //TODO: Implement this
 
         //Response
@@ -102,6 +102,7 @@ public class VoomaChannelAssetsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
 
 
     @PostMapping("/vooma-recollect-asset")

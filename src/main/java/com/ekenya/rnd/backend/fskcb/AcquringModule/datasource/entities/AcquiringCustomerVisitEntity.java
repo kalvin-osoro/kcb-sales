@@ -43,6 +43,12 @@ public class AcquiringCustomerVisitEntity {
     private String entityBrief;
     private String longitude;
     private String latitude;
+    private String assetNumber;
+    private String serialNumber;
+    private String terminalId;
+    private String remarks;
+    @Enumerated(EnumType.STRING)
+    private AssetCondition assetCondition;
 
     ///Fields in Call report in Acquiring -visitType,
     // attendance,
