@@ -46,4 +46,6 @@ public interface ICBChannelService {
     boolean attemptUpdateLead(TreasuryUpdateLeadRequest model);
 
     ArrayNode getDSRSummary(DSRSummaryRequest model);
+
+    List<ObjectNode> getAllOpportunities();
 }

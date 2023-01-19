@@ -29,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CBChannelService implements ICBChannelService {
     private final ICBLeadsRepository cbLeadsRepository;
+    private final CBOpportunitiesRepository cbOpportunitiesRepository;
     private final CBCustomerAppointmentRepository cbCustomerAppointmentRepository;
     private final CBConcessionRepository cbConcessionRepository;
     private final CBCustomerVisitRepository cbCustomerVisitRepository;
@@ -401,7 +402,29 @@ public class CBChannelService implements ICBChannelService {
         }
         return null;
     }
+
+    @Override
+    public List<ObjectNode> getAllOpportunities() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            List<CBOpportunitiesEntity> cbOpportunitiesEntities = cbOpportunitiesRepository.findAll();
+            for (CBOpportunitiesEntity cbOpportunitiesEntity : cbOpportunitiesEntities) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbOpportunitiesEntity.getId());
+                objectNode.put("name", cbOpportunitiesEntity.getProduct());
+                objectNode.put("stage", cbOpportunitiesEntity.getStage().ordinal());
+                objectNode.put("probability", cbOpportunitiesEntity.getProbability());
+                objectNode.put("createdOn", cbOpportunitiesEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all opportunities", e);
+        }
+        return null;
     }
+}
 
 
 //    @Override

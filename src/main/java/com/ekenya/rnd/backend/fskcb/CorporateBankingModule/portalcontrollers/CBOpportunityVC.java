@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers.CBChannelOpportunityVC.getResponseEntity;
+
 @RestController
 @RequestMapping("/api/v1")
 public class CBOpportunityVC {
@@ -39,17 +41,7 @@ public class CBOpportunityVC {
     //get all opportunities
     @PostMapping("/cb-get-all-opportunities")
     ResponseEntity<?> getAllOpportunities( ){
-        List<?> response = cbService.getAllOpportunities();
-        boolean success = response != null;
-        ObjectMapper objectMapper = new ObjectMapper();
-        if(success){
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)response);
-            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
-        }else{
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
-
-        }
+        return getResponseEntity(cbService.getAllOpportunities());
     }
     //get opportunity by id
     @PostMapping("/cb-get-opportunity-by-id")
