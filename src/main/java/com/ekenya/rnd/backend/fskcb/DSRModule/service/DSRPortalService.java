@@ -461,6 +461,7 @@ public class DSRPortalService implements IDSRPortalService {
                                 "Your DSR account has been created successfully.\n" +
                                 "Your account details are as follows:\n" +
                                 "Staff No: " + dsrDetails.getStaffNo() + "\n" +
+                                "Phone No: " + dsrDetails.getPhoneNo() + "\n" +
                                 "Sales Code: " + dsrDetails.getSalesCode() + "\n" +
                                 "Expiry Date: " + dsrDetails.getExpiryDate() + "\n\n" +
                                 "Please use this link to download the app:\n" +
