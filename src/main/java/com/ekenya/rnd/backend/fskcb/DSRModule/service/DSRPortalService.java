@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.services.ISmsService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.BranchEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.JsonLatLng;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
@@ -54,6 +56,8 @@ public class DSRPortalService implements IDSRPortalService {
     private IDSRTeamsRepository dsrTeamsRepository;
     @Autowired
     JavaMailSender javaMailSender;
+    @Autowired
+    ISmsService smsService;
 
     @Autowired
     private IDSRRegionsRepository dsrRegionsRepository;
@@ -431,9 +435,8 @@ public class DSRPortalService implements IDSRPortalService {
                     profileAndUserEntity.setStatus(Status.ACTIVE);
 
                     //
-                    DSRAccountEntity savedDsr=dsrAccountsRepository.save(dsrDetails);
+                    dsrAccountsRepository.save(dsrDetails);
                     //send email if user saved successfully
-                    sendAccountCreatedEmail(savedDsr.getEmail(),savedDsr.getFullName());
 
 
                     //Add DSR to profile ..
@@ -451,6 +454,20 @@ public class DSRPortalService implements IDSRPortalService {
 
                     //
                     dsrAccountsRepository.save(dsrDetails);
+                    //send email if user saved successfully
+                    if (dsrDetails.getExpiryDate() != null) {
+                        String subject = "DSR Account Created";
+                        String message = "Dear " + dsrDetails.getFullName() + ",\n\n" +
+                                "Your DSR account has been created successfully.\n" +
+                                "Your account details are as follows:\n" +
+                                "Staff No: " + dsrDetails.getStaffNo() + "\n" +
+                                "Sales Code: " + dsrDetails.getSalesCode() + "\n" +
+                                "Expiry Date: " + dsrDetails.getExpiryDate() + "\n\n" +
+                                "Please use this link to download the app:\n" +
+                                "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                "Thank you.";
+                        sendEmail(dsrDetails.getEmail(), subject, message);
+                    }
 
                     //Add DSR to profile ..
                     profilesAndUsersRepository.save(profileAndUserEntity);
@@ -482,6 +499,18 @@ public class DSRPortalService implements IDSRPortalService {
 
         return false;
 
+    }
+
+    private void sendEmail(String email, String subject, String message) {
+        try {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(email);
+            msg.setSubject(subject);
+            msg.setText(message);
+            javaMailSender.send(msg);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
     }
 
     @Override
@@ -893,9 +922,17 @@ public class DSRPortalService implements IDSRPortalService {
                         //
 
                         //Save DSR Account ..
-                        DSRAccountEntity savedUser =dsrAccountsRepository.save(account);
+                        dsrAccountsRepository.save(account);
                         //if saved  send email to notify user
-                        sendAccountCreatedEmail(account.getEmail(),account.getFullName());
+                        if (account.getId() > 0) {
+                            imported++;
+                            //Send email to notify user
+//                            String subject = "DSR Account Created";
+//                            String message = "Your DSR account has been created successfully. " +
+//                                    "Please login to your account to complete your profile";
+                            smsService.sendDsrCreatedEmail(account.getEmail(),account.getFullName());
+                        }
+
 
 
 
@@ -997,36 +1034,7 @@ public class DSRPortalService implements IDSRPortalService {
         return authService.resetDSRPIN(model);
     }
 
-    @Override
-    public boolean sendAccountCreatedEmail(String email,String fullName) {
-        try{
-            String message= " Dear " + fullName + ",\n" +
-                    "\n" +
-                    "Your account has been created successfully.\n" +
-                    "\n" +
-                    "Please use the following Link to download the app\n" +
-                    "\n" +
-                    "https://play.google.com/apps/internaltest/4701657927919684045" +
 
-                    "Regards,\n" +
-                    "KCB Team";
-            JsonObject emailResponse = sendEmail(email,message);
-            if (emailResponse == null) {
-                throw new RuntimeException("Unable to send sms");
-            }
-            int responseCode = emailResponse.get("ResultCode").getAsInt();
-            if (responseCode != 0) {
-                log.error("Send CODE failed. => "+emailResponse.get("ResultDesc").getAsString());
-                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
-            }
-            return true;
-        } catch (Exception e) {
-            logger.log(Level.ALL,e.getMessage(),e);
-        }
-
-
-        return false;
-    }
 
 
 //    @Override
@@ -1082,18 +1090,6 @@ public class DSRPortalService implements IDSRPortalService {
 //
 //    }
 
-    private JsonObject sendEmail(String receiverEmail, String message) {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false);
-            helper.setTo(receiverEmail);
-            helper.setSubject("Account Created");
-            helper.setText(message);
-            javaMailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        return  null;
-    }
+
 
 }

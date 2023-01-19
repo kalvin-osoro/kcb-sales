@@ -151,6 +151,33 @@ public class SMSService implements ISmsService{
         return false;
     }
 
+    @Override
+    public boolean sendDsrCreatedEmail(String receiverEmail, String fullName) {
+        try{
+            String message1= " Dear " + fullName + ",\n" +
+                    "\n" +
+                    "Your account has been created successfully.\n" +
+                    "\n" +
+                    "Please use the following Link to download the app\n" +
+                    "\n" +
+                    "https://play.google.com/apps/internaltest/4701657927919684045" +
+
+                    "Regards,\n" +
+                    "KCB Team";
+            JsonObject emailResponse = sendEmail(receiverEmail,message1);
+            if (emailResponse == null) {
+                throw new RuntimeException("Unable to send sms");
+            }
+            int responseCode = emailResponse.get("ResultCode").getAsInt();
+            if (responseCode != 0) {
+                log.error("Send CODE failed. => "+emailResponse.get("ResultDesc").getAsString());
+            }
+            return true;
+        } catch (Exception e) {
+            logger.log(Level.ALL,e.getMessage(),e);
+        }
+        return false;
+    }
 
 
     @Scheduled(fixedRate = 1)

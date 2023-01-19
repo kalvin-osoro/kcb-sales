@@ -40,5 +40,4 @@ public interface IDSRPortalService {
     boolean lockAccount(String staffNo);
     boolean unlockAccount(String staffNo);
     boolean resetPIN(String staffNo);
-    boolean sendAccountCreatedEmail(String email,String message);
 }
