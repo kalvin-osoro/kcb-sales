@@ -20,6 +20,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
+import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -494,7 +495,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 return null;
             }
             //get merchant by id
-            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(acquiringMerchantDetailsRequest.getMerchantId()).get();
+            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(acquiringMerchantDetailsRequest.getMerchantId()).orElseThrow( ()-> new ResourceNotFoundException("merchant","id",acquiringMerchantDetailsRequest.getMerchantId()));
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode asset = mapper.createObjectNode();
             asset.put("id", acquiringOnboardEntity.getId());

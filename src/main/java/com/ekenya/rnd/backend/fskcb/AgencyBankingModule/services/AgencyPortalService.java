@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -558,7 +559,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("createdOn", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
-                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null : dfsVoomaOnboardEntity.getDateAssigned().getTime());
+                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null :dfsVoomaOnboardEntity.getDateAssigned().getTime());
                 asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
                 asset.put("location", dfsVoomaOnboardEntity.getLocation());
                 asset.put("assetNumber", dfsVoomaOnboardEntity.getAssetNumber());

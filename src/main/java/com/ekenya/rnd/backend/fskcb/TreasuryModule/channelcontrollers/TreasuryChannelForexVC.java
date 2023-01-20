@@ -6,6 +6,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRTra
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryNegRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryChannelService;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.services.ITreasuryPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -26,6 +27,8 @@ public class TreasuryChannelForexVC {
     @Autowired
     ITreasuryChannelService channelService;
     @Autowired
+    ITreasuryPortalService portalService;
+    @Autowired
     CRMService crmService;
 
     @PostMapping("/treasury-get-forex-rates")
@@ -36,18 +39,19 @@ public class TreasuryChannelForexVC {
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(rates != null){
+        if (rates != null) {
             //Object
             //ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,rates,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, rates, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
         }
     }
+
     @PostMapping("/treasury-get-forex-neg-rates")
     public ResponseEntity<?> getForexNegotiatedRates(@RequestBody NegotionRateRequest model) {
 
@@ -55,16 +59,16 @@ public class TreasuryChannelForexVC {
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
-        if(forexList != null){
+        if (forexList != null) {
             //Object
             //ArrayNode node = objectMapper.createArrayNode();
 //          node.put("id",0);
 
-            return ResponseEntity.ok(new BaseAppResponse(1,forexList,"Request Processed Successfully"));
-        }else{
+            return ResponseEntity.ok(new BaseAppResponse(1, forexList, "Request Processed Successfully"));
+        } else {
 
             //Response
-            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 
@@ -89,6 +93,7 @@ public class TreasuryChannelForexVC {
             return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
         }
     }
+
     @PostMapping(value = "/treasury-get-all-trade-reqs")
     public ResponseEntity<?> getAllDSRTradeReqs(@RequestBody TreasuryGetDSRTradeRequest model) {
         List<?> tradeReqs = channelService.loadAllDSRTradeReqs(model);
@@ -98,7 +103,7 @@ public class TreasuryChannelForexVC {
         if (success) {
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)tradeReqs);
+            node.addAll((List) tradeReqs);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
@@ -121,7 +126,7 @@ public class TreasuryChannelForexVC {
         if (success) {
             //Object
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("message","successful");
+            node.put("message", "successful");
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
@@ -154,4 +159,20 @@ public class TreasuryChannelForexVC {
         }
     }
 
+    @PostMapping(value = "/treasury-get-all-currency-rates")
+    public ResponseEntity<?> getAllCurrencyRates() {
+        List<?> list = portalService.getAllCurrencyRates();
+        boolean success = list != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (list != null) {
+            return ResponseEntity.ok(new BaseAppResponse(1, list, "Request Processed Successfully"));
+
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+    }
 }
