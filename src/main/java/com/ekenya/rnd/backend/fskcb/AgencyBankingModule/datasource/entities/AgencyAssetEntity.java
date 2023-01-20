@@ -32,6 +32,7 @@ public class AgencyAssetEntity {
     private Long id;
  private String serialNumber;
  private Long agentId;
+ @Column(nullable = true)
  private Date dateAssigned;
  @Column(name="status")
  @Enumerated(EnumType.STRING)

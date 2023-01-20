@@ -558,7 +558,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("createdOn", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
-                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned().getTime());
+                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null : dfsVoomaOnboardEntity.getDateAssigned().getTime());
                 asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
                 asset.put("location", dfsVoomaOnboardEntity.getLocation());
                 asset.put("assetNumber", dfsVoomaOnboardEntity.getAssetNumber());
