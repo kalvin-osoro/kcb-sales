@@ -196,7 +196,7 @@ public class CBPortalService implements ICBPortalService {
                 objectNode.put("reasonForVisit", cbCustomerVisitEntity.getReasonForVisit());
                 objectNode.put("dsrName", cbCustomerVisitEntity.getDsrName());
                 objectNode.put("status", cbCustomerVisitEntity.getStatus().toString());
-                objectNode.put("createdOn", cbCustomerVisitEntity.getCreatedOn().toString());
+                objectNode.put("createdOn", cbCustomerVisitEntity.getCreatedOn() ==null ? null :cbCustomerVisitEntity.getCreatedOn().getTime());
                 objectNode.put("region", cbCustomerVisitEntity.getRegion());
                 list.add(objectNode);
             }
