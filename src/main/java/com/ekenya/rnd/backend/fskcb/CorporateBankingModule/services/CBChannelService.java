@@ -209,7 +209,7 @@ public class CBChannelService implements ICBChannelService {
             cbAppointmentEntity.setAppointmentTime(model.getAppointmentTime());
 //            cbAppointmentEntity.setAppointmentStatus(AppointmentStatus.PENDING);
             cbAppointmentEntity.setDuration(model.getDuration());
-            cbAppointmentEntity.setDsrAccountEntity(dsrAccountsRepository.findById(model.getDsrId()).get());
+//            cbAppointmentEntity.setDsrAccountEntity(dsrAccountsRepository.findById(model.getDsrId()).get());
             cbAppointmentEntity.setDsrId(model.getDsrId());
             cbAppointmentEntity.setReasonForVisit(model.getReasonForVisit());
             cbAppointmentEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
@@ -413,7 +413,7 @@ public class CBChannelService implements ICBChannelService {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", cbOpportunitiesEntity.getId());
                 objectNode.put("name", cbOpportunitiesEntity.getProduct());
-                objectNode.put("stage", cbOpportunitiesEntity.getStage().ordinal());
+                objectNode.put("stage", cbOpportunitiesEntity.getStage().toString());
                 objectNode.put("probability", cbOpportunitiesEntity.getProbability());
                 objectNode.put("createdOn", cbOpportunitiesEntity.getCreatedOn().getTime());
                 list.add(objectNode);
