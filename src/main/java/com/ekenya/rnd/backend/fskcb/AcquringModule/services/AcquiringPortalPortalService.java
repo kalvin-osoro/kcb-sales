@@ -203,6 +203,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("condition", dfsVoomaOnboardEntity.getAssetCondition().toString());
                 asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null :dfsVoomaOnboardEntity.getDateAssigned().getTime());
                 asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
                 asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
                 asset.put("location", dfsVoomaOnboardEntity.getLocation());
