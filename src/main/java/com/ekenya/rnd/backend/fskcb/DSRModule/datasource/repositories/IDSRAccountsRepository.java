@@ -19,6 +19,8 @@ public interface IDSRAccountsRepository extends JpaRepository<DSRAccountEntity, 
     Optional<DSRAccountEntity> findByStaffNo(String staffNo);
     Optional<DSRAccountEntity> findByStaffNoAndPhoneNo(String staffNo,String phoneNo);
 
+    Optional<DSRAccountEntity> findByEmail(String email);
+
 
 //    DSRAccountEntity findByDsrId(Long dsrId);
 }

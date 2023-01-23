@@ -900,7 +900,7 @@ public class DSRPortalService implements IDSRPortalService {
             int imported = 0;
             for (DSRAccountEntity account: results.getAccounts()) {
                 //
-                if(!dsrAccountsRepository.findByStaffNo(account.getStaffNo()).isPresent()){
+                if(!dsrAccountsRepository.findByEmail(account.getEmail()).isPresent()){
 
                     //Create inactive user account ..
                     AddAdminUserRequest req = new AddAdminUserRequest();
@@ -941,15 +941,13 @@ public class DSRPortalService implements IDSRPortalService {
                             sendEmail(account.getEmail(), subject, message);
                         }
 
-
-
                         //Add DSR to profile ..
                         profilesAndUsersRepository.save(profileAndUserEntity);
                     }
                     //
                     imported ++;
                 }else{
-                    results.getErrors().add(new ExcelImportError(0,0,"An DSR Account with Staff No '"+account.getStaffNo()+"' already exists"));
+                    results.getErrors().add(new ExcelImportError(0,0,"An DSR Account with Email '"+account.getEmail()+"' already exists"));
                 }
             }
             //
