@@ -926,20 +926,20 @@ public class DSRPortalService implements IDSRPortalService {
                         dsrAccountsRepository.save(account);
                         //send email
 
-//                        if (account.getEmail() != null && !account.getEmail().isEmpty()) {
-//                            String subject = "DSR Account Created";
-//                            String message = "Dear " + account.getFullName() + ",\n\n" +
-//                                    "Your DSR account has been created successfully.\n" +
-//                                    "Your account details are as follows:\n" +
-//                                    "Staff No: " + account.getStaffNo() + "\n" +
-//                                    "Phone No: " + account.getPhoneNo() + "\n" +
-//                                    "Sales Code: " + account.getSalesCode() + "\n" +
-//                                    "Expiry Date: " + account.getExpiryDate() + "\n\n" +
-//                                    "Please use this link to download the app:\n" +
-//                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-//                                    "Thank you.";
-//                            sendEmail(account.getEmail(), subject, message);
-//                        }
+                        if (account.getEmail() != null && !account.getEmail().isEmpty()) {
+                            String subject = "DSR Account Created";
+                            String message = "Dear " + account.getFullName() + ",\n\n" +
+                                    "Your DSR account has been created successfully.\n" +
+                                    "Your account details are as follows:\n" +
+                                    "Staff No: " + account.getStaffNo() + "\n" +
+                                    "Phone No: " + account.getPhoneNo() + "\n" +
+                                    "Sales Code: " + account.getSalesCode() + "\n" +
+                                    "Expiry Date: " + account.getExpiryDate() + "\n\n" +
+                                    "Please use this link to download the app:\n" +
+                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                    "Thank you.";
+                            sendEmail(account.getEmail(), subject, message);
+                        }
 
 
 
