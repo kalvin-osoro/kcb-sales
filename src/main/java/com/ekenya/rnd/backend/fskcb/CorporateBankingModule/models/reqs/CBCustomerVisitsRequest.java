@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.OpportunityStage;
 import com.ekenya.rnd.backend.fskcb.entity.Zone;
 import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Date;
 
 @Getter
@@ -29,6 +32,10 @@ public class CBCustomerVisitsRequest {
     private String remarks;
     private boolean staffOfOtherDepartmentPresent;
     private String timeSpent;
+    private String probality;
+    private OpportunityStage stage;
+    private String  prospect;
+    private String expectedAmount;
     private Date nextVisitDate;
     private String productInvolvement;
     private String cashManagement;

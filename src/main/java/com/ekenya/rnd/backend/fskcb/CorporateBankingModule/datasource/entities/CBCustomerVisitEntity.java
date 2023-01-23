@@ -22,6 +22,11 @@ public class CBCustomerVisitEntity {
     //dsr id from dsr table
     private  Long dsrId;
     private String dsrName;
+    private String probality;
+    @Enumerated(EnumType.STRING)
+    private OpportunityStage stage;
+    private String  prospect;
+    private String expectedAmount;
     private String customerName;
     private String reasonForVisit;
     private String visitDate;

@@ -396,7 +396,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
-                objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn().getTime());
+                objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn() ==null ? null : dfsVoomaTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
             return list;
@@ -604,7 +604,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 asset.put("condition", dfsVoomaOnboardEntity.getAssetCondition().toString());
                 asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("createdOn", dfsVoomaOnboardEntity.getSerialNumber());
-                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned()==null ?null :dfsVoomaOnboardEntity.getDateAssigned().getTime());
+                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null :dfsVoomaOnboardEntity.getDateAssigned().getTime());
                 asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
                 asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
                 asset.put("location", dfsVoomaOnboardEntity.getLocation());

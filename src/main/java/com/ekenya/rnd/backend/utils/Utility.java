@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.utils;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.locationtech.jts.geom.*;
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+@RequiredArgsConstructor
 public class Utility {
     private Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
