@@ -37,6 +37,7 @@ public class AcquiringLeadEntity {
     private String startDate;
     private String endDate;
     private String outcomeOfTheVisit;
+    private String remarks;
     private Date createdOn;
     @ManyToOne
     @JoinColumn(name = "dsrAccId")

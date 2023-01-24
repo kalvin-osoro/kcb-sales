@@ -23,6 +23,7 @@ public class CBLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String remarks;
     private String customerName;
     private String product;
     private String email;
@@ -36,9 +37,14 @@ public class CBLeadEntity {
     @Enumerated(EnumType.STRING)
     private LeadStatus leadStatus;
     private boolean assigned=false;
+    private boolean escalated=false;
     private String startDate;
     private String endDate;
     private String outcomeOfTheVisit;
+    private String profileCode;
+    private String escaleteEmail;
+    private String leadValue;
+    private Date assignTime;
     private Date createdOn;
     @ManyToOne
     @JoinColumn(name = "dsrAccId")

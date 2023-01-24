@@ -80,4 +80,6 @@ public interface ICBPortalService {
     boolean sendEmailForApproval(CBApproveConcessionRequest model);
 
     boolean rejectCBConcession(CBApproveConcessionRequest model);
+
+    boolean reAssignLead(CBAssignLeadRequest model);
 }

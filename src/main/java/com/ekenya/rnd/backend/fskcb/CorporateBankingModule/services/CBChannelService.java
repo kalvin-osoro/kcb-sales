@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositori
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 
@@ -221,8 +223,14 @@ public class CBChannelService implements ICBChannelService {
             cbAppointmentEntity.setDsrId(model.getDsrId());
             cbAppointmentEntity.setReasonForVisit(model.getReasonForVisit());
             cbAppointmentEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-
+            //add list of RM to this Appointment
             cbCustomerAppointmentRepository.save(cbAppointmentEntity);
+            Set<RelationshipManagerRequest> relationshipManagerRequestList =  model.getRm();
+            for (RelationshipManagerRequest relationshipManagerRequest : relationshipManagerRequestList) {
+                DSRAccountEntity dsrAccountEntity = new DSRAccountEntity();
+//                relationshipManagerRequest.getRmId();
+                dsrAccountsRepository.save(dsrAccountEntity);
+            }
             return true;
         } catch (Exception e) {
             log.error("Error occurred while creating customer appointment", e);
@@ -286,6 +294,8 @@ public class CBChannelService implements ICBChannelService {
             cbLeadEntity.setBusinessUnit(model.getBusinessUnit());
             cbLeadEntity.setEmail(model.getEmail());
             cbLeadEntity.setPhoneNumber(model.getPhoneNumber());
+            cbLeadEntity.setProfileCode(model.getProfileCode());
+            cbLeadEntity.setLeadValue(model.getLeadValue());
             cbLeadEntity.setProduct(model.getProduct());
             cbLeadEntity.setPriority(model.getPriority());
             cbLeadEntity.setDsrId(model.getDsrId());
@@ -293,6 +303,7 @@ public class CBChannelService implements ICBChannelService {
             cbLeadEntity.setTopic(model.getTopic());
             cbLeadEntity.setLeadStatus(LeadStatus.OPEN);
             cbLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //if this lead
             cbLeadsRepository.save(cbLeadEntity);
             return true;
 

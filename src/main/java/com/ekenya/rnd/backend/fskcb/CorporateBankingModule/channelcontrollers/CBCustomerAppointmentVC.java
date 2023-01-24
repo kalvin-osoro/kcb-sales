@@ -4,6 +4,8 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppoint
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentUpdateRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBChannelService;
+import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.DSRAccountsRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRPortalService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -22,6 +24,12 @@ import java.util.List;
 public class CBCustomerAppointmentVC {
     @Autowired
     private ICBChannelService channelService;
+
+    @Autowired
+    DSRPortalService dsrPortalService;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @PostMapping(value = "/cb-create-customer-appointmentV1")
     public ResponseEntity createCustomerAppointment(@RequestBody CBAppointmentRequest model){
@@ -71,6 +79,26 @@ public class CBCustomerAppointmentVC {
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping(value = "/dsr-get-accounts-all")
+    public ResponseEntity<?> getAllAccounts(DSRAccountsRequest request) {
+
+        //INSIDE SERVICE
+        ArrayNode list = dsrPortalService.getAllDSRAccounts(request);
+
+        //Response
+        if(list != null){
+            //Object
+            //ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 
             //Response

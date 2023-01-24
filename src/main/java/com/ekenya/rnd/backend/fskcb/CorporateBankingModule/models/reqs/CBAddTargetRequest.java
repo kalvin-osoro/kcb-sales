@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBTargetType;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.AssignmentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class CBAddTargetRequest {
     private  String targetSource;
     private Date startDate;
     private String endDate;
-    private TargetType targetType;
+    private CBTargetType targetType;
     private Date createdOn;
     private TargetStatus targetStatus;
     private AssignmentType assignmentType;

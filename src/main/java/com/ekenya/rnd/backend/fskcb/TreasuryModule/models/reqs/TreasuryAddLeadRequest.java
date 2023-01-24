@@ -31,4 +31,9 @@ public class TreasuryAddLeadRequest {
     private String email;
     private String phoneNumber;
     private Date createdOn;
+
+    private String profileCode;
+    private String escaleteEmail;
+    private String leadValue;
+    private Date assignTime;
 }

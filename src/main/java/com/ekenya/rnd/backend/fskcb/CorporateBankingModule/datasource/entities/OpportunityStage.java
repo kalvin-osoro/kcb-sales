@@ -2,9 +2,11 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities;
 
 public enum OpportunityStage {
     NEGOTIATION,
-    CREDITQUEST,
-    APPROVED,
-    PENDING_DISBURSEMENT
+    CREDIT_QUEST,
+    APPROVAL,
+    ACCEPTANCE,
+    DOCUMENTATION,
+    PENDING_DISBURSEMENT,
 
 
 }

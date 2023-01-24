@@ -38,7 +38,7 @@ public class CBTargetEntity {
 
     private String endDate;
     @Enumerated(EnumType.STRING)
-    private TargetType targetType;
+    private CBTargetType targetType;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetStatus targetStatus;

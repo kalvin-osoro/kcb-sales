@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
@@ -65,6 +66,9 @@ public class CBPortalService implements ICBPortalService {
         try {
             CBLeadEntity cbLeadEntity = cbLeadsRepository.findById(model.getLeadId()).orElse(null);
             cbLeadEntity.setDsrId(model.getDsrId());
+            cbLeadEntity.setLeadStatus(LeadStatus.OPEN);
+            cbLeadEntity.setEscaleteEmail(model.getEscalateEmail());
+            cbLeadEntity.setAssignTime(Utility.getPostgresCurrentTimeStampForInsert());
             cbLeadEntity.setPriority(model.getPriority());
             //set start date from input
             cbLeadEntity.setAssigned(true);
@@ -498,16 +502,19 @@ public class CBPortalService implements ICBPortalService {
             DSRAccountEntity user = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
 
             CBTargetEntity target = targetRepository.findById(model.getTargetId()).orElse(null);
-            if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
+            if (target.getTargetType().equals(CBTargetType.CROSS_SALES)) {
                 user.setCampaignTargetValue(model.getTargetValue());
             }
-            if (target.getTargetType().equals(TargetType.LEADS)) {
+            if (target.getTargetType().equals(CBTargetType.MFI)) {
                 user.setLeadsTargetValue(model.getTargetValue());
             }
-            if (target.getTargetType().equals(TargetType.VISITS)) {
+            if (target.getTargetType().equals(CBTargetType.PRODUCTS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
             }
-            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
+            if (target.getTargetType().equals(CBTargetType.ASSETS_AND_LIABILITIES)) {
+                user.setVisitsTargetValue(model.getTargetValue());
+            }
+            if (target.getTargetType().equals(CBTargetType.FINANCIAL_SERVICES)) {
                 user.setOnboardTargetValue(model.getTargetValue());
             }
 
@@ -584,6 +591,7 @@ public class CBPortalService implements ICBPortalService {
             cbOpportunityEntity.setProduct(model.getProduct());
             cbOpportunityEntity.setStage(model.getStage());
             cbOpportunityEntity.setValue(model.getValue());
+            cbOpportunityEntity.setCbSectors(model.getCbSectors());
             cbOpportunityEntity.setProbability(model.getProbability());
             cbOpportunityEntity.setStatus(OpportunityStatus.OPEN);
             cbOpportunityEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
@@ -608,9 +616,9 @@ public class CBPortalService implements ICBPortalService {
                 objectNode.put("customerName", cbOpportunitiesEntity.getCustomerName());
                 objectNode.put("product", cbOpportunitiesEntity.getProduct());
                 objectNode.put("value", cbOpportunitiesEntity.getValue());
-                objectNode.put("stage", cbOpportunitiesEntity.getStage().ordinal());
+                objectNode.put("stage", cbOpportunitiesEntity.getStage().toString());
                 objectNode.put("probability", cbOpportunitiesEntity.getProbability());
-                objectNode.put("status", cbOpportunitiesEntity.getStatus().ordinal());
+                objectNode.put("status", cbOpportunitiesEntity.getStatus().toString());
                 objectNode.put("createdOn", cbOpportunitiesEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
@@ -849,5 +857,30 @@ public class CBPortalService implements ICBPortalService {
         }
         return false;
     }
+
+    @Override
+    public boolean reAssignLead(CBAssignLeadRequest model) {
+        try {
+            CBLeadEntity cbLeadEntity = cbLeadsRepository.findById(model.getLeadId()).orElse(null);
+            cbLeadEntity.setDsrId(model.getDsrId());
+            cbLeadEntity.setBusinessUnit(model.getBusinessUnit());
+            cbLeadEntity.setRemarks(model.getRemarks());
+            //set start date from input
+            cbLeadEntity.setAssigned(false);
+            //save
+            cbLeadsRepository.save(cbLeadEntity);
+            //update is assigned to true
+
+            return true;
+
+
+        } catch (Exception e) {
+            log.error("Error assigning lead to dsr", e);
+        }
+        return false;
+    }
+
+    //check if assignTime is past 48 hours if yes then send email to escaleteEmail
+
 
 }

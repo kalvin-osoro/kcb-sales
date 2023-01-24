@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,4 +21,5 @@ public class CBAppointmentRequest {
     private String reasonForVisit;
     private String customerName;
     private String customerPhoneNumber;
+    private Set<RelationshipManagerRequest> rm;
 }

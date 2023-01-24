@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBSectors;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.OpportunityStage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class CBAddOpportunityRequest {
     private String product;
     private String value;
     private OpportunityStage stage;
+    private CBSectors cbSectors;
     private String probability;
     private OpportunityStatus status;
 

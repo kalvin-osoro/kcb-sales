@@ -17,6 +17,9 @@ public class CBAssignLeadRequest {
 //    private String topic;
     private Priority priority;
     private Long dsrId;
+    private String escalateEmail;
+    private String remarks;
+    private String businessUnit;
     private Long leadId;
 //    private String dsrName;
 //    private LeadStatus leadStatus;

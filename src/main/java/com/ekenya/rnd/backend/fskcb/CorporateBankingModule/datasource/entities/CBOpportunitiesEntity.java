@@ -29,6 +29,8 @@ public class CBOpportunitiesEntity {
     @Enumerated(EnumType.STRING)
     private OpportunityStage stage;
     private String probability;
+    @Enumerated(EnumType.STRING)
+    private CBSectors cbSectors;
     private Date createdOn;
     @Enumerated(EnumType.STRING)
     private OpportunityStatus status;

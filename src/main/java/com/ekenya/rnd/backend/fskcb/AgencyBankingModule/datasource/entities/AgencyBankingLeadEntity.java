@@ -28,6 +28,7 @@ public class AgencyBankingLeadEntity {
     private  Integer customerId;
     private String businessUnit;
     private String customerName;
+    private String remarks;
     private String product;
     private String email;
     private String customerAccountNumber;
