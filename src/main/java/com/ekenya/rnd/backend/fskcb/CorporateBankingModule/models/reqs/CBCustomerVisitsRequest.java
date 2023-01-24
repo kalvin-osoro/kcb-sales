@@ -21,6 +21,7 @@ public class CBCustomerVisitsRequest {
     private Long dsrId;
     private String customerName;
     private String dsrName;
+    private String region;
     private String reasonForVisit;
     private String visitDate;
     private Zone zone;
