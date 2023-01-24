@@ -34,7 +34,7 @@ public class CBCustomerVisitEntity {
     private Status status;
     //    private Zone zone;
     private Date createdOn;
-    private Date updatedOn;
+//    private Date updatedOn;
     private boolean isCompleted=false;
     //call details
     private String typeOfVisit;
