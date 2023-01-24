@@ -30,7 +30,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -307,12 +309,12 @@ public class CBPortalService implements ICBPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (CBConcessionEntity cbConcessionEntity : cbConcessionRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
-                node.put("id",cbConcessionEntity.getId());
+                node.put("id", cbConcessionEntity.getId());
                 node.put("concessionStatus", cbConcessionEntity.getConcessionStatus().toString());
                 node.put("createdOn", cbConcessionEntity.getCreatedOn().getTime());
-                node.put("submittedBy",cbConcessionEntity.getSubmittedBy());
-                node.put("customerName",cbConcessionEntity.getCustomerName());
-                node.put("submissionDate",cbConcessionEntity.getSubmissionDate());
+                node.put("submittedBy", cbConcessionEntity.getSubmittedBy());
+                node.put("customerName", cbConcessionEntity.getCustomerName());
+                node.put("submissionDate", cbConcessionEntity.getSubmissionDate());
 
                 List<CBRevenueLineEntity> cbRevenueLineEntityList = cbConcessionEntity.getCbRevenueLineEntityList();
                 ArrayNode arrayNode = mapper.createArrayNode();
@@ -390,11 +392,11 @@ public class CBPortalService implements ICBPortalService {
 
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", cbBankingConvenantEntity.getId());
-                objectNode.put("customerId",cbBankingConvenantEntity.getCustomerId());
+                objectNode.put("customerId", cbBankingConvenantEntity.getCustomerId());
                 objectNode.put("customerName", cbBankingConvenantEntity.getCustomerName());
                 ObjectNode period = mapper.createObjectNode();
                 period.put("endDate", cbBankingConvenantEntity.getEndDate());
-                period.put("createdOn",cbBankingConvenantEntity.getCreatedOn().toString());
+                period.put("createdOn", cbBankingConvenantEntity.getCreatedOn().toString());
                 objectNode.set("period", period);
                 objectNode.put("intervalForCheck", cbBankingConvenantEntity.getIntervalForCheck());
                 objectNode.put("status", cbBankingConvenantEntity.getStatus().toString());
@@ -825,10 +827,10 @@ public class CBPortalService implements ICBPortalService {
     }
 
     public void sendEmail(String email, CBConcessionEntity cbConcessionEntity) {
-      try {
-          MimeMessage message1 = javaMailSender.createMimeMessage();
-          MimeMessageHelper helper = new MimeMessageHelper(message1);
-          helper.setFrom("kcb@test.com", "KCB");
+        try {
+            MimeMessage message1 = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message1);
+            helper.setFrom("kcb@test.com", "KCB");
             helper.setTo(email);
             String subject1 = "Concession Approval";
             String content = "<p>Hello,</p>"
@@ -839,9 +841,9 @@ public class CBPortalService implements ICBPortalService {
             helper.setSubject(subject1);
             helper.setText(content, true);
             javaMailSender.send(message1);
-      } catch (Exception e) {
-          log.error("Error occurred while sending email", e);
-      }
+        } catch (Exception e) {
+            log.error("Error occurred while sending email", e);
+        }
     }
 
     @Override
@@ -880,7 +882,40 @@ public class CBPortalService implements ICBPortalService {
         return false;
     }
 
-    //check if assignTime is past 48 hours if yes then send email to escaleteEmail
+    //send escalation automatic email if assignedTime is past 48 hrs
+    public void sendEscalationEmail(String email, CBLeadEntity cbLeadEntity) {
+        try {
+            if (cbLeadEntity.getAssignTime() != null && cbLeadEntity.getLeadStatus() == LeadStatus.OPEN && cbLeadEntity.isEscalated() == false) {
+                Date date = new Date();
+                long diff = date.getTime() - cbLeadEntity.getAssignTime().getTime();
+                log.info("diff is " + diff);
+                long diffHours = diff / (60 * 60 * 1000) % 24;
+                if (diffHours > 48) {
+                    MimeMessage message1 = javaMailSender.createMimeMessage();
+                    MimeMessageHelper helper = new MimeMessageHelper(message1);
+                    helper.setFrom("corporate@gmail.com", "KCB");
+                    helper.setTo(cbLeadEntity.getEscaleteEmail());
+                    String subject1 = "Lead Escalation";
+                    String content = "<p>Hello,</p>"
+                            + "<p>You have a new lead escalation.</p>"
+                            + "<p>Please Login to the System and reasign </p>"
+                            + "<p>Regards,</p>"
+                            + "<p>KCB</p>";
+                    helper.setSubject(subject1);
+                    helper.setText(content, true);
+                    javaMailSender.send(message1);
+                    //isEscalated to true
+                    cbLeadEntity.setEscalated(true);
+                    cbLeadsRepository.save(cbLeadEntity);
 
-
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while sending email", e);
+        }
+    }
 }
+
+
+
+

@@ -152,6 +152,31 @@ public class SMSService implements ISmsService{
     }
 
     @Override
+    public boolean sendDSRCreatedSMS(String phoneNo, String fullName) {
+        try{
+            //
+
+            String message = "Hello " + fullName + ", your account has been created successfully \nPlease use this link to install the app https://play.google.com/apps/internaltest/4701657927919684045";
+
+
+            //
+            JsonObject emailResponse = attemptSendSMS(message, phoneNo);
+            if (emailResponse == null) {
+                throw new RuntimeException("Unable to send sms");
+            }
+            int responseCode = emailResponse.get("ResultCode").getAsInt();
+            if (responseCode != 0) {
+                log.error("Send CODE failed. => "+emailResponse.get("ResultDesc").getAsString());
+                //throw new RuntimeException(smsResponse.get("ResultDesc").getAsString());
+            }
+            return true;
+        } catch (Exception e) {
+            logger.log(Level.ALL,e.getMessage(),e);
+        }
+        return false;
+    }
+
+    @Override
     public boolean sendDsrCreatedEmail(String receiverEmail, String fullName) {
         try{
             String message1= " Dear " + fullName + ",\n" +
@@ -268,4 +293,6 @@ public class SMSService implements ISmsService{
         long diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
         return diff > 1200;
     };
+
+    //function to url shorten
 }

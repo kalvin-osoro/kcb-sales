@@ -38,11 +38,20 @@ public class CBCustomerAppointment {
 //    @JoinColumn(name = "dsrAgentId")
 //    private DSRAccountEntity dsrAccountEntity;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "customer_appointment_rm",
-            joinColumns = @JoinColumn(name = "dsrAccountId"),
-            inverseJoinColumns = @JoinColumn(name = "cbCustomerAppointmentId"))
-    private Set<DSRAccountEntity> dsrAccountEntities= new HashSet<>();
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "customer_appointment_rm",
+//            joinColumns = @JoinColumn(name = "dsrAccountId"),
+//            inverseJoinColumns = @JoinColumn(name = "cbCustomerAppointmentId"))
+//    private Set<DSRAccountEntity> dsrAccountEntities= new HashSet<>();
     private Date createdOn;
-//    private Long dsrId;
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "cbAppointment_dsrAccount",
+            joinColumns = @JoinColumn(
+                    name = "cbAppointmentId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "dsrAccountId", referencedColumnName = "id"))
+    private Set<DSRAccountEntity> dsrAccountEntities;
 }

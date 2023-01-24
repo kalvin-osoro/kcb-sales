@@ -223,14 +223,7 @@ public class CBChannelService implements ICBChannelService {
             cbAppointmentEntity.setDsrId(model.getDsrId());
             cbAppointmentEntity.setReasonForVisit(model.getReasonForVisit());
             cbAppointmentEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            //add list of RM to this Appointment
             cbCustomerAppointmentRepository.save(cbAppointmentEntity);
-            Set<RelationshipManagerRequest> relationshipManagerRequestList =  model.getRm();
-            for (RelationshipManagerRequest relationshipManagerRequest : relationshipManagerRequestList) {
-                DSRAccountEntity dsrAccountEntity = new DSRAccountEntity();
-//                relationshipManagerRequest.getRmId();
-                dsrAccountsRepository.save(dsrAccountEntity);
-            }
             return true;
         } catch (Exception e) {
             log.error("Error occurred while creating customer appointment", e);

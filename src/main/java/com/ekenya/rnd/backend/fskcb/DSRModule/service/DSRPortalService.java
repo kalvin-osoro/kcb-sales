@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.ISmsService;
+import com.ekenya.rnd.backend.fskcb.AuthModule.services.SMSService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.BranchEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.JsonLatLng;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
@@ -29,15 +30,22 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
@@ -51,6 +59,20 @@ import java.util.logging.Logger;
 
 @Service
 public class DSRPortalService implements IDSRPortalService {
+
+    @Value("CMCOM")
+    private String SMS_SENDER_ID;
+    @Value("5094")
+    private String client_id;
+    @Value("https://testgateway.ekenya.co.ke:8443/ServiceLayer/pgsms/send")
+    private String SMS_GATEWAY_URL;
+    @Value("janty")
+    private String SMS_USER_NAME;
+    @Value("b0c95e2144bdd4c86b94501a814f9bbd9d025651d8497df04b7b7f318fe5172088c491906756a67727f6ea964e9caf1c034bf9bb267b821e6b43cb3dcc569d0f")
+    private String SMS_PASSWORD;
+    @Value("30")
+    private String otpExpiresIn;
+    //
 
     @Autowired
     private IDSRTeamsRepository dsrTeamsRepository;
@@ -923,22 +945,37 @@ public class DSRPortalService implements IDSRPortalService {
                         //
 
                         //Save DSR Account ..
-                        dsrAccountsRepository.save(account);
+                        DSRAccountEntity account1 = dsrAccountsRepository.save(account);
                         //send email
 
-                        if (account.getEmail() != null && !account.getEmail().isEmpty()) {
+                        if (account1.getEmail() != null && !account1.getEmail().isEmpty()) {
                             String subject = "DSR Account Created";
-                            String message = "Dear " + account.getFullName() + ",\n\n" +
+                            String message = "Dear " + account1.getFullName() + ",\n\n" +
                                     "Your DSR account has been created successfully.\n" +
                                     "Your account details are as follows:\n" +
-                                    "Staff No: " + account.getStaffNo() + "\n" +
-                                    "Phone No: " + account.getPhoneNo() + "\n" +
-                                    "Sales Code: " + account.getSalesCode() + "\n" +
-                                    "Expiry Date: " + account.getExpiryDate() + "\n\n" +
+                                    "Staff No: " + account1.getStaffNo() + "\n" +
+                                    "Phone No: " + account1.getPhoneNo() + "\n" +
+                                    "Sales Code: " + account1.getSalesCode() + "\n" +
+                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
                                     "Please use this link to download the app:\n" +
                                     "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
                                     "Thank you.";
-                            sendEmail(account.getEmail(), subject, message);
+                            sendEmail(account1.getEmail(), subject, message);
+                        }
+                        //send sms
+                        if (account1.getPhoneNo() != null && !account.getPhoneNo().isEmpty()) {
+                            String message = "Dear " + account1.getFullName() + ",\n\n" +
+                                    "Your DSR account has been created successfully.\n" +
+                                    "Your account details are as follows:\n" +
+                                    "Staff No: " + account1.getStaffNo() + "\n" +
+                                    "Phone No: " + account1.getPhoneNo() + "\n" +
+                                    "Sales Code: " + account1.getSalesCode() + "\n" +
+                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
+                                    "Please use this link to download the app:\n" +
+                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                    "Thank you.";
+                            sendSMS(account1.getPhoneNo(), message);
+
                         }
 
                         //Add DSR to profile ..
@@ -967,6 +1004,42 @@ public class DSRPortalService implements IDSRPortalService {
             log.error(ex.getMessage(),ex);
         }
         return null;
+    }
+    @Scheduled(fixedRate = 1)
+    private JsonObject sendSMS(String phoneNo, String message) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+////        String url = environment.getProperty("sms_gateway.url");
+//        String client_id=
+//        String username =
+        long seed = System.currentTimeMillis();
+        Random random = new Random(seed);
+        int max = 99999999, min = 10000000;
+//        String password =
+        JsonObject jsonObjectBody = new JsonObject();
+        jsonObjectBody.addProperty("to", phoneNo);
+        jsonObjectBody.addProperty("message", message);
+        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+        jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
+        jsonObjectBody.addProperty("clientid", client_id);
+        jsonObjectBody.addProperty("username", SMS_USER_NAME);
+        jsonObjectBody.addProperty("password", SMS_PASSWORD);
+        logger.info("Message body is: " + jsonObjectBody);
+        HttpEntity<String> entity = new HttpEntity<>(jsonObjectBody.toString(), headers);
+        ResponseEntity<String> responseEntity = null;
+
+        try {
+            logger.info("Sending sms");
+            responseEntity = restTemplate.postForEntity(SMS_GATEWAY_URL,
+                    entity, String.class);
+            logger.info("After Sending sms");
+            JsonObject payload = JsonParser.parseString(responseEntity.getBody()).getAsJsonObject();
+            return payload;
+        } catch (Exception e) {
+            logger.info("Send SMS failed. " + e.getMessage());
+        }
+        return null;
+
     }
 
 //    private JsonObject sendEmail(String message, String receiverEmail) {
