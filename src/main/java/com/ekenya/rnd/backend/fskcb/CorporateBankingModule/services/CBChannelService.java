@@ -58,6 +58,7 @@ public class CBChannelService implements ICBChannelService {
             cbCustomerVisitEntity.setChannel(request.getChannel());
             cbCustomerVisitEntity.setProspect(request.getProspect());
             cbCustomerVisitEntity.setExpectedAmount(request.getExpectedAmount());
+            cbCustomerVisitEntity.setDsrId(request.getDsrId());
             cbCustomerVisitEntity.setCustomerName(request.getCustomerName());
             cbCustomerVisitEntity.setProductOffered(request.getProductOffered());
             cbCustomerVisitEntity.setOpportunities(request.getOpportunities());
