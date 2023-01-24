@@ -74,9 +74,9 @@ public class CBChannelService implements ICBChannelService {
             cbCustomerVisitEntity.setBancaRep(request.getBancaRep());
             cbCustomerVisitEntity.setTreasuryRep(request.getTreasuryRep());
             cbCustomerVisitEntity.setPeriodic(request.getPeriodic());
+            cbCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             cbCustomerVisitRepository.save(cbCustomerVisitEntity);
             return true;
-
 
         } catch (Exception e) {
             log.error("Error occurred while creating customer visit", e);
