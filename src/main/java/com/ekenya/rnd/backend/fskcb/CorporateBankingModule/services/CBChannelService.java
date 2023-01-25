@@ -227,16 +227,18 @@ public class CBChannelService implements ICBChannelService {
             cbAppointmentEntity.setDsrId(model.getDsrId());
             cbAppointmentEntity.setReasonForVisit(model.getReasonForVisit());
             cbAppointmentEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            cbCustomerAppointmentRepository.save(cbAppointmentEntity);
+            CBCustomerAppointment cbCustomerAppointment = cbCustomerAppointmentRepository.save(cbAppointmentEntity);
             //add list of RMs to the appointment
             for (RelationshipManagerRequest rm : model.getRm()) {
                 CBCustomerAppointmentRM cbCustomerAppointmentRM = new CBCustomerAppointmentRM();
-                cbCustomerAppointmentRM.setAppointmentId(cbAppointmentEntity.getId());
+                cbCustomerAppointmentRM.setAppointmentId(cbCustomerAppointment.getId());
                 cbCustomerAppointmentRM.setRmId(rm.getRmId());
                 cbCustomerAppointmentRM.setRmName(rm.getRmName());
                 cbCustomerAppointmentRM.setRmPhoneNumber(rm.getRmPhoneNumber());
                 cbCustomerAppointmentRM.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-                cbCustomerAppointmentRMRepository.save(cbCustomerAppointmentRM);
+
+                CBCustomerAppointmentRM rm1 = cbCustomerAppointmentRMRepository.save(cbCustomerAppointmentRM);
+                // update the linked table with appointmend id and rm id
             }
             return true;
         } catch (Exception e) {

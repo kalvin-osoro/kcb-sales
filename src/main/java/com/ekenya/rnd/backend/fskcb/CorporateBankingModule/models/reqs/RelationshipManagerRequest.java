@@ -12,7 +12,7 @@ public class RelationshipManagerRequest {
     private String rmPhoneNumber;
     private String rmName;
 
-    private Long appointmentId;
+//    private Long appointmentId;
 
 
 }
