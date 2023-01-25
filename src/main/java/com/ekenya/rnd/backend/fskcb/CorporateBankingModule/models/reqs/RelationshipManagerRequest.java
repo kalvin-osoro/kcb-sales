@@ -9,5 +9,10 @@ import lombok.*;
 public class RelationshipManagerRequest {
 //    private String rmName;
     private Long rmId;
+    private String rmPhoneNumber;
+    private String rmName;
+
+    private Long appointmentId;
+
 
 }

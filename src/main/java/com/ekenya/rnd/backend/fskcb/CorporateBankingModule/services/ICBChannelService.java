@@ -48,4 +48,8 @@ public interface ICBChannelService {
     ArrayNode getDSRSummary(DSRSummaryRequest model);
 
     List<ObjectNode> getAllOpportunities();
+
+    List<ObjectNode> getAllCustomeropportunityByDSR(CBDSROpportunity model);
+
+    boolean updateOpportunity(CBChannelOpportunityRequest request);
 }

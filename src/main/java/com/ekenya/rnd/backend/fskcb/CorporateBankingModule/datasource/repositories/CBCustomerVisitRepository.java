@@ -7,6 +7,8 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.C
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface CBCustomerVisitRepository extends JpaRepository<CBCustomerVisitEntity, Long> {
 
     //find all
@@ -20,4 +22,6 @@ public interface CBCustomerVisitRepository extends JpaRepository<CBCustomerVisit
 
     @Query(value = "SELECT COUNT(*) FROM cb_customer_visits WHERE dsrId=?1", nativeQuery = true)
     int countTotalVisits(Long dsrId);
+    @Query(value = "SELECT * FROM cb_customer_visits WHERE dsrId = ?1 AND opportunities IS NOT NULL", nativeQuery = true)
+    List<CBCustomerVisitEntity> findAllByDsrIdAndOpportunitiesIsNotNull(Long dsrId);
 }

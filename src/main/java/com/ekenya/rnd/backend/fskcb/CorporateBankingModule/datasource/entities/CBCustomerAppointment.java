@@ -34,24 +34,19 @@ public class CBCustomerAppointment {
     private String customerName;
     private String customerPhoneNumber;
     private Long dsrId;
-//    @ManyToOne
-//    @JoinColumn(name = "dsrAgentId")
-//    private DSRAccountEntity dsrAccountEntity;
+    @ManyToOne
+    @JoinColumn(name = "dsrAgentId")
+    private DSRAccountEntity dsrAccountEntity;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "customer_appointment_rm",
-//            joinColumns = @JoinColumn(name = "dsrAccountId"),
-//            inverseJoinColumns = @JoinColumn(name = "cbCustomerAppointmentId"))
-//    private Set<DSRAccountEntity> dsrAccountEntities= new HashSet<>();
+    //many to many relationship with CBCustomerAppointmentRM
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "cb_appointment_rm",
+            joinColumns = @JoinColumn(name = "appointmentId"),
+            inverseJoinColumns = @JoinColumn(name = "rmId"))
+    private Set<CBCustomerAppointmentRM> rm = new HashSet<>();
+
     private Date createdOn;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "cbAppointment_dsrAccount",
-            joinColumns = @JoinColumn(
-                    name = "cbAppointmentId", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "dsrAccountId", referencedColumnName = "id"))
-    private Set<DSRAccountEntity> dsrAccountEntities;
+
 }

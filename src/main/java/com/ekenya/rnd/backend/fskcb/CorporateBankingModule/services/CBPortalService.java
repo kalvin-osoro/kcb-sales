@@ -864,7 +864,7 @@ public class CBPortalService implements ICBPortalService {
     public boolean reAssignLead(CBAssignLeadRequest model) {
         try {
             CBLeadEntity cbLeadEntity = cbLeadsRepository.findById(model.getLeadId()).orElse(null);
-            cbLeadEntity.setDsrId(model.getDsrId());
+//            cbLeadEntity.setDsrId(model.getDsrId());
             cbLeadEntity.setBusinessUnit(model.getBusinessUnit());
             cbLeadEntity.setRemarks(model.getRemarks());
             //set start date from input

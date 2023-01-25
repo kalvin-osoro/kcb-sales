@@ -60,7 +60,8 @@ import java.util.logging.Logger;
 @Service
 public class DSRPortalService implements IDSRPortalService {
 
-    @Value("CMCOM")
+//    @Value("CMCOM")
+    @Value("ECLECTICS")
     private String SMS_SENDER_ID;
     @Value("5094")
     private String client_id;

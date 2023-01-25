@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentDateRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentUpdateRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.RelationshipManagerRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBChannelService;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.DSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.DSRPortalService;
@@ -105,4 +106,5 @@ public class CBCustomerAppointmentVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
 }

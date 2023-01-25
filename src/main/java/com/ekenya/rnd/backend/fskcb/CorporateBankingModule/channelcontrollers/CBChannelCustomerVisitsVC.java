@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.channelcontrollers;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddCustomerAppointmentRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerVisitReportRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCustomerVisitsRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBDSROpportunity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBChannelService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,6 +84,26 @@ public class CBChannelCustomerVisitsVC {
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
+    }
+        @PostMapping(value = "/cb-get-all-customer-opportubity")
+        public ResponseEntity<?> getAllCustomerOpportunityByDSR(@RequestBody CBDSROpportunity model) {
+            List<?> visits = channelService.getAllCustomeropportunityByDSR(model);
+            boolean success = visits != null;
+
+            //Response
+            ObjectMapper objectMapper = new ObjectMapper();
+            if(success){
+                //Object
+                ArrayNode node = objectMapper.createArrayNode();
+                node.addAll((List)visits);
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+            }
     }
 
 

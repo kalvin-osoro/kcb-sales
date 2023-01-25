@@ -13,6 +13,7 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryL
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
+import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -31,6 +32,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CBChannelService implements ICBChannelService {
     private final ICBLeadsRepository cbLeadsRepository;
+    private final CBCustomerAppointmentRMRepository cbCustomerAppointmentRMRepository;
     private final CBOpportunitiesRepository cbOpportunitiesRepository;
     private final CBCustomerAppointmentRepository cbCustomerAppointmentRepository;
     private final CBConcessionRepository cbConcessionRepository;
@@ -93,6 +95,8 @@ public class CBChannelService implements ICBChannelService {
     @Override
     public List<ObjectNode> getAllCustomerVisitsByDSR(CBCustomerVisitsRequest model) {
         //get all customer visits by dsr id
+        //find by dsr id and where opportunity is not null
+
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
@@ -224,6 +228,16 @@ public class CBChannelService implements ICBChannelService {
             cbAppointmentEntity.setReasonForVisit(model.getReasonForVisit());
             cbAppointmentEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             cbCustomerAppointmentRepository.save(cbAppointmentEntity);
+            //add list of RMs to the appointment
+            for (RelationshipManagerRequest rm : model.getRm()) {
+                CBCustomerAppointmentRM cbCustomerAppointmentRM = new CBCustomerAppointmentRM();
+                cbCustomerAppointmentRM.setAppointmentId(cbAppointmentEntity.getId());
+                cbCustomerAppointmentRM.setRmId(rm.getRmId());
+                cbCustomerAppointmentRM.setRmName(rm.getRmName());
+                cbCustomerAppointmentRM.setRmPhoneNumber(rm.getRmPhoneNumber());
+                cbCustomerAppointmentRM.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                cbCustomerAppointmentRMRepository.save(cbCustomerAppointmentRM);
+            }
             return true;
         } catch (Exception e) {
             log.error("Error occurred while creating customer appointment", e);
@@ -436,6 +450,51 @@ public class CBChannelService implements ICBChannelService {
         }
         return null;
     }
+
+    @Override
+    public List<ObjectNode> getAllCustomeropportunityByDSR(CBDSROpportunity model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            List<CBCustomerVisitEntity> cbCustomerVisitsEntities = cbCustomerVisitRepository.findAllByDsrIdAndOpportunitiesIsNotNull(model.getDsrId());
+            for (CBCustomerVisitEntity cbCustomerVisitsEntity : cbCustomerVisitsEntities) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", cbCustomerVisitsEntity.getId());
+                objectNode.put("customerName", cbCustomerVisitsEntity.getCustomerName());
+                objectNode.put("opportunity", cbCustomerVisitsEntity.getOpportunities());
+                objectNode.put("createdOn", cbCustomerVisitsEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all opportunities", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateOpportunity(CBChannelOpportunityRequest request) {
+        try {
+            if (request==null){
+                return false;
+            }
+            CBCustomerVisitEntity cbCustomerVisitEntity = cbCustomerVisitRepository.findById(request.getVisitId()).orElseThrow(() -> new ResourceNotFoundException("id", "id", request.getVisitId()));
+            cbCustomerVisitEntity.setProbality(request.getProbality());
+            cbCustomerVisitEntity.setExpectedAmount(request.getExpectedAmount());
+            cbCustomerVisitEntity.setStage(request.getStage());
+            cbCustomerVisitRepository.save(cbCustomerVisitEntity);
+            return true;
+
+        } catch (ResourceNotFoundException e) {
+            log.error("Error occurred while updating opportunity", e);
+        }
+        return false;
+    }
+
+
 }
 
 
