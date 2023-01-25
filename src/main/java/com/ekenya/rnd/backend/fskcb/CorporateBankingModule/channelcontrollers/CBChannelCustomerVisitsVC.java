@@ -85,7 +85,7 @@ public class CBChannelCustomerVisitsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-        @PostMapping(value = "/cb-get-all-customer-opportubity")
+        @PostMapping(value = "/cb-get-all-rm-opportubity")
         public ResponseEntity<?> getAllCustomerOpportunityByDSR(@RequestBody CBDSROpportunity model) {
             List<?> visits = channelService.getAllCustomeropportunityByDSR(model);
             boolean success = visits != null;
