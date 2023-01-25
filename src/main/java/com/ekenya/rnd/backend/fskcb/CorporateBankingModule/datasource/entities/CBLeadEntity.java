@@ -23,6 +23,7 @@ public class CBLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String profileCode;
     private String remarks;
     private String customerName;
     private String product;
@@ -41,7 +42,6 @@ public class CBLeadEntity {
     private String startDate;
     private String endDate;
     private String outcomeOfTheVisit;
-    private String profileCode;
     private String escaleteEmail;
     private String leadValue;
     private Date assignTime;

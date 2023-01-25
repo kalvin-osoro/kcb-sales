@@ -958,35 +958,35 @@ public class DSRPortalService implements IDSRPortalService {
                         DSRAccountEntity account1 = dsrAccountsRepository.save(account);
                         //send email
 
-                        if (account1.getEmail() != null && !account1.getEmail().isEmpty()) {
-                            String subject = "DSR Account Created";
-                            String message = "Dear " + account1.getFullName() + ",\n\n" +
-                                    "Your DSR account has been created successfully.\n" +
-                                    "Your account details are as follows:\n" +
-                                    "Staff No: " + account1.getStaffNo() + "\n" +
-                                    "Phone No: " + account1.getPhoneNo() + "\n" +
-                                    "Sales Code: " + account1.getSalesCode() + "\n" +
-                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
-                                    "Please use this link to download the app:\n" +
-                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-                                    "Thank you.";
-                            sendEmail(account1.getEmail(), subject, message);
-                        }
-                        //send sms
-                        if (account1.getPhoneNo() != null && !account.getPhoneNo().isEmpty()) {
-                            String message = "Dear " + account1.getFullName() + ",\n\n" +
-                                    "Your DSR account has been created successfully.\n" +
-                                    "Your account details are as follows:\n" +
-                                    "Staff No: " + account1.getStaffNo() + "\n" +
-                                    "Phone No: " + account1.getPhoneNo() + "\n" +
-                                    "Sales Code: " + account1.getSalesCode() + "\n" +
-                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
-                                    "Please use this link to download the app:\n" +
-                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-                                    "Thank you.";
-                            sendSMS(account1.getPhoneNo(), message);
-
-                        }
+//                        if (account1.getEmail() != null && !account1.getEmail().isEmpty()) {
+//                            String subject = "DSR Account Created";
+//                            String message = "Dear " + account1.getFullName() + ",\n\n" +
+//                                    "Your DSR account has been created successfully.\n" +
+//                                    "Your account details are as follows:\n" +
+//                                    "Staff No: " + account1.getStaffNo() + "\n" +
+//                                    "Phone No: " + account1.getPhoneNo() + "\n" +
+//                                    "Sales Code: " + account1.getSalesCode() + "\n" +
+//                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
+//                                    "Please use this link to download the app:\n" +
+//                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+//                                    "Thank you.";
+//                            sendEmail(account1.getEmail(), subject, message);
+//                        }
+//                        //send sms
+//                        if (account1.getPhoneNo() != null && !account.getPhoneNo().isEmpty()) {
+//                            String message = "Dear " + account1.getFullName() + ",\n\n" +
+//                                    "Your DSR account has been created successfully.\n" +
+//                                    "Your account details are as follows:\n" +
+//                                    "Staff No: " + account1.getStaffNo() + "\n" +
+//                                    "Phone No: " + account1.getPhoneNo() + "\n" +
+//                                    "Sales Code: " + account1.getSalesCode() + "\n" +
+//                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
+//                                    "Please use this link to download the app:\n" +
+//                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+//                                    "Thank you.";
+//                            sendSMS(account1.getPhoneNo(), message);
+//
+//                        }
 
                         //Add DSR to profile ..
                         profilesAndUsersRepository.save(profileAndUserEntity);
