@@ -959,35 +959,35 @@ public class DSRPortalService implements IDSRPortalService {
                         DSRAccountEntity account1 = dsrAccountsRepository.save(account);
                         //send email
 
-//                        if (account1.getEmail() != null && !account1.getEmail().isEmpty()) {
-//                            String subject = "DSR Account Created";
-//                            String message = "Dear " + account1.getFullName() + ",\n\n" +
-//                                    "Your DSR account has been created successfully.\n" +
-//                                    "Your account details are as follows:\n" +
-//                                    "Staff No: " + account1.getStaffNo() + "\n" +
-//                                    "Phone No: " + account1.getPhoneNo() + "\n" +
-//                                    "Sales Code: " + account1.getSalesCode() + "\n" +
-//                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
-//                                    "Please use this link to download the app:\n" +
-//                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-//                                    "Thank you.";
-//                            sendEmail(account1.getEmail(), subject, message);
-//                        }
-//                        //send sms
-//                        if (account1.getPhoneNo() != null && !account.getPhoneNo().isEmpty()) {
-//                            String message = "Dear " + account1.getFullName() + ",\n\n" +
-//                                    "Your DSR account has been created successfully.\n" +
-//                                    "Your account details are as follows:\n" +
-//                                    "Staff No: " + account1.getStaffNo() + "\n" +
-//                                    "Phone No: " + account1.getPhoneNo() + "\n" +
-//                                    "Sales Code: " + account1.getSalesCode() + "\n" +
-//                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
-//                                    "Please use this link to download the app:\n" +
-//                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-//                                    "Thank you.";
-//                            sendSMS(account1.getPhoneNo(), message);
-//
-//                        }
+                        if (account1.getEmail() != null && !account1.getEmail().isEmpty()) {
+                            String subject = "DSR Account Created";
+                            String message = "Dear " + account1.getFullName() + ",\n\n" +
+                                    "Your DSR account has been created successfully.\n" +
+                                    "Your account details are as follows:\n" +
+                                    "Staff No: " + account1.getStaffNo() + "\n" +
+                                    "Phone No: " + account1.getPhoneNo() + "\n" +
+                                    "Sales Code: " + account1.getSalesCode() + "\n" +
+                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
+                                    "Please use this link to download the app:\n" +
+                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                    "Thank you.";
+                            sendEmail(account1.getEmail(), subject, message);
+                        }
+                        //send sms
+                        if (account1.getPhoneNo() != null && !account.getPhoneNo().isEmpty()) {
+                            String message = "Dear " + account1.getFullName() + ",\n\n" +
+                                    "Your DSR account has been created successfully.\n" +
+                                    "Your account details are as follows:\n" +
+                                    "Staff No: " + account1.getStaffNo() + "\n" +
+                                    "Phone No: " + account1.getPhoneNo() + "\n" +
+                                    "Sales Code: " + account1.getSalesCode() + "\n" +
+                                    "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
+                                    "Please use this link to download the app:\n" +
+                                    "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                    "Thank you.";
+                            sendSMS(account1.getPhoneNo(), message);
+
+                        }
 
                         //Add DSR to profile ..
                         profilesAndUsersRepository.save(profileAndUserEntity);
@@ -1151,61 +1151,5 @@ public class DSRPortalService implements IDSRPortalService {
         }
         return null;
     }
-
-
-//    @Override
-//    public ResponseEntity<?> assignTarget(Long dsrId, Long targetId) {
-//        LinkedHashMap<String,Object>responseObject=new LinkedHashMap<>();
-//        LinkedHashMap<String,Object>responseParams=new LinkedHashMap<>();
-//
-//        try {
-//          //assign target to dsr
-//            DSR dsr=dsrRepository.findById(dsrId).orElseThrow(()->new ResourceNotFoundException("DSR","id",dsrId));
-//            Target target=targetRepository.findById(targetId).orElseThrow(()->new ResourceNotFoundException("Target","id",targetId));
-//            dsr.setTarget(target);
-//            dsrRepository.save(dsr);
-//            responseObject.put("status",SUCCESS);
-//            responseObject.put("message","Target assigned successfully");
-//            responseObject.put("data",responseParams);
-//            return ResponseEntity.ok().body(responseObject);
-//        } catch (ResourceNotFoundException e) {
-//            return ResponseEntity.ok().body(new MessageResponse(e.getMessage(),"failed"));
-//        }
-//    }
-//
-//    @Override
-//    public ResponseEntity<?> unassignTarget(Long dsrId, Long targetId) {
-//        LinkedHashMap<String,Object>responseObject=new LinkedHashMap<>();
-//        LinkedHashMap<String,Object>responseParams=new LinkedHashMap<>();
-//
-//        try {
-//            //unassign target from dsr
-//            DSR dsr=dsrRepository.findById(dsrId).orElseThrow(()->new ResourceNotFoundException("DSR","id",dsrId));
-//            Target target=targetRepository.findById(targetId).orElseThrow(()->new ResourceNotFoundException("Target","id",targetId));
-//            dsr.setTarget(null);
-//            dsrRepository.save(dsr);
-//            responseObject.put("status",SUCCESS);
-//            responseObject.put("message","Target unassigned successfully");
-//            responseObject.put("data",responseParams);
-//            return ResponseEntity.ok().body(responseObject);
-//        } catch (ResourceNotFoundException e) {
-//            return ResponseEntity.ok().body(new MessageResponse(e.getMessage(),"failed"));
-//        }
-//    }
-//
-//    //convert entity to dto
-//    private DSRDto mapToDto(DSR dsr) {
-//
-//        return modelMapper.map(dsr, DSRDto .class);
-//
-//    }
-//    //convert dto to entity
-//    private DSR mapToEntity(DSRDto dsrDto) {
-//
-//        return modelMapper.map(dsrDto, DSR.class);
-//
-//    }
-
-
 
 }
