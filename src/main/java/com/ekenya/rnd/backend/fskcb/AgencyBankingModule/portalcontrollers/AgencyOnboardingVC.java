@@ -102,7 +102,7 @@ public class AgencyOnboardingVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-    @PostMapping("/Agency-import-agents")
+    @PostMapping("/agency-import-agents")
     public ResponseEntity<?> importAgent(@RequestBody MultipartFile file ) {
         //T
         ObjectNode resp = agencyPortalService.attemptImportAgents(file);

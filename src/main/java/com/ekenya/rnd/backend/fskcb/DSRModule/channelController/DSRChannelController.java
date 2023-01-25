@@ -2,9 +2,11 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.channelController;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.DSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.DSRDetailsRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +43,25 @@ public class DSRChannelController {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/dsr-get-details")
+    public ResponseEntity<?> getDSRDetails(@RequestBody DSRDetailsRequest request ) {
+
+
+        //INSIDE SERVICE
+        ObjectNode info = dsrPortalService.getDSRProfile(request.getStaffNo());
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(info != null){
+            //Object
+
+            return ResponseEntity.ok(new BaseAppResponse(1,info,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

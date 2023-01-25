@@ -271,6 +271,7 @@ public class DSRPortalService implements IDSRPortalService {
             dsrTeam.setName(addTeamRequest.getTeamName());
             dsrTeam.setLocation(addTeamRequest.getTeamLocation());
             dsrTeam.setCreatedBy(userId);
+            dsrTeam.setRegionId(addTeamRequest.getZoneId());
             dsrTeam.setStatus(Status.ACTIVE);
             dsrTeam.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dsrTeamsRepository.save(dsrTeam);
@@ -901,6 +902,12 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("phone",entity.getPhoneNo());
                 node.put("staffNo",entity.getStaffNo());
                 node.put("salesCode",entity.getSalesCode());
+                node.put("teamId",entity.getTeamId());
+                DSRTeamEntity dsrTeamEntity = dsrTeamsRepository.findById(entity.getTeamId()).get();
+                node.put("regionId",dsrTeamEntity.getRegionId());
+                DSRRegionEntity dsrRegionEntity = dsrRegionsRepository.findById(dsrTeamEntity.getRegionId()).get();
+                node.put("regionBounds",dsrRegionEntity.getGeoJsonBounds());
+                node.put("regionName",dsrRegionEntity.getName());
                 node.put("status",entity.getStatus().toString());
                 node.put("dateCreated",dateFormat.format(entity.getCreatedOn()));
                 if(entity.getExpiryDate() != null) {
