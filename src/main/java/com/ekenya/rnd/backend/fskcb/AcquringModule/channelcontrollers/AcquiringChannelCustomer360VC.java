@@ -1,9 +1,15 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SearchType;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringOnboardingsRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequestID;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CustomerDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.AgencyOnboardingRepository;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.SearchRequest;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
 import com.ekenya.rnd.backend.fskcb.SpringBootKcbRestApiApplication;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -21,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.constraints.NotNull;
+
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
@@ -29,6 +37,12 @@ public class AcquiringChannelCustomer360VC {
 
     @Autowired
     IAcquiringChannelService channelService;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
     @Autowired
     ICRMService crmService;
 
@@ -120,5 +134,45 @@ public class AcquiringChannelCustomer360VC {
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+////new for all search type in one
+    @PostMapping("/agency-get-customer-360-details-by-accountV1")
+    public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody SearchRequest model) {
+        try {
+            if (model ==null){
+                return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
+            }
+            if (model.getSearchType()== SearchType.Account){
+                return getResponseEntity(model.getAccount(), model);
+            }
+            if (model.getSearchType()== SearchType.PhoneNo){
+                AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findMerchantByOutletPhone(model.getAgentNumber());
+
+                if (acquiringOnboardEntity==null){
+                    return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
+                }
+                return ResponseEntity.ok(new BaseAppResponse(1, acquiringOnboardEntity, "Request Processed Successfully"));
+
+            }
+            else {
+                return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @NotNull
+    public static ResponseEntity<?> getResponseEntity(String account, @RequestBody SearchRequest model) {
+        String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(uri, String.class, account);
+        String customer1 = result.trim();
+        String newString = customer1.replace("\\", "");
+        String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+        return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
     }
 }

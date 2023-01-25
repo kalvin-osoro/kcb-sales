@@ -15,4 +15,6 @@ public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardi
     List<AgencyOnboardingEntity> findAllByDsrId(Long dsrId);
 
     Optional<Object> findByAccountNumber(Integer accountNumber);
+
+    AgencyOnboardingEntity findAgentByagentPhone(String toString);
 }

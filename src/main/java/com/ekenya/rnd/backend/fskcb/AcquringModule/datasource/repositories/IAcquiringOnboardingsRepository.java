@@ -22,4 +22,6 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
     AcquiringOnboardEntity[] searchCustomers(String keyword);
 
     Optional<Object> findByAccountNumber(Integer accountNumber);
+
+    AcquiringOnboardEntity findMerchantByOutletPhone(String agentNumber);
 }

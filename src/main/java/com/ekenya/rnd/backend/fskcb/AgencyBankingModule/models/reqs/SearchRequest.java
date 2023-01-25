@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs;
+package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SearchType;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CRMRequest {
+public class SearchRequest {
     private String account;
+    private String agentNumber;
+    private SearchType searchType;
 }

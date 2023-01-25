@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisit
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquringSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomerLookupResponse;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.CustomerAssetsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
@@ -63,4 +64,5 @@ public interface IAcquiringChannelService {
     boolean recollectAsset(VoomaCollectAssetRequest model);
 
     Object getAssetById(AssetByIdRequest model);
+
 }
