@@ -409,7 +409,7 @@ public class DSRPortalService implements IDSRPortalService {
 //            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 //            if (userDetails == null)throw new RuntimeException("Service error");
 //            String createdBy = userDetails.getUsername();
-
+//principal
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String createdBy = authentication.getName();
 
@@ -420,6 +420,7 @@ public class DSRPortalService implements IDSRPortalService {
             DSRTeamEntity optionalDSRTeam =
                     dsrTeamsRepository.findById(dsrRequest.getTeamId()).orElse(null);
             //
+
             if(optionalDSRTeam != null &&
                     !dsrAccountsRepository.findByStaffNo(dsrRequest.getStaffNo()).isPresent()){
                 //
@@ -1133,7 +1134,7 @@ public class DSRPortalService implements IDSRPortalService {
                 objectNode.put("email", dsrAccountEntity.getEmail());
                 objectNode.put("phone", dsrAccountEntity.getEmail());
                 objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
-                objectNode.put("", dsrAccountEntity.getStaffNo());
+                objectNode.put("profileCode", dsrAccountEntity.getProfileCode());
                 objectNode.put("status", dsrAccountEntity.getStatus().toString());
                 objectNode.put("salesCode", dsrAccountEntity.getSalesCode());
                 objectNode.put("teamId", dsrAccountEntity.getTeamId());
