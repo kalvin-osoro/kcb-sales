@@ -1,7 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.ISmsService;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.SMSService;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBCustomerVisitEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.BranchEntity;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.JsonLatLng;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
@@ -60,8 +62,9 @@ import java.util.logging.Logger;
 @Service
 public class DSRPortalService implements IDSRPortalService {
 
-//    @Value("CMCOM")
-    @Value("ECLECTICS")
+
+//    @Value("ECLECTICS")
+@Value("CMCOM")
     private String SMS_SENDER_ID;
     @Value("5094")
     private String client_id;
@@ -423,6 +426,7 @@ public class DSRPortalService implements IDSRPortalService {
                 DSRAccountEntity dsrDetails =  DSRAccountEntity.builder()
                         .email(dsrRequest.getEmail())
                         .phoneNo(dsrRequest.getPhoneNo())
+                        .profileCode(profileEntity.getCode())
                         .status(Status.ACTIVE)
                         .fullName(dsrRequest.getFullName())
                         .staffNo(dsrRequest.getStaffNo())
@@ -725,7 +729,8 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Override
     public ArrayNode getAllDSRAccounts(DSRAccountsRequest model) {
-
+//        System.out.println("model.getProfileCode()");
+        System.out.println(model.getProfileCode());
         try{
 
             ArrayNode list = mObjectMapper.createArrayNode();
@@ -734,6 +739,7 @@ public class DSRPortalService implements IDSRPortalService {
             if(model.getProfileCode() != null) {
                 //Get profile ..
                 UserProfileEntity profileEntity = userProfilesRepository.findByCode(model.getProfileCode()).orElse(null);
+
                 //
                 if(profileEntity != null) {
                     //Each user in profile ..
@@ -767,6 +773,7 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("staffNo",entity.getStaffNo());
                 node.put("status",entity.getStatus().toString());
                 node.put("salesCode",entity.getSalesCode());
+                node.put("profileCode",entity.getProfileCode());
                 //
                 Optional<DSRTeamEntity> optionalDSRTeam = dsrTeamsRepository.findById(entity.getTeamId());
                 if(optionalDSRTeam.isPresent()){
@@ -946,6 +953,8 @@ public class DSRPortalService implements IDSRPortalService {
                         //
 
                         //Save DSR Account ..
+                        account.setProfileCode(profileEntity.getCode());
+
                         DSRAccountEntity account1 = dsrAccountsRepository.save(account);
                         //send email
 
@@ -1108,7 +1117,38 @@ public class DSRPortalService implements IDSRPortalService {
         return authService.resetDSRPIN(model);
     }
 
+    @Override
+    public List<ObjectNode> getAllDSRAccountsV1(DSRAccountsRequest model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            List<DSRAccountEntity> dsrAccountEntities = dsrAccountsRepository.findByProfileCode(model.getProfileCode());
+            for (DSRAccountEntity dsrAccountEntity : dsrAccountEntities) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dsrAccountEntity.getId());
+                objectNode.put("name", dsrAccountEntity.getFullName());
+                objectNode.put("email", dsrAccountEntity.getEmail());
+                objectNode.put("phone", dsrAccountEntity.getEmail());
+                objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
+                objectNode.put("", dsrAccountEntity.getStaffNo());
+                objectNode.put("status", dsrAccountEntity.getStatus().toString());
+                objectNode.put("salesCode", dsrAccountEntity.getSalesCode());
+                objectNode.put("teamId", dsrAccountEntity.getTeamId());
+                objectNode.put("teamName", dsrAccountEntity.getTeamId());
+//                objectNode.put("teamLoc", dsrAccountEntity.());
+                objectNode.put("expiry", dsrAccountEntity.getExpiryDate() ==null ? null :dsrAccountEntity.getExpiryDate().getTime());
 
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all opportunities", e);
+        }
+        return null;
+    }
 
 
 //    @Override

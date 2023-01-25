@@ -465,8 +465,9 @@ public class CBChannelService implements ICBChannelService {
                 objectNode.put("id", cbCustomerVisitsEntity.getId());
                 objectNode.put("customerName", cbCustomerVisitsEntity.getCustomerName());
                 objectNode.put("amountExpected", cbCustomerVisitsEntity.getExpectedAmount());
-                objectNode.put("opportunity", cbCustomerVisitsEntity.getStage().toString());
-                objectNode.put("stage", cbCustomerVisitsEntity.getOpportunities());
+                objectNode.put("probability", cbCustomerVisitsEntity.getProbality());
+                objectNode.put("stage", cbCustomerVisitsEntity.getStage().toString());
+                objectNode.put("opportunity", cbCustomerVisitsEntity.getOpportunities());
                 objectNode.put("createdOn", cbCustomerVisitsEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }

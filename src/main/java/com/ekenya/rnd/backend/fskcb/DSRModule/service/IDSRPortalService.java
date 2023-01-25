@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface IDSRPortalService {
 
     boolean createRegion(AddRegionRequest model);
@@ -40,4 +42,6 @@ public interface IDSRPortalService {
     boolean lockAccount(String staffNo);
     boolean unlockAccount(String staffNo);
     boolean resetPIN(String staffNo);
+
+    List<ObjectNode> getAllDSRAccountsV1(DSRAccountsRequest request);
 }

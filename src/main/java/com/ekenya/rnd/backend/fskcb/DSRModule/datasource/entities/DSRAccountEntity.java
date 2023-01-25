@@ -56,6 +56,7 @@ public class DSRAccountEntity {
 
     @Column(name="full_name",nullable = false)
     private String fullName;
+    private String profileCode;
 
     @Column(name="location")
     private String location;

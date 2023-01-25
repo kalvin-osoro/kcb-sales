@@ -16,9 +16,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1")
-//@PreAuthorize("hasAuthority('"+ SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
+@PreAuthorize("hasAuthority('"+ SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class DSRAccountsVC {
     @Autowired
     ObjectMapper mObjectMapper;
@@ -46,7 +48,7 @@ public class DSRAccountsVC {
         }
     }
     @PostMapping(value = "/dsr-get-accounts-all")
-    public ResponseEntity<?> getAllAccounts(DSRAccountsRequest request) {
+    public ResponseEntity<?> getAllAccounts(@RequestBody DSRAccountsRequest request) {
 
         //INSIDE SERVICE
         ArrayNode list = dsrPortalService.getAllDSRAccounts(request);
@@ -211,6 +213,30 @@ public class DSRAccountsVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+
+    @PostMapping(value = "/dsr-get-accounts-allV1")
+    public ResponseEntity<?> getAllAccountsV1(@RequestBody DSRAccountsRequest model) {
+
+        //INSIDE SERVICE
+        List<?> visits = dsrPortalService.getAllDSRAccountsV1(model);
+        boolean success = visits != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List) visits);
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createArrayNode(), "Request could NOT be processed. Please try again later"));
         }
     }
 }
