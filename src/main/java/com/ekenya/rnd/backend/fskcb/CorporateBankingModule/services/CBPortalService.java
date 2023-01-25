@@ -15,6 +15,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
 import com.ekenya.rnd.backend.utils.ConcessionTrackingStatus;
 import com.ekenya.rnd.backend.utils.Status;
@@ -62,6 +63,8 @@ public class CBPortalService implements ICBPortalService {
     private final CBQuestionnaireQuestionRepository cbQuestionnaireQuestionRepository;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    IQssService iQssService;
 
     @Override
     public boolean assignLead(CBAssignLeadRequest model) {
@@ -71,11 +74,18 @@ public class CBPortalService implements ICBPortalService {
             cbLeadEntity.setLeadStatus(LeadStatus.OPEN);
             cbLeadEntity.setEscaleteEmail(model.getEscalateEmail());
             cbLeadEntity.setAssignTime(Utility.getPostgresCurrentTimeStampForInsert());
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
             cbLeadEntity.setPriority(model.getPriority());
             //set start date from input
             cbLeadEntity.setAssigned(true);
             //save
             cbLeadsRepository.save(cbLeadEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
             //update is assigned to true
 
             return true;

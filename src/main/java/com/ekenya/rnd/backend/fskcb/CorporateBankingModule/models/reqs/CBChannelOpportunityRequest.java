@@ -17,6 +17,7 @@ public class CBChannelOpportunityRequest {
     private String probality;
     private OpportunityStage stage;
     private String expectedAmount;
+    private String opportunity;
     private Long visitId;
 
 }

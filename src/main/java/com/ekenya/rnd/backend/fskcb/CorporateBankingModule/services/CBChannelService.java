@@ -487,6 +487,7 @@ public class CBChannelService implements ICBChannelService {
             CBCustomerVisitEntity cbCustomerVisitEntity = cbCustomerVisitRepository.findById(request.getVisitId()).orElseThrow(() -> new ResourceNotFoundException("id", "id", request.getVisitId()));
             cbCustomerVisitEntity.setProbality(request.getProbality());
             cbCustomerVisitEntity.setExpectedAmount(request.getExpectedAmount());
+            cbCustomerVisitEntity.setOpportunities(request.getOpportunity());
             cbCustomerVisitEntity.setStage(request.getStage());
             cbCustomerVisitRepository.save(cbCustomerVisitEntity);
             return true;
