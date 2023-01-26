@@ -148,11 +148,19 @@ public class AcquiringChannelCustomer360VC {
             }
             if (model.getSearchType()== SearchType.PhoneNo){
                 AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findMerchantByOutletPhone(model.getAgentNumber());
-
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("merchantId", acquiringOnboardEntity.getId());
+                asset.put("merchantName", acquiringOnboardEntity.getAccountName());
+                asset.put("accountNo", acquiringOnboardEntity.getAccountNumber());
+                asset.put("merchantPhone", acquiringOnboardEntity.getOutletPhone());
+                asset.put("merchantEmail", acquiringOnboardEntity.getBusinessEmail());
+                asset.put("longitude", acquiringOnboardEntity.getLongitude());
+                asset.put("latitude", acquiringOnboardEntity.getLatitude());
                 if (acquiringOnboardEntity==null){
                     return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
                 }
-                return ResponseEntity.ok(new BaseAppResponse(1, acquiringOnboardEntity, "Request Processed Successfully"));
+                return ResponseEntity.ok(new BaseAppResponse(1, asset, "Request Processed Successfully"));
 
             }
             else {

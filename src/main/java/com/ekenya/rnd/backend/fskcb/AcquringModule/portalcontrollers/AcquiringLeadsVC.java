@@ -47,10 +47,6 @@ public class AcquiringLeadsVC {
         List<?> acquiringLeadRequests = acquiringService.getAllLeads();
         boolean success = acquiringLeadRequests != null;
 
-
-
-
-
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
