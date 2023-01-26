@@ -137,7 +137,7 @@ public class AcquiringChannelCustomer360VC {
     }
 
 ////new for all search type in one
-    @PostMapping("/agency-get-customer-360-details-by-accountV1")
+    @PostMapping("/acquiring-get-customer-360-details-by-accountV1")
     public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody SearchRequest model) {
         try {
             if (model ==null){
@@ -150,13 +150,23 @@ public class AcquiringChannelCustomer360VC {
                 AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findMerchantByOutletPhone(model.getAgentNumber());
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode asset = mapper.createObjectNode();
-                asset.put("merchantId", acquiringOnboardEntity.getId());
-                asset.put("merchantName", acquiringOnboardEntity.getAccountName());
-                asset.put("accountNo", acquiringOnboardEntity.getAccountNumber());
-                asset.put("merchantPhone", acquiringOnboardEntity.getOutletPhone());
-                asset.put("merchantEmail", acquiringOnboardEntity.getBusinessEmail());
-                asset.put("longitude", acquiringOnboardEntity.getLongitude());
-                asset.put("latitude", acquiringOnboardEntity.getLatitude());
+                asset.put("id", acquiringOnboardEntity.getId());
+                asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
+                asset.put("Region", acquiringOnboardEntity.getRegion());
+                asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                asset.put("email", acquiringOnboardEntity.getBusinessEmail());
+                asset.put("status", acquiringOnboardEntity.getStatus().toString());
+                asset.put("agent Id", acquiringOnboardEntity.getDsrId());
+                asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
+                ObjectNode cordinates = mapper.createObjectNode();
+                cordinates.put("latitude", acquiringOnboardEntity.getLatitude());
+                cordinates.put("longitude", acquiringOnboardEntity.getLongitude());
+                asset.put("cordinates", cordinates);
+                ObjectNode businessDetails = mapper.createObjectNode();
+                businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
+                businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
+
+                asset.set("businessDetails", businessDetails);
                 if (acquiringOnboardEntity==null){
                     return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
                 }

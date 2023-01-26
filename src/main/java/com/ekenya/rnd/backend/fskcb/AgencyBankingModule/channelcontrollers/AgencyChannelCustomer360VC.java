@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.SearchType;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.CRMRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
@@ -45,11 +46,40 @@ public class AgencyChannelCustomer360VC {
             }
             if (model.getSearchType()== SearchType.PhoneNo){
                 AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findAgentByagentPhone(model.getAgentNumber());
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", agencyOnboardingEntity.getId());
+                asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
+                asset.put("agencyName", agencyOnboardingEntity.getAgentName());
+                asset.put("id", agencyOnboardingEntity.getId());
+                asset.put("businessName", agencyOnboardingEntity.getBusinessName());
+//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
+                asset.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+                asset.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
+                asset.put("status", agencyOnboardingEntity.getStatus().toString());
+                asset.put("remarks", agencyOnboardingEntity.getRemarks());
+                asset.put("branchName", agencyOnboardingEntity.getBranch());
+                asset.put("accountName", agencyOnboardingEntity.getAgentName());
+                asset.put("dsrId", agencyOnboardingEntity.getDsrId());
+                asset.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+                ObjectNode cordinates = mapper.createObjectNode();
+                cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+                cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+                asset.set("cordinates", cordinates);
+                ObjectNode businessDetails = mapper.createObjectNode();
+                businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
+                businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
+                businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
+                businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
+                businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
+                businessDetails.put("city", agencyOnboardingEntity.getTown());
+                asset.set("businessDetails", businessDetails);
+
                 if (agencyOnboardingEntity==null){
+
                     return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
                 }
-                return ResponseEntity.ok(new BaseAppResponse(1, agencyOnboardingEntity, "Request processed successfully"));
-
+                return ResponseEntity.ok(new BaseAppResponse(1, asset, "Request processed successfully"));
             }
             else {
                 return ResponseEntity.ok(new BaseAppResponse(0, null, "Request could NOT be processed. Please try again later"));
