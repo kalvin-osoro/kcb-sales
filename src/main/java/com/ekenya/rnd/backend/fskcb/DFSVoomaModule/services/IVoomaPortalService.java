@@ -84,4 +84,6 @@ public interface IVoomaPortalService {
 
 
     Object getAssetById(AssetByIdRequest model);
+
+    List<ObjectNode> getQuestionnaireResponses(GetRQuestionnaireRequest model);
 }

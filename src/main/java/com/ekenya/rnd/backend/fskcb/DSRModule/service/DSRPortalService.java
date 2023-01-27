@@ -4,13 +4,11 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.ISmsService;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.SMSService;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBCustomerVisitEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.BranchEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.JsonLatLng;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.ResetDSRPINRequest;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.DSRsExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.RegionsExcelImportResult;
@@ -87,6 +85,9 @@ public class DSRPortalService implements IDSRPortalService {
 
     @Autowired
     private IDSRRegionsRepository dsrRegionsRepository;
+
+    @Autowired
+    private ISectorRepository sectorRepository;
     @Autowired
     private IDSRAccountsRepository dsrAccountsRepository;
     @Autowired
@@ -269,7 +270,9 @@ public class DSRPortalService implements IDSRPortalService {
 
             DSRTeamEntity dsrTeam = new DSRTeamEntity();
             dsrTeam.setName(addTeamRequest.getTeamName());
+            dsrTeam.setProfileCode(addTeamRequest.getProfileCode());
             dsrTeam.setLocation(addTeamRequest.getTeamLocation());
+            dsrTeam.setCreatedBy(userId);
             dsrTeam.setCreatedBy(userId);
             dsrTeam.setRegionId(addTeamRequest.getZoneId());
             dsrTeam.setStatus(Status.ACTIVE);
@@ -1155,6 +1158,44 @@ public class DSRPortalService implements IDSRPortalService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while getting all opportunities", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addSector(SectorRequest model) {
+        try {
+            if (model == null){
+                return false;
+            }
+            SectorEntity sectorEntity = new SectorEntity();
+            sectorEntity.setSectorDesc(model.getSectorDesc());
+            sectorEntity.setSectorName(model.getSectorName());
+            sectorEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            sectorRepository.save(sectorEntity);
+
+        } catch (Exception e) {
+            log.error("something went wrong,try again later");
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllSectors() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (SectorEntity sectorEntity : sectorRepository.findAll()) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", sectorEntity.getId());
+                objectNode.put("sectorName", sectorEntity.getSectorName());
+                objectNode.put("sectorDesc", sectorEntity.getSectorDesc());
+                objectNode.put("createdOn", sectorEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all leads", e);
         }
         return null;
     }

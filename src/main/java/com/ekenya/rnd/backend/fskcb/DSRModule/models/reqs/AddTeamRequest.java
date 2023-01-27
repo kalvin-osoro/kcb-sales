@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class AddTeamRequest {
     private Long id;
     private String teamName;
+    private String profileCode;
     private String teamLocation;
     private Status status;
     private long zoneId;

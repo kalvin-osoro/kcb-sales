@@ -1056,16 +1056,25 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null){
                 return false;
             }
-            DFSVOOMAQuestionerResponseEntity questionerResponseEntity = new DFSVOOMAQuestionerResponseEntity();
-            questionerResponseEntity.setResponse(model.getResponse());
-            questionerResponseEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            questionerResponseEntity.setQuestionId(model.getQuestionId());
-            QuestionEntity questionEntity =questionRepository.findById(model.getQuestionId()).get();
-            questionerResponseEntity.setQuestion(questionEntity.getQuestion());
-            questionerResponseEntity.setCustomerName(model.getCustomerName());
-            questionerResponseEntity.setAccountNo(model.getAccountNo());
-            questionerResponseEntity.setComment(model.getComment());
-            questionResponseRepository.save(questionerResponseEntity);
+
+            List<QuestionsAndResponses> questionRequestList = model.getQuestionsAndResponses();
+            for (QuestionsAndResponses questionRequest : questionRequestList) {
+
+                DFSVOOMAQuestionerResponseEntity questionerResponseEntity = new DFSVOOMAQuestionerResponseEntity();
+                questionerResponseEntity.setResponse(questionRequest.getResponse());
+                questionerResponseEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                questionerResponseEntity.setQuestionId(questionRequest.getQuestionId());
+                QuestionEntity questionEntity =questionRepository.findById(questionRequest.getQuestionId()).get();
+                questionerResponseEntity.setQuestion(questionEntity.getQuestion());
+                questionerResponseEntity.setCustomerName(model.getCustomerName());
+                questionerResponseEntity.setAccountNo(model.getAccountNo());
+                questionerResponseEntity.setNationalId(model.getNationalId());
+                questionerResponseEntity.setComment(questionRequest.getComment());
+                questionerResponseEntity.setQuestionnaireId(model.getQuestionnaireId());
+                questionResponseRepository.save(questionerResponseEntity);
+            }
+
+
             return  true;
 
 

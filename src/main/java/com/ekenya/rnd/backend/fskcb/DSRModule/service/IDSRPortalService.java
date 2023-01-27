@@ -44,4 +44,8 @@ public interface IDSRPortalService {
     boolean resetPIN(String staffNo);
 
     List<ObjectNode> getAllDSRAccountsV1(DSRAccountsRequest request);
+
+    boolean addSector(SectorRequest model);
+
+    List<ObjectNode> getAllSectors();
 }

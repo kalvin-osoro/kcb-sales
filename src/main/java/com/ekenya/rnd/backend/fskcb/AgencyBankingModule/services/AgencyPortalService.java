@@ -637,8 +637,8 @@ public class AgencyPortalService implements IAgencyPortalService {
             int imported = 0;
             for (AgencyOnboardingEntity agent : results.getAgents()) {
                 agent.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-                agent.setStatus(OnboardingStatus.PENDING);
-                agent.setIsApproved(false);
+                agent.setStatus(OnboardingStatus.APPROVED);
+                agent.setIsApproved(true);
                 agencyOnboardingRepository.save(agent);
                 imported++;
 

@@ -62,6 +62,7 @@ public class DSRTeamEntity {
 //    @JoinColumn(name = "zone_id",nullable = false)
 //    private Zone zone;
     private Long regionId;
+    private String profileCode;
 
 
     @JsonIgnore

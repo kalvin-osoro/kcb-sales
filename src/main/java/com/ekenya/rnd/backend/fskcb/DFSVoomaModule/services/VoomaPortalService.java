@@ -36,6 +36,8 @@ public class VoomaPortalService implements IVoomaPortalService {
     @Autowired
     private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     @Autowired
+    QuestionResponseRepository questionResponseRepository;
+    @Autowired
     private DFSVoomaOnboardingKYRepository dfsVoomaOnboardingKYRepository;
     @Autowired
     private DFSVoomaAgentOnboardV1Repository dfsVoomaAgentOnboardV1Repository;
@@ -1222,8 +1224,37 @@ public class VoomaPortalService implements IVoomaPortalService {
         return null;
     }
 
+    @Override
+    public List<ObjectNode> getQuestionnaireResponses(GetRQuestionnaireRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVOOMAQuestionerResponseEntity questionerResponse : questionResponseRepository.findByQuestionnaireId(model.getQuestionnaireId())) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("id", questionerResponse.getId());
+                node.put("response", questionerResponse.getResponse());
+                node.put("question", questionerResponse.getQuestion());
+                node.put("nationalId", questionerResponse.getNationalId());
+                node.put("accountNumber", questionerResponse.getAccountNo());
+                Long questionnaireId = questionerResponse.getQuestionnaireId();
+                QuestionnaireEntity questionnaireEntity = questionnaireRepository.findById(questionnaireId).get();
+                node.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
+                node.put("createdOn", questionerResponse.getCreatedOn().getTime());
+                list.add(node);
+            }
+            return list;
+        } catch (Exception ex) {
+            log.error("something went,try again later");
+        }
+        return null;
+    }
 
-    public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
+
+        public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
         Map<String, Object> resp = new LinkedHashMap<>();
         List<Map<String, Object>> data = new ArrayList<>();
         customerDetails.getMerchantKYCList().stream().map(x -> new File(x.getFilePath()).getName()).forEach(x -> resp.put(x.split("_")[0], x));

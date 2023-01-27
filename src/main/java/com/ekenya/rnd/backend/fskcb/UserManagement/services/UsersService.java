@@ -459,13 +459,23 @@ public class UsersService implements IUsersService {
         try{
             //
             UserAccountEntity account = userAccountsRepository.findByStaffNo(model.getStaffNo()).get();
+
+//            log.info("Account {}", account);
+//            log.info("Model {}", model);
+
             //Selected
             for (long pid: model.getProfiles()) {
                 //
                 UserProfileEntity profile = userProfilesRepository.findById(pid).get();
+//                log.info("Profile {}", profile);
+
                 //
                 Optional<ProfileAndUserEntity> profileUser =
                         profilesAndUsersRepository.findAllByUserIdAndProfileIdAndStatus(account.getId(),profile.getId(),Status.ACTIVE);
+
+//                log.info("PrpfileUser {}", profileUser);
+
+
                 //New Adding...
                 if(!profileUser.isPresent()){
                     //

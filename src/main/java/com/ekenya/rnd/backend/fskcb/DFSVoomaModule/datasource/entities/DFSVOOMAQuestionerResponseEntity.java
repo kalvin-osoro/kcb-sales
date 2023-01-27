@@ -32,4 +32,5 @@ public class DFSVOOMAQuestionerResponseEntity {
     @ManyToOne
     QuestionEntity questionEntity;
     private Long questionId;
+    private Long questionnaireId;
 }

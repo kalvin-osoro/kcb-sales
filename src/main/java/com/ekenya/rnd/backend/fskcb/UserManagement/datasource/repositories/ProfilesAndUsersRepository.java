@@ -17,4 +17,5 @@ public interface ProfilesAndUsersRepository  extends JpaRepository<ProfileAndUse
     Optional<ProfileAndUserEntity> findAllByUserIdAndProfileIdAndStatus(long userId, long profileId, Status status);
 
     List<ProfileAndUserEntity> findAllByProfileIdAndStatus(long profileId, Status status);
+
 }

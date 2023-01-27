@@ -4,4 +4,5 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVOOMAQ
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface QuestionResponseRepository extends JpaRepository<DFSVOOMAQuestionerResponseEntity,Long> {
+    DFSVOOMAQuestionerResponseEntity[] findByQuestionnaireId(Long questionnaireId);
 }
