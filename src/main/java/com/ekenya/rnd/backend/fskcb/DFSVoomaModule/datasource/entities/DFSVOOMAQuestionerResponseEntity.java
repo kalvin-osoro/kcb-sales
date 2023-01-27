@@ -24,7 +24,5 @@ public class DFSVOOMAQuestionerResponseEntity {
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private Long id;
-    private Long visitId;
-    private Long questionId;
     private  String response;
 }

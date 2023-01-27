@@ -7,10 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -26,5 +23,11 @@ public class AgencyBankingQuestionerResponseEntity {
     private Long id;
     private Long visitId;
     private Long questionId;
+
+    @ManyToOne
+    private AgencyBankingQuestionnaireQuestionEntity agencyBankingQuestionnaireQuestionEntity;
     private  String response;
+    private  String accountNo;
+    private  String nationalId;
+    private  String customerName;
 }

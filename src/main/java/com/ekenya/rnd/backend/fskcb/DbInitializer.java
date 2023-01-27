@@ -217,6 +217,30 @@ public class DbInitializer {
             //
             profilesAndRolesRepository.save(profileRole);
         }
+        //Relationship Manager
+        String ACQUIRING_AGENCY_RM_PROFILE_NAME = "RM_Acquiring_Agency";
+
+        if(!profilesRepository.findByName(ACQUIRING_AGENCY_RM_PROFILE_NAME).isPresent()) {
+
+            String ACQUIRING_AGENCY_RM_PROFILE_CODE = "rmAcquiringAgency";
+            //
+            UserProfileEntity userProfile = new UserProfileEntity();
+            userProfile.setName(ACQUIRING_AGENCY_RM_PROFILE_NAME);
+            userProfile.setCode(ACQUIRING_AGENCY_RM_PROFILE_CODE);
+
+            //
+            profilesRepository.save(userProfile);
+
+
+            //map to role
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+
+            ProfileAndRoleEntity profileRole = new ProfileAndRoleEntity();
+            profileRole.setProfileId(userProfile.getId());
+            profileRole.setRoleId(userRole.getId());
+            //
+            profilesAndRolesRepository.save(profileRole);
+        }
 
         //Agency
         String DSR_AGENCY_PROFILE_NAME = "DFS AGENCY";

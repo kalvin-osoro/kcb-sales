@@ -40,4 +40,5 @@ public interface IAgencyChannelService {
     ArrayNode getDSRSummary(DSRSummaryRequest model);
 
     Object getAssetById(AssetByIdRequest model);
+
 }

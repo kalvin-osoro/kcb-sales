@@ -20,4 +20,5 @@ public class TreasuryCustomerCallReportRequest {
     private String  manageRiskAndCashFlow;
     private String  agreedSalesMargin;
     private String  remarks;
+    private String dsrName;
 }

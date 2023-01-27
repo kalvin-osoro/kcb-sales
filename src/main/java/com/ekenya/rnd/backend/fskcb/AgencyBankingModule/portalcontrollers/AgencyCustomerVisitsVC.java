@@ -118,4 +118,23 @@ public class AgencyCustomerVisitsVC {
         }
     }
 
+    //create visits question for acquiring and agency
+    @PostMapping("/create-acquiring-agency-visit-question")
+    public ResponseEntity<?> craeteVisitQuestion(@RequestBody AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest model) {
+        boolean success = agencyService.createVisitQuestion(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
 }

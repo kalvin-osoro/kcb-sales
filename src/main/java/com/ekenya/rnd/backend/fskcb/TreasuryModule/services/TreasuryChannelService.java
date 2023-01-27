@@ -275,6 +275,8 @@ public class TreasuryChannelService implements ITreasuryChannelService {
             treasuryCustomerCallReportEntity.setManageRiskAndCashFlow(model.getManageRiskAndCashFlow());
             treasuryCustomerCallReportEntity.setAgreedSalesMargin(model.getAgreedSalesMargin());
             treasuryCustomerCallReportEntity.setRemarks(model.getRemarks());
+            treasuryCustomerCallReportEntity.setDsrName(model.getDsrName());
+
             //save
             treasuryCallReportRepository.save(treasuryCustomerCallReportEntity);
             return true;

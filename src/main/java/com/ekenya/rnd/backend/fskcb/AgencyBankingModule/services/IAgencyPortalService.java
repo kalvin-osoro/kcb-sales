@@ -62,4 +62,6 @@ public interface IAgencyPortalService {
     Object getAgentById(AgencyById model);
 
     Object getCustomerVisitById(AgencyVisitRequest model);
+
+    boolean createVisitQuestion(AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest model);
 }

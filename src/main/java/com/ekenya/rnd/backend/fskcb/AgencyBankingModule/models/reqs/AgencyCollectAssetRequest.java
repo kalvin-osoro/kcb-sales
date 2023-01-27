@@ -1,11 +1,11 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.BusinessUnit;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.QuestionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 
 public class AgencyCollectAssetRequest {
     @Getter
@@ -13,9 +13,9 @@ public class AgencyCollectAssetRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class AgencyBankingQuestionnareQuestionRequest {
-        private Long id;
         private String question;
         private  String questionnaireDescription;
-        private Date createdOn;
+        private BusinessUnit businessUnit;
+        private QuestionType questionType;
     }
 }

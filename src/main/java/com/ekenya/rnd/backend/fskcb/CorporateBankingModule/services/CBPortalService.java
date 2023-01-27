@@ -705,7 +705,7 @@ public class CBPortalService implements ICBPortalService {
             }
             QuestionnareQuestion cbQuestionnaireQuestionEntity = new QuestionnareQuestion();
             QuestionType cbQuestionTypeEntity = questionTypeRepository.findById(model.getQuestionType()).orElse(null);
-            cbQuestionnaireQuestionEntity.setQuestionType(cbQuestionTypeEntity);
+//            cbQuestionnaireQuestionEntity.setQuestionType(cbQuestionTypeEntity);
             cbQuestionnaireQuestionEntity.setQuestion(model.getQuestion());
             cbQuestionnaireQuestionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             cbQuestionnaireQuestionEntity.setStatus(Status.ACTIVE);

@@ -31,6 +31,7 @@ import java.util.List;
 public class AgencyChannelService implements IAgencyChannelService {
     private final AgencyAssetRepository agencyAssetRepository;
     private final AgencyAssetFilesRepository agencyAssetFilesRepository;
+    private final AgencyBankingQuestionnaireQuestionRepository questionnaireQuestionRepository;
     private final AgencyOnboardingKYCRepository agencyOnboardingKYCRepository;
     private final AgencyOnboardingRepository agencyOnboardingRepository;
     private final AgencyBankingLeadRepository agencyBankingLeadRepository;
@@ -580,6 +581,7 @@ public class AgencyChannelService implements IAgencyChannelService {
         }
         return null;
     }
+
 
 }
 

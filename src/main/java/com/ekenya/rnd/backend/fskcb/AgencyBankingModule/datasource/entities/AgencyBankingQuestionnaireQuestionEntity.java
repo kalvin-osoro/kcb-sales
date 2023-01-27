@@ -24,5 +24,9 @@ public class AgencyBankingQuestionnaireQuestionEntity {
     @Lob
     @Column(name="description")
     private  String questionnaireDescription;
+    @Enumerated(EnumType.STRING)
+    private BusinessUnit businessUnit;
+    @Enumerated(EnumType.STRING)
+    private QuestionType questionType;
     private Date createdOn;
 }

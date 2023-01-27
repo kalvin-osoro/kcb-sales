@@ -24,10 +24,7 @@ public class QuestionnareQuestion {
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY )
     private Long id;
     private String question;
-    @Lob
     private String questionDescription;
-    @ManyToOne
-    private QuestionType questionType;
     private Status status=Status.ACTIVE;
     @Lob
     private String choices;

@@ -52,4 +52,5 @@ public interface ICBChannelService {
     List<ObjectNode> getAllCustomeropportunityByDSR(CBDSROpportunity model);
 
     boolean updateOpportunity(CBChannelOpportunityRequest request);
+
 }

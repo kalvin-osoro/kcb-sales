@@ -23,7 +23,8 @@ public class QuestionnaireEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String questionnaireTitle;
-    private String questionnaireType;
+    @Enumerated(EnumType.STRING)
+    private QuestionnaireType questionnaireType;
     private String questionnaireDesc;
     @OneToMany(mappedBy="questionnaireEntity", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<QuestionEntity> questionEntitySet = new ArrayList<>();

@@ -16,6 +16,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -48,6 +49,8 @@ public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
     private final AgencyOnboardingKYCRepository agencyOnboardingKYCRepository;
+
+    private final IQssService iQssService;
     @Autowired
     ObjectMapper mapper;
     private final FileStorageService fileStorageService;
@@ -75,8 +78,16 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingVisitEntity.setStatus(Status.ACTIVE);
             agencyBankingVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             agencyBankingVisitEntity.setDsrName(agencyCustomerVisitsRequest.getDsrName());
+            agencyBankingVisitEntity.setDsrId(agencyBankingVisitEntity.getDsrId());
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(agencyCustomerVisitsRequest.getDsrId()).get();
             //save
             agencyBankingVisitRepository.save(agencyBankingVisitEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Visit",
+                    "You have been assigned a new visit. Please check your App for more details",
+                    null
+            );
             return true;
         } catch (Exception e) {
             log.error("Error occurred while scheduling customer visit", e);
@@ -457,7 +468,14 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingLeadEntity.setPriority(model.getPriority());
             //set dsrAccId from dsrAccountsEntity
             agencyBankingLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
             agencyBankingLeadRepository.save(agencyBankingLeadEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
             return true;
 
 
@@ -752,6 +770,26 @@ public class AgencyPortalService implements IAgencyPortalService {
             log.error("Error occurred while fetching merchant by id", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean createVisitQuestion(AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest model) {
+        try {
+            if (model == null){
+                return  false;
+            }
+            AgencyBankingQuestionnaireQuestionEntity questionnaireQuestionEntity = new AgencyBankingQuestionnaireQuestionEntity();
+            questionnaireQuestionEntity.setQuestion(model.getQuestion());
+            questionnaireQuestionEntity.setQuestionType(model.getQuestionType());
+            questionnaireQuestionEntity.setBusinessUnit(model.getBusinessUnit());
+            questionnaireQuestionEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            agencyBankingQuestionnaireQuestionRepository.save(questionnaireQuestionEntity);
+            return true;
+
+        } catch (Exception e) {
+            log.error("something went wrong,please try again later");
+        }
+        return false;
     }
 }
 

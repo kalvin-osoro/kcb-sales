@@ -20,6 +20,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -50,7 +51,10 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final IAcquiringLeadsRepository mLeadsRepo;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
+    private final IQssService iQssService;
     private final DFSVoomaOnboardRepository  dfsVoomaOnboardRepository;
+
+    private final IDSRAccountsRepository dsrAccountRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
     private  final IDSRAccountsRepository dsrAccountsRepository;
     private final ModelMapper modelMapper;
@@ -78,10 +82,17 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             AcquiringLeadEntity acquiringLeadEntity = acquiringLeadsRepository.findById(model.getLeadId()).get();
             acquiringLeadEntity.setDsrId(model.getDsrId());
             acquiringLeadEntity.setPriority(model.getPriority());
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
             //set start date from input
             acquiringLeadEntity.setAssigned(true);
             //save
             acquiringLeadsRepository.save(acquiringLeadEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
             //update is assigned to true
             return true;
         } catch (Exception e) {
@@ -291,8 +302,16 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             acquiringCustomerVisitEntity.setLatitude(customerVisitsRequest.getLatitude());
             acquiringCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringCustomerVisitEntity.setDsrName(customerVisitsRequest.getDsrName());
+            acquiringCustomerVisitEntity.setDsrId(customerVisitsRequest.getDsrId());
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(customerVisitsRequest.getDsrId()).get();
             //save
             acquiringCustomerVisitRepository.save(acquiringCustomerVisitEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Visit",
+                    "You have been assigned a new visit. Please check your App for more details",
+                    null
+            );
             return true;
         } catch (Exception e) {
             log.error("Error occurred while scheduling customer visit", e);
