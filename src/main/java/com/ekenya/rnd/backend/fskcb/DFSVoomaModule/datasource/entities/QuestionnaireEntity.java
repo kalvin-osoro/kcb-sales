@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities;
 
+import com.ekenya.rnd.backend.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,10 @@ public class QuestionnaireEntity {
     private String questionnaireTitle;
     @Enumerated(EnumType.STRING)
     private QuestionnaireType questionnaireType;
+    @Enumerated(EnumType.STRING)
+    private Status status=Status.ACTIVE;
     private String questionnaireDesc;
+    private String profileCode;
     @OneToMany(mappedBy="questionnaireEntity", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<QuestionEntity> questionEntitySet = new ArrayList<>();
     private Date createdOn;

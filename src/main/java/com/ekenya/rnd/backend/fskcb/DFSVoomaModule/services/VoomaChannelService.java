@@ -16,7 +16,9 @@ import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
+import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
+import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -42,6 +44,9 @@ import java.util.List;
 public class VoomaChannelService implements IVoomaChannelService {
 
     private final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+    private  final QuestionRepository questionRepository;
+    private  final QuestionnaireRepository questionnaireRepository;
+    private  final QuestionResponseRepository questionResponseRepository;
     private final DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
     private final DFSVoomaAssetFilesRepository dfsVoomaAssetFilesRepository;
     private final DFSVoomaAgentOnboardV1Repository dfsVoomaAgentOnboardV1Repository;
@@ -1045,7 +1050,62 @@ public class VoomaChannelService implements IVoomaChannelService {
         return false;
     }
 
+    @Override
+    public boolean createCustomerResponses(QuestionResponseRequest model) {
+        try {
+            if (model == null){
+                return false;
+            }
+            DFSVOOMAQuestionerResponseEntity questionerResponseEntity = new DFSVOOMAQuestionerResponseEntity();
+            questionerResponseEntity.setResponse(model.getResponse());
+            questionerResponseEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            questionerResponseEntity.setQuestionId(model.getQuestionId());
+            QuestionEntity questionEntity =questionRepository.findById(model.getQuestionId()).get();
+            questionerResponseEntity.setQuestion(questionEntity.getQuestion());
+            questionerResponseEntity.setCustomerName(model.getCustomerName());
+            questionerResponseEntity.setAccountNo(model.getAccountNo());
+            questionerResponseEntity.setComment(model.getComment());
+            questionResponseRepository.save(questionerResponseEntity);
+            return  true;
 
+
+        } catch (Exception e) {
+            log.error("something went wrong,please try again later");
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getAllQuestion(GetQuestionRequest model) {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (QuestionnaireEntity questionnaireEntity : questionnaireRepository.findByQuestionnaireTypeAndProfileCodeAndStatus(model.getQuestionnaireType(),model.getProfileCode(), Status.ACTIVE)) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
+                objectNode.put("createdOn", questionnaireEntity.getCreatedOn().getTime());
+
+                List<QuestionEntity> questionEntityList = questionnaireEntity.getQuestionEntitySet();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                for (QuestionEntity questionEntity : questionEntityList) {
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("id",questionEntity.getId());
+                    node.put("question", questionEntity.getQuestion());
+                    node.put("questionType", questionEntity.getQuestionType());
+                    arrayNode.add(node);
+                }
+                objectNode.put("questions", arrayNode);
+                list.add(objectNode);
+
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting all assets", e);
+        }
+
+        return null;
+    }
 
 
 }

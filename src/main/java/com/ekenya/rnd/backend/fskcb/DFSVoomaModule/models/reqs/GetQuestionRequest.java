@@ -6,16 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionnaireRequest {
-    private String questionnaireTitle;
-    private String profileCode;
+public class GetQuestionRequest {
     private QuestionnaireType questionnaireType;
-    private String questionnaireDesc;
-    private List<QuestionRequest> questionRequests;
+    private String profileCode;
 }

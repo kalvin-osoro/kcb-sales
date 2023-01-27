@@ -952,6 +952,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             questionnaireEntity.setQuestionnaireTitle(model.getQuestionnaireTitle());
             questionnaireEntity.setQuestionnaireType(model.getQuestionnaireType());
             questionnaireEntity.setQuestionnaireDesc(model.getQuestionnaireDesc());
+            questionnaireEntity.setProfileCode(model.getProfileCode());
             questionnaireEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             questionnaireRepository.save(questionnaireEntity);
 
@@ -986,6 +987,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ArrayNode arrayNode = mapper.createArrayNode();
                 for (QuestionEntity questionEntity : questionEntityList) {
                     ObjectNode node = mapper.createObjectNode();
+                    node.put("id",questionEntity.getId());
                     node.put("question", questionEntity.getQuestion());
                     node.put("questionType", questionEntity.getQuestionType());
                     arrayNode.add(node);

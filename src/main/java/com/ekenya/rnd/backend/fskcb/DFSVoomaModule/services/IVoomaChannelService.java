@@ -95,4 +95,7 @@ public interface IVoomaChannelService {
 
     boolean updateMerchant(VoomaAddAssetReportRequest model);
 
+    boolean createCustomerResponses(QuestionResponseRequest model);
+
+    List<ObjectNode> getAllQuestion(GetQuestionRequest model);
 }
