@@ -1092,6 +1092,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             ObjectMapper mapper = new ObjectMapper();
             for (QuestionnaireEntity questionnaireEntity : questionnaireRepository.findByQuestionnaireTypeAndProfileCodeAndStatus(model.getQuestionnaireType(),model.getProfileCode(), Status.ACTIVE)) {
                 ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", questionnaireEntity.getId());
                 objectNode.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
                 objectNode.put("createdOn", questionnaireEntity.getCreatedOn().getTime());
 

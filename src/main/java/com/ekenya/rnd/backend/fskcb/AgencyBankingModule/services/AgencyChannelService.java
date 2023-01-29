@@ -49,7 +49,7 @@ public class AgencyChannelService implements IAgencyChannelService {
                 return false;
             }
             AgencyAssetEntity agencyAssetEntity = (AgencyAssetEntity) agencyAssetRepository.findBySerialNumber((model.getSerialNumber())).orElse(null);
-            if ( agencyAssetEntity == null) {
+            if (agencyAssetEntity == null) {
                 return false;
             }
             agencyAssetEntity.setAgentAccNumber(model.getAccountNumber());
@@ -77,7 +77,7 @@ public class AgencyChannelService implements IAgencyChannelService {
                 ObjectNode objectNode = objectMapper.createObjectNode();
                 objectNode.put("assetId", acquiringAssetEntity1.getId());
                 objectNode.put("serialNumber", acquiringAssetEntity1.getSerialNumber());
-                objectNode.put("assetNumber",acquiringAssetEntity1.getAssetNumber());
+                objectNode.put("assetNumber", acquiringAssetEntity1.getAssetNumber());
                 objectNode.put("assetCondition", acquiringAssetEntity1.getAssetCondition().toString());
                 objectNode.put("totalTransaction", 0);
                 objectNodeList.add(objectNode);
@@ -115,7 +115,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     @Override
     public boolean createLead(AgencyAddLeadRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return false;
             }
             AgencyBankingLeadEntity agencyBankingLeadEntity = new AgencyBankingLeadEntity();
@@ -138,8 +138,6 @@ public class AgencyChannelService implements IAgencyChannelService {
         }
         return false;
     }
-
-
 
 
     @Override
@@ -251,25 +249,25 @@ public class AgencyChannelService implements IAgencyChannelService {
 
             //upload documents
             String frontIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_frontID_" + agentInfo.getId() + ".PNG", frontID,Utility.getSubFolder() );
+                    "agency_frontID_" + agentInfo.getId() + ".PNG", frontID, Utility.getSubFolder());
 
             String backIDPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_backID_" + agentInfo.getId() + ".PNG", backID,Utility.getSubFolder() );
+                    "agency_backID_" + agentInfo.getId() + ".PNG", backID, Utility.getSubFolder());
 
 
             String certificateOFGoodConductPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct,Utility.getSubFolder() );
+                    "agency_certificateOFGoodConduct_" + agentInfo.getId() + ".PNG", certificateOFGoodConduct, Utility.getSubFolder());
 
             String shopPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto,Utility.getSubFolder() );
+                    "agency_shopPhoto_" + agentInfo.getId() + ".PNG", shopPhoto, Utility.getSubFolder());
             String financialStatementPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_financialStatement_" + agentInfo.getId() + ".PNG", financialStatement,Utility.getSubFolder() );
+                    "agency_financialStatement_" + agentInfo.getId() + ".PNG", financialStatement, Utility.getSubFolder());
             String cvPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_cv_" + agentInfo.getId() + ".PNG", cv,Utility.getSubFolder() );
+                    "agency_cv_" + agentInfo.getId() + ".PNG", cv, Utility.getSubFolder());
             String customerPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto ,Utility.getSubFolder());
+                    "agency_customerPhoto_" + agentInfo.getId() + ".PNG", customerPhoto, Utility.getSubFolder());
             String crbReportPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "agency_crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport,Utility.getSubFolder() );
+                    "agency_crbReportPhoto_" + agentInfo.getId() + ".PNG", crbReport, Utility.getSubFolder());
             //check if all the documents were uploaded successfully if not throw an exception
             if (frontIDPath == null || backIDPath == null || certificateOFGoodConductPath == null
                     || shopPhotoPath == null || financialStatementPath == null || cvPath == null
@@ -289,7 +287,7 @@ public class AgencyChannelService implements IAgencyChannelService {
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/upload/"+Utility.getSubFolder()+"/")
+                        .path("/upload/" + Utility.getSubFolder() + "/")
                         .path(filePath)
                         .toUriString();
                 downloadUrlList.add(downloadUrl);
@@ -344,7 +342,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public boolean createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto,MultipartFile tariffPhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto) {
+    public boolean createCustomerVisit(String visitDetails, MultipartFile premiseInsidePhoto, MultipartFile tariffPhoto, MultipartFile premiseOutsidePhoto, MultipartFile cashRegisterPhoto) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -398,16 +396,16 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getTransactionOnRegisterReflectOnT24());
             agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getCountyLicence());
             agencyBankingVisitEntity.setTerminalId(agencyCustomerVisitsRequest.getCoreBusinessViable());
-          AgencyBankingVisitEntity  visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
+            AgencyBankingVisitEntity visitInfo = agencyBankingVisitRepository.save(agencyBankingVisitEntity);
 
             String premiseInsidePhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto,Utility.getSubFolder() );
+                    "premiseInsidePhoto_" + visitInfo.getId() + ".PNG", premiseInsidePhoto, Utility.getSubFolder());
             String premiseOutsidePhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto ,Utility.getSubFolder());
+                    "premiseOutsidePhoto_" + visitInfo.getId() + ".PNG", premiseOutsidePhoto, Utility.getSubFolder());
             String cashRegisterPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto,Utility.getSubFolder() );
+                    "cashRegisterPhoto_" + visitInfo.getId() + ".PNG", cashRegisterPhoto, Utility.getSubFolder());
             String tariffPhotoPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "tariffPhoto_" + visitInfo.getId() + ".PNG", tariffPhoto,Utility.getSubFolder() );
+                    "tariffPhoto_" + visitInfo.getId() + ".PNG", tariffPhoto, Utility.getSubFolder());
             //save the document paths
             ArrayList<String> filePathList = new ArrayList<>();
             filePathList.add(premiseInsidePhotoPath);
@@ -440,7 +438,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     @Override
     public List<ObjectNode> loadDSRLead(TreasuryGetDSRLeads model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return null;
             }
             List<ObjectNode> list = new ArrayList<>();
@@ -468,7 +466,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     @Override
     public List<ObjectNode> loadAssignedDSRLead(TreasuryGetDSRLeads model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return null;
             }
             List<ObjectNode> list = new ArrayList<>();
@@ -493,7 +491,7 @@ public class AgencyChannelService implements IAgencyChannelService {
     @Override
     public boolean attemptUpdateLead(TreasuryUpdateLeadRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return false;
             }
             AgencyBankingLeadEntity agencyBankingLeadEntity = agencyBankingLeadRepository.findById(model.getLeadId()).orElse(null);
@@ -515,8 +513,8 @@ public class AgencyChannelService implements IAgencyChannelService {
             }
             ArrayNode arrayNode = new ObjectMapper().createArrayNode();
             ObjectNode objectNode = new ObjectMapper().createObjectNode();
-            short commission=0;
-            short targetAchieved=0;
+            short commission = 0;
+            short targetAchieved = 0;
             objectNode.put("commission", commission);
             //get total number of dsr visits by dsr id
             int totalVisits = agencyBankingVisitRepository.countTotalVisits(model.getDsrId());
@@ -534,7 +532,7 @@ public class AgencyChannelService implements IAgencyChannelService {
             }
 //    //get total number of dsr targets achieved by dsr id
 //hard code for now since we dont know metrics to messure target achieved
-            objectNode.put("targetAchieved",targetAchieved);
+            objectNode.put("targetAchieved", targetAchieved);
             arrayNode.add(objectNode);
             return arrayNode;
         } catch (Exception e) {
@@ -582,7 +580,52 @@ public class AgencyChannelService implements IAgencyChannelService {
         return null;
     }
 
+    @Override
+    public Object searchAgent(AgencySearchRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.searchAgent(model.getKeyword());
+            if (agencyOnboardingEntity == null) {
+                return null;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", agencyOnboardingEntity.getId());
+            asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
+            asset.put("agencyName", agencyOnboardingEntity.getAgentName());
+            asset.put("id", agencyOnboardingEntity.getId());
+            asset.put("businessName", agencyOnboardingEntity.getBusinessName());
+//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
+            asset.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+            asset.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
+            asset.put("status", agencyOnboardingEntity.getStatus().toString());
+            asset.put("remarks", agencyOnboardingEntity.getRemarks());
+            asset.put("branchName", agencyOnboardingEntity.getBranch());
+            asset.put("accountName", agencyOnboardingEntity.getAgentName());
+            asset.put("dsrId", agencyOnboardingEntity.getDsrId());
+            asset.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+            ObjectNode cordinates = mapper.createObjectNode();
+            cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+            cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+            asset.set("cordinates", cordinates);
+            ObjectNode businessDetails = mapper.createObjectNode();
+            businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
+            businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
+            businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
+            businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
+            businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
+            businessDetails.put("city", agencyOnboardingEntity.getTown());
+            asset.set("businessDetails", businessDetails);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while searching agent", e);
+        }
 
+
+        return null;
+    }
 }
 
 

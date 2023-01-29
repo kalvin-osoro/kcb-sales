@@ -17,4 +17,7 @@ public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardi
     Optional<Object> findByAccountNumber(Integer accountNumber);
 
     AgencyOnboardingEntity findAgentByagentPhone(String toString);
+    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where agentName like %?1% or agentPhone like %?1% or agentIdNumber like %?1% or accountNumber like %?1% and status='APPROVED'", nativeQuery = true)
+    AgencyOnboardingEntity searchAgent(String keyword);
+
 }
