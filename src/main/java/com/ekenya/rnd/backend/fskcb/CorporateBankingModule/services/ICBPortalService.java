@@ -82,4 +82,6 @@ public interface ICBPortalService {
     boolean rejectCBConcession(CBApproveConcessionRequest model);
 
     boolean reAssignLead(CBAssignLeadRequest model);
+
+    boolean updateTarget(UpdateTargetRequest model);
 }

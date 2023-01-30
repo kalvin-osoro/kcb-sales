@@ -1,12 +1,18 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringTargetsRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.AgencyBankingTargetRepository;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaTargetRepository;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -14,9 +20,13 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.PSBankingTargetRepository;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.repositories.TreasuryTargetRepository;
 import com.ekenya.rnd.backend.utils.ConcessionTrackingStatus;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -54,6 +64,11 @@ public class CBPortalService implements ICBPortalService {
     private final IDSRTeamsRepository idsrTeamsRepository;
     private final IDSRAccountsRepository dsrAccountRepository;
     private final CBTargetRepository targetRepository;
+    private final DFSVoomaTargetRepository dfsVoomaTargetRepository;
+    private final AgencyBankingTargetRepository agencyBankingTargetRepository;
+    private final IAcquiringTargetsRepository acquiringTargetsRepository;
+    private final PSBankingTargetRepository psBankingTargetRepository;
+    private final TreasuryTargetRepository treasuryTargetRepository;
     private final CBOnboardingRepository cbOnboardingRepository;
     private final CBBankingConvenantRepository cbBankingConvenantRepository;
     private final CBConcessionRepository cbConcessionRepository;
@@ -888,6 +903,56 @@ public class CBPortalService implements ICBPortalService {
 
         } catch (Exception e) {
             log.error("Error assigning lead to dsr", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateTarget(UpdateTargetRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            //if profileCode==corporateBanking
+            if (model.getProfileCode().equalsIgnoreCase("corporateBanking")){
+                CBTargetEntity cbTargetEntity = targetRepository.findById(model.getTargetId()).orElse(null);
+                cbTargetEntity.setTargetValue(model.getTargetValue());
+                targetRepository.save(cbTargetEntity);
+            }
+            //if profileCode==dfsVooma
+            if (model.getProfileCode().equalsIgnoreCase("dfsVooma")){
+                DFSVoomaTargetEntity dfsVoomaTargetEntity = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+                dfsVoomaTargetEntity.setTargetValue(model.getTargetValue());
+                dfsVoomaTargetRepository.save(dfsVoomaTargetEntity);
+            }
+            //if profileCode==dfsAgency
+            if (model.getProfileCode().equalsIgnoreCase("dfsAgency")){
+                AgencyBankingTargetEntity agencyBankingTargetEntity = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
+                agencyBankingTargetEntity.setTargetValue(model.getTargetValue());
+                agencyBankingTargetRepository.save(agencyBankingTargetEntity);
+            }
+            //if profileCode==treasuryBanking
+            if (model.getProfileCode().equalsIgnoreCase("treasuryBanking")){
+                TreasuryTargetEntity treasuryTargetEntity = treasuryTargetRepository.findById(model.getTargetId()).orElse(null);
+                treasuryTargetEntity.setTargetValue(model.getTargetValue());
+                treasuryTargetRepository.save(treasuryTargetEntity);
+            }
+            //if profileCode==personalBanking
+            if (model.getProfileCode().equalsIgnoreCase("personalBanking")){
+                PSBankingTargetEntity personalBankingTargetEntity = psBankingTargetRepository.findById(model.getTargetId()).orElse(null);
+                personalBankingTargetEntity.setTargetValue(model.getTargetValue());
+                psBankingTargetRepository.save(personalBankingTargetEntity);
+            }
+            //else if profileCode==dfsAcquiring
+           else if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")){
+                AcquiringTargetEntity dfsAcquiringTargetEntity = acquiringTargetsRepository.findById(model.getTargetId()).orElse(null);
+                dfsAcquiringTargetEntity.setTargetValue(model.getTargetValue());
+                acquiringTargetsRepository.save(dfsAcquiringTargetEntity);
+            }
+            return true;
+
+        } catch (Exception e) {
+            log.error("Error occurred while updating target", e);
         }
         return false;
     }

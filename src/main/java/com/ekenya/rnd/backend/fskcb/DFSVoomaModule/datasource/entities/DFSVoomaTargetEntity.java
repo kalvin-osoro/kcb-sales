@@ -30,6 +30,8 @@ public class DFSVoomaTargetEntity {
     private Integer targetValue;
     private Integer targetAchievement;
     private  String targetSource;
+    private  String targetAssignedTeam;
+    private  String targetAssignedDSR;
     private Date startDate;
 
     private String endDate;

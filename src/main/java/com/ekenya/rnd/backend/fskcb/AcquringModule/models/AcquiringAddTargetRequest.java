@@ -24,7 +24,7 @@ public class AcquiringAddTargetRequest {
 //    private String startDate;
 //    private String endDate;
     private String targetName;
-    private Date createdOn;
+//    private Date createdOn;
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
 }

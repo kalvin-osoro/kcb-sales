@@ -399,6 +399,8 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetDesc", dfsVoomaTargetEntity.getTargetDesc());
                 objectNode.put("targetStatus", dfsVoomaTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", dfsVoomaTargetEntity.getTargetValue());
+                objectNode.put("targetAssignedTeam", dfsVoomaTargetEntity.getTargetAssignedTeam());
+                objectNode.put("targetAssignedDSR", dfsVoomaTargetEntity.getTargetAssignedDSR());
                 objectNode.put("createdOn", dfsVoomaTargetEntity.getCreatedOn() ==null ? null : dfsVoomaTargetEntity.getCreatedOn().getTime());
                 list.add(objectNode);
             }
@@ -696,15 +698,19 @@ public class VoomaPortalService implements IVoomaPortalService {
             DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
+                target.setTargetAssignedDSR(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
+                target.setTargetAssignedDSR(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
+                target.setTargetAssignedDSR(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
+                target.setTargetAssignedDSR(model.getTargetValue());
             }
 
             Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
@@ -730,15 +736,19 @@ public class VoomaPortalService implements IVoomaPortalService {
 
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 teamEntity.setCampaignTargetValue(model.getTargetValue());
+                target.setTargetAssignedTeam(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.LEADS)) {
                 teamEntity.setLeadsTargetValue(model.getTargetValue());
+                target.setTargetAssignedTeam(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 teamEntity.setVisitsTargetValue(model.getTargetValue());
+                target.setTargetAssignedTeam(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 teamEntity.setOnboardTargetValue(model.getTargetValue());
+                target.setTargetAssignedTeam(model.getTargetValue());
             }
 
             Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) teamEntity.getDfsVoomaTargetEntities();
