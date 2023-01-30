@@ -10,6 +10,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelSer
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.AgencyOnboardingRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.SearchRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.ICRMService;
 import com.ekenya.rnd.backend.fskcb.SpringBootKcbRestApiApplication;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -192,5 +193,27 @@ public class AcquiringChannelCustomer360VC {
         String newString = customer1.replace("\\", "");
         String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
         return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
+    }
+
+    //
+    @PostMapping(value = "/search-merchant")
+    public ResponseEntity<?> searchAgent(AgencySearchRequest model) {
+        Object agent =channelService.searchAgent(model);
+        boolean success = agent != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("agent").add(objectMapper.valueToTree(agent));
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
     }
 }

@@ -5,8 +5,10 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringCustomerVisitsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBRevenueLineEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
@@ -646,6 +648,44 @@ try {
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);
         }
+        return null;
+    }
+
+    @Override
+    public Object searchAgent(AgencySearchRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.searchAgent(model.getKeyword());
+            if (acquiringOnboardEntity == null) {
+                return null;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode asset = mapper.createObjectNode();
+            asset.put("id", acquiringOnboardEntity.getId());
+            asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
+            asset.put("Region", acquiringOnboardEntity.getRegion());
+            asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+            asset.put("email", acquiringOnboardEntity.getBusinessEmail());
+            asset.put("status", acquiringOnboardEntity.getStatus().toString());
+            asset.put("agent Id", acquiringOnboardEntity.getDsrId());
+            asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
+            ObjectNode cordinates = mapper.createObjectNode();
+            cordinates.put("latitude", acquiringOnboardEntity.getLatitude());
+            cordinates.put("longitude", acquiringOnboardEntity.getLongitude());
+            asset.put("cordinates", cordinates);
+            ObjectNode businessDetails = mapper.createObjectNode();
+            businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
+            businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
+
+            asset.set("businessDetails", businessDetails);
+            return asset;
+        } catch (Exception e) {
+            log.error("Error occurred while searching agent", e);
+        }
+
+
         return null;
     }
 
