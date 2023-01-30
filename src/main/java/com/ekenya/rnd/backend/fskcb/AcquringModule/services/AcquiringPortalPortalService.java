@@ -52,14 +52,14 @@ import java.util.Set;
 public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final IAcquiringLeadsRepository mLeadsRepo;
-    private final AssetLogsRepository  assetLogsRepository;
+    private final AssetLogsRepository assetLogsRepository;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final IQssService iQssService;
-    private final DFSVoomaOnboardRepository  dfsVoomaOnboardRepository;
+    private final DFSVoomaOnboardRepository dfsVoomaOnboardRepository;
 
     private final IDSRAccountsRepository dsrAccountRepository;
     private final AcquiringAssetRepository acquiringAssetRepository;
-    private  final IDSRAccountsRepository dsrAccountsRepository;
+    private final IDSRAccountsRepository dsrAccountsRepository;
     private final ModelMapper modelMapper;
     private final FileStorageService fileStorageService;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
@@ -75,8 +75,6 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
 
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
-
-
 
 
     @Override
@@ -176,14 +174,15 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
             List<String> filePathList = new ArrayList<>();
 
-            filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("AcquiringAsset" , assetFiles,Utility.getSubFolder());
+            filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("AcquiringAsset", assetFiles, Utility.getSubFolder());
             List<String> downloadUrlList = new ArrayList<>();
             for (String filePath : filePathList) {
                 String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/upload/"+Utility.getSubFolder()+"/")
+                        .path("/upload/" + Utility.getSubFolder() + "/")
                         .path(filePath)
                         .toUriString();
-                downloadUrlList.add(downloadUrl);;
+                downloadUrlList.add(downloadUrl);
+                ;
                 //save to db
                 AcquiringAssetFilesEntity dfsVoomaAssetFilesEntity = new AcquiringAssetFilesEntity();
                 dfsVoomaAssetFilesEntity.setAcquiringAssetEntity(dfsVoomaAssetEntity);
@@ -227,7 +226,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("condition", dfsVoomaOnboardEntity.getAssetCondition().toString());
                 asset.put("serialNo", dfsVoomaOnboardEntity.getSerialNumber());
                 asset.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
-                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null :dfsVoomaOnboardEntity.getDateAssigned().getTime());
+                asset.put("dateAssigned", dfsVoomaOnboardEntity.getDateAssigned() == null ? null : dfsVoomaOnboardEntity.getDateAssigned().getTime());
                 asset.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
                 asset.put("visitDate", dfsVoomaOnboardEntity.getVisitDate());
                 asset.put("location", dfsVoomaOnboardEntity.getLocation());
@@ -241,7 +240,6 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
         }
         return null;
     }
-
 
 
     @Override
@@ -275,7 +273,8 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
         }
         return null;
     }
-//TODO: wrong implementation
+
+    //TODO: wrong implementation
     @Override
     public List<ObjectNode> loadDSRsInTarget(AcquiringDSRsInTargetRequest model) {
         try {
@@ -433,7 +432,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 asset.put("priority", acquiringLeadEntity.getPriority().toString());
                 asset.put("dsrId", acquiringLeadEntity.getDsrId());
                 asset.put("dsrName", acquiringLeadEntity.getDsrName());
-                asset.put("createdOn",acquiringLeadEntity.getCreatedOn().getTime());
+                asset.put("createdOn", acquiringLeadEntity.getCreatedOn().getTime());
 
                 //add to list
                 list.add(asset);
@@ -500,7 +499,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             //summarize for last 7 days
-             {
+            {
                 for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.fetchAllOnboardingCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
                     asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
@@ -528,7 +527,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 return null;
             }
             //get merchant by id
-            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(acquiringMerchantDetailsRequest.getMerchantId()).orElseThrow( ()-> new ResourceNotFoundException("merchant","id",acquiringMerchantDetailsRequest.getMerchantId()));
+            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(acquiringMerchantDetailsRequest.getMerchantId()).orElseThrow(() -> new ResourceNotFoundException("merchant", "id", acquiringMerchantDetailsRequest.getMerchantId()));
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode asset = mapper.createObjectNode();
             asset.put("id", acquiringOnboardEntity.getId());
@@ -566,19 +565,19 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     @Override
     public List<ObjectNode> getTargetsSummary(AcquringSummaryRequest filters) {
-try {
+        try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             //summary targets for last 7 days
-    //[{
-    //    "target_id":"",
-    //    "target_name":"",
-    //    "target_value":"",
-    //    "target_achieved":"", //Sum of value achieved by department staff
-    //    "start_date":"dd-MMM-yyyy",
-    //    "target_status":"active",//completed, expired
-    //}]
-             {
+            //[{
+            //    "target_id":"",
+            //    "target_name":"",
+            //    "target_value":"",
+            //    "target_achieved":"", //Sum of value achieved by department staff
+            //    "start_date":"dd-MMM-yyyy",
+            //    "target_status":"active",//completed, expired
+            //}]
+            {
                 for (AcquiringTargetEntity acquiringTargetEntity : iAcquiringTargetsRepository.fetchAllTargetCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
                     asset.put("agentId", acquiringTargetEntity.getId());
@@ -591,7 +590,7 @@ try {
                 return list;
             }
 
-    } catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error occurred while fetching targets summary", e);
         }
         return null;
@@ -606,8 +605,8 @@ try {
                 for (AcquiringLeadEntity acquiringLeadEntity : acquiringLeadsRepository.fetchAllLeadsCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
                     //number of leads created
-                    asset.put("lead_orginates",acquiringLeadsRepository.countAllLeadsCreatedLast7Days());
-                    asset.put("leads_assigned",acquiringLeadsRepository.countAllLeadsCreatedLast7DaysAssigned());
+                    asset.put("lead_orginates", acquiringLeadsRepository.countAllLeadsCreatedLast7Days());
+                    asset.put("leads_assigned", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysAssigned());
                     asset.put("leads_open", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysOpen());
                     asset.put("leads_closed", acquiringLeadsRepository.countAllLeadsCreatedLast7DaysClosed());
                     asset.put("lead_status", acquiringLeadEntity.getLeadStatus().ordinal());
@@ -655,7 +654,7 @@ try {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-             {
+            {
                 for (AcquiringAssetEntity acquiringAssetEntity : acquiringAssetRepository.fetchAllAssetsCreatedLast7Days()) {
                     ObjectNode asset = mapper.createObjectNode();
                     asset.put("faulty_assets", acquiringAssetRepository.countFaultyAssets());
@@ -687,14 +686,19 @@ try {
             AcquiringTargetEntity target = iAcquiringTargetsRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
-            } if (target.getTargetType().equals(TargetType.LEADS)) {
+                user.setTargetId(model.getTargetId());
+            }
+            if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
+                user.setTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
+                user.setTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
+                user.setTargetId(model.getTargetId());
             }
 
             Set<AcquiringTargetEntity> acquiringTargetEntities = (Set<AcquiringTargetEntity>) user.getAcquiringTargetEntities();
@@ -727,7 +731,7 @@ try {
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 teamEntity.setVisitsTargetValue(model.getTargetValue());
             }
-            if  (target.getTargetType().equals(TargetType.ONBOARDING)) {
+            if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 teamEntity.setOnboardTargetValue(model.getTargetValue());
             }
 
@@ -770,8 +774,8 @@ try {
                 objectNode.put("region", acquiringOnboardEntity.getRegion());
                 objectNode.put("status", acquiringOnboardEntity.getStatus().toString());
                 objectNode.put("dateOnborded", acquiringOnboardEntity.getCreatedOn().getTime());
-                objectNode.put("payBillNo",Utility.generateRandomNumber());
-                objectNode.put("tillNo",Utility.generateRandomNumber());
+                objectNode.put("payBillNo", Utility.generateRandomNumber());
+                objectNode.put("tillNo", Utility.generateRandomNumber());
                 objectNode.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
                 objectNode.put("email", acquiringOnboardEntity.getBusinessEmail());
                 objectNode.put("dsrId", acquiringOnboardEntity.getDsrId());
@@ -846,7 +850,7 @@ try {
     @Override
     public boolean assignMerchantToDSR(AssignMerchant model) {
         try {
-            if (model== null){
+            if (model == null) {
                 return false;
             }
             AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getMerchantId()).get();
@@ -873,7 +877,7 @@ try {
     @Override
     public List<ObjectNode> findBySerialNumber(AssetInvetoryRequest model) {
         try {
-            if ( model== null){
+            if (model == null) {
                 return null;
             }
             //load list of all assets
@@ -902,6 +906,29 @@ try {
             log.error("Error occurred while getting asset logs", e);
         }
         return null;
+    }
+
+    @Override
+    public List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            DSRAccountEntity dsrAccountEntity =dsrAccountRepository.findByTargetId(model.getTargetId());
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", dsrAccountEntity.getId());
+            objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
+            objectNode.put("fullName", dsrAccountEntity.getFullName());
+            objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
+            list.add(objectNode);
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting dsr in target", e);
+        }
+
+return null;
     }
 
 

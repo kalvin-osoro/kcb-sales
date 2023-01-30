@@ -12,12 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AcquiringDSRsInTargetRequest {
-    private String targetId;
-    private String dsrId;
-    private Integer setTarget;
-    private Integer achievedTarget;
-    private String dsrName;
-    private String targetName;
-    private Date createdOn;
+   private Long targetId;
+   private String profileCode;
 
 }

@@ -86,4 +86,6 @@ public interface IAcquiringPortalService {
     boolean assignMerchantToDSR(AssignMerchant model);
 
     List<ObjectNode> findBySerialNumber(AssetInvetoryRequest model);
+
+    List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
 }

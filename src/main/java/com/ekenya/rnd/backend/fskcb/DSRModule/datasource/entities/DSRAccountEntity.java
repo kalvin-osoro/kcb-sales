@@ -109,6 +109,7 @@ public class DSRAccountEntity {
 
     private String campaignTargetValue;
     private String leadsTargetValue;
+    private Long targetId;
     private String visitsTargetValue;
     private String onboardTargetValue;
 
