@@ -1,4 +1,4 @@
-package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs;
+package com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VoomaAssignAssetRequest {
+public class AssetInvetoryRequest {
     private String serialNumber;
-    private String accountNumber;
-    private String remarks;
-    private String profileCode;
 }

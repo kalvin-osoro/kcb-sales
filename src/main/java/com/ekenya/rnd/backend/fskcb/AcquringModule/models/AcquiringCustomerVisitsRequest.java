@@ -29,9 +29,10 @@ public class AcquiringCustomerVisitsRequest {
     private String entityBrief;
     private String longitude;
     private String latitude;
-    private String assetNumber;
+    private Long assetNumber;
     private String serialNumber;
     private String terminalId;
     private String remarks;
+    private String profileCode;
     private AssetCondition assetCondition;
 }

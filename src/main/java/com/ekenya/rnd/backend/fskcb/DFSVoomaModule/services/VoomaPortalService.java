@@ -950,6 +950,12 @@ public class VoomaPortalService implements IVoomaPortalService {
             if (model == null) {
                 return false;
             }
+            //check if questionnaire of same questionnaireType already exists and it is status is active
+            QuestionnaireEntity questionnaireEntity1 = questionnaireRepository.findByQuestionnaireTypeAndStatus(model.getQuestionnaireType(), Status.ACTIVE);
+            if (questionnaireEntity1 != null) {
+                log.error("Questionnaire of same type already exists");
+                return false;
+            }
             QuestionnaireEntity questionnaireEntity = new QuestionnaireEntity();
             questionnaireEntity.setQuestionnaireTitle(model.getQuestionnaireTitle());
             questionnaireEntity.setQuestionnaireType(model.getQuestionnaireType());
@@ -1253,8 +1259,24 @@ public class VoomaPortalService implements IVoomaPortalService {
         return null;
     }
 
+    @Override
+    public boolean disableQuestionnaire(GetRQuestionnaireRequest model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            QuestionnaireEntity questionnaireEntity = questionnaireRepository.findById(model.getQuestionnaireId()).get();
+            questionnaireEntity.setStatus(Status.INACTIVE);
+            questionnaireRepository.save(questionnaireEntity);
+            return true;
+        } catch (Exception e) {
+            log.error("something went wrong,try again later");
+        }
+        return false;
+    }
 
-        public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
+
+    public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
         Map<String, Object> resp = new LinkedHashMap<>();
         List<Map<String, Object>> data = new ArrayList<>();
         customerDetails.getMerchantKYCList().stream().map(x -> new File(x.getFilePath()).getName()).forEach(x -> resp.put(x.split("_")[0], x));

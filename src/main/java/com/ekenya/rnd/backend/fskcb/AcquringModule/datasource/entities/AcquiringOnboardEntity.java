@@ -47,6 +47,8 @@ public class AcquiringOnboardEntity {
     private String bankName;
     private String branchName;
     private String accountName;
+    private String dsrSalesCode;
+    private Boolean isAssigned=false;
     private Integer accountNumber;
     private String accountNumberInUSD;
 //    private String accountNumberInKES;

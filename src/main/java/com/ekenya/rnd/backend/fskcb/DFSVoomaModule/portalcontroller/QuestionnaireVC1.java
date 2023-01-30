@@ -79,4 +79,21 @@ public class QuestionnaireVC1 {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+    //disable questionnaire
+    @PostMapping("/disable-questionnaire")
+    public ResponseEntity<?> disableQuestionnaire(@RequestBody GetRQuestionnaireRequest model) {
+        boolean success = voomaPortalService.disableQuestionnaire(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 }

@@ -28,6 +28,7 @@ public class RetailLeadEntity {
     private String remarks;
     private String customerAccountNumber;
     private String product;
+    private String profileCode;
     private String email;
     private String phoneNumber;
     private String topic;

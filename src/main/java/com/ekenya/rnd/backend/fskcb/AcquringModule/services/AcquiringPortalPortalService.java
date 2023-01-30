@@ -6,6 +6,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssetInvetoryRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
@@ -50,6 +52,7 @@ import java.util.Set;
 public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final IAcquiringLeadsRepository mLeadsRepo;
+    private final AssetLogsRepository  assetLogsRepository;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final IQssService iQssService;
     private final DFSVoomaOnboardRepository  dfsVoomaOnboardRepository;
@@ -187,6 +190,16 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
                 dfsVoomaAssetFilesEntity.setFileName(filePath);
                 dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
+                //fill assetLogs table
+                AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+                assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+                assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+                assetLogsEntity.setAction("Asset Added to the system");
+                assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
+                assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
+                assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+                assetLogsRepository.save(assetLogsEntity);
                 acquiringAssetFileRepository.save(dfsVoomaAssetFilesEntity);
 
             }
@@ -826,6 +839,67 @@ try {
             return asset;
         } catch (Exception e) {
             log.error("Error occurred while fetching merchant by id", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean assignMerchantToDSR(AssignMerchant model) {
+        try {
+            if (model== null){
+                return false;
+            }
+            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getMerchantId()).get();
+            acquiringOnboardEntity.setDsrSalesCode(model.getDsrSalesCode());
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+            //set start date from input
+            acquiringOnboardEntity.setIsAssigned(true);
+            //save
+            acquiringOnboardingsRepository.save(acquiringOnboardEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Merchant Assigned",
+                    "You have been assigned a new Merchant. Please check your App for more details",
+                    null
+            );
+            //update is assigned to true
+            return true;
+        } catch (Exception e) {
+            log.error("something went wrong,please try again later");
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> findBySerialNumber(AssetInvetoryRequest model) {
+        try {
+            if ( model== null){
+                return null;
+            }
+            //load list of all assets
+            List<AssetLogsEntity> assetLogsEntities = assetLogsRepository.findBySerialNumber(model.getSerialNumber());
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //bring all fields from asset logs
+            for (AssetLogsEntity assetLogsEntity : assetLogsEntities) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", assetLogsEntity.getId());
+                objectNode.put("serialNumber", assetLogsEntity.getSerialNumber());
+                objectNode.put("assetNumber", assetLogsEntity.getAssetNumber());
+                objectNode.put("assetCondition", assetLogsEntity.getCondition().toString());
+//                objectNode.put("location", assetLogsEntity.getLocation());
+//                objectNode.put("visitDate", assetLogsEntity.getVisitDate());
+//                objectNode.put("status", assetLogsEntity.getStatus().toString());
+                objectNode.put("customerAccNo", assetLogsEntity.getCustomerAccNumber());
+                objectNode.put("action", assetLogsEntity.getAction());
+                objectNode.put("remarks", assetLogsEntity.getAction());
+                objectNode.put("dsrSalesCode", assetLogsEntity.getDsrSalesCode());
+                objectNode.put("createdOn", assetLogsEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while getting asset logs", e);
         }
         return null;
     }

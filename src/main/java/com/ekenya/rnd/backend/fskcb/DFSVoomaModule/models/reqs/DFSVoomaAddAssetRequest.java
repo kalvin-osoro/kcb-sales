@@ -22,6 +22,8 @@ public class DFSVoomaAddAssetRequest {
     private Long assetNumber;
     private String lastServiceDate;
     private String visitDate;
+    private String profileCode;
+    private String remarks;
     private String dsrId;
 
 

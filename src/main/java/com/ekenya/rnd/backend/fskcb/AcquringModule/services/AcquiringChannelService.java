@@ -57,6 +57,7 @@ import static com.ekenya.rnd.backend.utils.Utility.isPointInPolygon;
 public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
+    private final AssetLogsRepository assetLogsRepository;
     private final AcquiringPrincipalRepository acquiringPrincipalRepository;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
@@ -343,6 +344,17 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringCustomerVisitsEntity.setAssetCondition(model.getAssetCondition());
 //            acquiringCustomerVisitsEntity.setDsrName("test");
             acquiringCustomerVisitsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            //assetLogs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+//            assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+            assetLogsEntity.setAssetNumber(model.getAssetNumber());
+            assetLogsEntity.setAction("Asset Report");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCondition(model.getAssetCondition());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             //save customer visit
             acquiringCustomerVisitRepository.save(acquiringCustomerVisitsEntity);
             return true;
@@ -555,6 +567,14 @@ try {
             acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
             acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetEntity.setAssigned(true);
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Assigned to Merchant");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCustomerAccNumber(model.getAccountNumber());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             acquiringAssetRepository.save(acquiringAssetEntity);
             return true;
         } catch (Exception e) {

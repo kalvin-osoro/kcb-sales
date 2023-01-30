@@ -56,6 +56,8 @@ public class AgencyOnboardingEntity {
     private String previousName;
     private String yearOfBirth;
     private String placeOfBirth;
+    private String dsrSalesCode;
+    private boolean isAssigned=false;
     private String relationshipToEntity;
     private String educationalQualification;
     //other borrowing details

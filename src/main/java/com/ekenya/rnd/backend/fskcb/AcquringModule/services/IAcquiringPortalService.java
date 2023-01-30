@@ -5,6 +5,8 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.Acquiring
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssetInvetoryRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -80,4 +82,8 @@ public interface IAcquiringPortalService {
     boolean rejectMerchantOnboarding(AcquiringApproveMerchant model);
 
     Object getAssetById(AssetByIdRequest model);
+
+    boolean assignMerchantToDSR(AssignMerchant model);
+
+    List<ObjectNode> findBySerialNumber(AssetInvetoryRequest model);
 }

@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.helper.AgentExcelHelper;
@@ -786,6 +787,33 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingQuestionnaireQuestionRepository.save(questionnaireQuestionEntity);
             return true;
 
+        } catch (Exception e) {
+            log.error("something went wrong,please try again later");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean assignAgentToDSR(AssignMerchant model) {
+        try {
+            if (model== null){
+                return false;
+            }
+            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findById(model.getMerchantId()).get();
+            agencyOnboardingEntity.setDsrSalesCode(model.getDsrSalesCode());
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+            //set start date from input
+            agencyOnboardingEntity.setAssigned(true);
+            //save
+            agencyOnboardingRepository.save(agencyOnboardingEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Agent Assigned",
+                    "You have been assigned a new Agent. Please check your App for more details",
+                    null
+            );
+            //update is assigned to true
+            return true;
         } catch (Exception e) {
             log.error("something went wrong,please try again later");
         }

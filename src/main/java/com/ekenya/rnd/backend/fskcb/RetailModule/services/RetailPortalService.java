@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.ConcessionStatus;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.entites.*;
 import com.ekenya.rnd.backend.fskcb.RetailModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.RetailModule.models.reqs.ChangeConvenantStatus;
@@ -28,6 +29,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RetailPortalService implements IRetailPortalService {
     private final RetailLeadRepository retailLeadRepository;
+
+    private final IQssService iQssService;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private final RetailConcessionRepository retailConcessionRepository;
     private final RetailConvenantTrackingRepository retailConvenantTrackingRepository;
@@ -51,9 +54,16 @@ public class RetailPortalService implements IRetailPortalService {
             }
             retailLeadEntity.setAssigned(true);
             retailLeadEntity.setPriority(model.getPriority());
+            DSRAccountEntity dsrAccountEntity = dsrAccountsRepository.findById(model.getDsrId()).get();
             //set dsrAccId from dsrAccountsEntity
             retailLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
             retailLeadRepository.save(retailLeadEntity);
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
             return true;
 
 
