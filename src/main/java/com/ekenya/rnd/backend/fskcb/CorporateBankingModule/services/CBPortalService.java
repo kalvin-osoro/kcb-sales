@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatu
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.IAcquiringTargetsRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.AgencyBankingTargetRepository;
@@ -960,6 +961,32 @@ public class CBPortalService implements ICBPortalService {
             log.error("Error occurred while updating target", e);
         }
         return false;
+    }
+
+    @Override
+    public List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            //list of dsr
+            List<DSRAccountEntity>list = dsrAccountRepository.findByCbTargetId(model.getTargetId());
+            List<ObjectNode> list1 = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //bring all fields from dsr
+            for (DSRAccountEntity dsrAccountEntity : list) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dsrAccountEntity.getId());
+                objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
+                objectNode.put("fullName", dsrAccountEntity.getFullName());
+                objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
+                list1.add(objectNode);
+                return list1;
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while getting dsr in target", e);
+        }
+        return null;
     }
 
     //send escalation automatic email if assignedTime is past 48 hrs

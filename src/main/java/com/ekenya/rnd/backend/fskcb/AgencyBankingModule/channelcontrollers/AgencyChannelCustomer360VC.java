@@ -113,7 +113,7 @@ public class AgencyChannelCustomer360VC {
 
 
     @PostMapping(value = "/search-agent")
-    public ResponseEntity<?> searchAgent(AgencySearchRequest model) {
+    public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
         Object agent =agencyChannelService.searchAgent(model);
         boolean success = agent != null;
         //Response

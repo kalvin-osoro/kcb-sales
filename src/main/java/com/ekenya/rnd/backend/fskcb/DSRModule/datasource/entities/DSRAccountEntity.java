@@ -155,6 +155,7 @@ public class DSRAccountEntity {
             inverseJoinColumns = @JoinColumn(name = "cbTargetId"))
     private Set<CBTargetEntity> cbTargetEntities;
     private Long cbTargetId;
+    private Long voomaTargetId;
 
 
 

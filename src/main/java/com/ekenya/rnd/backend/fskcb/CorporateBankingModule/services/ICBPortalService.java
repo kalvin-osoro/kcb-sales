@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
@@ -84,4 +85,6 @@ public interface ICBPortalService {
     boolean reAssignLead(CBAssignLeadRequest model);
 
     boolean updateTarget(UpdateTargetRequest model);
+
+    List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
 }

@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyAssetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
@@ -698,19 +699,19 @@ public class VoomaPortalService implements IVoomaPortalService {
             DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
-                target.setTargetAssignedDSR(model.getTargetValue());
+                user.setVoomaTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
-                target.setTargetAssignedDSR(model.getTargetValue());
+                user.setVoomaTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
-                target.setTargetAssignedDSR(model.getTargetValue());
+                user.setVoomaTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
-                target.setTargetAssignedDSR(model.getTargetValue());
+                user.setVoomaTargetId(model.getTargetId());
             }
 
             Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
@@ -1284,6 +1285,32 @@ public class VoomaPortalService implements IVoomaPortalService {
             log.error("something went wrong,try again later");
         }
         return false;
+    }
+
+    @Override
+    public List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            //list of dsr
+            List<DSRAccountEntity>list = dsrAccountsRepository.findByVoomaTargetId(model.getTargetId());
+            List<ObjectNode> list1 = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //bring all fields from dsr
+            for (DSRAccountEntity dsrAccountEntity : list) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dsrAccountEntity.getId());
+                objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
+                objectNode.put("fullName", dsrAccountEntity.getFullName());
+                objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
+                list1.add(objectNode);
+                return list1;
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while getting dsr in target", e);
+        }
+        return null;
     }
 
 

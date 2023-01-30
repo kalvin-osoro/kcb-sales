@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
@@ -67,4 +68,6 @@ public interface IAgencyPortalService {
     boolean createVisitQuestion(AgencyCollectAssetRequest.AgencyBankingQuestionnareQuestionRequest model);
 
     boolean assignAgentToDSR(AssignMerchant model);
+
+    List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
 }

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.utils.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ public interface IDSRTeamsRepository extends JpaRepository<DSRTeamEntity, Long> 
     Optional<DSRTeamEntity> findByName(String name);
 
     List<DSRTeamEntity> findAllByRegionId(long id);
+
 }

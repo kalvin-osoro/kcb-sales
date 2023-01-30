@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.TreasuryModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.TeamTAssignTargetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaTargetByIdRequest;
@@ -51,4 +52,6 @@ public interface ITreasuryPortalService {
     boolean editCurrencyRate(TreasuryRateRequest model);
 
     boolean updateCurrencyRate(TreasuryUpdateRequest model);
+
+    List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
 }

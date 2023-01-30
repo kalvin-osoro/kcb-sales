@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.TreasuryModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingVisitEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
@@ -514,5 +515,31 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             log.error("Error occurred while updating currency rate", e);
         }
         return false;
+    }
+
+    @Override
+    public List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            //list of dsr
+            List<DSRAccountEntity>list = dsrAccountsRepository.findByPsTargetId(model.getTargetId());
+            List<ObjectNode> list1 = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            //bring all fields from dsr
+            for (DSRAccountEntity dsrAccountEntity : list) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dsrAccountEntity.getId());
+                objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
+                objectNode.put("fullName", dsrAccountEntity.getFullName());
+                objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
+                list1.add(objectNode);
+                return list1;
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while getting dsr in target", e);
+        }
+        return null;
     }
 }

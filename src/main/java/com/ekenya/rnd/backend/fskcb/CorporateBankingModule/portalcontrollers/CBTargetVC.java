@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.CorporateBankingModule.portalcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAddTargetRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.UpdateTargetRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.services.ICBPortalService;
@@ -184,6 +185,30 @@ public class CBTargetVC {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping(value = "/cb-get-dsr-in-target")
+    public ResponseEntity<?> salesPersonInTarget(@RequestBody AcquiringDSRsInTargetRequest model) {
+        List<?> list = cbPortalService.salesPersonTarget(model);
+        boolean success = list != null;// acquiringTargetsResponse.size() > 0;
+
+
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
+
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

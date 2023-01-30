@@ -197,7 +197,7 @@ public class AcquiringChannelCustomer360VC {
 
     //
     @PostMapping(value = "/search-merchant")
-    public ResponseEntity<?> searchAgent(AgencySearchRequest model) {
+    public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
         Object agent =channelService.searchAgent(model);
         boolean success = agent != null;
         //Response

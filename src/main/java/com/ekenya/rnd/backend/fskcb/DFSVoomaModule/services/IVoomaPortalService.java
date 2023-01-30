@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
@@ -88,4 +89,6 @@ public interface IVoomaPortalService {
     List<ObjectNode> getQuestionnaireResponses(GetRQuestionnaireRequest model);
 
     boolean disableQuestionnaire(GetRQuestionnaireRequest model);
+
+    List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
 }

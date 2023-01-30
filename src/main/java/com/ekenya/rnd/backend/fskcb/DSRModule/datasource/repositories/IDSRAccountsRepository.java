@@ -25,6 +25,16 @@ public interface IDSRAccountsRepository extends JpaRepository<DSRAccountEntity, 
 
     List<DSRAccountEntity> findByTargetId(Long targetId);
 
+    List<DSRAccountEntity> findByAgencyTargetId(Long targetId);
+
+    List<DSRAccountEntity> findByCbTargetId(Long targetId);
+
+    List<DSRAccountEntity> findByPsTargetId(Long targetId);
+
+    List<DSRAccountEntity> findByTreasuryTargetId(Long targetId);
+
+    List<DSRAccountEntity> findByVoomaTargetId(Long targetId);
+
 
 //    DSRAccountEntity findByDsrId(Long dsrId);
 }
