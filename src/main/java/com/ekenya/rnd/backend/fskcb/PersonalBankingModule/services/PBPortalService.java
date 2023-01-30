@@ -480,14 +480,18 @@ public class PBPortalService implements IPBPortalService {
             PSBankingTargetEntity target = psBankingTargetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
+                user.setPsTargetId(model.getTargetId());
             } if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
+                user.setPsTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
+                user.setPsTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
+                user.setPsTargetId(model.getTargetId());
             }
 
             Set<PSBankingTargetEntity> psBankingTargetEntities = (Set<PSBankingTargetEntity>) user.getPsBankingTargetEntities();

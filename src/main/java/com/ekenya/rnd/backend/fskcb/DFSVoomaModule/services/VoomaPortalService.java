@@ -998,6 +998,7 @@ public class VoomaPortalService implements IVoomaPortalService {
             ObjectMapper mapper = new ObjectMapper();
             for (QuestionnaireEntity questionnaireEntity : questionnaireRepository.findAll()) {
                 ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", questionnaireEntity.getId());
                 objectNode.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
                 objectNode.put("createdOn", questionnaireEntity.getCreatedOn().getTime());
 

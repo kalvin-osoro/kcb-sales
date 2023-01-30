@@ -13,6 +13,5 @@ import java.util.Date;
 @NoArgsConstructor
 public class AcquiringDSRsInTargetRequest {
    private Long targetId;
-   private String profileCode;
 
 }

@@ -172,9 +172,9 @@ public class AcquiringTargetsVC {
 
     //list of dsr by targetId
     @PostMapping(value = "/acquiring-get-dsr-in-target")
-    public ResponseEntity<?> salesPersonInTarget(AcquiringDSRsInTargetRequest model) {
-        List<?> acquiringTargetsResponse = acquiringService.salesPersonTarget(model);
-        boolean success = acquiringTargetsResponse != null;// acquiringTargetsResponse.size() > 0;
+    public ResponseEntity<?> salesPersonInTarget(@RequestBody AcquiringDSRsInTargetRequest model) {
+        List<?> list = acquiringService.salesPersonTarget(model);
+        boolean success = list != null;// acquiringTargetsResponse.size() > 0;
 
 
 
@@ -183,7 +183,7 @@ public class AcquiringTargetsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(acquiringTargetsResponse));
+            node.addAll((List)list);
 
 //          node.put("id",0);
 

@@ -340,15 +340,19 @@ public class AgencyPortalService implements IAgencyPortalService {
             AgencyBankingTargetEntity target = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
+                user.setAgencyTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
+                user.setAgencyTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
+                user.setAgencyTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
+                user.setAgencyTargetId(model.getTargetId());
             }
 
             Set<AgencyBankingTargetEntity> agencyBankingTargetEntities = (Set<AgencyBankingTargetEntity>) user.getAgencyBankingTargetEntities();

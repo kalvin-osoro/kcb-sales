@@ -686,18 +686,22 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             AcquiringTargetEntity target = iAcquiringTargetsRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
+                user.setTargetValue(model.getTargetValue());
                 user.setTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
+                user.setTargetValue(model.getTargetValue());
                 user.setTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
+                user.setTargetValue(model.getTargetValue());
                 user.setTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
+                user.setTargetValue(model.getTargetValue());
                 user.setTargetId(model.getTargetId());
             }
 
@@ -914,16 +918,20 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             if (model == null) {
                 return null;
             }
-            DSRAccountEntity dsrAccountEntity =dsrAccountRepository.findByTargetId(model.getTargetId());
-            List<ObjectNode> list = new ArrayList<>();
+           //list of dsr
+            List<DSRAccountEntity>list = dsrAccountRepository.findByTargetId(model.getTargetId());
+            List<ObjectNode> list1 = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            ObjectNode objectNode = mapper.createObjectNode();
-            objectNode.put("id", dsrAccountEntity.getId());
-            objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
-            objectNode.put("fullName", dsrAccountEntity.getFullName());
-            objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
-            list.add(objectNode);
-            return list;
+            //bring all fields from dsr
+            for (DSRAccountEntity dsrAccountEntity : list) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", dsrAccountEntity.getId());
+                objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
+                objectNode.put("fullName", dsrAccountEntity.getFullName());
+                objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
+                list1.add(objectNode);
+                return list1;
+            }
         } catch (Exception e) {
             log.error("Error occurred while getting dsr in target", e);
         }

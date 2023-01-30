@@ -124,18 +124,21 @@ public class DSRAccountEntity {
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "agencyTargetId"))
     private Set<AgencyBankingTargetEntity> agencyBankingTargetEntities;
+    private Long agencyTargetId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ps_banking_target_dsr",
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "psBankingTargetId"))
     private Set<PSBankingTargetEntity> psBankingTargetEntities;
+    private Long psTargetId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "premium_banking_target_dsr",
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "premiumBankingTargetId"))
     private Set<PSTargetEntity> premiumTargetEntities;
+    private Long premiumTargetId;
 
     //TreasuryTargetEntity
 
@@ -144,12 +147,14 @@ public class DSRAccountEntity {
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "treasuryTargetId"))
     private Set<TreasuryTargetEntity> treasuryTargetEntities;
+    private Long treasuryTargetId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "cb_target_dsr",
             joinColumns = @JoinColumn(name = "dsrAccountId"),
             inverseJoinColumns = @JoinColumn(name = "cbTargetId"))
     private Set<CBTargetEntity> cbTargetEntities;
+    private Long cbTargetId;
 
 
 

@@ -23,7 +23,7 @@ public interface IDSRAccountsRepository extends JpaRepository<DSRAccountEntity, 
 
     List<DSRAccountEntity> findByProfileCode(String profileCode);
 
-    DSRAccountEntity findByTargetId(Long targetId);
+    List<DSRAccountEntity> findByTargetId(Long targetId);
 
 
 //    DSRAccountEntity findByDsrId(Long dsrId);

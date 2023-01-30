@@ -374,14 +374,18 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             TreasuryTargetEntity target = treasuryTargetRepository.findById(model.getTargetId()).orElse(null);
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
+                user.setTreasuryTargetId(model.getTargetId());
             } if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
+                user.setTreasuryTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
+                user.setTreasuryTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
+                user.setTreasuryTargetId(model.getTargetId());
             }
 
             Set<TreasuryTargetEntity> treasuryTargetEntities = (Set<TreasuryTargetEntity>) user.getTreasuryTargetEntities();
