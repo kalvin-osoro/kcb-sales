@@ -168,6 +168,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 //            dfsVoomaAssetEntity.setAssetCondition(dfsVoomaAddAssetRequest.getAssetCondition());
             dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            dfsVoomaAssetEntity.setAssetCondition(AssetCondition.WORKING);
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
 //            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(dfsVoomaAssetEntity);
@@ -176,6 +177,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
             assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            assetLogsEntity.setCondition(AssetCondition.WORKING);
             assetLogsEntity.setAction("Asset Added to the system");
             assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
             assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());

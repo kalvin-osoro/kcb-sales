@@ -38,7 +38,7 @@ public class AssetLogsEntity {
 
      @Enumerated(EnumType.STRING)
      @Column(name = "assetCondition")
-     private AssetCondition condition=AssetCondition.WORKING;
+     private AssetCondition condition;
 
      private Integer customerAccNumber;
 
