@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.AssignFeedBackRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.GetRQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.QuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaPortalService;
@@ -84,6 +85,21 @@ public class QuestionnaireVC1 {
     @PostMapping("/disable-questionnaire")
     public ResponseEntity<?> disableQuestionnaire(@RequestBody GetRQuestionnaireRequest model) {
         boolean success = voomaPortalService.disableQuestionnaire(model);
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    @PostMapping("/assign-feedback")
+    public ResponseEntity<?> assignFeedBack(@RequestBody AssignFeedBackRequest model) {
+        boolean success = voomaPortalService.assignFeedback(model);
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

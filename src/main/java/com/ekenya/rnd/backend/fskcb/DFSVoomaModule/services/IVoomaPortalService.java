@@ -91,4 +91,8 @@ public interface IVoomaPortalService {
     boolean disableQuestionnaire(GetRQuestionnaireRequest model);
 
     List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
+
+    List<ObjectNode> loadApprovedAgent();
+
+    boolean assignFeedback(AssignFeedBackRequest model);
 }

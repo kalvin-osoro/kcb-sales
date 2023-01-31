@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAgentOnboardV1;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaAgentOnboardingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,7 @@ public interface DFSVoomaAgentOnboardV1Repository extends JpaRepository<DFSVooma
     Iterable<DFSVoomaAgentOnboardV1> findAllByIsApproved();
 
     Optional<Object> findByAccountNumber(Long accountNumber);
+
+
+    Iterable<? extends DFSVoomaAgentOnboardV1> findByOnboardingStatus(OnboardingStatus approved);
 }

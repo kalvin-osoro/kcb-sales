@@ -1316,6 +1316,35 @@ public class VoomaPortalService implements IVoomaPortalService {
         return null;
     }
 
+    @Override
+    public List<ObjectNode> loadApprovedAgent() {
+        try {
+            ArrayList<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (DFSVoomaAgentOnboardV1 voomaAgentOnboardV1 : dfsVoomaAgentOnboardV1Repository.findByOnboardingStatus(OnboardingStatus.APPROVED)) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", voomaAgentOnboardV1.getId());
+                objectNode.put("agentName", voomaAgentOnboardV1.getAccountName());
+                objectNode.put("email", voomaAgentOnboardV1.getBusinessEmail());
+                objectNode.put("paybill", Utility.generateRandomNumber());
+                objectNode.put("till", Utility.generateRandomNumber());
+                objectNode.put("createdOn", voomaAgentOnboardV1.getCreatedOn().getTime());
+                objectNode.put("region", voomaAgentOnboardV1.getCityOrTown());
+                list.add(objectNode);
+                return list;
+        }
+        return null;
+    } catch (Exception e) {
+            log.error("Error occurred while getting approved agents", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean assignFeedback(AssignFeedBackRequest model) {
+        return false;
+    }
+
 
     public List<Map<String, Object>> getKycData(DFSVoomaMerchantOnboardV1 customerDetails) {
         Map<String, Object> resp = new LinkedHashMap<>();
