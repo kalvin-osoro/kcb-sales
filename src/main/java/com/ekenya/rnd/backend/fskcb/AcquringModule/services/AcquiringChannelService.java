@@ -564,9 +564,11 @@ try {
             if ( acquiringAssetEntity == null) {
                 return false;
             }
+            AcquiringOnboardEntity onboardEntity= acquiringOnboardingsRepository.findByAccountNumber(model.getAccountNumber());
             acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
             acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetEntity.setAssigned(true);
+            acquiringAssetEntity.setMerchantName(onboardEntity.getAccountName());
             AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
             assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             assetLogsEntity.setAction("Assigned to Merchant");
