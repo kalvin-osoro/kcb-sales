@@ -1320,8 +1320,8 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
                 //add to list
                 list.add(objectNode);
-                return list;
             }
+            return list;
         } catch (Exception e) {
             log.error("Error occurred while getting dsr in target", e);
         }
