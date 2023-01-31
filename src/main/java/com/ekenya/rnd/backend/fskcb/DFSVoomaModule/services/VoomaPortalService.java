@@ -1308,18 +1308,19 @@ public class VoomaPortalService implements IVoomaPortalService {
                 return null;
             }
             //list of dsr
-            List<DSRAccountEntity>list = dsrAccountsRepository.findByVoomaTargetId(model.getTargetId());
-            List<ObjectNode> list1 = new ArrayList<>();
+//            List<DSRAccountEntity>list = dsrAccountsRepository.findByVoomaTargetId(model.getTargetId());
+            List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             //bring all fields from dsr
-            for (DSRAccountEntity dsrAccountEntity : list) {
+            for (DSRAccountEntity dsrAccountEntity : dsrAccountsRepository.findByVoomaTargetId(model.getTargetId())) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", dsrAccountEntity.getId());
                 objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
                 objectNode.put("fullName", dsrAccountEntity.getFullName());
                 objectNode.put("targetValue", dsrAccountEntity.getTargetValue());
-                list1.add(objectNode);
-                return list1;
+                //add to list
+                list.add(objectNode);
+                return list;
             }
         } catch (Exception e) {
             log.error("Error occurred while getting dsr in target", e);
