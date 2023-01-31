@@ -17,7 +17,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "dbo_asset_logs")
-
 @DynamicUpdate
 @DynamicInsert
 public class AssetLogsEntity {
@@ -36,6 +35,7 @@ public class AssetLogsEntity {
      private String remarks;
      private boolean assigned=false;
      private String profileCode;
+     @Column(name = "assetCondition")
      private AssetCondition condition=AssetCondition.WORKING;
 
      private Integer customerAccNumber;

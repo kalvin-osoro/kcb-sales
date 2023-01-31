@@ -171,6 +171,16 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
 //            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(dfsVoomaAssetEntity);
+            //logs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+            assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            assetLogsEntity.setAction("Asset Added to the system");
+            assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
+            assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
+            assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
 
             List<String> filePathList = new ArrayList<>();
 
@@ -192,16 +202,6 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 //fill assetLogs table
 
                 acquiringAssetFileRepository.save(dfsVoomaAssetFilesEntity);
-//logs..
-                AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
-                assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-                assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
-                assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
-                assetLogsEntity.setAction("Asset Added to the system");
-                assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
-                assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
-                assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
-                assetLogsRepository.save(assetLogsEntity);
 
             }
             return true;

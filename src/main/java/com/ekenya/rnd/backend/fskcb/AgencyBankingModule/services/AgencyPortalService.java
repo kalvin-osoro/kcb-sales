@@ -541,6 +541,17 @@ public class AgencyPortalService implements IAgencyPortalService {
 //            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             AgencyAssetEntity savedAsset = agencyAssetRepository.save(dfsVoomaAssetEntity);
 
+            //logs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+            assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            assetLogsEntity.setAction("Asset Added to the system");
+            assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
+            assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
+            assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
+
             List<String> filePathList = new ArrayList<>();
 
             filePathList = fileStorageService.saveMultipleFileWithSpecificFileNameV("AgencyAsset_" , assetFiles,Utility.getSubFolder());
@@ -557,10 +568,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
                 dfsVoomaAssetFilesEntity.setFileName(filePath);
                 dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
-
                 agencyAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
-
-
             }
             return true;
 
