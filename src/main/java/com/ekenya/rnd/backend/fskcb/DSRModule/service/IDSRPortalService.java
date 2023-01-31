@@ -48,4 +48,8 @@ public interface IDSRPortalService {
     boolean addSector(SectorRequest model);
 
     List<ObjectNode> getAllSectors();
+
+    boolean editSector(SectorRequest model);
+
+    boolean deleteSector(SectorRequest model);
 }

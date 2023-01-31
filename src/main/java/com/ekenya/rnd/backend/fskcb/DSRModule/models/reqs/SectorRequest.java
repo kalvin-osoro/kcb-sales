@@ -11,5 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SectorRequest {
     private String sectorName;
+    private Long sectorId;
     private String sectorDesc;
 }

@@ -1256,6 +1256,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 node.put("id", questionerResponse.getId());
                 node.put("response", questionerResponse.getResponse());
                 node.put("question", questionerResponse.getQuestion());
+                node.put("respodent", questionerResponse.getCustomerName());
                 node.put("nationalId", questionerResponse.getNationalId());
                 node.put("accountNumber", questionerResponse.getAccountNo());
                 Long questionnaireId = questionerResponse.getQuestionnaireId();

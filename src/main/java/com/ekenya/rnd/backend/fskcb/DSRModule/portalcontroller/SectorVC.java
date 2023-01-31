@@ -60,4 +60,44 @@ public class SectorVC {
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //edit sector
+    @PostMapping(value = "/edit-sector")
+    public ResponseEntity<?> editSector(@RequestBody SectorRequest model) {
+
+        //INSIDE SERVICE
+        boolean success = dsrPortalService.editSector(model);
+
+        //Response
+        if(success){
+            //Object
+            ObjectNode node = mObjectMapper.createObjectNode();
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            }
+        }
+        //delete sector
+        @PostMapping(value = "/delete-sector")
+        public ResponseEntity<?> deleteSector(@RequestBody SectorRequest model) {
+
+            //INSIDE SERVICE
+            boolean success = dsrPortalService.deleteSector(model);
+
+            //Response
+            if(success){
+                //Object
+                ObjectNode node = mObjectMapper.createObjectNode();
+    //          node.put("id",0);
+
+                    return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+                }else{
+
+                        //Response
+                        return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+                    }
+            }
 }

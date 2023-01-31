@@ -23,6 +23,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.ExcelService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.UsersService;
+import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1197,6 +1198,38 @@ public class DSRPortalService implements IDSRPortalService {
             log.error("Error occurred while getting all leads", e);
         }
         return null;
+    }
+
+    @Override
+    public boolean editSector(SectorRequest model) {
+        try {
+            if (model == null){
+                return false;
+            }
+            SectorEntity sectorEntity = sectorRepository.findById(model.getSectorId()).orElseThrow(()-> new ResourceNotFoundException("sector","id",model.getSectorId() ));
+            sectorEntity.setSectorDesc(model.getSectorDesc());
+            sectorEntity.setSectorName(model.getSectorName());
+            sectorRepository.save(sectorEntity);
+            return true;
+        } catch (ResourceNotFoundException e) {
+            log.error("Error occurred while editing sector", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteSector(SectorRequest model) {
+        try {
+            if (model == null){
+                return false;
+            }
+            SectorEntity sectorEntity = sectorRepository.findById(model.getSectorId()).orElseThrow(()-> new ResourceNotFoundException("sector","id",model.getSectorId() ));
+            sectorRepository.delete(sectorEntity);
+            return true;
+        } catch (ResourceNotFoundException e) {
+            log.error("Error occurred while deleting sector", e);
+        }
+        return false;
     }
 
 }
