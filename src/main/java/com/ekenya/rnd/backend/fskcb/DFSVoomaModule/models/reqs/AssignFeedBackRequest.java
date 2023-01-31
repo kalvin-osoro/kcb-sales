@@ -14,6 +14,7 @@ public class AssignFeedBackRequest {
     private Long questionnaireId;
     private String duration;
     private String priority;
+    private String escalationEmail;
     private String salesPersonName;
 
 }

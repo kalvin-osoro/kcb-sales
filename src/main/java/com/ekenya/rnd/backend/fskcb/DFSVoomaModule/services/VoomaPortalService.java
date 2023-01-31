@@ -24,10 +24,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.*;
 
@@ -36,6 +40,9 @@ import java.util.*;
 public class VoomaPortalService implements IVoomaPortalService {
     @Autowired
     private DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
     @Autowired
     QuestionResponseRepository questionResponseRepository;
     @Autowired
@@ -700,18 +707,22 @@ public class VoomaPortalService implements IVoomaPortalService {
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
                 user.setVoomaTargetId(model.getTargetId());
+                user.setTargetValue(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.LEADS)) {
                 user.setLeadsTargetValue(model.getTargetValue());
                 user.setVoomaTargetId(model.getTargetId());
+                user.setTargetValue(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.VISITS)) {
                 user.setVisitsTargetValue(model.getTargetValue());
                 user.setVoomaTargetId(model.getTargetId());
+                user.setTargetValue(model.getTargetValue());
             }
             if (target.getTargetType().equals(TargetType.ONBOARDING)) {
                 user.setOnboardTargetValue(model.getTargetValue());
                 user.setVoomaTargetId(model.getTargetId());
+                user.setTargetValue(model.getTargetValue());
             }
 
             Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
@@ -1342,6 +1353,23 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Override
     public boolean assignFeedback(AssignFeedBackRequest model) {
+        try {
+            if (model==null){
+                return false;
+            }
+            QuestionnaireEntity questionnaireEntity = questionnaireRepository.findById(model.getQuestionnaireId()).get();
+            questionnaireEntity.setSalesPersonName(model.getSalesPersonName());
+            questionnaireEntity.setDuration(model.getDuration());
+            questionnaireEntity.setPriority(model.getPriority());
+            questionnaireEntity.setAssignedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            questionnaireEntity.setFeedbackAssigned(true);
+            //TODO:Send EscalationEmail if not atteded
+            questionnaireRepository.save(questionnaireEntity);
+
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning feedback", e);
+        }
         return false;
     }
 
@@ -1354,8 +1382,31 @@ public class VoomaPortalService implements IVoomaPortalService {
         return data;
     }
 
+    
 
-}
+    private void sendEmail(String salesPersonName, Long questionnaireId, String priority, String escalationEmail) {
+        try {
+            //send email
+            String subject = "Escalation";
+            String message = "Dear " + salesPersonName + ",\n" +
+                    "You have been assigned a feedback with priority " + priority + " and questionnaire id " + questionnaireId + ".\n" +
+                    "Please respond to the feedback as soon as possible.\n" +
+                    "Thank you.";
+            javaMailSender.send(new MimeMessagePreparator() {
+                @Override
+                public void prepare(MimeMessage mimeMessage) throws Exception {
+                    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+                    mimeMessageHelper.setFrom("");
+                    mimeMessageHelper.setTo(escalationEmail);
+                    mimeMessageHelper.setSubject(subject);
+                    mimeMessageHelper.setText(message);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Error occurred while sending email", e);
+        }
+    }
+    }
 
 
 

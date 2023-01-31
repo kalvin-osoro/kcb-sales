@@ -30,6 +30,12 @@ public class QuestionnaireEntity {
     private Status status=Status.ACTIVE;
     private String questionnaireDesc;
     private String profileCode;
+
+    private String duration;
+    private Boolean feedbackAssigned=false;
+    private String priority;
+    private Date assignedOn;
+    private String salesPersonName;
     @OneToMany(mappedBy="questionnaireEntity", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<QuestionEntity> questionEntitySet = new ArrayList<>();
     private Date createdOn;

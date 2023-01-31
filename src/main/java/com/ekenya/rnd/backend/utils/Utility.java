@@ -171,6 +171,11 @@ public class Utility {
     }
 
 
-
+    public static Date addMinutesToDate(Date date, int i) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MINUTE, i);
+        return cal.getTime();
+    }
 }
 
