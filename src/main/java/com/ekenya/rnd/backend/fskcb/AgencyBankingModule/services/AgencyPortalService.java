@@ -560,16 +560,6 @@ public class AgencyPortalService implements IAgencyPortalService {
 
                 agencyAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
 
-                //Logs
-                AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
-                assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-                assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
-                assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
-                assetLogsEntity.setAction("Asset Added to the system");
-                assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
-                assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
-                assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
-                assetLogsRepository.save(assetLogsEntity);
 
             }
             return true;
