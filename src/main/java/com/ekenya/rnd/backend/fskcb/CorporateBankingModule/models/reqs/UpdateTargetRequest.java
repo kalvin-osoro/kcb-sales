@@ -11,7 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateTargetRequest {
     private Long targetId;
-    private Integer targetValue;
+    private String targetValue;
+    private Long dsrId;
     private String profileCode;
 
 }

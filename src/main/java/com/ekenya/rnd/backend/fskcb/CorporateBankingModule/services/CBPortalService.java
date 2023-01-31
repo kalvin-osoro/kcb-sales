@@ -922,38 +922,44 @@ public class CBPortalService implements ICBPortalService {
             //if profileCode==corporateBanking
             if (model.getProfileCode().equalsIgnoreCase("corporateBanking")){
                 CBTargetEntity cbTargetEntity = targetRepository.findById(model.getTargetId()).orElse(null);
-                cbTargetEntity.setTargetValue(model.getTargetValue());
-                targetRepository.save(cbTargetEntity);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+                dsrAccountEntity.setTargetValue(model.getTargetValue());
+                dsrAccountRepository.save(dsrAccountEntity);
             }
             //if profileCode==dfsVooma
             if (model.getProfileCode().equalsIgnoreCase("dfsVooma")){
                 DFSVoomaTargetEntity dfsVoomaTargetEntity = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
-                dfsVoomaTargetEntity.setTargetValue(model.getTargetValue());
-                dfsVoomaTargetRepository.save(dfsVoomaTargetEntity);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+                dsrAccountEntity.setTargetValue(model.getTargetValue());
+                dsrAccountRepository.save(dsrAccountEntity);
             }
             //if profileCode==dfsAgency
             if (model.getProfileCode().equalsIgnoreCase("dfsAgency")){
                 AgencyBankingTargetEntity agencyBankingTargetEntity = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
-                agencyBankingTargetEntity.setTargetValue(model.getTargetValue());
-                agencyBankingTargetRepository.save(agencyBankingTargetEntity);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+                dsrAccountEntity.setTargetValue(model.getTargetValue());
+                dsrAccountRepository.save(dsrAccountEntity);
             }
             //if profileCode==treasuryBanking
             if (model.getProfileCode().equalsIgnoreCase("treasuryBanking")){
                 TreasuryTargetEntity treasuryTargetEntity = treasuryTargetRepository.findById(model.getTargetId()).orElse(null);
-                treasuryTargetEntity.setTargetValue(model.getTargetValue());
-                treasuryTargetRepository.save(treasuryTargetEntity);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+                dsrAccountEntity.setTargetValue(model.getTargetValue());
+                dsrAccountRepository.save(dsrAccountEntity);
             }
             //if profileCode==personalBanking
             if (model.getProfileCode().equalsIgnoreCase("personalBanking")){
                 PSBankingTargetEntity personalBankingTargetEntity = psBankingTargetRepository.findById(model.getTargetId()).orElse(null);
-                personalBankingTargetEntity.setTargetValue(model.getTargetValue());
-                psBankingTargetRepository.save(personalBankingTargetEntity);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+                dsrAccountEntity.setTargetValue(model.getTargetValue());
+                dsrAccountRepository.save(dsrAccountEntity);
             }
             //else if profileCode==dfsAcquiring
            else if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")){
                 AcquiringTargetEntity dfsAcquiringTargetEntity = acquiringTargetsRepository.findById(model.getTargetId()).orElse(null);
-                dfsAcquiringTargetEntity.setTargetValue(model.getTargetValue());
-                acquiringTargetsRepository.save(dfsAcquiringTargetEntity);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
+                dsrAccountEntity.setTargetValue(model.getTargetValue());
+                dsrAccountRepository.save(dsrAccountEntity);
             }
             return true;
 

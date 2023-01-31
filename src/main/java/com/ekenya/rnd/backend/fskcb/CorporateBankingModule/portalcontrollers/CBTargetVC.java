@@ -169,7 +169,7 @@ public class CBTargetVC {
         }
     }
 
-    @PostMapping(value = "/cb-update-target")
+    @PostMapping(value = "/update-target")
     public ResponseEntity<?> updateTarget(@RequestBody UpdateTargetRequest model) {
         boolean success = cbPortalService.updateTarget(model);
 

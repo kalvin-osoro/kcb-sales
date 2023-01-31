@@ -688,8 +688,8 @@ try {
             asset.put("Region", acquiringOnboardEntity.getRegion());
             asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
             asset.put("email", acquiringOnboardEntity.getBusinessEmail());
+            asset.put("accountnumber", acquiringOnboardEntity.getAccountNumber());
             asset.put("status", acquiringOnboardEntity.getStatus().toString());
-            asset.put("agent Id", acquiringOnboardEntity.getDsrId());
             asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
             ObjectNode cordinates = mapper.createObjectNode();
             cordinates.put("latitude", acquiringOnboardEntity.getLatitude());
