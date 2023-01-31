@@ -972,8 +972,8 @@ public class VoomaPortalService implements IVoomaPortalService {
             if (model == null) {
                 return false;
             }
-            //check if questionnaire of same questionnaireType already exists and it is status is active
-            QuestionnaireEntity questionnaireEntity1 = questionnaireRepository.findByQuestionnaireTypeAndStatus(model.getQuestionnaireType(), Status.ACTIVE);
+            //check if questionnaire of same QuestionType,status and profilecode exists
+            QuestionnaireEntity questionnaireEntity1 = questionnaireRepository.findByQuestionTypeAndStatusAndProfileCode(model.getQuestionnaireType(), Status.ACTIVE, model.getProfileCode());
             if (questionnaireEntity1 != null) {
                 log.error("Questionnaire of same type already exists");
                 return false;
