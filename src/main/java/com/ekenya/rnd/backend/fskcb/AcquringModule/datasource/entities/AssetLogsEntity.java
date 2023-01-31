@@ -33,7 +33,7 @@ public class AssetLogsEntity {
      private String customerIdNumber;
      private String action;
      private String remarks;
-     private boolean assigned=false;
+     private Boolean assigned=false;
      private String profileCode;
      @Column(name = "assetCondition")
      private AssetCondition condition=AssetCondition.WORKING;
