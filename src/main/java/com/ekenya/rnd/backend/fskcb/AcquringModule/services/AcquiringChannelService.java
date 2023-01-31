@@ -574,7 +574,7 @@ try {
             assetLogsEntity.setAction("Assigned to Merchant");
             assetLogsEntity.setProfileCode(model.getProfileCode());
             assetLogsEntity.setRemarks(model.getRemarks());
-            assetLogsEntity.setCustomerAccNumber(model.getAccountNumber());
+            assetLogsEntity.setCustomerAccNumber(onboardEntity.getAccountNumber());
             assetLogsEntity.setSerialNumber(model.getSerialNumber());
             assetLogsRepository.save(assetLogsEntity);
             acquiringAssetRepository.save(acquiringAssetEntity);

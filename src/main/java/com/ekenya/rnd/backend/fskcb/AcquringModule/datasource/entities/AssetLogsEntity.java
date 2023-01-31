@@ -30,6 +30,7 @@ public class AssetLogsEntity {
     private Long assetNumber;
      private Date createdOn;
      private String serialNumber;
+     private String customerIdNumber;
      private String action;
      private String remarks;
      private String profileCode;

@@ -190,6 +190,9 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 dfsVoomaAssetFilesEntity.setFileName(filePath);
                 dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
                 //fill assetLogs table
+
+                acquiringAssetFileRepository.save(dfsVoomaAssetFilesEntity);
+//logs..
                 AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
                 assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
                 assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
@@ -199,7 +202,6 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
                 assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
                 assetLogsRepository.save(assetLogsEntity);
-                acquiringAssetFileRepository.save(dfsVoomaAssetFilesEntity);
 
             }
             return true;

@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AssetLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
@@ -46,6 +47,7 @@ import java.util.Set;
 @Service
 public class AgencyPortalService implements IAgencyPortalService {
     private final AgencyBankingVisitRepository agencyBankingVisitRepository;
+    private final AssetLogsRepository assetLogsRepository;
     private final AgencyBankingVisitFileRepository  agencyBankingVisitFileRepository;
 
     private final AgencyBankingQuestionerResponseRepository agencyBankingQuestionerResponseRepository;
@@ -555,7 +557,19 @@ public class AgencyPortalService implements IAgencyPortalService {
                 dfsVoomaAssetFilesEntity.setFilePath(downloadUrl);
                 dfsVoomaAssetFilesEntity.setFileName(filePath);
                 dfsVoomaAssetFilesEntity.setIdAsset(savedAsset.getId());
+
                 agencyAssetFilesRepository.save(dfsVoomaAssetFilesEntity);
+
+                //Logs
+                AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+                assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+                assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+                assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+                assetLogsEntity.setAction("Asset Added to the system");
+                assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
+                assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
+                assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+                assetLogsRepository.save(assetLogsEntity);
 
             }
             return true;
