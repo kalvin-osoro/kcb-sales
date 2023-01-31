@@ -896,7 +896,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 objectNode.put("id", assetLogsEntity.getId());
                 objectNode.put("serialNumber", assetLogsEntity.getSerialNumber());
                 objectNode.put("assetNumber", assetLogsEntity.getAssetNumber());
-                objectNode.put("assetCondition", assetLogsEntity.getCondition().toString());
+                objectNode.put("assetCondition", assetLogsEntity.getCondition()== null ?null :assetLogsEntity.getCondition().toString());
 //                objectNode.put("location", assetLogsEntity.getLocation());
 //                objectNode.put("visitDate", assetLogsEntity.getVisitDate());
 //                objectNode.put("status", assetLogsEntity.getStatus().toString());
