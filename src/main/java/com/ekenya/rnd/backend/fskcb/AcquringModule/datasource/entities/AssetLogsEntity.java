@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,7 +26,9 @@ public class AssetLogsEntity {
     private Long id;
     @Enumerated(EnumType.STRING)
     private AssetType assetType;
+    @Column(name = "dateAssigned",nullable = true)
     private Date dateAssigned;
+    @Column(name = "dateCollected",nullable = true)
     private Date dateCollected;
     private Long assetNumber;
      private Date createdOn;
@@ -38,7 +41,7 @@ public class AssetLogsEntity {
 
      @Enumerated(EnumType.STRING)
      @Column(name = "assetCondition")
-     private AssetCondition condition;
+     private AssetCondition condition=AssetCondition.WORKING;
 
      private Integer customerAccNumber;
 
