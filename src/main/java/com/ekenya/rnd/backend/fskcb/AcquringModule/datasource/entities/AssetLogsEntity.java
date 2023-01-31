@@ -27,12 +27,14 @@ public class AssetLogsEntity {
     @Enumerated(EnumType.STRING)
     private AssetType assetType;
     private Date dateAssigned;
+    private Date dateCollected;
     private Long assetNumber;
      private Date createdOn;
      private String serialNumber;
      private String customerIdNumber;
      private String action;
      private String remarks;
+     private boolean assigned=false;
      private String profileCode;
      private AssetCondition condition=AssetCondition.WORKING;
 

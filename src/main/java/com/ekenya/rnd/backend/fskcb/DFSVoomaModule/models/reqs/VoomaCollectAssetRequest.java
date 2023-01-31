@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VoomaCollectAssetRequest {
     private String serialNumber;
+    private String profileCode;
 }

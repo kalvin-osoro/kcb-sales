@@ -902,6 +902,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 //                objectNode.put("status", assetLogsEntity.getStatus().toString());
                 objectNode.put("customerAccNo", assetLogsEntity.getCustomerAccNumber());
                 objectNode.put("action", assetLogsEntity.getAction());
+                objectNode.put("dateCollected", assetLogsEntity.getDateCollected()==null ? null :assetLogsEntity.getDateCollected().getTime());
                 objectNode.put("remarks", assetLogsEntity.getAction());
                 objectNode.put("dsrSalesCode", assetLogsEntity.getDsrSalesCode());
                 objectNode.put("createdOn", assetLogsEntity.getCreatedOn().getTime());

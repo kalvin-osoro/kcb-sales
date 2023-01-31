@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class AssetRecollectRequest {
     private String serialNumber;
+    private String profileCode;
 }

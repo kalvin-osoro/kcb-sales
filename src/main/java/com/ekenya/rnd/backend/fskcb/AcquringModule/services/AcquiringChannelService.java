@@ -625,6 +625,20 @@ try {
             dfsVoomaAssetEntity.setMerchantAccNo(null);
             dfsVoomaAssetEntity.setAcquiringOnboardEntity(null);
             dfsVoomaAssetEntity.setAssigned(false);
+
+            //logs
+
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Assigned to Merchant");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+//            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCondition(AssetCondition.FAULTY);
+            assetLogsEntity.setAssigned(true);
+//            assetLogsEntity.setCustomerIdNumber(onboardingEntity.getAgentIdNumber());
+//            assetLogsEntity.setCustomerAccNumber(onboardingEntity.getAccountNumber());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             acquiringAssetRepository.save(dfsVoomaAssetEntity);
             return true;
 

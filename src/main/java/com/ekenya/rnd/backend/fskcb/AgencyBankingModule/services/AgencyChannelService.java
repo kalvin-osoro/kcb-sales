@@ -66,6 +66,8 @@ public class AgencyChannelService implements IAgencyChannelService {
             assetLogsEntity.setAction("Assigned to Merchant");
             assetLogsEntity.setProfileCode(model.getProfileCode());
             assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCondition(AssetCondition.FAULTY);
+            assetLogsEntity.setAssigned(true);
             assetLogsEntity.setCustomerIdNumber(onboardingEntity.getAgentIdNumber());
             assetLogsEntity.setCustomerAccNumber(onboardingEntity.getAccountNumber());
             assetLogsEntity.setSerialNumber(model.getSerialNumber());
@@ -118,6 +120,18 @@ public class AgencyChannelService implements IAgencyChannelService {
             dfsVoomaAssetEntity.setAgentAccNumber(null);
             dfsVoomaAssetEntity.setAgencyOnboardingEntity(null);
             dfsVoomaAssetEntity.setAssigned(false);
+
+            //
+
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Collected from Agent");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setAssigned(false);
+            assetLogsEntity.setDateCollected(Utility.getPostgresCurrentTimeStampForInsert());
+//            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             agencyAssetRepository.save(dfsVoomaAssetEntity);
             return true;
 
