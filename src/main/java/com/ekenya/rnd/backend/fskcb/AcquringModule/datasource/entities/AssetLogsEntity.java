@@ -35,6 +35,8 @@ public class AssetLogsEntity {
      private String remarks;
      private Boolean assigned=false;
      private String profileCode;
+
+     @Enumerated(EnumType.STRING)
      @Column(name = "assetCondition")
      private AssetCondition condition=AssetCondition.WORKING;
 
