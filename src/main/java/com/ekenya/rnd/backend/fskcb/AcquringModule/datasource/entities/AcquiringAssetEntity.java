@@ -35,7 +35,6 @@ public class AcquiringAssetEntity {
  @Column(name="status")
  @Enumerated(EnumType.STRING)
  private Status status= Status.ACTIVE;
- @Enumerated(EnumType.STRING)
  private AssetCondition assetCondition=AssetCondition.WORKING;
  private Date lastServiceDate;
  private String deviceId;
