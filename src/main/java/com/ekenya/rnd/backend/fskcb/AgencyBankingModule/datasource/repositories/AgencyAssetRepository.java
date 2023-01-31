@@ -14,6 +14,8 @@ public interface AgencyAssetRepository extends JpaRepository<AgencyAssetEntity, 
 
     List<AgencyAssetEntity> findByAgentAccNumber(String agentAccNumber);
 
+    List<AgencyAssetEntity> findByAgentIdNumber(String agentIdNumber);
+
 
     //searchAgentByKeyWordAndStatus
 }

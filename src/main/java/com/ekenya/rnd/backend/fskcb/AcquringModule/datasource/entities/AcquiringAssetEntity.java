@@ -47,7 +47,7 @@ public class AcquiringAssetEntity {
  private Date createdOn;
  private Long dsrId;
  private String merchantName;
- private String merchantAccNo;
+ private Integer merchantAccNo;
  private String visitDate;
  private String terminalId;
 

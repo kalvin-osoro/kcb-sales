@@ -40,6 +40,7 @@ public class AgencyAssetEntity {
  private AssetCondition assetCondition=AssetCondition.WORKING;
  private Date lastServiceDate;
  private String deviceId;
+ private String agentIdNumber;
  private String location;
  private String longitude;
  private String latitude;
@@ -48,7 +49,7 @@ public class AgencyAssetEntity {
  private Long assetNumber;
  private Date createdOn;
  private Long dsrId;
- private Long agentName;
+ private String agentName;
  private String agentAccNumber;
  private String visitDate;
  private String terminalId;

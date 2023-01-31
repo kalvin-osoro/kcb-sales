@@ -35,7 +35,7 @@ public class AssetLogsEntity {
      private String profileCode;
      private AssetCondition condition=AssetCondition.WORKING;
 
-     private String customerAccNumber;
+     private Integer customerAccNumber;
 
      private String dsrSalesCode;
 }

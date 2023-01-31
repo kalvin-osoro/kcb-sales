@@ -27,5 +27,5 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
     @Query(value = "SELECT * FROM dbo_aqc_onboarding WHERE clientLegalName LIKE %?1% OR businessName LIKE %?1% OR  businessPhoneNumber LIKE %?1% and status='APPROVED' ", nativeQuery = true)
     AcquiringOnboardEntity searchAgent(String keyword);
 
-    AcquiringOnboardEntity findByAccountNumber(String accountNumber);
+    AcquiringOnboardEntity findByAccountNumber(Integer accountNumber);
 }

@@ -11,5 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AgencyAssignAssetRequest {
     private String serialNumber;
-    private String accountNumber;
+    private String agentIdNumber;
+
+    private String remarks;
+    private String profileCode;
 }

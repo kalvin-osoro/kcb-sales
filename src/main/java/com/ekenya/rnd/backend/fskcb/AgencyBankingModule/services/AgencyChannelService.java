@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AssetLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
@@ -30,6 +31,7 @@ import java.util.List;
 @Service
 public class AgencyChannelService implements IAgencyChannelService {
     private final AgencyAssetRepository agencyAssetRepository;
+    private final AssetLogsRepository assetLogsRepository;
     private final AgencyAssetFilesRepository agencyAssetFilesRepository;
     private final AgencyBankingQuestionnaireQuestionRepository questionnaireQuestionRepository;
     private final AgencyOnboardingKYCRepository agencyOnboardingKYCRepository;
@@ -52,9 +54,21 @@ public class AgencyChannelService implements IAgencyChannelService {
             if (agencyAssetEntity == null) {
                 return false;
             }
-            agencyAssetEntity.setAgentAccNumber(model.getAccountNumber());
+            AgencyOnboardingEntity onboardingEntity = (AgencyOnboardingEntity) agencyOnboardingRepository.findByAgentIdNumber(model.getAgentIdNumber()).orElse(null);
+            agencyAssetEntity.setAgentAccNumber(model.getAgentIdNumber());
+            agencyAssetEntity.setAgentIdNumber(model.getAgentIdNumber());
+            agencyAssetEntity.setAgentName(onboardingEntity.getAgentName());
             agencyAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             agencyAssetEntity.setAssigned(true);
+            //logs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Assigned to Merchant");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCustomerAccNumber(onboardingEntity.getAccountNumber());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             agencyAssetRepository.save(agencyAssetEntity);
             return true;
         } catch (Exception e) {
@@ -70,7 +84,7 @@ public class AgencyChannelService implements IAgencyChannelService {
                 return null;
             }
             //get all assets for merchant
-            List<AgencyAssetEntity> acquiringAssetEntity = agencyAssetRepository.findByAgentAccNumber(model.getAgentAccNumber());
+            List<AgencyAssetEntity> acquiringAssetEntity = agencyAssetRepository.findByAgentIdNumber(model.getAgentIdNumber());
             List<ObjectNode> objectNodeList = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             acquiringAssetEntity.forEach(acquiringAssetEntity1 -> {
