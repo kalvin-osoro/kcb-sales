@@ -27,6 +27,7 @@ public class AddAdminUserRequest {
     @ApiModelProperty(value = "Email")
     @Email
     private String email;
+    private Boolean isRm;
 //
 //    @ApiModelProperty(value = "Password")
 //    @NotNull

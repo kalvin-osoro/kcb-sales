@@ -154,7 +154,7 @@ public class AuthService implements IAuthService{
                     profilesAndUsersRepository.findAllByUserId(account.getId())) {
                 UserProfileEntity userProfile = userProfilesRepository.findById(userAndProfile.getProfileId()).orElse(null);
                 //
-                if(userAndProfile != null) {
+                if(userAndProfile != null && userProfile != null) {
                     ObjectNode node = mObjectMapper.createObjectNode();
                     node.put("name",userProfile.getName());
                     node.put("code",userProfile.getCode());
@@ -168,6 +168,8 @@ public class AuthService implements IAuthService{
             response.setIssued(Calendar.getInstance().getTime());
             response.setExpiresInMinutes(JWT_EXPIRY_IN_MILLISECONDS/(1000 * 60));
             response.setProfiles(profiles);
+            response.setRm(account.getRoles().stream().allMatch( h ->
+                    h.getName().equalsIgnoreCase(SystemRoles.RM)));
             response.setType("Bearer");
             //
             response.setShouldSetSecQns(securityQuestionAnswersRepo.findAllByUserIdAndStatus(account.getId(),Status.ACTIVE).isEmpty());
@@ -296,6 +298,8 @@ public class AuthService implements IAuthService{
             response.setType("Bearer");
             response.setName(account.getFullName());
             response.setEmail(account.getEmail());
+            response.setRm(account.getRoles().stream().allMatch( h ->
+                            h.getName().equalsIgnoreCase(SystemRoles.RM)));
             //
             DSRAccountEntity dsrAccount = dsrAccountsRepository.findByStaffNo(account.getStaffNo()).orElse(null);
             if(dsrAccount != null) {
@@ -476,6 +480,7 @@ public class AuthService implements IAuthService{
                             addUserRequest.setFullName(dsrAccount.getFullName());
                             addUserRequest.setPhoneNo(dsrAccount.getPhoneNo());
                             addUserRequest.setStaffNo(dsrAccount.getStaffNo());
+                            addUserRequest.setIsRm(dsrAccount.getIsRm());
                             //
                             if (usersService.attemptCreateUser(addUserRequest, AccountType.DSR,true)) {
                                 //All is well,

@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.Asset
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.Calender.model.DSRAgent;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
@@ -655,6 +656,43 @@ public class AgencyChannelService implements IAgencyChannelService {
 
         return null;
     }
+
+    @Override
+    public List<ObjectNode> getDSRAgent(DSRAgent model) {
+       try {
+           if (model==null) {
+               return null;
+           }
+           //search agent by dsrName and Onboarding status APPROVED
+           List<AgencyOnboardingEntity> agencyOnboardingEntities = agencyOnboardingRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED);
+           if (agencyOnboardingEntities == null) {
+               return null;
+
+           }
+           List<ObjectNode> objectNodes = new ArrayList<>();
+           for (AgencyOnboardingEntity agencyOnboardingEntity : agencyOnboardingEntities) {
+               ObjectMapper mapper = new ObjectMapper();
+               ObjectNode asset = mapper.createObjectNode();
+               asset.put("id", agencyOnboardingEntity.getId());
+               asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
+               asset.put("agencyName", agencyOnboardingEntity.getAgentName());
+               asset.put("businessName", agencyOnboardingEntity.getBusinessName());
+               ObjectNode cordinates = mapper.createObjectNode();
+               cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+               cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+               asset.set("cordinates", cordinates);
+               objectNodes.add(asset);
+
+           }
+           return objectNodes;
+       } catch (Exception e) {
+           log.error("something went wrong,please try again later");
+       }
+
+        return null;
+    }
+
+
 }
 
 

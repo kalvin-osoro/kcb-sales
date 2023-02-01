@@ -2,8 +2,10 @@ package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.channelcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringCustomerOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyAllDSROnboardingsRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyChannelService;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.IAgencyPortalService;
+import com.ekenya.rnd.backend.fskcb.Calender.model.DSRAgent;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -72,6 +74,28 @@ public class AgencyChannelOnboardingVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+    @PostMapping(value = "/getDsrAgent")
+    public ResponseEntity<?> searchAgent(@RequestBody DSRAgent model) {
+        List<?>  agent=agencyChannelService.getDSRAgent(model);
+        boolean success = agent != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)agent);
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
+    }
+
 
 
 }

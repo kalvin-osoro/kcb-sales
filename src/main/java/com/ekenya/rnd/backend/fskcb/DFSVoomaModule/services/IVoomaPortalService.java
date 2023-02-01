@@ -95,4 +95,6 @@ public interface IVoomaPortalService {
     List<ObjectNode> loadApprovedAgent();
 
     boolean assignFeedback(AssignFeedBackRequest model);
+
+    List<ObjectNode> getAllAgents();
 }

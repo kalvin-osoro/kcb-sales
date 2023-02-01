@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.Calender.model.DSRAgent;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
@@ -42,4 +43,6 @@ public interface IAgencyChannelService {
     Object getAssetById(AssetByIdRequest model);
 
     Object searchAgent(AgencySearchRequest model);
+
+    List<ObjectNode> getDSRAgent(DSRAgent model);
 }

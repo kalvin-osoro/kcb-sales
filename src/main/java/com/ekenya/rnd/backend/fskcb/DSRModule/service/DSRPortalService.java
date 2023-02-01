@@ -437,6 +437,7 @@ public class DSRPortalService implements IDSRPortalService {
                         .fullName(dsrRequest.getFullName())
                         .staffNo(dsrRequest.getStaffNo())
                         .teamId(optionalDSRTeam.getId())
+                        .isRm(dsrRequest.getIsRM())
                         .salesCode(dsrRequest.getSalesCode())
                         .createdBy(createdBy)
                         .createdOn(Utility.getPostgresCurrentTimeStampForInsert())
@@ -452,6 +453,7 @@ public class DSRPortalService implements IDSRPortalService {
                 req.setFullName(dsrDetails.getFullName());
                 req.setPhoneNo(dsrDetails.getPhoneNo());
                 req.setStaffNo(dsrDetails.getStaffNo());
+                req.setIsRm(dsrDetails.getIsRm());
 
                 //Save DSR Account ..
 
@@ -462,6 +464,8 @@ public class DSRPortalService implements IDSRPortalService {
                     UserAccountEntity userAccount =
                             userAccountsRepository.findByStaffNo(dsrDetails.getStaffNo()).get();
                     //
+                    //check existing profileId and userId
+                    //TODO check existing profileId and userId
                     ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
                     profileAndUserEntity.setProfileId(profileEntity.getId());
                     profileAndUserEntity.setUserId(userAccount.getId());
@@ -950,6 +954,7 @@ public class DSRPortalService implements IDSRPortalService {
                     req.setFullName(account.getFullName());
                     req.setPhoneNo(account.getPhoneNo());
                     req.setStaffNo(account.getStaffNo());
+                    req.setIsRm(account.getIsRm());
 
                     //
                     if(usersService.attemptCreateUser(req,AccountType.DSR,false)) {

@@ -13,6 +13,7 @@ public class LoginResponse {
     private boolean shouldSetSecQns = true;
     private boolean shouldChangePin = false;
     private boolean success = false;
+    private boolean isRm = false;
     private int remAttempts = 3;
     private String token;
     private String type;

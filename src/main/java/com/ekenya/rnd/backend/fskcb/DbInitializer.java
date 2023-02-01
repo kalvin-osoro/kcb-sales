@@ -175,6 +175,19 @@ public class DbInitializer {
             //
             log.info(SystemRoles.DSR +" already exists,");
         }
+        //RM
+        if(!roleRepository.findByName(SystemRoles.RM).isPresent()){
+            //
+            UserRoleEntity role = new UserRoleEntity();
+            role.setName(SystemRoles.RM);
+            role.setCreatedOn(Calendar.getInstance().getTime());
+            role.setType(RoleType.SYSTEM);
+            //
+            roleRepository.save(role);
+        }else{
+            //
+            log.info(SystemRoles.RM +" already exists,");
+        }
 
         //
         if(!roleRepository.findByName(SystemRoles.USER).isPresent()){

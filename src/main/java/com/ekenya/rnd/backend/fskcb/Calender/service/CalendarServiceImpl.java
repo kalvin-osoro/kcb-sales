@@ -51,7 +51,7 @@ public class CalendarServiceImpl implements CalendarService {
                 membersEntity.setName(memberRequest.getName());
                 membersEntity.setEmail(memberRequest.getEmail());
                 membersEntity.setSalesCode(memberRequest.getSalesCode());
-                membersEntity.setMeetingDetailsEntities((Set<MeetingDetailsEntity>) meetingDetailsEntity);
+                membersEntity.setMeetingDetailsEntities((List<MeetingDetailsEntity>) meetingDetailsEntity);
                 membersEntity.setPhoneNumber(memberRequest.getPhoneNumber());
                 membersRepository.save(membersEntity);
                 //send notification to saved members

@@ -16,6 +16,7 @@ public class AddDSRAccountRequest {
     private String salesCode;
     private Long teamId;
     private String email;
+    private Boolean isRM;
     private Date expiry;
     private String gender;
     private String profileCode;

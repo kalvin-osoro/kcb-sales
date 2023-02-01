@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +18,10 @@ public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardi
     Optional<Object> findByAccountNumber(Integer accountNumber);
 
     AgencyOnboardingEntity findAgentByagentPhone(String toString);
-    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where agentName like %?1% or agentPhone like %?1% or agentIdNumber like %?1% or accountNumber like %?1% and status='APPROVED'", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where agentName ilike %?1% or agentPhone ilike %?1% or agentIdNumber ilike %?1% or accountNumber ilike %?1% and status='APPROVED'", nativeQuery = true)
     AgencyOnboardingEntity searchAgent(String keyword);
 
     Optional<Object> findByAgentIdNumber(String agentIdNumber);
+    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where dsrName ilike %?1%  and status='APPROVED'", nativeQuery = true)
+    List<AgencyOnboardingEntity> searchByDsrNameAndStatus(String dsrName, OnboardingStatus approved);
 }

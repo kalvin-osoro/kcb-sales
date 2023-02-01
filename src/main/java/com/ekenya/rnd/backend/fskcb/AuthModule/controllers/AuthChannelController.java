@@ -59,6 +59,7 @@ public class AuthChannelController {
                 node.put("sales_code",resp.getSalesCode());
                 node.put("team_name",resp.getTeamName());
                 node.put("team_code",resp.getTeamCode());
+                node.put("isRm",resp.isRm()? 1:0);
                 node.put("issued",dateFormat.format(resp.getIssued()));
                 node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());

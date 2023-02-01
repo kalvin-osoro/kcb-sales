@@ -195,7 +195,8 @@ public class ExcelHelper {
         final int TEAM_COLUMN_INDEX = 6;
         final int GENDER_COLUMN_INDEX = 7;
         final int ACCOUNT_EXPIRY_COLUMN_INDEX = 8;
-        
+        final int ACCOUNT_IS_RM = 9;
+
         try {
             DSRsExcelImportResult result = new DSRsExcelImportResult();
 
@@ -379,7 +380,7 @@ public class ExcelHelper {
                     //result.getErrors().add(importError);
                 }
 
-                //Sales Code
+                //Gender
                 try{
                     Cell currentCell = currentRow.getCell(GENDER_COLUMN_INDEX, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     String gender = currentCell.getStringCellValue();
@@ -419,6 +420,24 @@ public class ExcelHelper {
                     importError.setError(ex.getMessage());
                     importError.setRow(rowNumber);
                     importError.setColumn(ACCOUNT_EXPIRY_COLUMN_INDEX);
+                    //
+                    result.getErrors().add(importError);
+                }
+                //Is RM
+                try{
+                    Cell currentCell = currentRow.getCell(ACCOUNT_IS_RM, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String isRm = currentCell.getStringCellValue();
+                    if(isRm != null || !isRm.isEmpty() || !isRm.isBlank()) {
+                        dsrAccount.setIsRm(isRm.equalsIgnoreCase("yes"));
+                    }else{
+                        //Not set, ignore..
+                    }
+                }catch (Exception ex){
+                    mLogger.log(Level.SEVERE, ex.getMessage(),ex);
+                    ExcelImportError importError = new ExcelImportError();
+                    importError.setError(ex.getMessage());
+                    importError.setRow(rowNumber);
+                    importError.setColumn(ACCOUNT_IS_RM);
                     //
                     result.getErrors().add(importError);
                 }

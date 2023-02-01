@@ -7,4 +7,5 @@ public class SystemRoles {
     public static final String DSR = "ROLE_DSR";
     public static final String ADMIN = "ROLE_ADMIN";
     public static final String SYS_ADMIN = "ROLE_SYS_ADMIN";
+    public static final String RM = "ROLE_RM";
 }

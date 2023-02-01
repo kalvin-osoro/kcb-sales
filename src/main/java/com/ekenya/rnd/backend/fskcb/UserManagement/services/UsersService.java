@@ -155,7 +155,15 @@ public class UsersService implements IUsersService {
                     //DSR Account..
                     UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
                     account.setRoles(Collections.singleton(userRole));//set role to user
-                    userAccountsRepository.save(account);//save user to db
+//                    userAccountsRepository.save(account);//save user to db
+                    if (model.getIsRm()){
+                        userRole = roleRepository.findByName(SystemRoles.RM).get();//get role from db
+                        account.setRoles(Collections.singleton(userRole));//set role to user
+                       //save user to db
+
+                    }
+                    userAccountsRepository.save(account);
+
                 }
                 //
                 return true;

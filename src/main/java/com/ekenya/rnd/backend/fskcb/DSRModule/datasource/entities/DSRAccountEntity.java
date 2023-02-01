@@ -43,6 +43,7 @@ public class DSRAccountEntity {
 
     @Column(name="cat")
     private String staffCategory;
+    private Boolean isRm;
 
     @Column(name="staff_no",nullable = false)
     private String staffNo;

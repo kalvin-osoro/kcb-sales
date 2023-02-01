@@ -198,4 +198,21 @@ public class VoomaOnboardingVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    @PostMapping(value = "/vooma-get-all-agent")
+    public ResponseEntity<?> loadAllAgent() {
+        List<?> list = voomaService.getAllAgents();
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list != null){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
+            return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 }
