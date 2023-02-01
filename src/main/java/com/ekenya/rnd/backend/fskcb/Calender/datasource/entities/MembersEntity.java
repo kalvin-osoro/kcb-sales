@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ public class MembersEntity {
     private String salesCode;
     private String phoneNumber;
     private String email;
-    @ManyToOne
-    private MeetingDetailsEntity meetingDetailsEntity;
+    @ManyToMany
+    Set<MeetingDetailsEntity> meetingDetailsEntities;
 
 }

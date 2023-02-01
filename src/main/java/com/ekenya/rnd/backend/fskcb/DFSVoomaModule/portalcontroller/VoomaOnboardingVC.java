@@ -189,8 +189,8 @@ public class VoomaOnboardingVC {
         ObjectMapper objectMapper = new ObjectMapper();
         if(list != null){
             //Object
-//            ArrayNode node = objectMapper.createArrayNode();
-//            node.addAll((List)list);
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
             return ResponseEntity.ok(new BaseAppResponse(1,list,"Request Processed Successfully"));
         }else{
 

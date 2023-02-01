@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Slf4j
@@ -50,7 +51,7 @@ public class CalendarServiceImpl implements CalendarService {
                 membersEntity.setName(memberRequest.getName());
                 membersEntity.setEmail(memberRequest.getEmail());
                 membersEntity.setSalesCode(memberRequest.getSalesCode());
-                membersEntity.setMeetingDetailsEntity(meetingDetailsEntity);
+                membersEntity.setMeetingDetailsEntities((Set<MeetingDetailsEntity>) meetingDetailsEntity);
                 membersEntity.setPhoneNumber(memberRequest.getPhoneNumber());
                 membersRepository.save(membersEntity);
                 //send notification to saved members

@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,5 +32,11 @@ public class MeetingDetailsEntity {
     private String ownerEmail;
     private String salesCode;
     private String profileCode;
+    @ManyToMany
+    @JoinTable(
+            name = "owner",
+            joinColumns = @JoinColumn(name = "appointmentIdd"),
+            inverseJoinColumns = @JoinColumn(name = "memberId"))
+    Set<MembersEntity> members;
     private Date createdOn;
 }

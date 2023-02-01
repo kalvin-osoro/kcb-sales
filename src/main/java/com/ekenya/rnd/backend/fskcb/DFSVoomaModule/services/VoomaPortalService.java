@@ -1275,7 +1275,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 Long questionnaireId = questionerResponse.getQuestionnaireId();
                 QuestionnaireEntity questionnaireEntity = questionnaireRepository.findById(questionnaireId).get();
                 node.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
-                node.put("createdOn", questionerResponse.getCreatedOn().getTime());
+                node.put("createdOn", questionerResponse.getCreatedOn() ==null ? null :questionerResponse.getCreatedOn().getTime());
                 list.add(node);
             }
             return list;
@@ -1343,9 +1343,8 @@ public class VoomaPortalService implements IVoomaPortalService {
                 objectNode.put("createdOn", voomaAgentOnboardV1.getCreatedOn().getTime());
                 objectNode.put("region", voomaAgentOnboardV1.getCityOrTown());
                 list.add(objectNode);
-                return list;
         }
-        return null;
+            return list;
     } catch (Exception e) {
             log.error("Error occurred while getting approved agents", e);
         }
