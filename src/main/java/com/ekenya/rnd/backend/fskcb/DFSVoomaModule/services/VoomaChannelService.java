@@ -1,10 +1,9 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringAssetFilesEntity;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AssetLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
@@ -45,6 +44,8 @@ public class VoomaChannelService implements IVoomaChannelService {
 
     private final DFSVoomaCustomerVisitRepository dfsVoomaCustomerVisitRepository;
     private  final QuestionRepository questionRepository;
+
+    private final AssetLogsRepository assetLogsRepository;
     private  final QuestionnaireRepository questionnaireRepository;
     private  final QuestionResponseRepository questionResponseRepository;
     private final DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
@@ -309,6 +310,18 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAssetEntity.setMerchantAccNo(model.getAccountNumber());
             dfsVoomaAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssigned(true);
+            //logs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Assigned to Merchant");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCondition(AssetCondition.FAULTY);
+            assetLogsEntity.setAssigned(true);
+//            assetLogsEntity.setCustomerIdNumber(onboardingEntity.getAgentIdNumber());
+//            assetLogsEntity.setCustomerAccNumber(onboardingEntity.getAccountNumber());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
         } catch (Exception e) {
@@ -330,6 +343,19 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAssetEntity.setAgentAccNumber(model.getAccountNumber());
             dfsVoomaAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssigned(true);
+
+            //logs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Assigned to Merchant");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCondition(AssetCondition.FAULTY);
+            assetLogsEntity.setAssigned(true);
+//            assetLogsEntity.setCustomerIdNumber(onboardingEntity.getAgentIdNumber());
+//            assetLogsEntity.setCustomerAccNumber(onboardingEntity.getAccountNumber());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
         } catch (Exception e) {
@@ -379,6 +405,16 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAssetEntity.setMerchantAccNo(null);
             dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(null);
             dfsVoomaAssetEntity.setAssigned(false);
+
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Collected from Agent");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setAssigned(false);
+            assetLogsEntity.setDateCollected(Utility.getPostgresCurrentTimeStampForInsert());
+//            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
 
@@ -980,6 +1016,16 @@ public class VoomaChannelService implements IVoomaChannelService {
             dfsVoomaAssetEntity.setAgentAccNumber(null);
 //            dfsVoomaAssetEntity.setDfsVoomaOnboardEntity(null);
             dfsVoomaAssetEntity.setAssigned(false);
+
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAction("Collected from Agent");
+            assetLogsEntity.setProfileCode(model.getProfileCode());
+            assetLogsEntity.setAssigned(false);
+            assetLogsEntity.setDateCollected(Utility.getPostgresCurrentTimeStampForInsert());
+//            assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setSerialNumber(model.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
             dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
             return true;
 

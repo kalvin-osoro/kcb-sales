@@ -530,6 +530,16 @@ public class CBPortalService implements ICBPortalService {
             DSRAccountEntity user = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
 
             CBTargetEntity target = targetRepository.findById(model.getTargetId()).orElse(null);
+
+            //conversion happen here
+            Long userTargetVale = Long.parseLong(model.getTargetValue());
+            //
+            Long targetTargetVale = Long.parseLong(String.valueOf(target.getTargetValue()));
+            //
+            if (userTargetVale > targetTargetVale) {
+                return false;
+            }
+
             if (target.getTargetType().equals(CBTargetType.CROSS_SALES)) {
                 user.setCampaignTargetValue(model.getTargetValue());
                 user.setCbTargetId(model.getTargetId());

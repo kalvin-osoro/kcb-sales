@@ -479,6 +479,17 @@ public class PBPortalService implements IPBPortalService {
             DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
             PSBankingTargetEntity target = psBankingTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            //conversion happen here
+            Long userTargetVale = Long.parseLong(model.getTargetValue());
+            //
+            Long targetTargetVale = Long.parseLong(String.valueOf(target.getTargetValue()));
+            //
+            if (userTargetVale > targetTargetVale) {
+                log.info("target assigned is more than target available");
+                return false;
+            }
+
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
                 user.setPsTargetId(model.getTargetId());

@@ -176,8 +176,6 @@ public class AcquiringTargetsVC {
         List<?> list = acquiringService.salesPersonTarget(model);
         boolean success = list != null;// acquiringTargetsResponse.size() > 0;
 
-
-
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){

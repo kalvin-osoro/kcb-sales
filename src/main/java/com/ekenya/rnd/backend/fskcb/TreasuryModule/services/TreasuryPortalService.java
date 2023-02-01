@@ -373,6 +373,16 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
             TreasuryTargetEntity target = treasuryTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            //conversion happen here
+            Long userTargetVale = Long.parseLong(model.getTargetValue());
+            //
+            Long targetTargetVale = Long.parseLong(String.valueOf(target.getTargetValue()));
+            //
+            if (userTargetVale > targetTargetVale) {
+                return false;
+            }
+
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
                 user.setTreasuryTargetId(model.getTargetId());

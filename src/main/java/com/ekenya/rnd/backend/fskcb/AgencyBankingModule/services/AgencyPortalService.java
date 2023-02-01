@@ -341,6 +341,16 @@ public class AgencyPortalService implements IAgencyPortalService {
             DSRAccountEntity user = dsrAccountRepository.findById(model.getDsrId()).orElse(null);
 
             AgencyBankingTargetEntity target = agencyBankingTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            //conversion happen here
+            Long userTargetVale = Long.parseLong(model.getTargetValue());
+            //
+            Long targetTargetVale = Long.parseLong(String.valueOf(target.getTargetValue()));
+            //
+            if (userTargetVale > targetTargetVale) {
+                return false;
+            }
+
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
                 user.setAgencyTargetId(model.getTargetId());

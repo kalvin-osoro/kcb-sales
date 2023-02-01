@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AssetLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyAssetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
@@ -45,6 +46,9 @@ public class VoomaPortalService implements IVoomaPortalService {
     JavaMailSender javaMailSender;
     @Autowired
     QuestionResponseRepository questionResponseRepository;
+
+    @Autowired
+    AssetLogsRepository assetLogsRepository;
     @Autowired
     private DFSVoomaOnboardingKYRepository dfsVoomaOnboardingKYRepository;
     @Autowired
@@ -574,6 +578,17 @@ public class VoomaPortalService implements IVoomaPortalService {
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
 //            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             DFSVoomaAssetEntity savedAsset = dfsVoomaAssetRepository.save(dfsVoomaAssetEntity);
+            //logs
+            //logs
+            AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
+            assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
+            assetLogsEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
+            assetLogsEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
+            assetLogsEntity.setAction("Asset Added to the system");
+            assetLogsEntity.setProfileCode(dfsVoomaAddAssetRequest.getProfileCode());
+            assetLogsEntity.setRemarks(dfsVoomaAddAssetRequest.getRemarks());
+            assetLogsEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
+            assetLogsRepository.save(assetLogsEntity);
 
             List<String> filePathList = new ArrayList<>();
 
@@ -704,6 +719,16 @@ public class VoomaPortalService implements IVoomaPortalService {
             DSRAccountEntity user = dsrAccountsRepository.findById(model.getDsrId()).orElse(null);
 
             DFSVoomaTargetEntity target = dfsVoomaTargetRepository.findById(model.getTargetId()).orElse(null);
+
+            //conversion happen here
+            Long userTargetVale = Long.parseLong(model.getTargetValue());
+            //
+            Long targetTargetVale = Long.parseLong(String.valueOf(target.getTargetValue()));
+            //
+            if (userTargetVale > targetTargetVale) {
+                return false;
+            }
+
             if (target.getTargetType().equals(TargetType.CAMPAINGS)) {
                 user.setCampaignTargetValue(model.getTargetValue());
                 user.setVoomaTargetId(model.getTargetId());
