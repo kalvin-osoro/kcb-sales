@@ -30,6 +30,7 @@ public class AgencyBankingTargetEntity {
     private Integer targetValue;
     private Integer targetAchievement;
     private  String targetSource;
+    private  Long targetAssigned=0L;
     private Date startDate;
 
     private String endDate;

@@ -45,23 +45,23 @@ public class CalendarServiceImpl implements CalendarService {
             meetingDetailsEntity.setProfileCode(model.getProfileCode());
             //save
             meetingDetailsRepository.save(meetingDetailsEntity);
-            List<MemberRequest> membersList = model.getMemberRequests();
-            for (MemberRequest memberRequest : membersList){
-                MembersEntity membersEntity =new MembersEntity();
-                membersEntity.setName(memberRequest.getName());
-                membersEntity.setEmail(memberRequest.getEmail());
-                membersEntity.setSalesCode(memberRequest.getSalesCode());
-                membersEntity.setMeetingDetailsEntities((List<MeetingDetailsEntity>) meetingDetailsEntity);
-                membersEntity.setPhoneNumber(memberRequest.getPhoneNumber());
-                membersRepository.save(membersEntity);
-                //send notification to saved members
-                qssService.sendAlert(
-                        membersEntity.getSalesCode(),
-                        "New Calendar",
-                        "You have been invited to a new calendar by {} "+meetingDetailsEntity.getOwner(),
-                        null
+           //add members
+            List<MemberRequest> members = model.getMemberRequests();
+            if (members!=null){
+                for (MemberRequest member:members) {
+                    MembersEntity membersEntity = new MembersEntity();
+                    membersEntity.setAppointmentId(meetingDetailsEntity.getId());
+                    membersEntity.setName(member.getName());
+                    membersEntity.setSalesCode(member.getSalesCode());
+                    membersEntity.setEmail(member.getEmail());
+                    MembersEntity members1 = membersRepository.save(membersEntity);
+                    qssService.sendAlert(
+                           members1 .getSalesCode(),
+                            "New Calendar",
+                            "You have been invited to a new calendar by {} "+meetingDetailsEntity.getOwner(),
+                            null
                 );
-
+                }
             }
                 return true;
 

@@ -29,6 +29,7 @@ public class PSBankingTargetEntity {
     private String targetName;
     private String targetDesc;
     private Integer targetValue;
+    private Long targetAssigned;
     private Integer targetAchievement;
     private  String targetSource;
     private Date startDate;

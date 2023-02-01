@@ -33,6 +33,7 @@ public class AcquiringTargetEntity {
     private String targetName;
     private String targetDesc;
     private Integer targetValue;
+    private  Long targetAssigned=0L;
     private Integer targetAchievement;
     private  String targetSource;
     private Date startDate;

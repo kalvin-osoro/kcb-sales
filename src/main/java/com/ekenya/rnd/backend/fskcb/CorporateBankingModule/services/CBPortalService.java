@@ -564,7 +564,10 @@ public class CBPortalService implements ICBPortalService {
             Set<CBTargetEntity> cbTargetEntities = user.getCbTargetEntities();
             cbTargetEntities.add(target);
             user.setCbTargetEntities(cbTargetEntities);
+            target.setTargetAssigned(target.getTargetAssigned() + userTargetVale);
+            targetRepository.save(target);
             dsrAccountRepository.save(user);
+          ;
             return true;
         } catch (Exception e) {
             log.error("Error occurred while assigning target to dsr", e);

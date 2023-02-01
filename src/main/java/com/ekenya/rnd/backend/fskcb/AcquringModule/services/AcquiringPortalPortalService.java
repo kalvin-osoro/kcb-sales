@@ -114,6 +114,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 objectNode.put("targetSource", acquiringTargetEntity.getTargetSource());
                 objectNode.put("agencyTargetType", acquiringTargetEntity.getTargetType().toString());
                 objectNode.put("targetDesc", acquiringTargetEntity.getTargetDesc());
+                objectNode.put("targetAssigned", acquiringTargetEntity.getTargetAssigned());
                 objectNode.put("targetStatus", acquiringTargetEntity.getTargetStatus().name());
                 objectNode.put("targetValue", acquiringTargetEntity.getTargetValue());
 //                objectNode.put("targetAchieved",dfsVoomaTargetEntity.getTargetAchievement());
@@ -720,6 +721,8 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             Set<AcquiringTargetEntity> acquiringTargetEntities = (Set<AcquiringTargetEntity>) user.getAcquiringTargetEntities();
             acquiringTargetEntities.add(target);
             user.setAcquiringTargetEntities(acquiringTargetEntities);
+            target.setTargetAssigned(target.getTargetAssigned() + userTargetVale);
+            iAcquiringTargetsRepository.save(target);
             dsrAccountsRepository.save(user);
             return true;
         } catch (Exception e) {
@@ -754,6 +757,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             Set<AcquiringTargetEntity> acquiringTargetEntities = (Set<AcquiringTargetEntity>) teamEntity.getAcquiringTargetEntities();
             acquiringTargetEntities.add(target);
             teamEntity.setAcquiringTargetEntities(acquiringTargetEntities);
+
             dsrTeamsRepository.save(teamEntity);
             return true;
 

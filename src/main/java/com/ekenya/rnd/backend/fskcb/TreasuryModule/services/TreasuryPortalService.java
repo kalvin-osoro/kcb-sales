@@ -402,6 +402,8 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             Set<TreasuryTargetEntity> treasuryTargetEntities = (Set<TreasuryTargetEntity>) user.getTreasuryTargetEntities();
             treasuryTargetEntities.add(target);
             user.setTreasuryTargetEntities(treasuryTargetEntities);
+            target.setTargetAssigned(target.getTargetAssigned() + userTargetVale);
+            treasuryTargetRepository.save(target);
             dsrAccountsRepository.save(user);
             return true;
         } catch (Exception e) {

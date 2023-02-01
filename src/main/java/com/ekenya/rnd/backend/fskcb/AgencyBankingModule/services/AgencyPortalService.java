@@ -243,8 +243,9 @@ public class AgencyPortalService implements IAgencyPortalService {
                 node.put("id", agencyBankingTargetEntity.getId());
                 node.put("targetName", agencyBankingTargetEntity.getTargetName());
                 node.put("targetSource", agencyBankingTargetEntity.getTargetSource());
-                node.put("agencyTargetType", agencyBankingTargetEntity.getTargetType().ordinal());
+                node.put("agencyTargetType", agencyBankingTargetEntity.getTargetType().toString());
                 node.put("targetDesc", agencyBankingTargetEntity.getTargetDesc());
+                node.put("targetRemained", agencyBankingTargetEntity.getTargetAssigned());
                 node.put("targetStatus", agencyBankingTargetEntity.getTargetStatus().name());
                 node.put("targetValue", agencyBankingTargetEntity.getTargetValue());
                 node.put("createdOn", agencyBankingTargetEntity.getCreatedOn().toString());
@@ -335,6 +336,7 @@ public class AgencyPortalService implements IAgencyPortalService {
     @Override
     public boolean assignTargetToDSR(DSRTAssignTargetRequest model) {
         try {
+
             if (model == null) {
                 return false;
             }
@@ -372,6 +374,8 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingTargetEntities.add(target);
             user.setAgencyBankingTargetEntities(agencyBankingTargetEntities);
             dsrAccountRepository.save(user);
+            target.setTargetAssigned(target.getTargetAssigned() + userTargetVale);
+            agencyBankingTargetRepository.save(target);
             return true;
         } catch (Exception e) {
             log.error("Error occurred while assigning target to dsr", e);

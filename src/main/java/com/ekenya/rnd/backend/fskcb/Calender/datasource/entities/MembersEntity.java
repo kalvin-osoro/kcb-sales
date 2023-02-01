@@ -27,6 +27,7 @@ public class MembersEntity {
     private String salesCode;
     private String phoneNumber;
     private String email;
+    private Long appointmentId;
     @ManyToMany
     List<MeetingDetailsEntity> meetingDetailsEntities;
 

@@ -509,6 +509,8 @@ public class PBPortalService implements IPBPortalService {
             Set<PSBankingTargetEntity> psBankingTargetEntities = (Set<PSBankingTargetEntity>) user.getPsBankingTargetEntities();
             psBankingTargetEntities.add(target);
             user.setPsBankingTargetEntities(psBankingTargetEntities);
+            target.setTargetAssigned(target.getTargetAssigned() + userTargetVale);
+            psBankingTargetRepository.save(target);
             dsrAccountsRepository.save(user);
             return true;
         } catch (Exception e) {

@@ -146,7 +146,7 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", dfsVoomaCustomerVisitEntity.getId());
                 objectNode.put("customerName", dfsVoomaCustomerVisitEntity.getCustomerName());
-                objectNode.put("visitDate", dfsVoomaCustomerVisitEntity.getVisitDate());
+                objectNode.put("visitDate", dfsVoomaCustomerVisitEntity.getCreatedOn() ==null ?null :dfsVoomaCustomerVisitEntity.getCreatedOn().getTime());
                 objectNode.put("reasonForVisit", dfsVoomaCustomerVisitEntity.getReasonForVisit());
                 objectNode.put("dsrName", dfsVoomaCustomerVisitEntity.getDsrName());
                 list.add(objectNode);
@@ -695,7 +695,12 @@ public class VoomaPortalService implements IVoomaPortalService {
             objectNode.put("branch", dfsVoomaCustomerVisitEntity.getBranch());
             objectNode.put("region", dfsVoomaCustomerVisitEntity.getRegion());
             objectNode.put("location", dfsVoomaCustomerVisitEntity.getLocation());
-            objectNode.put("visitDate", dfsVoomaCustomerVisitEntity.getVisitDate());
+            objectNode.put("briefOfEntity", dfsVoomaCustomerVisitEntity.getEntityBrief());
+            objectNode.put("objectiveOfVisit", dfsVoomaCustomerVisitEntity.getReasonForVisit());
+            objectNode.put("highlight", dfsVoomaCustomerVisitEntity.getHighlights());
+            objectNode.put("actionPoint", dfsVoomaCustomerVisitEntity.getActionPlan());
+            objectNode.put("attendance", dfsVoomaCustomerVisitEntity.getAttendance());
+            objectNode.put("visitDate", dfsVoomaCustomerVisitEntity.getCreatedOn() == null ?null :dfsVoomaCustomerVisitEntity.getCreatedOn().getTime());
             //object of longitude and latitude
             ObjectNode node = mapper.createObjectNode();
             node.put("latitude", dfsVoomaCustomerVisitEntity.getLongitude());
@@ -753,6 +758,8 @@ public class VoomaPortalService implements IVoomaPortalService {
             Set<DFSVoomaTargetEntity> dfsVoomaTargetEntities = (Set<DFSVoomaTargetEntity>) user.getDfsVoomaTargetEntities();
             dfsVoomaTargetEntities.add(target);
             user.setDfsVoomaTargetEntities(dfsVoomaTargetEntities);
+            target.setTargetAssigned(target.getTargetAssigned() + userTargetVale);
+            dfsVoomaTargetRepository.save(target);
             dsrAccountsRepository.save(user);
             return true;
         } catch (Exception e) {
