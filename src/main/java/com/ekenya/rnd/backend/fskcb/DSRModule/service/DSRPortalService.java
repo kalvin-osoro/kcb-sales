@@ -338,7 +338,7 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("campaignTargetValue",entity.getCampaignTargetValue());
                 node.put("visitTargetValue",entity.getVisitsTargetValue());
                 node.put("onboardingTargetValue",entity.getOnboardTargetValue());
-//                node.put("regionId",entity.getRegionId());
+                node.put("regionId",entity.getRegionId());
 //                DSRRegionEntity regionEntity =dsrRegionsRepository.findById(entity.getRegionId()).get();
 //                node.put("region",regionEntity.getName());
                 node.put("status",entity.getStatus().equals(Status.ACTIVE)?"Active":"Inactive");
