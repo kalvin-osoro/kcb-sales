@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -35,8 +36,15 @@ public class SMSService implements ISmsService{
 
     //  @Value("CMCOM")
 //    @Value("ECLECTICS")
+    //SMS_SENDER_ID is CMCOM or ECLECTICS based on time of the day
+//    @Value("${SMS_SENDER_ID}")
+//    private String SMS_SENDER_ID;
+    //@Value is CMCOM or ECLECTICS based on time of the day
     @Value("CMCOM")
     private String SMS_SENDER_ID;
+    //
+    @Value("ECLECTICS")
+    private String SMS_SENDER_ID1;
     @Value("5094")
     private String client_id;
     @Value("https://testgateway.ekenya.co.ke:8443/ServiceLayer/pgsms/send")
@@ -216,11 +224,15 @@ public class SMSService implements ISmsService{
         long seed = System.currentTimeMillis();
         Random random = new Random(seed);
         int max = 99999999, min = 10000000;
-//        String password =
         JsonObject jsonObjectBody = new JsonObject();
         jsonObjectBody.addProperty("to", phoneNo);
         jsonObjectBody.addProperty("message", message);
-        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+        if (LocalTime.now().isBefore(LocalTime.of(18, 0))) {
+            jsonObjectBody.addProperty("from", SMS_SENDER_ID1);
+        } else {
+            jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+        }
+//        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
         jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
         jsonObjectBody.addProperty("clientid", client_id);
         jsonObjectBody.addProperty("username", SMS_USER_NAME);

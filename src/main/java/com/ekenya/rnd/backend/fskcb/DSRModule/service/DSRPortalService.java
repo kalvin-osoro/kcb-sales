@@ -52,6 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.text.DateFormat;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,8 +64,11 @@ public class DSRPortalService implements IDSRPortalService {
 
 
 //    @Value("ECLECTICS")
-@Value("CMCOM")
+    @Value("CMCOM")
     private String SMS_SENDER_ID;
+    @Value("ECLECTICS")
+    private String SMS_SENDER_ID1;
+
     @Value("5094")
     private String client_id;
     @Value("https://testgateway.ekenya.co.ke:8443/ServiceLayer/pgsms/send")
@@ -1046,7 +1050,13 @@ public class DSRPortalService implements IDSRPortalService {
         JsonObject jsonObjectBody = new JsonObject();
         jsonObjectBody.addProperty("to", phoneNo);
         jsonObjectBody.addProperty("message", message);
-        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+
+        if (LocalTime.now().isBefore(LocalTime.of(18, 0))) {
+            jsonObjectBody.addProperty("from", SMS_SENDER_ID1);
+        } else {
+            jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+        }
+//        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
         jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
         jsonObjectBody.addProperty("clientid", client_id);
         jsonObjectBody.addProperty("username", SMS_USER_NAME);
