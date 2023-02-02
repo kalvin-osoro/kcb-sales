@@ -1251,4 +1251,19 @@ public class DSRPortalService implements IDSRPortalService {
         return false;
     }
 
+    @Override
+    public boolean attemptDeleteTeam(Long teamId) {
+        try {
+            if (teamId == null){
+                return false;
+            }
+            DSRTeamEntity dsrTeamEntity = dsrTeamsRepository.findById(teamId).orElseThrow(()-> new ResourceNotFoundException("team","id",teamId ));
+            dsrTeamsRepository.delete(dsrTeamEntity);
+            return true;
+        } catch (ResourceNotFoundException e) {
+            log.error("Error occurred while deleting team", e);
+        }
+        return false;
+    }
+
 }

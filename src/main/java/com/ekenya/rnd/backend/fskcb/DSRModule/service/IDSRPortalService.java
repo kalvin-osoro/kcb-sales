@@ -52,4 +52,6 @@ public interface IDSRPortalService {
     boolean editSector(SectorRequest model);
 
     boolean deleteSector(SectorRequest model);
+
+    boolean attemptDeleteTeam(Long teamId);
 }

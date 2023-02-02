@@ -166,4 +166,28 @@ public class DSRTeamsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+
+    //delete team
+    @PostMapping("/dsr-delete-team")
+    public ResponseEntity<?> deleteTeam(@RequestParam("teamId") Long teamId) {
+        //TODO; INSIDE SERVICE
+        boolean success = dsrPortalService.attemptDeleteTeam(teamId);
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ObjectNode node = objectMapper.createObjectNode();
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            }
+        }
+
+
+
 }
