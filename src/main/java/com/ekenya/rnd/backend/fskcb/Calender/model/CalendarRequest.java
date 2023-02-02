@@ -13,14 +13,18 @@ import java.util.List;
 @NoArgsConstructor
 public class CalendarRequest {
     private String owner;
+    private String ownerPhone;
+    private String time;
+    private String customerPhoneNumber;
     private String venue;
+    private String customerName;
     private String reason;
+    private Long dsrId;
+    private Boolean isOnline=false;
     private String dateOfEvent;
     private String period;
-    private String phoneNumber;
     private String ownerEmail;
     private String salesCode;
     private String profileCode;
 
-    private List<MemberRequest>memberRequests;
 }

@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.Calender.datasource.entities;
 
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,18 +28,23 @@ public class MeetingDetailsEntity {
     private  Long id;
     private String owner;
     private String venue;
+    private String time;
     private String reason;
     private String dateOfEvent;
     private String period;
-    private String phoneNumber;
+    private Boolean isOnline=false;
+    private String ownerPhone;
+    private String customerPhoneNumber;
+    private String customerName;
     private String ownerEmail;
     private String salesCode;
+    private Long dsrId;
     private String profileCode;
     @ManyToMany
-    @JoinTable(
-            name = "dbo_owner-member",
-            joinColumns = @JoinColumn(name = "appointmentIdd"),
-            inverseJoinColumns = @JoinColumn(name = "memberId"))
-    List<MembersEntity> members;
+    @JoinTable(name = "appointment_member",
+            joinColumns = @JoinColumn(name = "appointmentId"),
+            inverseJoinColumns = @JoinColumn(name = "memberId")
+    )
+    private Set<DSRAccountEntity> assignedMembers = new HashSet<>();
     private Date createdOn;
 }

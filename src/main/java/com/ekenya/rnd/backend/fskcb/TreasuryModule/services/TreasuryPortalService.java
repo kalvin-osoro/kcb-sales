@@ -18,6 +18,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccoun
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingLeadEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.*;
@@ -39,6 +40,7 @@ import java.util.*;
 public class TreasuryPortalService implements ITreasuryPortalService {
     private final TreasuryTradeRequestRepository treasuryTradeRequestRepository;
     private final TreasuryCurrencyRepository treasuryCurrencyRepository;
+    private final IQssService qssService;
     private final IDSRTeamsRepository dsrTeamsRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private final TreasuryNegotiationRequestRepository negotiationRequestRepository;
@@ -155,9 +157,18 @@ public class TreasuryPortalService implements ITreasuryPortalService {
             }
             treasuryLeadEntity.setAssigned(true);
             treasuryLeadEntity.setPriority(model.getPriority());
+            treasuryLeadEntity.setEscalatesEmail(model.getEscalatesEmail());
+            treasuryLeadEntity.setAssignedTime(Utility.getPostgresCurrentTimeStampForInsert());
             //set dsrAccId from dsrAccountsEntity
             treasuryLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
             treasuryLeadRepository.save(treasuryLeadEntity);
+
+            qssService.sendAlert(
+                    dsrAccountsEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
             return true;
 
 

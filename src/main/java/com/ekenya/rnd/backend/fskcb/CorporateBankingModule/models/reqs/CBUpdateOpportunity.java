@@ -13,5 +13,6 @@ import lombok.Setter;
 public class CBUpdateOpportunity {
     private Long opportunityId;
     private OpportunityStage stage;
+    private String value;
     private String probability;
 }

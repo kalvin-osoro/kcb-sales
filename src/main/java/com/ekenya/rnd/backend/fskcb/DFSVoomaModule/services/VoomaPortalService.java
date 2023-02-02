@@ -7,6 +7,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.Agen
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.DFSVoomaQuestionerResponseEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
@@ -14,6 +15,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRTeamsRepository;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.fskcb.files.FileStorageService;
 import com.ekenya.rnd.backend.utils.Status;
@@ -44,6 +46,12 @@ public class VoomaPortalService implements IVoomaPortalService {
 
     @Autowired
     JavaMailSender javaMailSender;
+
+    @Autowired
+    IQssService iQssService;
+
+    @Autowired
+    IQssService qssService;
     @Autowired
     QuestionResponseRepository questionResponseRepository;
 
@@ -110,6 +118,14 @@ public class VoomaPortalService implements IVoomaPortalService {
             dfsVoomaCustomerVisitEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaCustomerVisitEntity.setStatus(Status.ACTIVE);
             dfsVoomaCustomerVisitRepository.save(dfsVoomaCustomerVisitEntity);
+
+            DSRAccountEntity dsrAccountEntity = dsrAccountsRepository.findById(model.getDsrId()).get();
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Visit",
+                    "You have been assigned a new visit. Please check your App for more details",
+                    null
+            );
             return true;
 
         } catch (Exception e) {
@@ -163,13 +179,21 @@ public class VoomaPortalService implements IVoomaPortalService {
         try {
             DFSVoomaLeadEntity dfsVoomaLeadEntity = dfsVoomaLeadRepository.findById(model.getLeadId()).orElse(null);
             dfsVoomaLeadEntity.setDsrId(model.getDsrId());
+            dfsVoomaLeadEntity.setLeadStatus(LeadStatus.OPEN);
+            dfsVoomaLeadEntity.setEscalatesEmail(model.getEscalatesEmail());
+            dfsVoomaLeadEntity.setAssignTime(Utility.getPostgresCurrentTimeStampForInsert());
+            DSRAccountEntity dsrAccountEntity = dsrAccountsRepository.findById(model.getDsrId()).get();
             dfsVoomaLeadEntity.setPriority(model.getPriority());
             //set start date from input
-//            dfsVoomaLeadEntity.setStartDate(model.getStartDate());
-//            dfsVoomaLeadEntity.setEndDate(model.getEndDate());
             dfsVoomaLeadEntity.setAssigned(true);
             //save
             dfsVoomaLeadRepository.save(dfsVoomaLeadEntity);
+            qssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
             //update is assigned to true
 
             return true;

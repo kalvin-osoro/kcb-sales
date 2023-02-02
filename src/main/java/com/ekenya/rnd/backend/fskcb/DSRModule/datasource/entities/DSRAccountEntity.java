@@ -2,12 +2,14 @@ package com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringTargetEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyBankingTargetEntity;
+import com.ekenya.rnd.backend.fskcb.Calender.datasource.entities.MeetingDetailsEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingTargetEntity;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.datasource.entity.PSTargetEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryTargetEntity;
 import com.ekenya.rnd.backend.utils.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -15,6 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -157,6 +160,10 @@ public class DSRAccountEntity {
     private Set<CBTargetEntity> cbTargetEntities;
     private Long cbTargetId;
     private Long voomaTargetId;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "assignedMembers")
+    private Set<MeetingDetailsEntity> appointmentSet = new HashSet<>();
 
 
 

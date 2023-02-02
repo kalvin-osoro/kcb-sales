@@ -14,6 +14,8 @@ public class VoomaAssignLeadRequest {
     private Long leadId;
 
     private Long dsrId;
+    private String escalatesEmail;
+    private String assignTime;
     private Priority priority;
 //    private String startDate;
 //    private  String endDate;

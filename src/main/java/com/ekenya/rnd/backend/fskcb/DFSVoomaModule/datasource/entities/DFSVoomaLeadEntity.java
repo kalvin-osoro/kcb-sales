@@ -27,6 +27,8 @@ public class DFSVoomaLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String escalatesEmail;
+    private Date assignTime;
     private String customerName;
     private String product;
     private String email;

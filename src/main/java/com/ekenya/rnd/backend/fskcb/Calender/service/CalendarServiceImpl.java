@@ -5,14 +5,23 @@ import com.ekenya.rnd.backend.fskcb.Calender.datasource.entities.MeetingDetailsE
 import com.ekenya.rnd.backend.fskcb.Calender.datasource.entities.MembersEntity;
 import com.ekenya.rnd.backend.fskcb.Calender.datasource.repositories.MeetingDetailsRepository;
 import com.ekenya.rnd.backend.fskcb.Calender.datasource.repositories.MembersRepository;
+import com.ekenya.rnd.backend.fskcb.Calender.model.AppointmentByDSRRequest;
+import com.ekenya.rnd.backend.fskcb.Calender.model.AssignMembers;
 import com.ekenya.rnd.backend.fskcb.Calender.model.CalendarRequest;
 import com.ekenya.rnd.backend.fskcb.Calender.model.MemberRequest;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBCustomerAppointment;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentDateRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.utils.Utility;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,51 +33,101 @@ import java.util.Set;
 public class CalendarServiceImpl implements CalendarService {
     private final MeetingDetailsRepository meetingDetailsRepository;
     private final MembersRepository membersRepository;
+    private final IDSRAccountsRepository  dsrAccountRepository;
     private final IQssService qssService;
     @Override
     public boolean createCalendar(CalendarRequest model) {
         try {
-            if (model==null){
+            if (model == null) {
                 return false;
             }
             //create meeting details
             MeetingDetailsEntity meetingDetailsEntity = new MeetingDetailsEntity();
             meetingDetailsEntity.setOwner(model.getOwner());
+            meetingDetailsEntity.setDsrId(model.getDsrId());
+            meetingDetailsEntity.setCustomerName(model.getCustomerName());
             meetingDetailsEntity.setVenue(model.getVenue());
+            meetingDetailsEntity.setTime(model.getTime());
             meetingDetailsEntity.setReason(model.getReason());
             meetingDetailsEntity.setDateOfEvent(model.getDateOfEvent());
             meetingDetailsEntity.setPeriod(model.getPeriod());
-            meetingDetailsEntity.setPhoneNumber(model.getPhoneNumber());
+            meetingDetailsEntity.setOwnerPhone(model.getOwnerPhone());
             meetingDetailsEntity.setSalesCode(model.getSalesCode());
             meetingDetailsEntity.setProfileCode(model.getProfileCode());
             meetingDetailsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             meetingDetailsEntity.setProfileCode(model.getProfileCode());
             //save
             meetingDetailsRepository.save(meetingDetailsEntity);
-           //add members
-            List<MemberRequest> members = model.getMemberRequests();
-            if (members!=null){
-                for (MemberRequest member:members) {
-                    MembersEntity membersEntity = new MembersEntity();
-                    membersEntity.setAppointmentId(meetingDetailsEntity.getId());
-                    membersEntity.setName(member.getName());
-                    membersEntity.setSalesCode(member.getSalesCode());
-                    membersEntity.setEmail(member.getEmail());
-                    MembersEntity members1 = membersRepository.save(membersEntity);
-                    qssService.sendAlert(
-                           members1 .getSalesCode(),
-                            "New Calendar",
-                            "You have been invited to a new calendar by {} "+meetingDetailsEntity.getOwner(),
-                            null
-                );
-                }
-            }
-                return true;
+            return true;
 
         }catch (Exception e){
             log.error("Error occurred while creating calendar",e);
         }
         return false;
+    }
+
+    @Override
+    public boolean assignMembersToAppointment(AssignMembers model) {
+        try {
+            if (model == null) {
+                return false;
+            }
+            Set<DSRAccountEntity> assignedMembers = null;
+            MeetingDetailsEntity meetingDetailsEntity = meetingDetailsRepository.findById(model.getAppointmentId()).get();
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+            assignedMembers = meetingDetailsEntity.getAssignedMembers();
+            assignedMembers.add(dsrAccountEntity);
+            meetingDetailsEntity.setAssignedMembers(assignedMembers);
+            meetingDetailsRepository.save(meetingDetailsEntity);
+            qssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Calendar",
+                    "You have been invited to a new calendar by {} " + meetingDetailsEntity.getOwner(),
+                    null
+
+            );
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while assigning members to appointment",e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<ObjectNode> getCustomerAppointmentByDSRIdAndDate(AppointmentByDSRRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (MeetingDetailsEntity meetingDetails : meetingDetailsRepository.findAllByDsrIdAndDateOfEvent(model.getDsrId(), model.getDateOfEvent())) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("id",meetingDetails.getId());
+                node.put("customerName", meetingDetails.getCustomerName());
+                node.put("customerPhoneNumber", meetingDetails.getCustomerPhoneNumber());
+                node.put("typeOfAppointment", meetingDetails.getIsOnline());
+                node.put("appointmentDate", meetingDetails.getDateOfEvent());
+                node.put("appointmentTime", meetingDetails.getTime());
+                node.put("duration", meetingDetails.getPeriod());
+                node.put("reasonForVisit", meetingDetails.getReason());
+                //list of members
+                List<String> members = new ArrayList<>();
+                for (DSRAccountEntity dsrAccountEntity : meetingDetails.getAssignedMembers()) {
+                    members.add(dsrAccountEntity.getStaffNo());
+                    members.add(dsrAccountEntity.getFullName());
+                    members.add(dsrAccountEntity.getProfileCode());
+                    members.add(dsrAccountEntity.getEmail());
+                }
+                node.put("members", members.toString());
+
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("Error occurred while loading questionnaires", e);
+        }
+        return null;
     }
 }
 

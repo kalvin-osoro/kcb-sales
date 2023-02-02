@@ -192,6 +192,13 @@ public class CBPortalService implements ICBPortalService {
             cbCustomerVisitEntity.setDsrName(model.getDsrName());
             //save
             cbCustomerVisitRepository.save(cbCustomerVisitEntity);
+            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+            iQssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Visit",
+                    "You have been assigned a new visit. Please check your App for more details",
+                    null
+            );
             return true;
         } catch (Exception e) {
             log.error("Error occurred while scheduling customer visit", e);
@@ -830,6 +837,7 @@ public class CBPortalService implements ICBPortalService {
             CBOpportunitiesEntity cbOpportunitiesEntity = cbOpportunitiesRepository.findById(model.getOpportunityId()).orElse(null);
             cbOpportunitiesEntity.setProbability(model.getProbability());
             cbOpportunitiesEntity.setStage(model.getStage());
+            cbOpportunitiesEntity.setValue(model.getValue());
             cbOpportunitiesRepository.save(cbOpportunitiesEntity);
             return true;
 

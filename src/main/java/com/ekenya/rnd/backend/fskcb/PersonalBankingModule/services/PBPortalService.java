@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.PersonalBankingModule.services;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.TargetStatus;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAddQuestionnaireRequest;
@@ -7,6 +8,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetR
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AgencyById;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaFeedBackEntity;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaOnboardingKYCentity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaTargetEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -20,6 +22,7 @@ import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.repository.*;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.PremiumSegmentModule.models.reps.PSApproveMerchantOnboarindRequest;
+import com.ekenya.rnd.backend.fskcb.QSSAdapter.services.IQssService;
 import com.ekenya.rnd.backend.utils.Status;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +43,7 @@ public class PBPortalService implements IPBPortalService {
     private final PSBankingLeadRepository psBankingLeadRepository;
 
     private final IDSRTeamsRepository dsrTeamsRepository;
+    private final IQssService qssService;
     private  final PSBankingOnboardingFileRepository psBankingOnboardingFileRepository;
     private final IDSRAccountsRepository dsrAccountsRepository;
     private  final PSBankingFeedBackRepository psBankingFeedBackRepository;
@@ -78,14 +82,23 @@ public class PBPortalService implements IPBPortalService {
     @Override
     public boolean assignLead(PBAssignLeadRequest model) {
         try {
-            PSBankingLeadEntity psBankingLeadEntity = psBankingLeadRepository.findById(model.getLeadId()).get();
+            PSBankingLeadEntity psBankingLeadEntity = psBankingLeadRepository.findById(model.getLeadId()).orElse(null);
             psBankingLeadEntity.setDsrId(model.getDsrId());
-            psBankingLeadEntity.setStartDate(model.getStartDate());
-            psBankingLeadEntity.setEndDate(model.getEndDate());
+            psBankingLeadEntity.setLeadStatus(LeadStatus.OPEN);
+            psBankingLeadEntity.setEscalatesEmail(model.getEscalatesEmail());
+            psBankingLeadEntity.setAssignedTime(Utility.getPostgresCurrentTimeStampForInsert());
+            DSRAccountEntity dsrAccountEntity = dsrAccountsRepository.findById(model.getDsrId()).get();
+            psBankingLeadEntity.setPriority(model.getPriority());
+            //set start date from input
             psBankingLeadEntity.setAssigned(true);
-
+            //save
             psBankingLeadRepository.save(psBankingLeadEntity);
-            return true;
+            qssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Lead Assigned",
+                    "You have been assigned a new lead. Please check your App for more details",
+                    null
+            );
         } catch (Exception e) {
             log.error("Error occurred while assigning lead", e);
         }
@@ -108,6 +121,13 @@ public class PBPortalService implements IPBPortalService {
             psBankingVisitEntity.setDsrName(model.getDsrName());
             //save
             psBankingCustomerVisitRepository.save(psBankingVisitEntity);
+            DSRAccountEntity dsrAccountEntity =dsrAccountsRepository.findById(model.getDsrId()).get();
+            qssService.sendAlert(
+                    dsrAccountEntity.getStaffNo(),
+                    "New Visit",
+                    "You have been assigned a new visit. Please check your App for more details",
+                    null
+            );
             return true;
         } catch (Exception e) {
             log.error("Error occurred while scheduling customer visit", e);

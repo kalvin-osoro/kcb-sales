@@ -26,6 +26,9 @@ public class  TreasuryLeadEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private  Integer customerId;
+
+    private String escalatesEmail;
+    private Date assignedTime;
     private String businessUnit;
     private String customerName;
     private String product;

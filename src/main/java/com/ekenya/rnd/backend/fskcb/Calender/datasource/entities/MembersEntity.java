@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.Calender.datasource.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +30,6 @@ public class MembersEntity {
     private String phoneNumber;
     private String email;
     private Long appointmentId;
-    @ManyToMany
-    List<MeetingDetailsEntity> meetingDetailsEntities;
+
 
 }

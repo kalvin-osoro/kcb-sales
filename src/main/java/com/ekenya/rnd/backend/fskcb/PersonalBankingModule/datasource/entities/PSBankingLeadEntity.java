@@ -20,6 +20,8 @@ public class PSBankingLeadEntity {
     private long id;
     private  Integer customerId;
     private String businessUnit;
+    private String escalatesEmail;
+    private Date assignedTime;
     private String customerName;
     private String product;
     private String email;

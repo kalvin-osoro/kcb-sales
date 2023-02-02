@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,4 +17,7 @@ public class TreasuryAssignLeadRequest {
 
     private Long dsrId;
     private Priority priority;
+
+    private String escalatesEmail;
+    private Date assignedTime;
 }
