@@ -492,6 +492,10 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
             DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
             agencyBankingLeadRepository.save(agencyBankingLeadEntity);
+//            if(agencyBankingLeadEntity.isAssigned()==true){
+//
+//            }
+
             iQssService.sendAlert(
                     dsrAccountEntity.getStaffNo(),
                     "New Lead Assigned",

@@ -498,6 +498,7 @@ public class DbInitializer {
                 dsrTeam.setLocation("Nairobi");
                 dsrTeam.setCreatedBy("0");
                 dsrTeam.setStatus(Status.ACTIVE);
+//                dsrTeam.setRegionId(optionalDSRRegion.get().getId());
                 dsrTeam.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
                 dSRTeamsRepository.save(dsrTeam);
             }

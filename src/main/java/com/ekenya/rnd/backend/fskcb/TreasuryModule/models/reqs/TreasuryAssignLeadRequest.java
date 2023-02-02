@@ -20,6 +20,6 @@ public class TreasuryAssignLeadRequest {
 
     private String escalatesEmail;
 //    private String staffNo;
-    private String salesCode;
-    private Date assignedTime;
+//    private String salesCode;
+//    private Date assignedTime;
 }
