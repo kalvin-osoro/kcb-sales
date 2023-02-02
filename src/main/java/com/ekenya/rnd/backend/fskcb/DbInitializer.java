@@ -207,7 +207,7 @@ public class DbInitializer {
     private void createDefaultProfiles(){
 
         //Vooma
-        String DSR_VOOMA_PROFILE_NAME = "DFS Vooma";
+        String DSR_VOOMA_PROFILE_NAME = "VOOMA";
 
         if(!profilesRepository.findByName(DSR_VOOMA_PROFILE_NAME).isPresent()) {
 
@@ -256,7 +256,7 @@ public class DbInitializer {
         }
 
         //Agency
-        String DSR_AGENCY_PROFILE_NAME = "DFS AGENCY";
+        String DSR_AGENCY_PROFILE_NAME = "AGENCY";
 
         if(!profilesRepository.findByName(DSR_AGENCY_PROFILE_NAME).isPresent()) {
 
@@ -284,7 +284,7 @@ public class DbInitializer {
         }
 
         //Acquiring
-        String DSR_ACQUIRING_PROFILE_NAME = "DFS ACQUIRING";
+        String DSR_ACQUIRING_PROFILE_NAME = "MERCHANT ACQUIRING";
 
         if(!profilesRepository.findByName(DSR_ACQUIRING_PROFILE_NAME).isPresent()) {
 

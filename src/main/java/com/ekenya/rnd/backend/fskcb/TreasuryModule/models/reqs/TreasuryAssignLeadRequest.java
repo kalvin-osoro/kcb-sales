@@ -19,5 +19,7 @@ public class TreasuryAssignLeadRequest {
     private Priority priority;
 
     private String escalatesEmail;
+    private String staffNo;
+    private String salesCode;
     private Date assignedTime;
 }

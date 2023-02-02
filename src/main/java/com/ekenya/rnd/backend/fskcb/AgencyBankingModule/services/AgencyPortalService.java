@@ -490,7 +490,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             agencyBankingLeadEntity.setPriority(model.getPriority());
             //set dsrAccId from dsrAccountsEntity
             agencyBankingLeadEntity.setDsrAccountEntity(dsrAccountsEntity);
-            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+            DSRAccountEntity dsrAccountEntity = (DSRAccountEntity) dsrAccountRepository.findBystaffNo(model.getStaffNo()).get();
             agencyBankingLeadRepository.save(agencyBankingLeadEntity);
             iQssService.sendAlert(
                     dsrAccountEntity.getStaffNo(),
