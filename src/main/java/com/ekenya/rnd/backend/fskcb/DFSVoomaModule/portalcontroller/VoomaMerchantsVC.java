@@ -11,11 +11,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.util.Base64;
 
 @RestController
@@ -121,10 +123,14 @@ public class VoomaMerchantsVC {
         try {
             Resource file = fileStorageService.loadFileAsResourceByName(fileName);
            //take all file extensions including png, jpeg, jpg, pdf, docx, doc, xls, xlsx, csv, txt
-            MimeType mimeType = (file.getFilename().endsWith("PNG")) ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
+            MediaType mediaType = (file.getFilename().endsWith("PNG")) ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG;
+            //if ends with pdf
+            if(file.getFilename().endsWith("pdf")){
+                mediaType = MediaType.APPLICATION_PDF;
+            }
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
-                    .header(HttpHeaders.CONTENT_TYPE, String.valueOf(mimeType))
+                    .contentType(mediaType)
                     .body(file);
         } catch (Exception e) {
             e.printStackTrace();
