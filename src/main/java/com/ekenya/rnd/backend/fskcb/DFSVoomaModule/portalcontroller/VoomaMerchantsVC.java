@@ -122,16 +122,24 @@ public class VoomaMerchantsVC {
     {
         try {
             Resource file = fileStorageService.loadFileAsResourceByName(fileName);
-           //take all file extensions including png, jpeg, jpg, pdf, docx, doc, xls, xlsx, csv, txt
-            MediaType mediaType = (file.getFilename().endsWith("PNG")) ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG;
-            //if ends with pdf
-            if(file.getFilename().endsWith("pdf")){
-                mediaType = MediaType.APPLICATION_PDF;
+            if (fileName.contains("PNG")) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                        .body(file);
+            } else {
+                //return pdf
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                        .body(file);
             }
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
-                    .contentType(mediaType)
-                    .body(file);
+//            MediaType mediaType = (file.getFilename().endsWith("PNG")) ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG;
+
+//            return ResponseEntity.ok()
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+//                    .contentType(mediaType)
+//                    .body(file);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

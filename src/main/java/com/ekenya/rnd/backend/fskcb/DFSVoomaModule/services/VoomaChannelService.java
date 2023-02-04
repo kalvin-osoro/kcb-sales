@@ -587,7 +587,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                     "vooma_merchant_signatureDoc_" + merchantDetails1.getId() + ".PNG", signatureDoc, Utility.getSubFolder());
             //save download url from file storage service.loadFileAsResource
             String businessPermitDocPath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "vooma_merchant_businessPermitDoc_" + merchantDetails1.getId() + ".PNG", businessPermitDoc, Utility.getSubFolder());
+                    "vooma_merchant_businessPermitDoc_" + merchantDetails1.getId() + ".PDF", businessPermitDoc, Utility.getSubFolder());
             //save
             List<String> filePathList = new ArrayList<>();
             filePathList.add(frontIDPath);
