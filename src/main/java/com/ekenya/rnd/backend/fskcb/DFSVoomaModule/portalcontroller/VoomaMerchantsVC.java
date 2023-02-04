@@ -122,7 +122,7 @@ public class VoomaMerchantsVC {
     {
         try {
             Resource file = fileStorageService.loadFileAsResourceByName(fileName);
-            if (fileName.contains("PNG")) {
+            if (fileName.endsWith("PNG") || fileName.endsWith("png")) {
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
