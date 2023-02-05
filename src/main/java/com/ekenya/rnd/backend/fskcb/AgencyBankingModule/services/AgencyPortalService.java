@@ -516,7 +516,7 @@ public class AgencyPortalService implements IAgencyPortalService {
         try {
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (AgencyOnboardingEntity agencyOnboardingEntity : agencyBankingLeadRepository.findAllByIsApproved()) {
+            for (AgencyOnboardingEntity agencyOnboardingEntity : agencyOnboardingRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", agencyOnboardingEntity.getId());
                 objectNode.put("customerName", agencyOnboardingEntity.getBusinessName());
