@@ -167,7 +167,7 @@ public class CalendarServiceImpl implements CalendarService {
                 for (DSRAccountEntity dsrAccountEntity : meetingDetails.getAssignedMembers()) {
                     members.add(dsrAccountEntity.getStaffNo());
                     members.add(dsrAccountEntity.getFullName());
-                    members.add(dsrAccountEntity.getProfileCode());
+//                    members.add(dsrAccountEntity.getProfileCode());
                     members.add(dsrAccountEntity.getEmail());
                 }
                 node.put("members", members.toString());
