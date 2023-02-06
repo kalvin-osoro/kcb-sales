@@ -548,23 +548,27 @@ public class CBPortalService implements ICBPortalService {
             }
 
             if (target.getTargetType().equals(CBTargetType.CROSS_SALES)) {
-                user.setCampaignTargetValue(model.getTargetValue());
+                user.setCrossSalesTargetValue(model.getTargetValue());
                 user.setCbTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(CBTargetType.MFI)) {
-                user.setLeadsTargetValue(model.getTargetValue());
+                user.setMFITargetValue(model.getTargetValue());
                 user.setCbTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(CBTargetType.PRODUCTS)) {
-                user.setVisitsTargetValue(model.getTargetValue());
+                user.setProductTargetValue(model.getTargetValue());
                 user.setCbTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(CBTargetType.ASSETS_AND_LIABILITIES)) {
-                user.setVisitsTargetValue(model.getTargetValue());
+                user.setAssetLiabilityTargetValue(model.getTargetValue());
                 user.setCbTargetId(model.getTargetId());
             }
             if (target.getTargetType().equals(CBTargetType.FINANCIAL_SERVICES)) {
-                user.setOnboardTargetValue(model.getTargetValue());
+                user.setFinancialServiceTargetValue(model.getTargetValue());
+                user.setCbTargetId(model.getTargetId());
+            }
+            if (target.getTargetType().equals(CBTargetType.VOLUMES)) {
+                user.setVolumeTargetValue(model.getTargetValue());
                 user.setCbTargetId(model.getTargetId());
             }
 

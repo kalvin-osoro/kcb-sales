@@ -21,6 +21,12 @@ public class QuestionnaireVC1 {
     @Autowired
   private IVoomaPortalService voomaPortalService;
 
+//    UniversalResponse{
+//        private String message;
+//        private Integer status;
+//        private Object data;
+//    }
+
 
     @PostMapping("/vooma-create-questionnaire1")
     public ResponseEntity<?> createQuestionnaire1(@RequestBody QuestionnaireRequest model) {

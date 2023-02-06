@@ -10,4 +10,5 @@ public enum CBTargetType {
     FINANCIAL_SERVICES,
 
     MFI,
+    VOLUMES
 }

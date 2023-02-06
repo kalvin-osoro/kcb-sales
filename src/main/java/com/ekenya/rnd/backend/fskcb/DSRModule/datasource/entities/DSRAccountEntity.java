@@ -117,6 +117,11 @@ public class DSRAccountEntity {
     private String visitsTargetValue;
     private String volumeTargetValue;
     private String onboardTargetValue;
+    private String MFITargetValue;
+    private String crossSalesTargetValue;
+    private String productTargetValue;
+    private String assetLiabilityTargetValue;
+    private String financialServiceTargetValue;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "acquiring_target_dsr",
