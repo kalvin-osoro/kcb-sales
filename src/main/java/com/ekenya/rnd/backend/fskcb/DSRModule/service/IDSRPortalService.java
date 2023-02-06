@@ -43,7 +43,7 @@ public interface IDSRPortalService {
     boolean unlockAccount(String staffNo);
     boolean resetPIN(String staffNo);
 
-    List<ObjectNode> getAllDSRAccountsV1();
+    List<ObjectNode> getAllDSRAccountsV1(DSRAccountsRequest model);
 
     boolean addSector(SectorRequest model);
 
