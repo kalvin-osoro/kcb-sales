@@ -1155,7 +1155,7 @@ public class DSRPortalService implements IDSRPortalService {
                 return null;
             }
             List<ObjectNode> list = new ArrayList<>();
-            List<DSRAccountEntity> dsrAccountEntities = dsrAccountsRepository.findByProfileCode(model.getProfileCode());
+            List<DSRAccountEntity> dsrAccountEntities = dsrAccountsRepository.findAll();
             for (DSRAccountEntity dsrAccountEntity : dsrAccountEntities) {
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode objectNode = mapper.createObjectNode();
