@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MeetingDetailsRepository extends JpaRepository<MeetingDetailsEntity,Long> {
 
     MeetingDetailsEntity[] findAllByDsrIdAndDateOfEvent(Long dsrId, String dateOfEvent);
+
+    MeetingDetailsEntity[] findByProfileCode(String profileCode);
 }

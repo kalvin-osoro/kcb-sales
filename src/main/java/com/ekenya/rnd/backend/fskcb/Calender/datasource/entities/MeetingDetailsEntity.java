@@ -31,6 +31,9 @@ public class MeetingDetailsEntity {
     private String time;
     private String reason;
     private String dateOfEvent;
+    private String link;
+    @Enumerated(EnumType.STRING)
+    private MeetingType meetingType=MeetingType.PHYSICAL;
     private String period;
     private Boolean isOnline=false;
     private String ownerPhone;
@@ -38,6 +41,7 @@ public class MeetingDetailsEntity {
     private String customerName;
     private String ownerEmail;
     private String salesCode;
+    private String region;
     private Long dsrId;
     private String profileCode;
     @ManyToMany

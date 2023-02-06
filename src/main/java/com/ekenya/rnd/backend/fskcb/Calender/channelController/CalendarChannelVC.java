@@ -1,16 +1,13 @@
-package com.ekenya.rnd.backend.fskcb.Calender.controller;
+package com.ekenya.rnd.backend.fskcb.Calender.channelController;
 
 import com.ekenya.rnd.backend.fskcb.Calender.model.AppointmentByDSRRequest;
 import com.ekenya.rnd.backend.fskcb.Calender.model.AssignMembers;
 import com.ekenya.rnd.backend.fskcb.Calender.model.CalendarRequest;
 import com.ekenya.rnd.backend.fskcb.Calender.service.CalendarService;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentDateRequest;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBCampaignsRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
-public class CalendarVC {
+public class CalendarChannelVC {
 
     @Autowired
     CalendarService calendarService;

@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.Calender.service;
 import com.ekenya.rnd.backend.fskcb.Calender.model.AppointmentByDSRRequest;
 import com.ekenya.rnd.backend.fskcb.Calender.model.AssignMembers;
 import com.ekenya.rnd.backend.fskcb.Calender.model.CalendarRequest;
+import com.ekenya.rnd.backend.fskcb.Calender.model.GetAppointmentDto;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAppointmentDateRequest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -14,4 +15,6 @@ public interface CalendarService {
     boolean assignMembersToAppointment(AssignMembers model);
 
     List<ObjectNode> getCustomerAppointmentByDSRIdAndDate(AppointmentByDSRRequest model);
+
+    List<ObjectNode> getAllAppointments(GetAppointmentDto model);
 }
