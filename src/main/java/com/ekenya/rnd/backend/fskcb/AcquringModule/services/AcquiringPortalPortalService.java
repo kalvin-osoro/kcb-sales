@@ -717,6 +717,11 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 user.setTargetValue(model.getTargetValue());
                 user.setTargetId(model.getTargetId());
             }
+            if (target.getTargetType().equals(TargetType.VOLUMES)) {
+                user.setVolumeTargetValue(model.getTargetValue());
+                user.setTargetValue(model.getTargetValue());
+                user.setTargetId(model.getTargetId());
+            }
 
             Set<AcquiringTargetEntity> acquiringTargetEntities = (Set<AcquiringTargetEntity>) user.getAcquiringTargetEntities();
             acquiringTargetEntities.add(target);

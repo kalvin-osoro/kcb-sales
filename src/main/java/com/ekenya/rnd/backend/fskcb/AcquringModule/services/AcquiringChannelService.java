@@ -9,6 +9,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.Agen
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
+import com.ekenya.rnd.backend.fskcb.Calender.model.DSRAgent;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBRevenueLineEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
@@ -299,6 +300,16 @@ public class AcquiringChannelService implements IAcquiringChannelService {
                 list.add(campaignsNode);
             }
             //targetType =ONBOARDING
+            for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.ONBOARDING)) {
+                ObjectNode node = mapper.createObjectNode();
+                ObjectNode onboardingNode = mapper.createObjectNode();
+                node.put("achieved", acquiringTargetEntity.getTargetAchievement());
+                node.put("target", acquiringTargetEntity.getTargetValue());
+                onboardingNode.set("onboarding", node);
+                list.add(onboardingNode);
+            }
+            //Volume
+
             for (AcquiringTargetEntity acquiringTargetEntity : acquiringTargetsRepository.findAllByTargetType(TargetType.ONBOARDING)) {
                 ObjectNode node = mapper.createObjectNode();
                 ObjectNode onboardingNode = mapper.createObjectNode();
@@ -725,5 +736,40 @@ try {
         return null;
     }
 
-}
+    @Override
+    public List<ObjectNode> getDSRAgent(DSRAgent model) {
+        try {
+            if (model==null) {
+                return null;
+            }
+            //search agent by dsrName and Onboarding status APPROVED
+            List<AcquiringOnboardEntity> acquiringOnboardEntities = acquiringOnboardingsRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED);
+            if (acquiringOnboardEntities == null) {
+                return null;
+
+            }
+            List<ObjectNode> objectNodes = new ArrayList<>();
+            for (AcquiringOnboardEntity acquiringOnboard : acquiringOnboardEntities) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", acquiringOnboard.getId());
+                asset.put("merchantPhone", acquiringOnboard.getOutletPhone());
+                asset.put("merchantName", acquiringOnboard.getAccountName());
+                asset.put("businessName", acquiringOnboard.getBusinessName());
+                ObjectNode cordinates = mapper.createObjectNode();
+                cordinates.put("latitude", acquiringOnboard.getLatitude());
+                cordinates.put("longitude", acquiringOnboard.getLongitude());
+                asset.set("cordinates", cordinates);
+                objectNodes.add(asset);
+
+            }
+            return objectNodes;
+        } catch (Exception e) {
+            log.error("something went wrong,please try again later");
+        }
+
+        return null;
+    }
+    }
+
 

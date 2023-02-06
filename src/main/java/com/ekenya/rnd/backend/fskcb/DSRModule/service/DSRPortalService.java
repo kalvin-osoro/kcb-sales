@@ -917,6 +917,7 @@ public class DSRPortalService implements IDSRPortalService {
                 node.put("phone",entity.getPhoneNo());
                 node.put("staffNo",entity.getStaffNo());
                 node.put("salesCode",entity.getSalesCode());
+                node.put("targetVolume",entity.getVolumeTargetValue());
                 node.put("teamId",entity.getTeamId());
                 DSRTeamEntity dsrTeamEntity = dsrTeamsRepository.findById(entity.getTeamId()).get();
                 node.put("regionId",dsrTeamEntity.getRegionId());

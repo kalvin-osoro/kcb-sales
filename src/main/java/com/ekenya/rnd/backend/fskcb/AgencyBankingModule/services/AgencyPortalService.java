@@ -267,12 +267,12 @@ public class AgencyPortalService implements IAgencyPortalService {
             for (AgencyOnboardingEntity agencyOnboardingEntity : agencyOnboardingRepository.findAll()) {
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", agencyOnboardingEntity.getId());
-                node.put("merchantName", agencyOnboardingEntity.getAgentName());
+                node.put("agentName", agencyOnboardingEntity.getAgentName());
                 node.put("region", agencyOnboardingEntity.getRegion());
                 node.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
                 node.put("email", agencyOnboardingEntity.getAgentEmail());
                 node.put("status", agencyOnboardingEntity.getStatus().toString());
-                node.put("agent Id", agencyOnboardingEntity.getDsrId());
+                node.put("dsrName", agencyOnboardingEntity.getDsrName());
                 node.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
                 list.add(node);
             }

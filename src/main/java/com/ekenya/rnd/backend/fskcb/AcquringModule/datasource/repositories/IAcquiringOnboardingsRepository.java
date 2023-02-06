@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.PersonalBankingModule.datasource.entities.PSBankingOnboardingEntity;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,4 +30,7 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
     AcquiringOnboardEntity searchAgent(String keyword);
 
     AcquiringOnboardEntity findByAccountNumber(Integer accountNumber);
+
+    @Query(value = "SELECT * FROM dbo_aqc_onboarding where dsrName ilike %?1%  and status='APPROVED'", nativeQuery = true)
+    List<AcquiringOnboardEntity> searchByDsrNameAndStatus(String dsrSalesCode, OnboardingStatus approved);
 }

@@ -8,6 +8,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.resp.AcquiringCustomer
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
+import com.ekenya.rnd.backend.fskcb.Calender.model.DSRAgent;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.CustomerAssetsRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaAssignAssetRequest;
@@ -67,4 +68,6 @@ public interface IAcquiringChannelService {
     Object getAssetById(AssetByIdRequest model);
 
     Object searchAgent(AgencySearchRequest model);
+
+    List<ObjectNode> getDSRAgent(DSRAgent model);
 }

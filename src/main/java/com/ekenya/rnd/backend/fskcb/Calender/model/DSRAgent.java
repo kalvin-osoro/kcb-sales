@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DSRAgent {
     private String dsrName;
+//    private String dsrSalesCode;
 }

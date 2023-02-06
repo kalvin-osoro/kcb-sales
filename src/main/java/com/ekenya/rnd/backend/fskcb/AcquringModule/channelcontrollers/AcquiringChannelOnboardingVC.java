@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AquiringCustomerOnboar
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
+import com.ekenya.rnd.backend.fskcb.Calender.model.DSRAgent;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -66,5 +67,26 @@ public class AcquiringChannelOnboardingVC {
         }
     }
 
+
+    @PostMapping(value = "/acquiring-getDsr-merchant")
+    public ResponseEntity<?> searchAgent(@RequestBody DSRAgent model) {
+        List<?>  agent=acquiringChannelService.getDSRAgent(model);
+        boolean success = agent != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)agent);
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
+    }
 
 }

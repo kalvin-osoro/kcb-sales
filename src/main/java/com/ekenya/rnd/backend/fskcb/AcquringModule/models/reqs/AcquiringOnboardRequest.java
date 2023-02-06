@@ -21,6 +21,7 @@ public class AcquiringOnboardRequest {
     private String clientLegalName;
     private Long dsrId;
     private String region;
+    private String dsrName;
     private String businessPhoneNumber;
     private String businessEmail;
 //    private OnboardingStatus status;

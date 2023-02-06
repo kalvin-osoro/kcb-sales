@@ -36,6 +36,7 @@ public class AcquiringOnboardEntity {
     private Date createdOn;
     private String latitude;
     private String longitude;
+    private String dsrName;
     private  String businessName;
     private String businessWebsite;
     private String outletContactPerson;

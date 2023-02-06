@@ -115,6 +115,7 @@ public class DSRAccountEntity {
     private String leadsTargetValue;
     private Long targetId;
     private String visitsTargetValue;
+    private String volumeTargetValue;
     private String onboardTargetValue;
 
     @ManyToMany(fetch = FetchType.LAZY)

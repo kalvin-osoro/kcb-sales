@@ -32,7 +32,6 @@ public class AgentExcelHelper {
 
     public static AgentExcelImportResult excelToAgents(InputStream is) {
         final int REGION_COL = 1;
-
         final int BRANCH_COL = 2;
         final int STAFF_NAME_COL = 3;
         final int PHONE_NO_COL = 4;
