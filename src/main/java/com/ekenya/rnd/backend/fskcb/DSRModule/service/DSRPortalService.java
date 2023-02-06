@@ -1167,9 +1167,9 @@ public class DSRPortalService implements IDSRPortalService {
                 objectNode.put("status", dsrAccountEntity.getStatus() ==null ? null:dsrAccountEntity.getStatus().toString());
                 objectNode.put("salesCode", dsrAccountEntity.getSalesCode());
                 objectNode.put("teamId", dsrAccountEntity.getTeamId());
-                DSRTeamEntity dsrTeamEntity = dsrTeamsRepository.findById(dsrAccountEntity.getTeamId()).get();
-                objectNode.put("teamName", dsrTeamEntity.getName());
-                objectNode.put("teamLoc", dsrTeamEntity.getLocation());
+//                DSRTeamEntity dsrTeamEntity = dsrTeamsRepository.findById(dsrAccountEntity.getTeamId()).get();
+//                objectNode.put("teamName", dsrTeamEntity.getName());
+//                objectNode.put("teamLoc", dsrTeamEntity.getLocation());
                 objectNode.put("expiry", dsrAccountEntity.getExpiryDate() ==null ? null :dsrAccountEntity.getExpiryDate().getTime());
                 list.add(objectNode);
             }
