@@ -24,10 +24,10 @@ public class DSRChannelController {
     @Autowired
     IDSRPortalService dsrPortalService;
     @PostMapping(value = "/dsr-get-accounts-allV1")
-    public ResponseEntity<?> getAllAccountsV1(@RequestBody DSRAccountsRequest model) {
+    public ResponseEntity<?> getAllAccountsV1() {
 
         //INSIDE SERVICE
-        List<?> visits = dsrPortalService.getAllDSRAccountsV1(model);
+        List<?> visits = dsrPortalService.getAllDSRAccountsV1();
         boolean success = visits != null;
 
         //Response
