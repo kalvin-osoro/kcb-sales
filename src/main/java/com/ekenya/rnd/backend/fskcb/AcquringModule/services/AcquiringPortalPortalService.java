@@ -879,8 +879,8 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 return false;
             }
             AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getMerchantId()).get();
-            acquiringOnboardEntity.setDsrSalesCode(model.getDsrSalesCode());
             DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+            acquiringOnboardEntity.setDsrName(dsrAccountEntity.getFullName());
             //set start date from input
             acquiringOnboardEntity.setIsAssigned(true);
             //save
