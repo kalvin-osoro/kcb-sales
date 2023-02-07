@@ -664,7 +664,7 @@ public class AgencyChannelService implements IAgencyChannelService {
                return null;
            }
            //search agent by dsrName and Onboarding status APPROVED
-           List<AgencyOnboardingEntity> agencyOnboardingEntities = agencyOnboardingRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED);
+           List<AgencyOnboardingEntity> agencyOnboardingEntities = agencyOnboardingRepository.findByDsrNameEqualsIgnoreCaseAndStatus(model.getDsrName(), OnboardingStatus.APPROVED);
            if (agencyOnboardingEntities == null) {
                return null;
 

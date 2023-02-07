@@ -749,7 +749,7 @@ try {
 //
 //            }
             List<ObjectNode> objectNodes = new ArrayList<>();
-            for (AcquiringOnboardEntity acquiringOnboard : acquiringOnboardingsRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED)) {
+            for (AcquiringOnboardEntity acquiringOnboard : acquiringOnboardingsRepository.findByDsrNameEqualsIgnoreCaseAndStatus(model.getDsrName(), OnboardingStatus.APPROVED)) {
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboard.getId());

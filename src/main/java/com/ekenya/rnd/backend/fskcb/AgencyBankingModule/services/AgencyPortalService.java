@@ -529,7 +529,7 @@ public class AgencyPortalService implements IAgencyPortalService {
                 objectNode.put("dateOnborded", agencyOnboardingEntity.getCreatedOn().getTime());
                 objectNode.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
                 objectNode.put("email", agencyOnboardingEntity.getAgentEmail());
-                objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+                objectNode.put("dsrName", agencyOnboardingEntity.getDsrName());
 
 //                objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
                 ArrayNode arrayNode = mapper.createArrayNode();
