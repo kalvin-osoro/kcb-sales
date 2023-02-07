@@ -523,7 +523,7 @@ public class AgencyPortalService implements IAgencyPortalService {
             for (AgencyOnboardingEntity agencyOnboardingEntity : agencyOnboardingRepository.findAllByIsApproved()) {
                 ObjectNode objectNode = mapper.createObjectNode();
                 objectNode.put("id", agencyOnboardingEntity.getId());
-                objectNode.put("customerName", agencyOnboardingEntity.getBusinessName());
+                objectNode.put("customerName", agencyOnboardingEntity.getAgentName());
                 objectNode.put("region", agencyOnboardingEntity.getRegion());
                 objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
                 objectNode.put("dateOnborded", agencyOnboardingEntity.getCreatedOn().getTime());
