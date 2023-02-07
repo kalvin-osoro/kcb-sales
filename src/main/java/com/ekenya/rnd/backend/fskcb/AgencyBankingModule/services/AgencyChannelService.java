@@ -242,8 +242,8 @@ public class AgencyChannelService implements IAgencyChannelService {
                     agentDetails, AgencyOnboardingRequest.class);
             if (agencyOnboardingRequest == null) throw new RuntimeException("Bad request");
             AgencyOnboardingEntity agencyOnboardingEntity = new AgencyOnboardingEntity();
-            agencyOnboardingEntity.setAgentName(agencyOnboardingRequest.getAgentName());
             agencyOnboardingEntity.setBusinessType(agencyOnboardingRequest.getBusinessType());
+            agencyOnboardingEntity.setAgentName(agencyOnboardingRequest.getAgentName());
             //personal details
             agencyOnboardingEntity.setSurname(agencyOnboardingRequest.getSurname());
             agencyOnboardingEntity.setOtherNames(agencyOnboardingRequest.getOtherNames());
