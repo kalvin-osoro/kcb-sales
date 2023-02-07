@@ -31,6 +31,6 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
 
     AcquiringOnboardEntity findByAccountNumber(Integer accountNumber);
 
-    @Query(value = "SELECT * FROM dbo_aqc_onboarding where dsrName ilike %?1%  and status='APPROVED'", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_aqc_onboarding where dsrName LIKE %?1%  and status='APPROVED'", nativeQuery = true)
     List<AcquiringOnboardEntity> searchByDsrNameAndStatus(String dsrName, OnboardingStatus approved);
 }
