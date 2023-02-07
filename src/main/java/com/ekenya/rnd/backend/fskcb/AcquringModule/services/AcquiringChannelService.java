@@ -743,13 +743,13 @@ try {
                 return null;
             }
             //search agent by dsrName and Onboarding status APPROVED
-            List<AcquiringOnboardEntity> acquiringOnboardEntities = acquiringOnboardingsRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED);
-            if (acquiringOnboardEntities == null) {
-                return null;
-
-            }
+//            List<AcquiringOnboardEntity> acquiringOnboardEntities = acquiringOnboardingsRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED);
+//            if (acquiringOnboardEntities == null) {
+//                return null;
+//
+//            }
             List<ObjectNode> objectNodes = new ArrayList<>();
-            for (AcquiringOnboardEntity acquiringOnboard : acquiringOnboardEntities) {
+            for (AcquiringOnboardEntity acquiringOnboard : acquiringOnboardingsRepository.searchByDsrNameAndStatus(model.getDsrName(), OnboardingStatus.APPROVED)) {
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode asset = mapper.createObjectNode();
                 asset.put("id", acquiringOnboard.getId());
