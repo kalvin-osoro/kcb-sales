@@ -641,7 +641,7 @@ try {
 
             AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
             assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            assetLogsEntity.setAction("Assigned to Merchant");
+            assetLogsEntity.setAction("Collected from Merchant");
             assetLogsEntity.setProfileCode(model.getProfileCode());
 //            assetLogsEntity.setRemarks(model.getRemarks());
             assetLogsEntity.setCondition(AssetCondition.FAULTY);

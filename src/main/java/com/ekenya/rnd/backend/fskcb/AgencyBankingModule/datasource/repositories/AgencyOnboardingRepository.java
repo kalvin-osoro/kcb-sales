@@ -18,13 +18,15 @@ public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardi
     Optional<Object> findByAccountNumber(Integer accountNumber);
 
     AgencyOnboardingEntity findAgentByagentPhone(String toString);
-    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where agentName LIKE %?1% or agentPhone LIKE %?1% or agentIdNumber LIKE %?1% or accountNumber LIKE %?1% and status='APPROVED'", nativeQuery = true)
-    AgencyOnboardingEntity searchAgent(String keyword);
 
+
+//    AgencyOnboardingEntity findByAgentNameEqualsIgnoreCaseAndAgentPhoneAndAgentIdNumberAndAccountNumberAndStatus(String keyword);
     Optional<Object> findByAgentIdNumber(String agentIdNumber);
     @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where dsrName LIKE %?1%  and status='APPROVED'", nativeQuery = true)
-    List<AgencyOnboardingEntity> searchByDsrNameAndStatus(String dsrName, OnboardingStatus approved);
+    List<AgencyOnboardingEntity> searchByDsrNameAndStatus(String keyword, OnboardingStatus approved);
     List<AgencyOnboardingEntity>findByDsrNameEqualsIgnoreCaseAndStatus(String dsrName,OnboardingStatus approved);
     @Query(value = "SELECT * FROM dbo_agency_bank_onboarding WHERE isApproved = true", nativeQuery = true)
     Iterable<AgencyOnboardingEntity> findAllByIsApproved();
+    @Query(value = "SELECT * FROM dbo_agency_bank_onboarding where agentName LIKE %?1% OR agentPhone LIKE %?1% OR agentIdNumber LIKE %?1% OR accountNumber LIKE %?1% and status='APPROVED'", nativeQuery = true)
+    AgencyOnboardingEntity searchAgent(String keyword);
 }
