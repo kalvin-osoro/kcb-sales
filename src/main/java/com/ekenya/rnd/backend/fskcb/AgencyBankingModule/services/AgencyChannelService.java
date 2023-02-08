@@ -246,6 +246,8 @@ public class AgencyChannelService implements IAgencyChannelService {
             agencyOnboardingEntity.setAgentName(agencyOnboardingRequest.getAgentName());
             //personal details
             agencyOnboardingEntity.setSurname(agencyOnboardingRequest.getSurname());
+            agencyOnboardingEntity.setLatitude(agencyOnboardingRequest.getLatitude());
+            agencyOnboardingEntity.setLongitude(agencyOnboardingRequest.getLongitude());
             agencyOnboardingEntity.setOtherNames(agencyOnboardingRequest.getOtherNames());
             agencyOnboardingEntity.setPreviousName(agencyOnboardingRequest.getPreviousName());
             agencyOnboardingEntity.setYearOfBirth(agencyOnboardingRequest.getYearOfBirth());
