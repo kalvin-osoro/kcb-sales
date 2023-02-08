@@ -8,10 +8,14 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveM
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssetInvetoryRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.AgencyOnboardingRepository;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaAgentOnboardV1Repository;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaMerchantOnboardV1Repository;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.DFSVoomaOnboardRepository;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaAddAssetRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -52,6 +56,10 @@ import java.util.Set;
 public class  AcquiringPortalPortalService implements IAcquiringPortalService {
 
     private final IAcquiringLeadsRepository mLeadsRepo;
+
+    private final AgencyOnboardingRepository agencyOnboardingRepository;
+    private final DFSVoomaMerchantOnboardV1Repository dfsVoomaMerchantOnboardV1Repository;
+    private final DFSVoomaAgentOnboardV1Repository dfsVoomaAgentOnboardV1Repository;
     private final AssetLogsRepository assetLogsRepository;
     private final IAcquiringTargetsRepository iAcquiringTargetsRepository;
     private final IQssService iQssService;
@@ -878,19 +886,39 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             if (model == null) {
                 return false;
             }
-            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getMerchantId()).get();
-            DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
-            acquiringOnboardEntity.setDsrName(dsrAccountEntity.getFullName());
-            //set start date from input
-            acquiringOnboardEntity.setIsAssigned(true);
-            //save
-            acquiringOnboardingsRepository.save(acquiringOnboardEntity);
-            iQssService.sendAlert(
-                    dsrAccountEntity.getStaffNo(),
-                    "New Merchant Assigned",
-                    "You have been assigned a new Merchant. Please check your App for more details",
-                    null
-            );
+            if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")){
+                AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getCustomerId()).get();
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+                acquiringOnboardEntity.setDsrName(dsrAccountEntity.getFullName());
+                //set start date from input
+                acquiringOnboardEntity.setIsAssigned(true);
+                //save
+                acquiringOnboardingsRepository.save(acquiringOnboardEntity);
+                iQssService.sendAlert(
+                        dsrAccountEntity.getStaffNo(),
+                        "New Merchant Assigned",
+                        "You have been assigned a new Merchant. Please check your App for more details",
+                        null
+                );
+
+            }
+           if (model.getProfileCode().equalsIgnoreCase("dfsAgency")){
+               AgencyOnboardingEntity agencyOnboarding =agencyOnboardingRepository.findById(model.getCustomerId()).orElseThrow(null );
+               DSRAccountEntity dsrAccountEntity= dsrAccountRepository.findById(model.getDsrId()).orElseThrow(null);
+               agencyOnboarding.setDsrName(dsrAccountEntity.getFullName());
+               agencyOnboarding.setAssigned(true);
+               agencyOnboardingRepository.save(agencyOnboarding);
+               iQssService.sendAlert(
+                       dsrAccountEntity.getStaffNo(),
+                       "New Merchant Assigned",
+                       "You have been assigned a new Merchant. Please check your App for more details",
+                       null
+               );
+               if (model.getProfileCode().equalsIgnoreCase("dfcVooma")){
+                   //TODO finish this method as well
+               }
+
+           }
             //update is assigned to true
             return true;
         } catch (Exception e) {

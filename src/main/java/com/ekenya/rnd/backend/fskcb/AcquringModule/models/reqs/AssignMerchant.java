@@ -10,7 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignMerchant {
-    private Long merchantId;
-    private String dsrSalesCode;
+    private Long customerId;
+//    private String dsrSalesCode;
     private Long dsrId;
+    private String profileCode;
 }

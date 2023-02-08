@@ -838,8 +838,8 @@ public class AgencyPortalService implements IAgencyPortalService {
             if (model== null){
                 return false;
             }
-            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findById(model.getMerchantId()).get();
-            agencyOnboardingEntity.setDsrSalesCode(model.getDsrSalesCode());
+            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findById(model.getCustomerId()).get();
+//            agencyOnboardingEntity.setDsrSalesCode(model.getDsrSalesCode());
             DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
             //set start date from input
             agencyOnboardingEntity.setAssigned(true);

@@ -725,7 +725,6 @@ try {
             ObjectNode businessDetails = mapper.createObjectNode();
             businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
             businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
-
             asset.set("businessDetails", businessDetails);
             return asset;
         } catch (Exception e) {
