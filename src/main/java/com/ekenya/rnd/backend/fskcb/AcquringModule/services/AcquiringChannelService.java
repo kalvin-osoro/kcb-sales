@@ -421,6 +421,7 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringOnboardEntity.setBusinessWebsite(acquiringOnboardRequest.getBusinessWebsite());
             acquiringOnboardEntity.setOutletContactPerson(acquiringOnboardRequest.getOutletContactPerson());
             acquiringOnboardEntity.setOutletPhone(acquiringOnboardRequest.getOutletPhone());
+            acquiringOnboardEntity.setDsrName(acquiringOnboardRequest.getDsrName());
             acquiringOnboardEntity.setNumberOfOutlet(acquiringOnboardRequest.getNumberOfOutlet());
             acquiringOnboardEntity.setRegion(acquiringOnboardRequest.getRegion());
             acquiringOnboardEntity.setLatitude(acquiringOnboardRequest.getLatitude());
