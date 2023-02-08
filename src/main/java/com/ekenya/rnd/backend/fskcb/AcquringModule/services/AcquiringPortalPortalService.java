@@ -1047,7 +1047,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 }
                 return list;
             }
-
+//TODO finish for other business units
         } catch (Exception e) {
             log.error("something went wrong,please try again later");
         }

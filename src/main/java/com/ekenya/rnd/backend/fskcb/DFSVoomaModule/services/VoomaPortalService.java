@@ -1029,11 +1029,11 @@ public class VoomaPortalService implements IVoomaPortalService {
                 return false;
             }
             //check if questionnaire of same QuestionType,status and profilecode exists
-//            QuestionnaireEntity questionnaireEntity1 =questionnaireRepository.findByQuestionnaireTypeAndStatus(model.getQuestionnaireType(), model.getProfileCode(),Status.ACTIVE);
-//            if (questionnaireEntity1 != null) {
-//                log.error("Questionnaire of same type already exists");
-//                return false;
-//            }
+            QuestionnaireEntity questionnaireEntity1 =questionnaireRepository.findByQuestionnaireTypeAndStatusAndProfileCode(model.getQuestionnaireType(),Status.ACTIVE,model.getProfileCode());
+            if (questionnaireEntity1 != null) {
+                log.error("Questionnaire of same type already exists");
+                return false;
+            }
             QuestionnaireEntity questionnaireEntity = new QuestionnaireEntity();
             questionnaireEntity.setQuestionnaireTitle(model.getQuestionnaireTitle());
             questionnaireEntity.setQuestionnaireType(model.getQuestionnaireType());
