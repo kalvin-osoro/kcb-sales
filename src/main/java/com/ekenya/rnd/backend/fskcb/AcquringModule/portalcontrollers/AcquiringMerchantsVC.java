@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.portalcontrollers;
 
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringMerchantDetailsRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.DSRMerchantRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -81,4 +82,27 @@ public class AcquiringMerchantsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //get merhant by dsrId
+    @PostMapping(value = "/acquiring-get-all-dsr-merchant")
+    public ResponseEntity<?> getDsrMerchant(@RequestBody DSRMerchantRequest model) {
+        List<?> list = acquiringService.getDsrMerchant(model);
+        //
+        boolean success  = list != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
 }

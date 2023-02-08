@@ -3,10 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringLeadEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssetInvetoryRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBAssignLeadRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRTAssignTargetRequest;
@@ -88,4 +85,7 @@ public interface IAcquiringPortalService {
     List<ObjectNode> findBySerialNumber(AssetInvetoryRequest model);
 
     List<ObjectNode> salesPersonTarget(AcquiringDSRsInTargetRequest model);
+
+    List<ObjectNode> getDsrMerchant(DSRMerchantRequest model);
+
 }

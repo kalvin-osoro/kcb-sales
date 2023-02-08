@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.Asset
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.DSRMerchantRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.helper.AgentExcelHelper;
@@ -881,6 +882,49 @@ public class AgencyPortalService implements IAgencyPortalService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while getting dsr in target", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getDSRAgent(DSRMerchantRequest model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode>list= new ArrayList<>();
+            ObjectMapper mapper1=new ObjectMapper();
+
+            for (AgencyOnboardingEntity agencyOnboardingEntity :agencyOnboardingRepository.findByDsrId(model.getDsrId())){
+                ObjectNode objectNode =mapper.createObjectNode();
+                objectNode.put("id", agencyOnboardingEntity.getId());
+                objectNode.put("businessName", agencyOnboardingEntity.getBusinessName());
+//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
+                objectNode.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+                objectNode.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
+                objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
+                objectNode.put("remarks", agencyOnboardingEntity.getRemarks());
+                objectNode.put("branchName", agencyOnboardingEntity.getBranch());
+                objectNode.put("accountName", agencyOnboardingEntity.getAgentName());
+                objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+                objectNode.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+                ObjectNode cordinates = mapper.createObjectNode();
+                cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+                cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+                objectNode.set("cordinates", cordinates);
+                ObjectNode businessDetails = mapper.createObjectNode();
+                businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
+                businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
+                businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
+                businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
+                businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
+                businessDetails.put("city", agencyOnboardingEntity.getTown());
+                objectNode.set("businessDetails", businessDetails);
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.info("something went wrong,please try again later");
         }
         return null;
     }

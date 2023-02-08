@@ -4,10 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.*;
 
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringApproveMerchant;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringNearbyCustomersRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssetInvetoryRequest;
-import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AssignMerchant;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories.AgencyOnboardingRepository;
@@ -886,7 +883,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             if (model == null) {
                 return false;
             }
-            if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")){
+            if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")) {
                 AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getCustomerId()).get();
                 DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
                 acquiringOnboardEntity.setDsrName(dsrAccountEntity.getFullName());
@@ -902,23 +899,23 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 );
 
             }
-           if (model.getProfileCode().equalsIgnoreCase("dfsAgency")){
-               AgencyOnboardingEntity agencyOnboarding =agencyOnboardingRepository.findById(model.getCustomerId()).orElseThrow(null );
-               DSRAccountEntity dsrAccountEntity= dsrAccountRepository.findById(model.getDsrId()).orElseThrow(null);
-               agencyOnboarding.setDsrName(dsrAccountEntity.getFullName());
-               agencyOnboarding.setAssigned(true);
-               agencyOnboardingRepository.save(agencyOnboarding);
-               iQssService.sendAlert(
-                       dsrAccountEntity.getStaffNo(),
-                       "New Merchant Assigned",
-                       "You have been assigned a new Merchant. Please check your App for more details",
-                       null
-               );
-               if (model.getProfileCode().equalsIgnoreCase("dfcVooma")){
-                   //TODO finish this method as well
-               }
+            if (model.getProfileCode().equalsIgnoreCase("dfsAgency")) {
+                AgencyOnboardingEntity agencyOnboarding = agencyOnboardingRepository.findById(model.getCustomerId()).orElseThrow(null);
+                DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElseThrow(null);
+                agencyOnboarding.setDsrName(dsrAccountEntity.getFullName());
+                agencyOnboarding.setAssigned(true);
+                agencyOnboardingRepository.save(agencyOnboarding);
+                iQssService.sendAlert(
+                        dsrAccountEntity.getStaffNo(),
+                        "New Merchant Assigned",
+                        "You have been assigned a new Merchant. Please check your App for more details",
+                        null
+                );
+                if (model.getProfileCode().equalsIgnoreCase("dfcVooma")) {
+                    //TODO finish this method as well
+                }
 
-           }
+            }
             //update is assigned to true
             return true;
         } catch (Exception e) {
@@ -943,13 +940,13 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 objectNode.put("id", assetLogsEntity.getId());
                 objectNode.put("serialNumber", assetLogsEntity.getSerialNumber());
                 objectNode.put("assetNumber", assetLogsEntity.getAssetNumber());
-                objectNode.put("assetCondition", assetLogsEntity.getCondition()== null ?null :assetLogsEntity.getCondition().toString());
+                objectNode.put("assetCondition", assetLogsEntity.getCondition() == null ? null : assetLogsEntity.getCondition().toString());
 //                objectNode.put("location", assetLogsEntity.getLocation());
 //                objectNode.put("visitDate", assetLogsEntity.getVisitDate());
 //                objectNode.put("status", assetLogsEntity.getStatus().toString());
                 objectNode.put("customerAccNo", assetLogsEntity.getCustomerAccNumber());
                 objectNode.put("action", assetLogsEntity.getAction());
-                objectNode.put("dateCollected", assetLogsEntity.getDateCollected()==null ? null :assetLogsEntity.getDateCollected().getTime());
+                objectNode.put("dateCollected", assetLogsEntity.getDateCollected() == null ? null : assetLogsEntity.getDateCollected().getTime());
                 objectNode.put("remarks", assetLogsEntity.getAction());
                 objectNode.put("dsrSalesCode", assetLogsEntity.getDsrSalesCode());
                 objectNode.put("createdOn", assetLogsEntity.getCreatedOn().getTime());
@@ -968,7 +965,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             if (model == null) {
                 return null;
             }
-           //list of dsr
+            //list of dsr
             List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             //bring all fields from dsr
@@ -986,9 +983,44 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             log.error("Error occurred while getting dsr in target", e);
         }
 
-return null;
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getDsrMerchant(DSRMerchantRequest model) {
+        try {
+            if (model==null){
+                return null;
+            }
+            List<ObjectNode>list =new ArrayList<>();
+            ObjectMapper mapper =new ObjectMapper();
+            for (AcquiringOnboardEntity acquiringOnboardEntity :acquiringOnboardingsRepository.findByDsrId(model.getDsrId())){
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", acquiringOnboardEntity.getId());
+                objectNode.put("merchantName", acquiringOnboardEntity.getClientLegalName());
+                objectNode.put("region", acquiringOnboardEntity.getRegion());
+                objectNode.put("status", acquiringOnboardEntity.getStatus().toString());
+                objectNode.put("dateOnborded", acquiringOnboardEntity.getCreatedOn().getTime());
+                objectNode.put("payBillNo", Utility.generateRandomNumber());
+                objectNode.put("tillNo", Utility.generateRandomNumber());
+                objectNode.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                objectNode.put("email", acquiringOnboardEntity.getBusinessEmail());
+                objectNode.put("dsrId", acquiringOnboardEntity.getDsrId());
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(acquiringOnboardEntity.getLongitude());
+                arrayNode.add(acquiringOnboardEntity.getLatitude());
+                objectNode.put("co-ordinates", arrayNode);
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("something went wrong,please try again later");
+        }
+        return null;
     }
 
 
+
 }
+
 

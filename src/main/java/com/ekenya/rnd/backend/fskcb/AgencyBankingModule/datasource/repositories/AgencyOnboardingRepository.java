@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.repositories;
 
+import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.AcquiringOnboardEntity;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.OnboardingStatus;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +34,5 @@ public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardi
         "Or p.agentPhone LIKE CONCAT('%', :query, '%')")
     AgencyOnboardingEntity searchAgent(String query);
 
+    AgencyOnboardingEntity[] findByDsrId(Long dsrId);
 }
