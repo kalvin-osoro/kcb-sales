@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DSRMerchantRequest {
     private Long dsrId;
+    private String profileCode;
 }

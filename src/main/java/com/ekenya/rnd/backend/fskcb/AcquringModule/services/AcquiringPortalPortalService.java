@@ -996,25 +996,58 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             }
             List<ObjectNode>list =new ArrayList<>();
             ObjectMapper mapper =new ObjectMapper();
-            for (AcquiringOnboardEntity acquiringOnboardEntity :acquiringOnboardingsRepository.findByDsrId(model.getDsrId())){
-                ObjectNode objectNode = mapper.createObjectNode();
-                objectNode.put("id", acquiringOnboardEntity.getId());
-                objectNode.put("merchantName", acquiringOnboardEntity.getClientLegalName());
-                objectNode.put("region", acquiringOnboardEntity.getRegion());
-                objectNode.put("status", acquiringOnboardEntity.getStatus().toString());
-                objectNode.put("dateOnborded", acquiringOnboardEntity.getCreatedOn().getTime());
-                objectNode.put("payBillNo", Utility.generateRandomNumber());
-                objectNode.put("tillNo", Utility.generateRandomNumber());
-                objectNode.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
-                objectNode.put("email", acquiringOnboardEntity.getBusinessEmail());
-                objectNode.put("dsrId", acquiringOnboardEntity.getDsrId());
-                ArrayNode arrayNode = mapper.createArrayNode();
-                arrayNode.add(acquiringOnboardEntity.getLongitude());
-                arrayNode.add(acquiringOnboardEntity.getLatitude());
-                objectNode.put("co-ordinates", arrayNode);
-                list.add(objectNode);
+            if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")){
+                for (AcquiringOnboardEntity acquiringOnboardEntity :acquiringOnboardingsRepository.findByDsrId(model.getDsrId())){
+                    ObjectNode objectNode = mapper.createObjectNode();
+                    objectNode.put("id", acquiringOnboardEntity.getId());
+                    objectNode.put("merchantName", acquiringOnboardEntity.getClientLegalName());
+                    objectNode.put("region", acquiringOnboardEntity.getRegion());
+                    objectNode.put("status", acquiringOnboardEntity.getStatus().toString());
+                    objectNode.put("dateOnborded", acquiringOnboardEntity.getCreatedOn().getTime());
+                    objectNode.put("payBillNo", Utility.generateRandomNumber());
+                    objectNode.put("tillNo", Utility.generateRandomNumber());
+                    objectNode.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                    objectNode.put("email", acquiringOnboardEntity.getBusinessEmail());
+                    objectNode.put("dsrId", acquiringOnboardEntity.getDsrId());
+                    ArrayNode arrayNode = mapper.createArrayNode();
+                    arrayNode.add(acquiringOnboardEntity.getLongitude());
+                    arrayNode.add(acquiringOnboardEntity.getLatitude());
+                    objectNode.put("co-ordinates", arrayNode);
+                    list.add(objectNode);
+                }
+                return list;
             }
-            return list;
+            if (model.getProfileCode().equalsIgnoreCase("dfsAgency")){
+                for (AgencyOnboardingEntity agencyOnboardingEntity :agencyOnboardingRepository.findByDsrId(model.getDsrId())){
+                    ObjectNode objectNode =mapper.createObjectNode();
+                    objectNode.put("id", agencyOnboardingEntity.getId());
+                    objectNode.put("businessName", agencyOnboardingEntity.getBusinessName());
+//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
+                    objectNode.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+                    objectNode.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
+                    objectNode.put("status", agencyOnboardingEntity.getStatus().toString());
+                    objectNode.put("remarks", agencyOnboardingEntity.getRemarks());
+                    objectNode.put("branchName", agencyOnboardingEntity.getBranch());
+                    objectNode.put("accountName", agencyOnboardingEntity.getAgentName());
+                    objectNode.put("dsrId", agencyOnboardingEntity.getDsrId());
+                    objectNode.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+                    ObjectNode cordinates = mapper.createObjectNode();
+                    cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+                    cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+                    objectNode.set("cordinates", cordinates);
+                    ObjectNode businessDetails = mapper.createObjectNode();
+                    businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
+                    businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
+                    businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
+                    businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
+                    businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
+                    businessDetails.put("city", agencyOnboardingEntity.getTown());
+                    objectNode.set("businessDetails", businessDetails);
+                    list.add(objectNode);
+                }
+                return list;
+            }
+
         } catch (Exception e) {
             log.error("something went wrong,please try again later");
         }
