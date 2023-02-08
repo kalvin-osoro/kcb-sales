@@ -886,6 +886,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             if (model.getProfileCode().equalsIgnoreCase("dfsAcquiring")) {
                 AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.findById(model.getCustomerId()).get();
                 DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).get();
+                acquiringOnboardEntity.setDsrId(dsrAccountEntity.getId());
                 acquiringOnboardEntity.setDsrName(dsrAccountEntity.getFullName());
                 //set start date from input
                 acquiringOnboardEntity.setIsAssigned(true);
@@ -903,6 +904,7 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
                 AgencyOnboardingEntity agencyOnboarding = agencyOnboardingRepository.findById(model.getCustomerId()).orElseThrow(null);
                 DSRAccountEntity dsrAccountEntity = dsrAccountRepository.findById(model.getDsrId()).orElseThrow(null);
                 agencyOnboarding.setDsrName(dsrAccountEntity.getFullName());
+                agencyOnboarding.setDsrId(dsrAccountEntity.getId());
                 agencyOnboarding.setAssigned(true);
                 agencyOnboardingRepository.save(agencyOnboarding);
                 iQssService.sendAlert(
