@@ -4,12 +4,9 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatu
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
-import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
-import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
-import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
@@ -22,9 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 
@@ -43,6 +38,7 @@ public class CBChannelService implements ICBChannelService {
 
     private final double commission = Math.round(Math.random() * 1000000*1.35)/100.0;
     private final double preCommission = Math.round(Math.random() * 1000000*1.35)/100.0;
+
 
 
 
@@ -312,8 +308,31 @@ public class CBChannelService implements ICBChannelService {
             cbLeadEntity.setTopic(model.getTopic());
             cbLeadEntity.setLeadStatus(LeadStatus.OPEN);
             cbLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
-            //if this lead
             cbLeadsRepository.save(cbLeadEntity);
+            if (model.getBusinessUnit().equalsIgnoreCase("Corporate banking")){
+                //send email to corporate banking email
+//                getEmailContent(model);
+//                sendEmail("davidcharomakuba@gmail.com", subject, message);
+            }
+            if (model.getBusinessUnit().equalsIgnoreCase("Personal Banking")){
+                //send email to
+            }
+            if (model.getBusinessUnit().equalsIgnoreCase("Agency banking")){
+                //send email to email to agency banking email
+            }
+            if (model.getBusinessUnit().equalsIgnoreCase("Retail Banking")){
+                //send email to Retail email
+            }
+            if (model.getBusinessUnit().equalsIgnoreCase("Merchant banking")){
+                //send email to acquiring email
+            }
+            if (model.getBusinessUnit().equalsIgnoreCase("Treasury")){
+                //send email to Treasury email
+            }
+            if (model.getBusinessUnit().equalsIgnoreCase("Vooma")){
+                //send email to vooma
+            }
+
             return true;
 
         } catch (Exception e) {
@@ -321,6 +340,47 @@ public class CBChannelService implements ICBChannelService {
         }
         return false;
     }
+
+    private HashMap<Object, Object> getEmailContent(TreasuryAddLeadRequest model) {
+
+        var result = new HashMap<>();
+        String subject = "New Lead";
+        String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                "There is new lead created.\n" +
+                "Product: " + model.getProduct() + "\n" +
+                "Priority: " + model.getPriority() + "\n" +
+                "From: " + model.getProfileCode()+ "\n" +
+                "Created By: " + model.getDsrName() + "\n\n" +
+                "Thank you.";
+
+        result.put("subject", subject);
+        result.put("message", message);
+
+        return  result;
+
+    }
+//    private void sendMail(TreasuryAddLeadRequest model) {
+//        try {
+//            String subject = "New Lead";
+//            String body = "Dear Team "  + ",\n" +
+//                    "A new Lead  has been created by " + model.getDsrName() + " with the following details:\n" +
+//                    "Customer Name: " + model.getCustomerName() + "\n" +
+//                    "Product: " + model.getProduct() + "\n" +
+//                    "Estimated Lead Value: " + model.getLeadValue() + "\n" +
+//                    "Lead Priority: " + model.getPriority() + "\n" +
+//                    "from: " + model.getProfileCode() + "\n" +
+//                    "Kindly attend to this request as soon as possible.\n" +
+//                    "Thank you.";
+//            mailSender.send(new MimeMessagePreparator() {
+//                @Override
+//                public void prepare(MimeMessage mimeMessage) throws Exception {
+//                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+//                    message.setFrom("rndproducts@eclectics.io");
+//                    message.setTo("davidcharomakuba@gmail.com");
+//                    message.setSubject(subject);
+//                    message.setText(body, false);
+//                }
+//            });
 
 
     @Override
