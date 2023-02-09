@@ -4,11 +4,15 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.LeadStatu
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.repositories.*;
+import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.CBGetLeadsByDsrIdRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DSRSummaryRequest;
+import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
+import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
 import com.ekenya.rnd.backend.utils.Utility;
@@ -17,9 +21,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 
@@ -29,6 +40,7 @@ public class CBChannelService implements ICBChannelService {
     private final ICBLeadsRepository cbLeadsRepository;
     private final CBCustomerAppointmentRMRepository cbCustomerAppointmentRMRepository;
     private final CBOpportunitiesRepository cbOpportunitiesRepository;
+    private  final JavaMailSender mailSender;
     private final CBCustomerAppointmentRepository cbCustomerAppointmentRepository;
     private final CBConcessionRepository cbConcessionRepository;
     private final CBCustomerVisitRepository cbCustomerVisitRepository;
@@ -311,26 +323,87 @@ public class CBChannelService implements ICBChannelService {
             cbLeadsRepository.save(cbLeadEntity);
             if (model.getBusinessUnit().equalsIgnoreCase("Corporate banking")){
                 //send email to corporate banking email
-//                getEmailContent(model);
-//                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Personal Banking")){
                 //send email to
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Agency banking")){
                 //send email to email to agency banking email
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Retail Banking")){
                 //send email to Retail email
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Merchant banking")){
                 //send email to acquiring email
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Treasury")){
                 //send email to Treasury email
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Vooma")){
                 //send email to vooma
+                String subject = "New Lead";
+                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                        "There is new lead created.\n" +
+                        "Product: " + model.getProduct() + "\n" +
+                        "Priority: " + model.getPriority() + "\n" +
+                        "From: " + model.getProfileCode()+ "\n" +
+                        "Created By: " + model.getDsrName() + "\n\n" +
+                        "Thank you.";
+                sendEmail("davidcharomakuba@gmail.com", subject, message);
             }
 
             return true;
@@ -339,25 +412,6 @@ public class CBChannelService implements ICBChannelService {
             log.error("Error occurred while creating lead", e);
         }
         return false;
-    }
-
-    private HashMap<Object, Object> getEmailContent(TreasuryAddLeadRequest model) {
-
-        var result = new HashMap<>();
-        String subject = "New Lead";
-        String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                "There is new lead created.\n" +
-                "Product: " + model.getProduct() + "\n" +
-                "Priority: " + model.getPriority() + "\n" +
-                "From: " + model.getProfileCode()+ "\n" +
-                "Created By: " + model.getDsrName() + "\n\n" +
-                "Thank you.";
-
-        result.put("subject", subject);
-        result.put("message", message);
-
-        return  result;
-
     }
 //    private void sendMail(TreasuryAddLeadRequest model) {
 //        try {
@@ -381,6 +435,18 @@ public class CBChannelService implements ICBChannelService {
 //                    message.setText(body, false);
 //                }
 //            });
+
+    private void sendEmail(String email, String subject, String message) {
+        try {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(email);
+            msg.setSubject(subject);
+            msg.setText(message);
+            mailSender.send(msg);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+    }
 
 
     @Override
