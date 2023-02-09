@@ -323,87 +323,30 @@ public class CBChannelService implements ICBChannelService {
             cbLeadsRepository.save(cbLeadEntity);
             if (model.getBusinessUnit().equalsIgnoreCase("Corporate banking")){
                 //send email to corporate banking email
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Personal Banking")){
                 //send email to
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Agency banking")){
                 //send email to email to agency banking email
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Retail Banking")){
                 //send email to Retail email
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Merchant banking")){
                 //send email to acquiring email
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Treasury")){
-                //send email to Treasury email
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
             if (model.getBusinessUnit().equalsIgnoreCase("Vooma")){
                 //send email to vooma
-                String subject = "New Lead";
-                String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
-                        "There is new lead created.\n" +
-                        "Product: " + model.getProduct() + "\n" +
-                        "Priority: " + model.getPriority() + "\n" +
-                        "From: " + model.getProfileCode()+ "\n" +
-                        "Created By: " + model.getDsrName() + "\n\n" +
-                        "Thank you.";
-                sendEmail("davidcharomakuba@gmail.com", subject, message);
+                leadEmail(model,"davidcharomakuba@gmail.com");
             }
 
             return true;
@@ -413,28 +356,18 @@ public class CBChannelService implements ICBChannelService {
         }
         return false;
     }
-//    private void sendMail(TreasuryAddLeadRequest model) {
-//        try {
-//            String subject = "New Lead";
-//            String body = "Dear Team "  + ",\n" +
-//                    "A new Lead  has been created by " + model.getDsrName() + " with the following details:\n" +
-//                    "Customer Name: " + model.getCustomerName() + "\n" +
-//                    "Product: " + model.getProduct() + "\n" +
-//                    "Estimated Lead Value: " + model.getLeadValue() + "\n" +
-//                    "Lead Priority: " + model.getPriority() + "\n" +
-//                    "from: " + model.getProfileCode() + "\n" +
-//                    "Kindly attend to this request as soon as possible.\n" +
-//                    "Thank you.";
-//            mailSender.send(new MimeMessagePreparator() {
-//                @Override
-//                public void prepare(MimeMessage mimeMessage) throws Exception {
-//                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-//                    message.setFrom("rndproducts@eclectics.io");
-//                    message.setTo("davidcharomakuba@gmail.com");
-//                    message.setSubject(subject);
-//                    message.setText(body, false);
-//                }
-//            });
+
+    private void leadEmail(TreasuryAddLeadRequest model,String email) {
+        String subject = "New Lead";
+        String message = "Dear " + model.getBusinessUnit()+ "Team" + ",\n\n" +
+                "There is new lead created.\n" +
+                "Product: " + model.getProduct() + "\n" +
+                "Priority: " + model.getPriority() + "\n" +
+                "From: " + model.getProfileCode()+ "\n" +
+                "Created By: " + model.getDsrName() + "\n\n" +
+                "Thank you.";
+        sendEmail( email,subject, message);
+    }
 
     private void sendEmail(String email, String subject, String message) {
         try {
