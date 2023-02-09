@@ -1323,8 +1323,8 @@ public class VoomaPortalService implements IVoomaPortalService {
                 ObjectNode objectNode = mapper.createObjectNode();
                 ObjectNode node = mapper.createObjectNode();
                 node.put("id", questionerResponse.getId());
-                node.put("response", questionerResponse.getResponse());
-                node.put("question", questionerResponse.getQuestion());
+//                node.put("response", questionerResponse.getResponse());
+//                node.put("question", questionerResponse.getQuestion());
                 node.put("respodent", questionerResponse.getCustomerName());
                 node.put("nationalId", questionerResponse.getNationalId());
                 node.put("accountNumber", questionerResponse.getAccountNo());
