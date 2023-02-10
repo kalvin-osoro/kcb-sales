@@ -36,5 +36,5 @@ public interface AgencyOnboardingRepository extends JpaRepository<AgencyOnboardi
 
     AgencyOnboardingEntity[] findByDsrId(Long dsrId);
 
-    AgencyOnboardingEntity findByAgentNameContainingIgnoreCase(String keyword);
+    AgencyOnboardingEntity[] findByAgentNameContainingIgnoreCase(String keyword);
 }

@@ -114,14 +114,14 @@ public class AgencyChannelCustomer360VC {
 
     @PostMapping(value = "/search-agent")
     public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
-        Object agent =agencyChannelService.searchAgent(model);
+      List<?> agent =agencyChannelService.searchAgent(model);
         boolean success = agent != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if (success) {
             //return merchant object
-            ObjectNode node = objectMapper.createObjectNode();
-            node.putArray("agent").add(objectMapper.valueToTree(agent));
+            ArrayNode node =objectMapper.createArrayNode();
+            node.addAll((List)agent);
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {

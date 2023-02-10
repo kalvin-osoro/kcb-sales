@@ -613,44 +613,45 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public Object searchAgent(AgencySearchRequest model) {
+    public List<Object> searchAgent(AgencySearchRequest model) {
         try {
             if (model == null) {
                 return null;
             }
-            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findByAgentNameContainingIgnoreCase(model.getKeyword());
-            if (agencyOnboardingEntity == null) {
-                return null;
-            }
+
+            List<Object>list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            ObjectNode asset = mapper.createObjectNode();
-            asset.put("id", agencyOnboardingEntity.getId());
-            asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
-            asset.put("agencyName", agencyOnboardingEntity.getAgentName());
-            asset.put("id", agencyOnboardingEntity.getId());
-            asset.put("businessName", agencyOnboardingEntity.getBusinessName());
+            for (AgencyOnboardingEntity  agencyOnboardingEntity : agencyOnboardingRepository.findByAgentNameContainingIgnoreCase(model.getKeyword())){
+                ObjectNode asset = mapper.createObjectNode();
+                asset.put("id", agencyOnboardingEntity.getId());
+                asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
+                asset.put("agencyName", agencyOnboardingEntity.getAgentName());
+                asset.put("id", agencyOnboardingEntity.getId());
+                asset.put("businessName", agencyOnboardingEntity.getBusinessName());
 //            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
-            asset.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
-            asset.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
-            asset.put("status", agencyOnboardingEntity.getStatus().toString());
-            asset.put("remarks", agencyOnboardingEntity.getRemarks());
-            asset.put("branchName", agencyOnboardingEntity.getBranch());
-            asset.put("accountName", agencyOnboardingEntity.getAgentName());
-            asset.put("dsrId", agencyOnboardingEntity.getDsrId());
-            asset.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
-            ObjectNode cordinates = mapper.createObjectNode();
-            cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
-            cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
-            asset.set("cordinates", cordinates);
-            ObjectNode businessDetails = mapper.createObjectNode();
-            businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
-            businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
-            businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
-            businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
-            businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
-            businessDetails.put("city", agencyOnboardingEntity.getTown());
-            asset.set("businessDetails", businessDetails);
-            return asset;
+                asset.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
+                asset.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
+                asset.put("status", agencyOnboardingEntity.getStatus().toString());
+                asset.put("remarks", agencyOnboardingEntity.getRemarks());
+                asset.put("branchName", agencyOnboardingEntity.getBranch());
+                asset.put("accountName", agencyOnboardingEntity.getAgentName());
+                asset.put("dsrId", agencyOnboardingEntity.getDsrId());
+                asset.put("createdOn", agencyOnboardingEntity.getCreatedOn().getTime());
+                ObjectNode cordinates = mapper.createObjectNode();
+                cordinates.put("latitude", agencyOnboardingEntity.getLatitude());
+                cordinates.put("longitude", agencyOnboardingEntity.getLongitude());
+                asset.set("cordinates", cordinates);
+                ObjectNode businessDetails = mapper.createObjectNode();
+                businessDetails.put("businessName", agencyOnboardingEntity.getBusinessName());
+                businessDetails.put("nearbyLandMark", agencyOnboardingEntity.getStreetName());
+                businessDetails.put("pobox", agencyOnboardingEntity.getAgentPbox());
+                businessDetails.put("postalCode", agencyOnboardingEntity.getAgentPostalCode());
+                businessDetails.put("natureOfBusiness", agencyOnboardingEntity.getBusinessType());
+                businessDetails.put("city", agencyOnboardingEntity.getTown());
+                asset.set("businessDetails", businessDetails);
+                list.add(asset);
+            }
+            return list;
         } catch (Exception e) {
             log.error("Error occurred while searching agent", e);
         }
