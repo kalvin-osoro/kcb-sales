@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GetRQuestionnaireRequest {
     private  Long questionnaireId;
+
 }

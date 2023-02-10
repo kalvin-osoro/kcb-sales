@@ -1312,29 +1312,43 @@ public class VoomaPortalService implements IVoomaPortalService {
     }
 
     @Override
-    public List<ObjectNode> getQuestionnaireResponses(GetRQuestionnaireRequest model) {
+    public ObjectNode getQuestionnaireResponses(GetRQuestionnaireRequest model) {
         try {
             if (model == null) {
                 return null;
             }
-            List<ObjectNode> list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
-            for (DFSVOOMAQuestionerResponseEntity questionerResponse : questionResponseRepository.findByQuestionnaireId(model.getQuestionnaireId())) {
+            QuestionnaireEntity questionnaireEntity = questionnaireRepository.findById(model.getQuestionnaireId()).orElseThrow((()-> new ResourceNotFoundException("questionnaire","id", model.getQuestionnaireId())));
                 ObjectNode objectNode = mapper.createObjectNode();
                 ObjectNode node = mapper.createObjectNode();
-                node.put("id", questionerResponse.getId());
-//                node.put("response", questionerResponse.getResponse());
-//                node.put("question", questionerResponse.getQuestion());
-                node.put("respodent", questionerResponse.getCustomerName());
-                node.put("nationalId", questionerResponse.getNationalId());
-                node.put("accountNumber", questionerResponse.getAccountNo());
-                Long questionnaireId = questionerResponse.getQuestionnaireId();
-                QuestionnaireEntity questionnaireEntity = questionnaireRepository.findById(questionnaireId).get();
-                node.put("questionnaireTitle", questionnaireEntity.getQuestionnaireTitle());
-                node.put("createdOn", questionerResponse.getCreatedOn() ==null ? null :questionerResponse.getCreatedOn().getTime());
-                list.add(node);
-            }
-            return list;
+                node.put("id", questionnaireEntity.getId());
+                node.put("questionnaireName", questionnaireEntity.getQuestionnaireTitle());
+                node.put("createdOn", questionnaireEntity.getCreatedOn() ==null ? null :questionnaireEntity.getCreatedOn().getTime());
+                //list of questions and responses
+                List<QuestionEntity> questionEntityList = questionRepository.findAll();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                for (QuestionEntity questionEntity : questionEntityList) {
+                    ObjectNode objectNode1 = mapper.createObjectNode();
+                    objectNode1.put("id", questionEntity.getId());
+                    objectNode1.put("question", questionEntity.getQuestion());
+                    objectNode1.put("questionType", questionEntity.getQuestionType().toString());
+                    //list of responses based on questionnaireId
+                   List<DFSVOOMAQuestionerResponseEntity> questionResponseEntities = questionResponseRepository.findByQuestionId(questionEntity.getId());
+                    ArrayNode arrayNode1 = mapper.createArrayNode();
+                    for (DFSVOOMAQuestionerResponseEntity questionResponseEntity : questionResponseEntities) {
+                        ObjectNode objectNode2 = mapper.createObjectNode();
+                        objectNode2.put("id", questionResponseEntity.getId());
+                        objectNode2.put("respondent", questionResponseEntity.getCustomerName());
+                        objectNode2.put("response", questionResponseEntity.getResponse());
+                        arrayNode1.add(objectNode2);
+                    }
+                    objectNode1.put("responses", arrayNode1);
+                    arrayNode.add(objectNode1);
+                }
+                objectNode.put("questionnaire", node);
+                node.put("questions", arrayNode);
+                return objectNode;
+
         } catch (Exception ex) {
             log.error("something went,try again later");
         }

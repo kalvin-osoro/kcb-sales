@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryAddLeadRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
@@ -98,4 +99,8 @@ public interface IVoomaChannelService {
     boolean createCustomerResponses(QuestionResponseRequest model);
 
     List<ObjectNode> getAllQuestion(GetQuestionRequest model);
+
+    Object searchMerchant(AgencySearchRequest model);
+
+    Object searchAgent(AgencySearchRequest model);
 }

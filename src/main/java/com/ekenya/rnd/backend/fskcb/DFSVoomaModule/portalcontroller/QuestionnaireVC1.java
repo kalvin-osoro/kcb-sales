@@ -69,15 +69,15 @@ public class QuestionnaireVC1 {
     }
     @PostMapping("/get-questionnaire-response")
     public ResponseEntity<?> getQuestionnaireById(@RequestBody GetRQuestionnaireRequest model) {
-        List<?> questionnaireV1 = voomaPortalService.getQuestionnaireResponses(model);
-        boolean success = questionnaireV1 != null;
+        ObjectNode objectNode = voomaPortalService.getQuestionnaireResponses(model);
+        boolean success = objectNode != null;
 
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if(success){
             //Object
-            ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((List)questionnaireV1);
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("responses").add(objectMapper.valueToTree(objectNode));
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
         }else{

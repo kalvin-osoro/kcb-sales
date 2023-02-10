@@ -37,7 +37,7 @@ public class CBLeadsVC {
         }
     }
 
-    //List all leads
+    //List all leads...
     @PostMapping(value = "/cb-get-all-leads")
     public ResponseEntity<?> getAllLeads() {
         List<?>list = cbService.getAllLeads();

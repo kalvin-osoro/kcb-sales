@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.channelcontrollers;
 
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.DFSVoomaOnboardRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.VoomaCustomerOnboardingRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services.IVoomaChannelService;
@@ -148,7 +149,49 @@ public class  VoomaChannelOnboardingVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //
+    @PostMapping(value = "/search-vooma-merchant")
+    public ResponseEntity<?> searchMerchant(@RequestBody AgencySearchRequest model) {
+        Object agent =voomaChannelService.searchMerchant(model);
+        boolean success = agent != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("merchant").add(objectMapper.valueToTree(agent));
 
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
+    }
+
+    //agent
+    @PostMapping(value = "/search-vooma-agent")
+    public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
+        Object agent =voomaChannelService.searchAgent(model);
+        boolean success = agent != null;
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (success) {
+            //return merchant object
+            ObjectNode node = objectMapper.createObjectNode();
+            node.putArray("agent").add(objectMapper.valueToTree(agent));
+
+            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+        } else {
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+        }
+
+
+    }
 
 
 

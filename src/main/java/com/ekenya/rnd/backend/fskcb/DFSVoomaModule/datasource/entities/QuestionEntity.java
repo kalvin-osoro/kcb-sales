@@ -8,6 +8,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +28,7 @@ public class QuestionEntity {
     @ManyToOne
     @JoinColumn(name = "questionnaireId")
     private QuestionnaireEntity questionnaireEntity;
+
+    @OneToMany(mappedBy="questionEntity", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<DFSVOOMAQuestionerResponseEntity> responseEntities = new ArrayList<>();
 }

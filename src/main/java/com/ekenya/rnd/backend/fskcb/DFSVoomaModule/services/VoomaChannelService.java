@@ -4,8 +4,10 @@ import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetFileRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AcquiringAssetRepository;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.datasource.repositories.AssetLogsRepository;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.AgencyOnboardingEntity;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.datasource.entities.TargetType;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
+import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.services.AgencySearchRequest;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBJustificationEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.models.reqs.CBJustificationRequest;
@@ -1163,5 +1165,56 @@ public class VoomaChannelService implements IVoomaChannelService {
         return null;
     }
 
+    @Override
+    public Object searchMerchant(AgencySearchRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1 = dfsVoomaMerchantOnboardV1Repository.searchAgent(model.getKeyword());
+            if (dfsVoomaMerchantOnboardV1 == null) {
+                return null;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode = mapper.createObjectNode();
 
-}
+            return objectNode;
+        } catch (Exception e) {
+            log.error("Error occurred while searching agent", e);
+        }
+
+
+        return null;
+    }
+
+    @Override
+    public Object searchAgent(AgencySearchRequest model) {
+        try {
+            if (model == null) {
+                return null;
+            }
+            DFSVoomaAgentOnboardV1 agentOnboardV1 = dfsVoomaAgentOnboardV1Repository.searchAgent(model.getKeyword());
+            if (agentOnboardV1 == null) {
+                return null;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode objectNode =mapper.createObjectNode();
+            objectNode.put("id", agentOnboardV1.getId());
+            objectNode.put("agentName", agentOnboardV1.getAccountName());
+            objectNode.put("email", agentOnboardV1.getBusinessEmail());
+            objectNode.put("paybill", Utility.generateRandomNumber());
+            objectNode.put("till", Utility.generateRandomNumber());
+            objectNode.put("createdOn", agentOnboardV1.getCreatedOn().getTime());
+            objectNode.put("region", agentOnboardV1.getCityOrTown());
+            return objectNode;
+        } catch (Exception e) {
+            log.error("Error occurred while searching agent", e);
+        }
+
+
+        return null;
+    }
+    }
+
+
+
