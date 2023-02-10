@@ -618,7 +618,7 @@ public class AgencyChannelService implements IAgencyChannelService {
             if (model == null) {
                 return null;
             }
-            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.searchAgent(model.getKeyword());
+            AgencyOnboardingEntity agencyOnboardingEntity = agencyOnboardingRepository.findByAgentNameContainingIgnoreCase(model.getKeyword());
             if (agencyOnboardingEntity == null) {
                 return null;
             }

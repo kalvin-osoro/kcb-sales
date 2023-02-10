@@ -16,6 +16,8 @@ public interface DFSVoomaAgentOnboardV1Repository extends JpaRepository<DFSVooma
 
 
     Iterable<? extends DFSVoomaAgentOnboardV1> findByOnboardingStatus(OnboardingStatus approved);
-    @Query(value = "SELECT * FROM dfs_vooma_Agent_onboardingV1 WHERE organisationName LIKE %?1% OR businessPhoneNumber LIKE %?1% OR  accountName LIKE %?1% and status='APPROVED' ", nativeQuery = true)
+    @Query(value = "SELECT * FROM dfs_vooma_Agent_onboardingV1 WHERE organisationName LIKE '%?1%'; OR businessPhoneNumber LIKE '%?1%' OR  accountName LIKE '%?1%' and status='APPROVED' ", nativeQuery = true)
     DFSVoomaAgentOnboardV1 searchAgent(String keyword);
+
+
 }
