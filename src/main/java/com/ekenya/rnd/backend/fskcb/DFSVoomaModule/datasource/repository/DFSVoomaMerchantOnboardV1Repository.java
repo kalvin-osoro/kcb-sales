@@ -14,7 +14,7 @@ public interface DFSVoomaMerchantOnboardV1Repository extends JpaRepository<DFSVo
     Iterable<DFSVoomaMerchantOnboardV1> findAllByIsApproved();
 
     Optional<Object> findByAccountNumber(Integer accountNumber);
-    @Query(value = "SELECT * FROM dbo_dfs_vooma_merchant_onboard WHERE tradingName LIKE %?1% OR businessName LIKE %?1% OR  accountName LIKE %?1% and status='APPROVED' ", nativeQuery = true)
+    @Query(value = "SELECT * FROM dbo_dfs_vooma_merchant_onboard WHERE tradingName LIKE %?1% OR businessName LIKE %?1% OR  accountName LIKE %?1% ", nativeQuery = true)
     DFSVoomaMerchantOnboardV1 searchAgent(String keyword);
 
 

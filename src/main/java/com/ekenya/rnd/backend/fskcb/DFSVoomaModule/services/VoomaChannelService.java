@@ -1171,14 +1171,44 @@ public class VoomaChannelService implements IVoomaChannelService {
             if (model == null) {
                 return null;
             }
-            DFSVoomaMerchantOnboardV1 dfsVoomaMerchantOnboardV1 = dfsVoomaMerchantOnboardV1Repository.searchAgent(model.getKeyword());
-            if (dfsVoomaMerchantOnboardV1 == null) {
+            DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity = dfsVoomaMerchantOnboardV1Repository.searchAgent(model.getKeyword());
+            if (dfsVoomaOnboardEntity == null) {
                 return null;
             }
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", dfsVoomaOnboardEntity.getId());
+            objectNode.put("businessName", dfsVoomaOnboardEntity.getBusinessName());
+//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
+            objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getOutletPhoneNumber());
+            objectNode.put("businessEmail", dfsVoomaOnboardEntity.getBusinessEmailAddress());
+            objectNode.put("status", dfsVoomaOnboardEntity.getOnboardingStatus().toString());
+            objectNode.put("remarks", dfsVoomaOnboardEntity.getRemarks());
+            objectNode.put("branchName", dfsVoomaOnboardEntity.getBranchName());
+            objectNode.put("accountName", dfsVoomaOnboardEntity.getAccountName());
+            objectNode.put("accountNumber", dfsVoomaOnboardEntity.getAccountNumber());
+            objectNode.put("settlementType", dfsVoomaOnboardEntity.getSettlmentType().toString());
+//            objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
+            objectNode.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+            ObjectNode cordinates = mapper.createObjectNode();
+            cordinates.put("latitude", dfsVoomaOnboardEntity.getLatitude());
+            cordinates.put("longitude", dfsVoomaOnboardEntity.getLongitude());
+            objectNode.set("cordinates", cordinates);
+            ObjectNode businessDetails = mapper.createObjectNode();
+            businessDetails.put("businessName", dfsVoomaOnboardEntity.getTradingName());
+            businessDetails.put("nearbyLandMark", dfsVoomaOnboardEntity.getNearestLandmark());
+            businessDetails.put("pobox", dfsVoomaOnboardEntity.getPostalAddress());
+            businessDetails.put("KRAPin", dfsVoomaOnboardEntity.getBusinessKraPin());
+            businessDetails.put("postalCode", dfsVoomaOnboardEntity.getPostalCode());
+            businessDetails.put("natureOfBusiness", dfsVoomaOnboardEntity.getNatureOfBusiness());
+            businessDetails.put("VATNumber", dfsVoomaOnboardEntity.getVATNumber());
+            businessDetails.put("voomaTill", dfsVoomaOnboardEntity.getWantTillNumber());
+            businessDetails.put("voomaPaybill", dfsVoomaOnboardEntity.getWantPaybillNumber());
+            businessDetails.put("city", dfsVoomaOnboardEntity.getCityOrTown());
+            objectNode.set("businessDetails", businessDetails);
 
             return objectNode;
+
         } catch (Exception e) {
             log.error("Error occurred while searching agent", e);
         }
