@@ -702,34 +702,34 @@ try {
     }
 
     @Override
-    public Object searchAgent(AgencySearchRequest model) {
+    public List<ObjectNode> searchAgent(AgencySearchRequest model) {
         try {
             if (model == null) {
                 return null;
             }
-            AcquiringOnboardEntity acquiringOnboardEntity = acquiringOnboardingsRepository.searchAgent(model.getKeyword());
-            if (acquiringOnboardEntity == null) {
-                return null;
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper =new ObjectMapper();
+            for (AcquiringOnboardEntity acquiringOnboardEntity : acquiringOnboardingsRepository.findByClientLegalNameIsContainingIgnoreCase(model.getKeyword())){
+                ObjectNode asset =mapper.createObjectNode();
+                asset.put("id", acquiringOnboardEntity.getId());
+                asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
+                asset.put("Region", acquiringOnboardEntity.getRegion());
+                asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
+                asset.put("email", acquiringOnboardEntity.getBusinessEmail());
+                asset.put("accountnumber", acquiringOnboardEntity.getAccountNumber());
+                asset.put("status", acquiringOnboardEntity.getStatus().toString());
+                asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
+                ObjectNode cordinates = mapper.createObjectNode();
+                cordinates.put("latitude", acquiringOnboardEntity.getLatitude());
+                cordinates.put("longitude", acquiringOnboardEntity.getLongitude());
+                asset.put("cordinates", cordinates);
+                ObjectNode businessDetails = mapper.createObjectNode();
+                businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
+                businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
+                asset.set("businessDetails", businessDetails);
+                list.add(asset);
             }
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode asset = mapper.createObjectNode();
-            asset.put("id", acquiringOnboardEntity.getId());
-            asset.put("merchantName", acquiringOnboardEntity.getClientLegalName());
-            asset.put("Region", acquiringOnboardEntity.getRegion());
-            asset.put("phoneNumber", acquiringOnboardEntity.getBusinessPhoneNumber());
-            asset.put("email", acquiringOnboardEntity.getBusinessEmail());
-            asset.put("accountnumber", acquiringOnboardEntity.getAccountNumber());
-            asset.put("status", acquiringOnboardEntity.getStatus().toString());
-            asset.put("createdOn", acquiringOnboardEntity.getCreatedOn().getTime());
-            ObjectNode cordinates = mapper.createObjectNode();
-            cordinates.put("latitude", acquiringOnboardEntity.getLatitude());
-            cordinates.put("longitude", acquiringOnboardEntity.getLongitude());
-            asset.put("cordinates", cordinates);
-            ObjectNode businessDetails = mapper.createObjectNode();
-            businessDetails.put("businessName", acquiringOnboardEntity.getBusinessName());
-            businessDetails.put("physicalLocation", acquiringOnboardEntity.getRegion());
-            asset.set("businessDetails", businessDetails);
-            return asset;
+            return list;
         } catch (Exception e) {
             log.error("Error occurred while searching agent", e);
         }
@@ -772,9 +772,6 @@ try {
 
         return null;
     }
-
-    //
-
     }
 
 

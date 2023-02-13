@@ -8,10 +8,13 @@ import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch/")
@@ -152,14 +155,15 @@ public class  VoomaChannelOnboardingVC {
     //
     @PostMapping(value = "/search-vooma-merchant")
     public ResponseEntity<?> searchMerchant(@RequestBody AgencySearchRequest model) {
-        Object agent =voomaChannelService.searchMerchant(model);
+        List<?> agent =voomaChannelService.searchMerchant(model);
         boolean success = agent != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if (success) {
             //return merchant object
-            ObjectNode node = objectMapper.createObjectNode();
-            node.putArray("merchant").add(objectMapper.valueToTree(agent));
+            ArrayNode node =objectMapper.createArrayNode();
+            node.addAll((List)agent);
+
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {
@@ -174,14 +178,14 @@ public class  VoomaChannelOnboardingVC {
     //agent
     @PostMapping(value = "/search-vooma-agent")
     public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
-        Object agent =voomaChannelService.searchAgent(model);
+        List<?> agent =voomaChannelService.searchAgent(model);
         boolean success = agent != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if (success) {
             //return merchant object
-            ObjectNode node = objectMapper.createObjectNode();
-            node.putArray("agent").add(objectMapper.valueToTree(agent));
+            ArrayNode node= objectMapper.createArrayNode();
+            node.addAll((List)agent);
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {

@@ -67,7 +67,7 @@ public interface IAcquiringChannelService {
 
     Object getAssetById(AssetByIdRequest model);
 
-    Object searchAgent(AgencySearchRequest model);
+    List<ObjectNode> searchAgent(AgencySearchRequest model);
 
     List<ObjectNode> getDSRAgent(DSRAgent model);
 }

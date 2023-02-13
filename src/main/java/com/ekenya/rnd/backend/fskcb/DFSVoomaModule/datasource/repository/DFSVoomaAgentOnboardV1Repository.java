@@ -20,4 +20,5 @@ public interface DFSVoomaAgentOnboardV1Repository extends JpaRepository<DFSVooma
     DFSVoomaAgentOnboardV1 searchAgent(String keyword);
 
 
+    DFSVoomaAgentOnboardV1[] findByAccountNameContainingIgnoreCase(String keyword);
 }

@@ -37,4 +37,6 @@ public interface IAcquiringOnboardingsRepository extends JpaRepository<Acquiring
     List<AcquiringOnboardEntity>findByDsrNameEqualsIgnoreCaseAndStatus(String dsrName,OnboardingStatus approved);
 
     Iterable<? extends AcquiringOnboardEntity> findByDsrId(Long dsrId);
+
+    AcquiringOnboardEntity[] findByClientLegalNameIsContainingIgnoreCase(String keyword);
 }

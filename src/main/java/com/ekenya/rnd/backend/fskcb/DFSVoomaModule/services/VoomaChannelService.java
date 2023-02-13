@@ -1166,48 +1166,51 @@ public class VoomaChannelService implements IVoomaChannelService {
     }
 
     @Override
-    public Object searchMerchant(AgencySearchRequest model) {
+    public List<ObjectNode> searchMerchant(AgencySearchRequest model) {
         try {
             if (model == null) {
                 return null;
             }
-            DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity = dfsVoomaMerchantOnboardV1Repository.searchAgent(model.getKeyword());
-            if (dfsVoomaOnboardEntity == null) {
-                return null;
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode objectNode = mapper.createObjectNode();
-            objectNode.put("id", dfsVoomaOnboardEntity.getId());
-            objectNode.put("businessName", dfsVoomaOnboardEntity.getBusinessName());
+           List<ObjectNode> list = new ArrayList<>();
+           ObjectMapper mapper = new ObjectMapper();
+           for (DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity : dfsVoomaMerchantOnboardV1Repository.findByAccountNameContainingIgnoreCase(model.getKeyword())){
+               if (dfsVoomaOnboardEntity ==null){
+                   log.error("Merchant does not exist {}",model.getKeyword());
+                   return null;
+               }
+               ObjectNode objectNode =mapper.createObjectNode();
+               objectNode.put("id", dfsVoomaOnboardEntity.getId());
+               objectNode.put("businessName", dfsVoomaOnboardEntity.getBusinessName());
 //            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
-            objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getOutletPhoneNumber());
-            objectNode.put("businessEmail", dfsVoomaOnboardEntity.getBusinessEmailAddress());
-            objectNode.put("status", dfsVoomaOnboardEntity.getOnboardingStatus().toString());
-            objectNode.put("remarks", dfsVoomaOnboardEntity.getRemarks());
-            objectNode.put("branchName", dfsVoomaOnboardEntity.getBranchName());
-            objectNode.put("accountName", dfsVoomaOnboardEntity.getAccountName());
-            objectNode.put("accountNumber", dfsVoomaOnboardEntity.getAccountNumber());
-            objectNode.put("settlementType", dfsVoomaOnboardEntity.getSettlmentType().toString());
+               objectNode.put("phoneNumber", dfsVoomaOnboardEntity.getOutletPhoneNumber());
+               objectNode.put("businessEmail", dfsVoomaOnboardEntity.getBusinessEmailAddress());
+               objectNode.put("status", dfsVoomaOnboardEntity.getOnboardingStatus().toString());
+               objectNode.put("remarks", dfsVoomaOnboardEntity.getRemarks());
+               objectNode.put("branchName", dfsVoomaOnboardEntity.getBranchName());
+               objectNode.put("accountName", dfsVoomaOnboardEntity.getAccountName());
+               objectNode.put("accountNumber", dfsVoomaOnboardEntity.getAccountNumber());
+               objectNode.put("settlementType", dfsVoomaOnboardEntity.getSettlmentType().toString());
 //            objectNode.put("dsrId", dfsVoomaOnboardEntity.getDsrId());
-            objectNode.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
-            ObjectNode cordinates = mapper.createObjectNode();
-            cordinates.put("latitude", dfsVoomaOnboardEntity.getLatitude());
-            cordinates.put("longitude", dfsVoomaOnboardEntity.getLongitude());
-            objectNode.set("cordinates", cordinates);
-            ObjectNode businessDetails = mapper.createObjectNode();
-            businessDetails.put("businessName", dfsVoomaOnboardEntity.getTradingName());
-            businessDetails.put("nearbyLandMark", dfsVoomaOnboardEntity.getNearestLandmark());
-            businessDetails.put("pobox", dfsVoomaOnboardEntity.getPostalAddress());
-            businessDetails.put("KRAPin", dfsVoomaOnboardEntity.getBusinessKraPin());
-            businessDetails.put("postalCode", dfsVoomaOnboardEntity.getPostalCode());
-            businessDetails.put("natureOfBusiness", dfsVoomaOnboardEntity.getNatureOfBusiness());
-            businessDetails.put("VATNumber", dfsVoomaOnboardEntity.getVATNumber());
-            businessDetails.put("voomaTill", dfsVoomaOnboardEntity.getWantTillNumber());
-            businessDetails.put("voomaPaybill", dfsVoomaOnboardEntity.getWantPaybillNumber());
-            businessDetails.put("city", dfsVoomaOnboardEntity.getCityOrTown());
-            objectNode.set("businessDetails", businessDetails);
-
-            return objectNode;
+               objectNode.put("createdOn", dfsVoomaOnboardEntity.getCreatedOn().getTime());
+               ObjectNode cordinates = mapper.createObjectNode();
+               cordinates.put("latitude", dfsVoomaOnboardEntity.getLatitude());
+               cordinates.put("longitude", dfsVoomaOnboardEntity.getLongitude());
+               objectNode.set("cordinates", cordinates);
+               ObjectNode businessDetails = mapper.createObjectNode();
+               businessDetails.put("businessName", dfsVoomaOnboardEntity.getTradingName());
+               businessDetails.put("nearbyLandMark", dfsVoomaOnboardEntity.getNearestLandmark());
+               businessDetails.put("pobox", dfsVoomaOnboardEntity.getPostalAddress());
+               businessDetails.put("KRAPin", dfsVoomaOnboardEntity.getBusinessKraPin());
+               businessDetails.put("postalCode", dfsVoomaOnboardEntity.getPostalCode());
+               businessDetails.put("natureOfBusiness", dfsVoomaOnboardEntity.getNatureOfBusiness());
+               businessDetails.put("VATNumber", dfsVoomaOnboardEntity.getVATNumber());
+               businessDetails.put("voomaTill", dfsVoomaOnboardEntity.getWantTillNumber());
+               businessDetails.put("voomaPaybill", dfsVoomaOnboardEntity.getWantPaybillNumber());
+               businessDetails.put("city", dfsVoomaOnboardEntity.getCityOrTown());
+               objectNode.set("businessDetails", businessDetails);
+               list.add(objectNode);
+           }
+           return  list;
 
         } catch (Exception e) {
             log.error("Error occurred while searching agent", e);
@@ -1218,29 +1221,32 @@ public class VoomaChannelService implements IVoomaChannelService {
     }
 
     @Override
-    public Object searchAgent(AgencySearchRequest model) {
+    public List<ObjectNode> searchAgent(AgencySearchRequest model) {
         try {
             if (model == null) {
                 return null;
             }
-            DFSVoomaAgentOnboardV1 agentOnboardV1 = dfsVoomaAgentOnboardV1Repository.searchAgent(model.getKeyword());
-            if (agentOnboardV1 == null) {
-                return null;
+            List<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper =new ObjectMapper();
+            for (DFSVoomaAgentOnboardV1 agentOnboardV1 : dfsVoomaAgentOnboardV1Repository.findByAccountNameContainingIgnoreCase(model.getKeyword())){
+                if (agentOnboardV1 ==null){
+                    log.error("no match found");
+                    return null;
+                }
+                ObjectNode objectNode =mapper.createObjectNode();
+                objectNode.put("id", agentOnboardV1.getId());
+                objectNode.put("agentName", agentOnboardV1.getAccountName());
+                objectNode.put("email", agentOnboardV1.getBusinessEmail());
+                objectNode.put("paybill", Utility.generateRandomNumber());
+                objectNode.put("till", Utility.generateRandomNumber());
+                objectNode.put("createdOn", agentOnboardV1.getCreatedOn().getTime());
+                objectNode.put("region", agentOnboardV1.getCityOrTown());
+                list.add(objectNode);
             }
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode objectNode =mapper.createObjectNode();
-            objectNode.put("id", agentOnboardV1.getId());
-            objectNode.put("agentName", agentOnboardV1.getAccountName());
-            objectNode.put("email", agentOnboardV1.getBusinessEmail());
-            objectNode.put("paybill", Utility.generateRandomNumber());
-            objectNode.put("till", Utility.generateRandomNumber());
-            objectNode.put("createdOn", agentOnboardV1.getCreatedOn().getTime());
-            objectNode.put("region", agentOnboardV1.getCityOrTown());
-            return objectNode;
+           return list;
         } catch (Exception e) {
             log.error("Error occurred while searching agent", e);
         }
-
 
         return null;
     }

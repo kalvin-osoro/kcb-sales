@@ -16,6 +16,7 @@ import com.ekenya.rnd.backend.fskcb.SpringBootKcbRestApiApplication;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -29,6 +30,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @RestController
@@ -198,14 +200,15 @@ public class AcquiringChannelCustomer360VC {
     //
     @PostMapping(value = "/search-merchant")
     public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
-        Object agent =channelService.searchAgent(model);
+        List<?> agent =channelService.searchAgent(model);
         boolean success = agent != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();
         if (success) {
             //return merchant object
-            ObjectNode node = objectMapper.createObjectNode();
-            node.putArray("agent").add(objectMapper.valueToTree(agent));
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)agent);
+
 
             return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
         } else {

@@ -100,7 +100,7 @@ public interface IVoomaChannelService {
 
     List<ObjectNode> getAllQuestion(GetQuestionRequest model);
 
-    Object searchMerchant(AgencySearchRequest model);
+    List<ObjectNode> searchMerchant(AgencySearchRequest model);
 
-    Object searchAgent(AgencySearchRequest model);
+    List<ObjectNode> searchAgent(AgencySearchRequest model);
 }
