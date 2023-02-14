@@ -129,13 +129,14 @@ public class AcquiringChannelCustomer360VC {
         try {
             String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
             RestTemplate restTemplate = new RestTemplate();
-            //return json object
+//return json object
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
-            //convert to json object
-            JsonParser parser = new JsonParser();
-            JsonObject json = parser.parse(result).getAsJsonObject();
-            //return json object
-            return ResponseEntity.ok(new BaseAppResponse(1, json, "Request Processed Successfully"));
+            String customer1 = result.trim();
+            String newString = customer1.replace("\\", "");
+            String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
