@@ -135,13 +135,13 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
 //return json object
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
-//            //remove 1st key and value from json object
-//            JsonParser parser = new JsonParser();
-//            JsonObject jsonObject = parser.parse(result).getAsJsonObject();
-//            jsonObject.remove("data");
             String customer1 = result.trim();
             String newString = customer1.replace("\\", "");
             String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            //            //remove 1st key and value from json object
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = parser.parse(result).getAsJsonObject();
+            jsonObject.remove("@odata.etag");
             return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
 
 
