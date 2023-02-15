@@ -53,26 +53,26 @@ public class AcquiringChannelCustomer360VC {
     @Autowired
     ICRMService crmService;
 
-    @PostMapping("/acquiring-customer-lookup")
-    public ResponseEntity<?> lookupCustomer(@RequestParam String account) {
-
-
-        JsonObject resp = channelService.findCustomerByAccNo(account);//
-
-        //Response
-        ObjectMapper objectMapper = new ObjectMapper();
-        if (resp == null) {
-            //Object
-            ObjectNode node = objectMapper.createObjectNode();
-//          node.put("id",0);
-
-            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
-        } else {
-
-            //Response
-            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
-        }
-    }
+//    @PostMapping("/acquiring-customer-lookup")
+//    public ResponseEntity<?> lookupCustomer(@RequestParam String account) {
+//
+//
+//        JsonObject resp = channelService.findCustomerByAccNo(account);//
+//
+//        //Response
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        if (resp == null) {
+//            //Object
+//            ObjectNode node = objectMapper.createObjectNode();
+////          node.put("id",0);
+//
+//            return ResponseEntity.ok(new BaseAppResponse(1, node, "Request Processed Successfully"));
+//        } else {
+//
+//            //Response
+//            return ResponseEntity.ok(new BaseAppResponse(0, objectMapper.createObjectNode(), "Request could NOT be processed. Please try again later"));
+//        }
+//    }
 
 
     //CUSTOMER360 VIEW
@@ -98,18 +98,18 @@ public class AcquiringChannelCustomer360VC {
 //
 //    }
 
-    @GetMapping("/get-crm-customers")
-    public ResponseEntity<?> getCRMCustomer() {
-        try {
-            String uri = "http://10.216.2.10:8081/api/Values?entity=accounts&paramval=none";
-            RestTemplate restTemplate = new RestTemplate();
-            String result = restTemplate.getForObject(uri, String.class);
-            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/get-crm-customers")
+//    public ResponseEntity<?> getCRMCustomer() {
+//        try {
+//            String uri = "http://10.216.2.10:8081/api/Values?entity=accounts&paramval=none";
+//            RestTemplate restTemplate = new RestTemplate();
+//            String result = restTemplate.getForObject(uri, String.class);
+//            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 //    @PostMapping("/acquiring-get-customer-360-details-by-account")
 //    public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody CRMRequest model) {
@@ -131,17 +131,16 @@ public class AcquiringChannelCustomer360VC {
     @PostMapping("/acquiring-get-customer-360-details-by-account")
     public ResponseEntity<?> getCustomerDetailsByAccountV1(@RequestBody CRMRequest model) {
         try {
-            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+            String accountNo = model.getAccount();
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval=" + accountNo;
+
             RestTemplate restTemplate = new RestTemplate();
-//return json object
-            String result = restTemplate.getForObject(uri, String.class, model.getAccount());
+            String result = restTemplate.getForObject(uri, String.class);
+
             String customer1 = result.trim();
             String newString = customer1.replace("\\", "");
             String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
-            //            //remove 1st key and value from json object
-            JsonParser parser = new JsonParser();
-            JsonObject jsonObject = parser.parse(result).getAsJsonObject();
-            jsonObject.remove("@odata.etag");
+
             return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
 
 
@@ -183,7 +182,7 @@ public class AcquiringChannelCustomer360VC {
             String customer1 = result.block().trim();
             String newString = customer1.replace("\\", "");
             String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
-            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
+            return ResponseEntity.ok(new BaseAppResponse(1, removeFirstAndLastQuotes, "Request Processed Successfully"));
 
         } catch (Exception e) {
             e.printStackTrace();
