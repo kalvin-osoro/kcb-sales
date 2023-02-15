@@ -582,7 +582,7 @@ try {
             acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
             acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetEntity.setAssigned(true);
-//            acquiringAssetEntity.setMerchantName(onboardEntity.getAccountName());
+            acquiringAssetEntity.setMerchantName(onboardEntity.getAccountName());
             //logs
             //
             AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
