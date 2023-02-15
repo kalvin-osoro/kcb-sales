@@ -170,7 +170,8 @@ public class AcquiringChannelCustomer360VC {
     @PostMapping("/acquiring-get-customer-360-details-by-accountV2")
     public ResponseEntity<?> getCustomerDetailsByAccountV2(@RequestBody CRMRequest model) {
         try {
-            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+            String accountNumber= model.getAccount();
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval=" + accountNumber;
             if (model.getAccount()==null){
                 return ResponseEntity.ok(new BaseAppResponse(0, null, "please enter account number"));
             }

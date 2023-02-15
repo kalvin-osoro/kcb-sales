@@ -627,7 +627,6 @@ public class AgencyChannelService implements IAgencyChannelService {
                 asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
                 asset.put("agencyName", agencyOnboardingEntity.getAgentName());
                 asset.put("idNumber", agencyOnboardingEntity.getAgentIdNumber());
-                asset.put("businessName", agencyOnboardingEntity.getBusinessName());
 //            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
                 asset.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
                 asset.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
