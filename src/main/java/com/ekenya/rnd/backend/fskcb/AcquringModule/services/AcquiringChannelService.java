@@ -582,12 +582,15 @@ try {
             acquiringAssetEntity.setMerchantAccNo(model.getAccountNumber());
             acquiringAssetEntity.setDateAssigned(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringAssetEntity.setAssigned(true);
-            acquiringAssetEntity.setMerchantName(onboardEntity.getAccountName());
+//            acquiringAssetEntity.setMerchantName(onboardEntity.getAccountName());
+            //logs
+            //
             AssetLogsEntity assetLogsEntity = new AssetLogsEntity();
             assetLogsEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             assetLogsEntity.setAction("Assigned to Merchant");
             assetLogsEntity.setProfileCode(model.getProfileCode());
             assetLogsEntity.setRemarks(model.getRemarks());
+            assetLogsEntity.setCondition(AssetCondition.WORKING);
             assetLogsEntity.setCustomerAccNumber(onboardEntity.getAccountNumber());
             assetLogsEntity.setSerialNumber(model.getSerialNumber());
             assetLogsRepository.save(assetLogsEntity);
