@@ -28,6 +28,8 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -40,6 +42,8 @@ public class AcquiringChannelCustomer360VC {
 
     @Autowired
     IAcquiringChannelService channelService;
+    @Autowired
+    WebClient webClient;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -131,6 +135,10 @@ public class AcquiringChannelCustomer360VC {
             RestTemplate restTemplate = new RestTemplate();
 //return json object
             String result = restTemplate.getForObject(uri, String.class, model.getAccount());
+//            //remove 1st key and value from json object
+//            JsonParser parser = new JsonParser();
+//            JsonObject jsonObject = parser.parse(result).getAsJsonObject();
+//            jsonObject.remove("data");
             String customer1 = result.trim();
             String newString = customer1.replace("\\", "");
             String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
@@ -159,8 +167,31 @@ public class AcquiringChannelCustomer360VC {
         }
     }
 
-////new for all search type in one
-    @PostMapping("/acquiring-get-customer-360-details-by-accountV1")
+    //get customer details by account number using webclient
+    @PostMapping("/acquiring-get-customer-360-details-by-accountV2")
+    public ResponseEntity<?> getCustomerDetailsByAccountV2(@RequestBody CRMRequest model) {
+        try {
+            String uri = "http://10.216.2.10:8081/api/Values?entity=accountsbyaccno&paramval={accountNo}";
+            if (model.getAccount()==null){
+                return ResponseEntity.ok(new BaseAppResponse(0, null, "please enter account number"));
+            }
+            WebClient webClient = WebClient.create(uri);
+            Mono<String> result = webClient.get()
+                    .uri(uri, model.getAccount())
+                    .retrieve()
+                    .bodyToMono(String.class);
+//            String customer1 = result.block().trim();
+//            String newString = customer1.replace("\\", "");
+//            String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error!, Please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+        @PostMapping("/acquiring-get-customer-360-details-by-accountV1")
     public ResponseEntity<?> getCustomerDetailsByAccount(@RequestBody SearchRequest model) {
         try {
             if (model ==null){
