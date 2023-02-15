@@ -180,9 +180,9 @@ public class AcquiringChannelCustomer360VC {
                     .uri(uri, model.getAccount())
                     .retrieve()
                     .bodyToMono(String.class);
-//            String customer1 = result.block().trim();
-//            String newString = customer1.replace("\\", "");
-//            String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
+            String customer1 = result.block().trim();
+            String newString = customer1.replace("\\", "");
+            String removeFirstAndLastQuotes = newString.substring(1, newString.length() - 1);
             return ResponseEntity.ok(new BaseAppResponse(1, result, "Request Processed Successfully"));
 
         } catch (Exception e) {
