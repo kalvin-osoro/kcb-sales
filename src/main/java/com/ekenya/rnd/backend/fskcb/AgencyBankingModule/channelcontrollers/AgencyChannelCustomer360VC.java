@@ -114,7 +114,7 @@ public class AgencyChannelCustomer360VC {
 
     @PostMapping(value = "/search-agent")
     public ResponseEntity<?> searchAgent(@RequestBody AgencySearchRequest model) {
-      List<?> agent =agencyChannelService.searchAgent(model);
+      List<ObjectNode> agent =agencyChannelService.searchAgent(model);
         boolean success = agent != null;
         //Response
         ObjectMapper objectMapper = new ObjectMapper();

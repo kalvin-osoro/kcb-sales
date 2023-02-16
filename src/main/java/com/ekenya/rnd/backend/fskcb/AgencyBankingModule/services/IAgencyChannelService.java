@@ -42,7 +42,7 @@ public interface IAgencyChannelService {
 
     Object getAssetById(AssetByIdRequest model);
 
-  List<Object>searchAgent(AgencySearchRequest model);
+  List<ObjectNode>searchAgent(AgencySearchRequest model);
 
     List<ObjectNode> getDSRAgent(DSRAgent model);
 }

@@ -613,13 +613,13 @@ public class AgencyChannelService implements IAgencyChannelService {
     }
 
     @Override
-    public List<Object> searchAgent(AgencySearchRequest model) {
+    public List<ObjectNode> searchAgent(AgencySearchRequest model) {
         try {
             if (model == null) {
                 return null;
             }
 
-            List<Object>list = new ArrayList<>();
+            List<ObjectNode>list = new ArrayList<>();
             ObjectMapper mapper = new ObjectMapper();
             for (AgencyOnboardingEntity  agencyOnboardingEntity : agencyOnboardingRepository.findByAgentNameContainingIgnoreCase(model.getKeyword())){
                 ObjectNode asset = mapper.createObjectNode();
@@ -627,7 +627,6 @@ public class AgencyChannelService implements IAgencyChannelService {
                 asset.put("agencyPhone", agencyOnboardingEntity.getAgentPhone());
                 asset.put("agencyName", agencyOnboardingEntity.getAgentName());
                 asset.put("idNumber", agencyOnboardingEntity.getAgentIdNumber());
-//            objectNode.put("region", dfsVoomaOnboardEntity.getCityOrTown());
                 asset.put("phoneNumber", agencyOnboardingEntity.getAgentPhone());
                 asset.put("businessEmail", agencyOnboardingEntity.getAgentEmail());
                 asset.put("status", agencyOnboardingEntity.getStatus().toString());
