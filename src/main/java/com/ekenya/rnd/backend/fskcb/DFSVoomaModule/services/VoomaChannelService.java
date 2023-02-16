@@ -1173,7 +1173,7 @@ public class VoomaChannelService implements IVoomaChannelService {
             }
            List<ObjectNode> list = new ArrayList<>();
            ObjectMapper mapper = new ObjectMapper();
-           for (DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity : dfsVoomaMerchantOnboardV1Repository.findByAccountNameContainingIgnoreCase(model.getKeyword())){
+           for (DFSVoomaMerchantOnboardV1 dfsVoomaOnboardEntity : dfsVoomaMerchantOnboardV1Repository.findByBusinessNameContainingIgnoreCase(model.getKeyword())){
                if (dfsVoomaOnboardEntity ==null){
                    log.error("Merchant does not exist {}",model.getKeyword());
                    return null;
