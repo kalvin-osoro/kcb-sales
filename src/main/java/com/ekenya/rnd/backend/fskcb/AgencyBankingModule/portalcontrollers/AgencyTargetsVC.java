@@ -46,7 +46,7 @@ public class AgencyTargetsVC {
     @PostMapping(value = "/agency-get-all-targets")
     public ResponseEntity<?> getAllTargets() {
         List<?> agencyTargetsResponse = agencyService.loadAgencyTargets();
-        boolean success = agencyTargetsResponse != null;// agencyTargetsResponse.size() > 0;
+        boolean success = agencyTargetsResponse.size()>0;
 
 
         //Response
@@ -54,7 +54,7 @@ public class AgencyTargetsVC {
         if(success){
             //Object
             ArrayNode node = objectMapper.createArrayNode();
-            node.addAll((ArrayNode) objectMapper.valueToTree(agencyTargetsResponse));
+            node.addAll((List)agencyTargetsResponse);
 //          node.put("id",0);
 
             return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));

@@ -244,13 +244,12 @@ public class AgencyPortalService implements IAgencyPortalService {
                 node.put("id", agencyBankingTargetEntity.getId());
                 node.put("targetName", agencyBankingTargetEntity.getTargetName());
                 node.put("targetSource", agencyBankingTargetEntity.getTargetSource());
-                node.put("agencyTargetType", agencyBankingTargetEntity.getTargetType().toString());
+                node.put("agencyTargetType", agencyBankingTargetEntity.getTargetType().name());
                 node.put("targetDesc", agencyBankingTargetEntity.getTargetDesc());
                 node.put("targetRemained", agencyBankingTargetEntity.getTargetAssigned());
-                node.put("targetStatus", agencyBankingTargetEntity.getTargetStatus().name());
+                node.put("targetStatus", agencyBankingTargetEntity.getTargetStatus().toString());
                 node.put("targetValue", agencyBankingTargetEntity.getTargetValue());
-                node.put("createdOn", agencyBankingTargetEntity.getCreatedOn().toString());
-                //add to list
+                node.put("createdOn", agencyBankingTargetEntity.getCreatedOn().getTime());
                 list.add(node);
             }
             return list;

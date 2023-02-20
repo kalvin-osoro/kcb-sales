@@ -10,6 +10,7 @@ import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,14 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/api/v1")
-@PreAuthorize("hasAuthority('"+ SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
+//@PreAuthorize("hasAuthority('"+ SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class DSRAccountsVC {
-    @Autowired
-    ObjectMapper mObjectMapper;
+    private final  ObjectMapper mObjectMapper;
     //
-    @Autowired
-    IDSRPortalService dsrPortalService;
+   private  final  IDSRPortalService dsrPortalService;
     //
     @PostMapping("/dsr-accounts-create")
     public ResponseEntity<?> createAccount(@RequestBody AddDSRAccountRequest request ) {

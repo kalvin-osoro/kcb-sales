@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 @Service
 public class FileStorageService implements IFileStorageService {
 
@@ -194,6 +196,8 @@ public class FileStorageService implements IFileStorageService {
 
             }
         }
+
+
 
     //save file
     public void save(MultipartFile file) {

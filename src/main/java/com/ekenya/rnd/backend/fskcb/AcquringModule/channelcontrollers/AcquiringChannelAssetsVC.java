@@ -14,9 +14,11 @@ import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
@@ -25,9 +27,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/ch")
+@RequiredArgsConstructor
 public class AcquiringChannelAssetsVC {
-    @Autowired
-    IAcquiringChannelService acquiringChannelService;
+   private final IAcquiringChannelService acquiringChannelService;
 
     @PostMapping("/acquiring-assign-asset-merchant")
     public ResponseEntity<?> assignAssetMerchant1(@RequestBody VoomaAssignAssetRequest model) {
