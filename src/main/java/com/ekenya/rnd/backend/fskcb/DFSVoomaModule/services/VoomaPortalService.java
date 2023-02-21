@@ -10,6 +10,7 @@ import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdReq
 import com.ekenya.rnd.backend.fskcb.CorporateBankingModule.datasource.entities.CBLeadEntity;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.repository.*;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.QuestionnaireWrapper;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRTeamEntity;
@@ -1462,6 +1463,42 @@ public class VoomaPortalService implements IVoomaPortalService {
             return list;
         } catch (Exception e) {
             log.error("Error occurred while getting approved agents", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ObjectNode> getQuestionnaireByProfileCode(QuestionnaireWrapper model) {
+        try {
+            if (model ==null){
+                return  null;
+            }
+            List<QuestionnaireEntity> questionnaireEntities = questionnaireRepository.findByProfileCodeAndQuestionnaireType(model.getProfileCode(), model.getQuestionnaireType());
+            ArrayList<ObjectNode> list = new ArrayList<>();
+            ObjectMapper mapper = new ObjectMapper();
+            for (QuestionnaireEntity questionnaireEntity : questionnaireEntities) {
+                ObjectNode objectNode = mapper.createObjectNode();
+                objectNode.put("id", questionnaireEntity.getId());
+                objectNode.put("questionnaireType", questionnaireEntity.getQuestionnaireType().toString());
+                objectNode.put("profileCode", questionnaireEntity.getProfileCode());
+                objectNode.put("status", questionnaireEntity.getStatus().toString());
+//                //list of questions in questionnaire
+//                List<QuestionEntity> questionEntities = questionRepository.findByQuestionnaireId(questionnaireEntity.getId());
+//                //list of questions
+//                List<ObjectNode> questions = new ArrayList<>();
+//                for (QuestionEntity questionEntity : questionEntities) {
+//                    ObjectNode question = mapper.createObjectNode();
+//                    question.put("id", questionEntity.getId());
+//                    question.put("question", questionEntity.getQuestion());
+//                    question.put("questionType", questionEntity.getQuestionType().toString());
+//                    questions.add(question);
+//                }
+                objectNode.put("createdOn", questionnaireEntity.getCreatedOn().getTime());
+                list.add(objectNode);
+            }
+            return list;
+        } catch (Exception e) {
+            log.error("An error has occured,please try again later",e);
         }
         return null;
     }

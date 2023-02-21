@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.portalcontroller;
 
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.QuestionnaireWrapper;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.AssignFeedBackRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.GetRQuestionnaireRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.QuestionnaireRequest;
@@ -116,6 +117,26 @@ public class QuestionnaireVC1 {
 
             //Response
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+    //get questionnaire by profileCode and QuestionnaireType
+    @PostMapping("/get-questionnaire-by-profileCode")
+    public ResponseEntity<?> getQuestionnaireByProfileCode(@RequestBody QuestionnaireWrapper model) {
+        List<ObjectNode> list = voomaPortalService.getQuestionnaireByProfileCode(model);
+        boolean success = list != null;
+
+        //Response
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(success){
+            //Object
+            ArrayNode node = objectMapper.createArrayNode();
+            node.addAll((List)list);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
 }

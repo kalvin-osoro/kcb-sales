@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.DFSVoomaModule.services;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringDSRsInTargetRequest;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.datasource.entities.DFSVoomaMerchantOnboardV1;
+import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.QuestionnaireWrapper;
 import com.ekenya.rnd.backend.fskcb.DFSVoomaModule.models.reqs.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -97,4 +98,6 @@ public interface IVoomaPortalService {
     boolean assignFeedback(AssignFeedBackRequest model);
 
     List<ObjectNode> getAllAgents();
+
+    List<ObjectNode> getQuestionnaireByProfileCode(QuestionnaireWrapper model);
 }
