@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.model;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.CustomUserDetailsService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
@@ -9,12 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
-
+@RequiredArgsConstructor
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
-    @Autowired
-     private CustomUserDetailsService customUserDetailsService;
-    @Autowired
-    JwtTokenProvider tokenProvider;
+
+     private  final CustomUserDetailsService customUserDetailsService;
+
+    private final JwtTokenProvider tokenProvider;
 
     @Override
     public Optional<String> getCurrentAuditor() {

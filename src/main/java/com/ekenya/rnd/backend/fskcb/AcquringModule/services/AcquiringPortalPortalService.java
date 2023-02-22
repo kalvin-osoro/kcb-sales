@@ -46,7 +46,10 @@ import java.util.Optional;
 import java.util.Set;
 
 
-
+/**
+ * Creater: david Charo
+ * Date:11/14/2022
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -171,11 +174,9 @@ public class  AcquiringPortalPortalService implements IAcquiringPortalService {
             DFSVoomaAddAssetRequest dfsVoomaAddAssetRequest = mapper.readValue(assetDetails, DFSVoomaAddAssetRequest.class);
             AcquiringAssetEntity dfsVoomaAssetEntity = new AcquiringAssetEntity();
             dfsVoomaAssetEntity.setSerialNumber(dfsVoomaAddAssetRequest.getSerialNumber());
-//            dfsVoomaAssetEntity.setAssetCondition(dfsVoomaAddAssetRequest.getAssetCondition());
             dfsVoomaAssetEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             dfsVoomaAssetEntity.setAssetNumber(dfsVoomaAddAssetRequest.getAssetNumber());
             dfsVoomaAssetEntity.setAssetType(dfsVoomaAddAssetRequest.getAssetType());
-//            dfsVoomaAddAssetRequest.setDeviceId(dfsVoomaAddAssetRequest.getDeviceId());
             AcquiringAssetEntity savedAsset = acquiringAssetRepository.save(dfsVoomaAssetEntity);
             //logs
             AssetLogsEntity assetLogsEntity = new AssetLogsEntity();

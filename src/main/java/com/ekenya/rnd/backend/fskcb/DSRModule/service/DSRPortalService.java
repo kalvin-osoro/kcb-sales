@@ -513,6 +513,20 @@ public class DSRPortalService implements IDSRPortalService {
                                 "Thank you.";
                         sendEmail(dsrDetails.getEmail(), subject, message);
                     }
+                    if (dsrDetails.getPhoneNo() != null && !dsrDetails.getPhoneNo().isEmpty()) {
+                        String message = "Dear " + dsrDetails.getFullName() + ",\n\n" +
+                                "Your DSR account has been created successfully.\n" +
+                                "Your account details are as follows:\n" +
+                                "Staff No: " + dsrDetails.getStaffNo() + "\n" +
+                                "Phone No: " + dsrDetails.getPhoneNo() + "\n" +
+                                "Sales Code: " + dsrDetails.getSalesCode() + "\n" +
+                                "Expiry Date: " + dsrDetails.getExpiryDate() + "\n\n" +
+                                "Please use this link to download the app:\n" +
+                                "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
+                                "Thank you.";
+                        sendSMS(dsrDetails.getPhoneNo(), message);
+
+                    }
 
                     //Add DSR to profile ..
                     profilesAndUsersRepository.save(profileAndUserEntity);
@@ -1163,7 +1177,7 @@ public class DSRPortalService implements IDSRPortalService {
                 objectNode.put("id", dsrAccountEntity.getId());
                 objectNode.put("name", dsrAccountEntity.getFullName());
                 objectNode.put("email", dsrAccountEntity.getEmail());
-                objectNode.put("phone", dsrAccountEntity.getEmail());
+                objectNode.put("phone", dsrAccountEntity.getPhoneNo());
                 objectNode.put("staffNo", dsrAccountEntity.getStaffNo());
                 objectNode.put("isRM", dsrAccountEntity.getIsRm()==null ?false :dsrAccountEntity.getIsRm());
                 objectNode.put("profileCode", dsrAccountEntity.getProfileCode());
