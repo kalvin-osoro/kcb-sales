@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.AcquringModule.channelcontrollers;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.AcquiringAssignAssetRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringAddAssetReportRequest;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.AcquiringCollectAssetRequest;
+import com.ekenya.rnd.backend.fskcb.AcquringModule.models.reqs.ShutdownWrapper;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringChannelService;
 import com.ekenya.rnd.backend.fskcb.AcquringModule.services.IAcquiringPortalService;
 import com.ekenya.rnd.backend.fskcb.AgencyBankingModule.models.reqs.AssetByIdRequest;
@@ -16,7 +17,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -126,4 +131,5 @@ public class AcquiringChannelAssetsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
-}
+
+    }

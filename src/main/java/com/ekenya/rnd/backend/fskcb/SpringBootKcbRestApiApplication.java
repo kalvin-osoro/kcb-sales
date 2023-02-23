@@ -21,10 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.client.RestTemplate;
@@ -39,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
@@ -97,6 +103,14 @@ public class SpringBootKcbRestApiApplication   {
 		prepareLogger(args);
 		//
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
+		//shut down the system..........
+		LocalDate today = LocalDate.now();
+		LocalDate expiryDate = LocalDate.of(2023, 3, 31);
+		if(today.isAfter(expiryDate)){
+			System.exit(0);
+			log.error("Application has expired. Please contact the Eclectics team for a new version.");
+		}
+
 
 	}
 
@@ -319,8 +333,21 @@ public class SpringBootKcbRestApiApplication   {
 		FirebaseApp app = FirebaseApp.initializeApp(firebaseOptions, "my-app");
 		return FirebaseMessaging.getInstance(app);
 	}
+ public  class  Shutdown implements ApplicationContextAware {
+		private ApplicationContext applicationContext;
+		@Override
+		public  void  setApplicationContext(ApplicationContext applicationContext)  throws BeansException {
+			this .applicationContext = applicationContext;
+		}
+		public void shutdownApplication(){
+			if (LocalDate.now().isAfter(LocalDate.of(2023, 3, 31))) {
+				((ConfigurableApplicationContext) applicationContext).close();
+				log.info("License expired");
+			}
+			log.info("License valid");
 
-
+		}
+	}
 
 }
 
