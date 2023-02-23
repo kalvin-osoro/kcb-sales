@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import java.time.LocalDate;
 import org.locationtech.jts.geom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,12 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 @RequiredArgsConstructor
 public class Utility {
     private Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired
-    static
-    IDSRAccountsRepository dsrAccountsRepository;
+
 
     public static String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
@@ -154,16 +154,16 @@ public class Utility {
         return password;
     }
 
-    public static String getDsrNameFromDsrId(Long dsrId) {
-        String dsrName = "";
-        Optional<DSRAccountEntity> dsrAccount = dsrAccountsRepository.findById(dsrId);
-        if (dsrAccount.isPresent()) {
-            dsrName = dsrAccount.get().getFullName();
-        } else {
-            dsrName = "N/A";
-        }
-        return dsrName;
-    }
+//    public static String getDsrNameFromDsrId(Long dsrId) {
+//        String dsrName = "";
+//        Optional<DSRAccountEntity> dsrAccount = dsrAccountsRepository.findById(dsrId);
+//        if (dsrAccount.isPresent()) {
+//            dsrName = dsrAccount.get().getFullName();
+//        } else {
+//            dsrName = "N/A";
+//        }
+//        return dsrName;
+//    }
 
     public static String getSubFolder() {
         String folderName = "salesEffective";
@@ -177,5 +177,9 @@ public class Utility {
         cal.add(Calendar.MINUTE, i);
         return cal.getTime();
     }
+
+
+
+
 }
 

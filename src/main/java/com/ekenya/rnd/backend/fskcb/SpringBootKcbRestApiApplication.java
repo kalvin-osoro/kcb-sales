@@ -105,9 +105,9 @@ public class SpringBootKcbRestApiApplication   {
 		SpringApplication.run(SpringBootKcbRestApiApplication.class, args);
 		//shut down the system..........
 		LocalDate today = LocalDate.now();
-		LocalDate expiryDate = LocalDate.of(2023, 3, 31);
+		LocalDate expiryDate = LocalDate.of(2023, 3, 30);
 		if(today.isAfter(expiryDate)){
-			System.exit(0);
+			System.exit(500);
 			log.error("Application has expired. Please contact the Eclectics team for a new version.");
 		}
 

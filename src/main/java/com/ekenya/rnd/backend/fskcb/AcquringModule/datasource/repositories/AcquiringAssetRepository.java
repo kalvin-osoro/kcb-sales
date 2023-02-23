@@ -29,6 +29,6 @@ public interface AcquiringAssetRepository extends JpaRepository<AcquiringAssetEn
 
     Optional<Object> findBySerialNumber(String serialNumber);
 
-    List<AcquiringAssetEntity> findByMerchantAccNo(String merchantAccNo);
+    List<AcquiringAssetEntity> findByMerchantAccNo(Integer merchantAccNo);
 }
 

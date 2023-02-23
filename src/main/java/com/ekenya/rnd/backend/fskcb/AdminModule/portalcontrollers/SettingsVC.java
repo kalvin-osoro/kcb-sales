@@ -56,4 +56,5 @@ public class SettingsVC {
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //creating email endpoint
 }

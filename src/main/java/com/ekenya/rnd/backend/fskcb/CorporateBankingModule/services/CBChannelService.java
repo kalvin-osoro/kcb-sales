@@ -15,6 +15,8 @@ import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLea
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryTradeRequest;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
 import com.ekenya.rnd.backend.fskcb.exception.ResourceNotFoundException;
+import com.ekenya.rnd.backend.fskcb.setup.datasource.entities.EmailEntities;
+import com.ekenya.rnd.backend.fskcb.setup.datasource.repository.EmailRepository;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -38,6 +40,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CBChannelService implements ICBChannelService {
     private final ICBLeadsRepository cbLeadsRepository;
+
+    private final EmailRepository emailRepository;
     private final CBCustomerAppointmentRMRepository cbCustomerAppointmentRMRepository;
     private final CBOpportunitiesRepository cbOpportunitiesRepository;
     private  final JavaMailSender mailSender;
@@ -321,30 +325,30 @@ public class CBChannelService implements ICBChannelService {
             cbLeadEntity.setLeadStatus(LeadStatus.OPEN);
             cbLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             cbLeadsRepository.save(cbLeadEntity);
-            if (model.getBusinessUnit().equalsIgnoreCase("Corporate banking")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("corporate_banking")){
                 //send email to corporate banking email
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
-            if (model.getBusinessUnit().equalsIgnoreCase("Personal Banking")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("personal_banking")){
                 //send email to
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
-            if (model.getBusinessUnit().equalsIgnoreCase("Agency banking")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("agency_banking")){
                 //send email to email to agency banking email
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
-            if (model.getBusinessUnit().equalsIgnoreCase("Retail Banking")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("retail_Banking")){
                 //send email to Retail email
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
-            if (model.getBusinessUnit().equalsIgnoreCase("Merchant banking")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("merchant_banking")){
                 //send email to acquiring email
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
-            if (model.getBusinessUnit().equalsIgnoreCase("Treasury")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("treasury")){
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
-            if (model.getBusinessUnit().equalsIgnoreCase("Vooma")){
+            if (model.getBusinessUnit().replace(" ","_").toLowerCase().equalsIgnoreCase("vooma")){
                 //send email to vooma
                 leadEmail(model,"davidcharomakuba@gmail.com");
             }
