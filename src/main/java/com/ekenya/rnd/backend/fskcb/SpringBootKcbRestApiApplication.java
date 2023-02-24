@@ -13,10 +13,6 @@ import ch.qos.logback.core.util.StatusPrinter;
 import com.ekenya.rnd.backend.fskcb.CrmAdapters.services.CRMService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
@@ -322,17 +318,7 @@ public class SpringBootKcbRestApiApplication   {
 
 
 	//firebase
-	@Bean
-	FirebaseMessaging firebaseMessaging() throws IOException {
-		GoogleCredentials googleCredentials = GoogleCredentials
-				.fromStream(new ClassPathResource("firebase-service-account.json").getInputStream());
-		FirebaseOptions firebaseOptions = FirebaseOptions
-				.builder()
-				.setCredentials(googleCredentials)
-				.build();
-		FirebaseApp app = FirebaseApp.initializeApp(firebaseOptions, "my-app");
-		return FirebaseMessaging.getInstance(app);
-	}
+
 // public  class  Shutdown implements ApplicationContextAware {
 //		private ApplicationContext applicationContext;
 //		@Override
