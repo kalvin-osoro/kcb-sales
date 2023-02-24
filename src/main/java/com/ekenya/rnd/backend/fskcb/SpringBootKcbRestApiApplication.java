@@ -333,21 +333,21 @@ public class SpringBootKcbRestApiApplication   {
 		FirebaseApp app = FirebaseApp.initializeApp(firebaseOptions, "my-app");
 		return FirebaseMessaging.getInstance(app);
 	}
- public  class  Shutdown implements ApplicationContextAware {
-		private ApplicationContext applicationContext;
-		@Override
-		public  void  setApplicationContext(ApplicationContext applicationContext)  throws BeansException {
-			this .applicationContext = applicationContext;
-		}
-		public void shutdownApplication(){
-			if (LocalDate.now().isAfter(LocalDate.of(2023, 3, 31))) {
-				((ConfigurableApplicationContext) applicationContext).close();
-				log.info("License expired");
-			}
-			log.info("License valid");
-
-		}
-	}
+// public  class  Shutdown implements ApplicationContextAware {
+//		private ApplicationContext applicationContext;
+//		@Override
+//		public  void  setApplicationContext(ApplicationContext applicationContext)  throws BeansException {
+//			this .applicationContext = applicationContext;
+//		}
+//		public void shutdownApplication(){
+//			if (LocalDate.now().isAfter(LocalDate.of(2023, 3, 31))) {
+//				((ConfigurableApplicationContext) applicationContext).close();
+//				log.info("License expired");
+//			}
+//			log.info("License valid");
+//
+//		}
+//	}
 
 }
 

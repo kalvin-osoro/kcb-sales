@@ -25,8 +25,6 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRAccountEnti
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.entities.DSRRegionEntity;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.DSRModule.datasource.repositories.IDSRRegionsRepository;
-import com.ekenya.rnd.backend.fskcb.FireBaseMessage.FirebaseMessagingService;
-import com.ekenya.rnd.backend.fskcb.FireBaseMessage.Wrapper.Note;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.datasource.entities.TreasuryLeadEntity;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryGetDSRLeads;
 import com.ekenya.rnd.backend.fskcb.TreasuryModule.models.reqs.TreasuryUpdateLeadRequest;
@@ -61,7 +59,6 @@ public class AcquiringChannelService implements IAcquiringChannelService {
     private final AcquiringOnboardingKYCRepository acquiringOnboardingKYCRepository;
     private final IAcquiringOnboardingsRepository acquiringOnboardingsRepository;
 
-    private final FirebaseMessagingService firebaseMessagingService;
     private final AssetLogsRepository assetLogsRepository;
     private final AcquiringPrincipalRepository acquiringPrincipalRepository;
     private final AcquiringAssetFileRepository acquiringAssetFileRepository;
@@ -129,7 +126,6 @@ public class AcquiringChannelService implements IAcquiringChannelService {
             acquiringLeadEntity.setCreatedOn(Utility.getPostgresCurrentTimeStampForInsert());
             acquiringLeadsRepository.save(acquiringLeadEntity);
             //send push notification using firebase from FirebaseMessagingService class
-            firebaseMessagingService.sendNotification();
             return true;
 
         } catch (Exception e) {
