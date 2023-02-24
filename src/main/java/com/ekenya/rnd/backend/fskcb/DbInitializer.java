@@ -63,7 +63,7 @@ public class  DbInitializer {
 
     @EventListener(ApplicationReadyEvent.class)
     private void init() {
-        log.info("DB initializer; Seeding db ..");
+        log.info("DB initializer; Seeding db .............");
 
         //1. Seed system roles
         createSystemRoles();
@@ -87,6 +87,7 @@ public class  DbInitializer {
 
 
     private void createAdminUser(){
+        log.info("Creating admin user .............");
         //
         String adminName = "System Admin";
         String adminUserName = "Admin";
@@ -110,6 +111,7 @@ public class  DbInitializer {
             IUserAccountsRepository.save(userApp);//save user to db
 
 
+
             //
             UserRoleEntity userRole = roleRepository.findByName(SystemRoles.SYS_ADMIN).get();//get role from db
             userApp.setRoles(Collections.singleton(userRole));//set role to user
@@ -127,7 +129,7 @@ public class  DbInitializer {
                 profilesAndUsersRepository.save(profileAndUserEntity);
             }
             //
-            log.info("Admin Account registered successfully");
+            log.info("Admin Account registered successfully.........");
 
         }catch (Exception exception){
 
