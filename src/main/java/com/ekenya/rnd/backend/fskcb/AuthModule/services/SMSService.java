@@ -101,11 +101,18 @@ public class SMSService implements ISmsService{
         }
         return null;
     }
+    ////Hello {}
+    // You have been enrolled to participate in the KCB Sales Effectiveness Tool PoCUse the links below to access toolBack Office Admin Portal => http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com/Android Mobile Application => Your username is {}, and your first time password is {}Powered by Eclectics.io
 
     @Override
-    public boolean sendPasswordEmail(String receiverEmail, String fullName, String password) {
+    public boolean sendPasswordEmail(String receiverEmail, String fullName, String password,String staffNumber) {
         try {
-            String message = "Hello " + fullName + ", your password is " + password + "\nPlease change it immediately after login";
+
+            String message = "Hello " + fullName + " you have been enrolled to participate in the KCB Sales Effectiveness Tool PoC.\n" +
+                    " Use the links below to access  Back Office Admin Portal\n" +
+                    " http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com/ \n" +
+                    " Your username is " + staffNumber + ", and your first time password is " + password + "\n"+
+                    " Powered by Eclectics.io";
             JsonObject emailResponse = sendEmail(message, receiverEmail);
             if (emailResponse == null) {
                 throw new RuntimeException("Unable to send email");

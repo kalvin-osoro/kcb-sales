@@ -141,7 +141,7 @@ public class UsersService implements IUsersService {
                     userAccountsRepository.save(account);//save user to db
 
                     //
-                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
+                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
                         //
                         log.info("OTP send via EMAIL "+account.getEmail());
                         //return true;
@@ -200,12 +200,9 @@ public class UsersService implements IUsersService {
                     //
                     userAccountsRepository.save(account);
                     //
-                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
+                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
                         //
                         log.info("OTP Send Via Email ..");
-                    }else if(smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password)){
-                        //
-                        log.info("OTP Send Via SMS ..");
                     }else{
                         results.getErrors().add(new ExcelImportError("Send OTP for "+account.getEmail()+" failed."));
                     }
@@ -319,7 +316,7 @@ public class UsersService implements IUsersService {
                     //
                     userAccountsRepository.save(account);
                     //
-                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password)){
+                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
                         //
                     }
                 }
@@ -415,7 +412,7 @@ public class UsersService implements IUsersService {
 
                 userAccountsRepository.save(account.get());
 
-                if(smsService.sendPasswordEmail(account.get().getEmail(),account.get().getFullName(),password)){
+                if(smsService.sendPasswordEmail(account.get().getEmail(),account.get().getFullName(),password,account.get().getStaffNo())){
                     //
                     return true;
                 }

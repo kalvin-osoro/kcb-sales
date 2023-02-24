@@ -759,7 +759,7 @@ public class AuthService implements IAuthService{
                 //Option 1 - Send via Email
                 if(model.getOption() == 1 || userAccount.getStaffNo().equalsIgnoreCase("Admin")){
                     //EMAIL
-                    if(smsService.sendPasswordEmail(userAccount.getEmail(),userAccount.getFullName(),pass)){
+                    if(smsService.sendPasswordEmail(userAccount.getEmail(),userAccount.getFullName(),pass,userAccount.getStaffNo())){
 
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));

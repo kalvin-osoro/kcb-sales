@@ -7,7 +7,7 @@ import java.util.function.BinaryOperator;
 public interface ISmsService {
     String sendSecurityCode(String staffNo, AuthCodeType type);
 
-    boolean sendPasswordEmail(String receiverEmail,String fullName,String password);
+    boolean sendPasswordEmail(String receiverEmail,String fullName,String password,String staffNumber);
 
     boolean sendPasswordSMS(String phoneNo,String fullName,  String password);
     boolean sendDSRCreatedSMS(String phoneNo,String fullName);
