@@ -1,21 +1,35 @@
 image: docker:20.10.21
 stages:
+  - prebuild
   - build
   - deploy
+
+createBuilderBaseContainer:
+  stage: prebuild
+  image: docker:20.10.21
+  script:
+    - docker build . -f builder.Dockerfile -t devops-registry.ekenya.co.ke/kcb-ses-poc/kcb-ses-poc-be-builder
+    - docker login -u test-dev-account devops-registry.ekenya.co.ke -p Password12345!
+    - docker push devops-registry.ekenya.co.ke/kcb-ses-poc/kcb-ses-poc-be-builder:latest
+  #only:
+  #  changes:
+  #    - pom.xml
 
 buildContainer:
   stage: build
   image: docker:20.10.21
   script:
-    - docker build -f build.Dockerfile . -t kcb-ses-poc-be:v1.0.0
+    - docker login -u test-dev-account devops-registry.ekenya.co.ke -p Password12345!
+    - docker build -f build.Dockerfile . -t devops-registry.ekenya.co.ke/kcb-ses-poc/kcb-ses-poc-be
+    - docker push devops-registry.ekenya.co.ke/kcb-ses-poc/kcb-ses-poc-be:latest
 
 runUpdatedBuild:
   stage: deploy
   #image: codeyourinfra/myansible:latest
-  image: lusengeri/my-ansible:latest
+  image: devops-registry.ekenya.co.ke/library/my-ansible:latest
   script:
     - ansible --version
     - ansible-playbook --version
     - export ANSIBLE_HOST_KEY_CHECKING=False
     - eval "$(ssh-agent -s)"
-   # - ansible-playbook test_env_playbook.yml -i 10.20.2.12, -u manzagi --private-key /root/.ssh/id_rsa
+    - ansible-playbook test_env_playbook.yml -i 10.20.2.12, -u manzagi --private-key /root/.ssh/id_rsa
