@@ -27,7 +27,7 @@ import java.util.Optional;
 
 @Slf4j
 @Configuration
-public class DbInitializer {
+public class  DbInitializer {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
