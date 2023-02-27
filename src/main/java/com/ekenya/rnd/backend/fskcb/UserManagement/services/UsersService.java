@@ -117,7 +117,7 @@ public class UsersService implements IUsersService {
 
         try{
 
-            if(!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+//            if(!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
 
                 //
                 String password = Utility.generatePIN();
@@ -167,7 +167,7 @@ public class UsersService implements IUsersService {
                 }
                 //
                 return true;
-            }
+//            }
 
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
