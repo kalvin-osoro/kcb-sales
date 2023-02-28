@@ -1008,8 +1008,8 @@ public class DSRPortalService implements IDSRPortalService {
                                     "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
                                     "Please use this link to download the app:\n" +
                                     "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-                                    "and this linnk to access the portal:\n" +
-                                    "http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com//\n\n" +
+//                                    "and this linnk to access the portal:\n" +
+//                                    "http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com//\n\n" +
                                     "Thank you.";
                             sendEmail(account1.getEmail(), subject, message);
                         }
@@ -1024,8 +1024,8 @@ public class DSRPortalService implements IDSRPortalService {
                                     "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
                                     "Please use this link to download the app:\n" +
                                     "https://play.google.com/apps/internaltest/4701657927919684045\n\n" +
-                                    "and this linnk to access the portal:\n" +
-                                    "http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com//\n\n" +
+//                                    "and this linnk to access the portal:\n" +
+//                                    "http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com//\n\n" +
                                     "Thank you.";
                             sendSMS(account1.getPhoneNo(), message);
 

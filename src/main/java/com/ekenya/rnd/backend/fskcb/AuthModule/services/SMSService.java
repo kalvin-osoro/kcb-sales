@@ -143,11 +143,18 @@ public class SMSService implements ISmsService{
 
 
     @Override
-    public boolean sendPasswordSMS(String phoneNo,String fullName, String password) {
+    public boolean sendPasswordSMS(String phoneNo,String fullName, String password,String staffNo) {
 
         try{
             //
-            String message = "Hello " + fullName + ", use this as your Password to login : " + password +"\nRemember to change it after you signin";
+            String message = "Hello " + fullName + "\n your staffNo is : " + staffNo + " and your password is " + password +
+                    ". Please use these credentials to log in to the portal. \n" +
+                    "Please use this link to access the back office portal:\n" +
+                    "https://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com\n" +
+                    "Thank you.\n" +
+                    "Powered by Eclectics.io";
+
+            //Please use these credentials to log in to the portal. We highly recommend that you change your password immediately after logging in, for added security.
             //
             JsonObject emailResponse = attemptSendSMS(message, phoneNo);
             if (emailResponse == null) {
@@ -239,7 +246,7 @@ public class SMSService implements ISmsService{
         } else {
             jsonObjectBody.addProperty("from", SMS_SENDER_ID);
         }
-//        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+//        jsonObjectBody.addProperty("from", SMS_SENDER_ID1);
         jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
         jsonObjectBody.addProperty("clientid", client_id);
         jsonObjectBody.addProperty("username", SMS_USER_NAME);
@@ -313,5 +320,6 @@ public class SMSService implements ISmsService{
         return diff > 1200;
     };
 
-    //function to url shorten
+
+
 }

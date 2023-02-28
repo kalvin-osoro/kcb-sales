@@ -117,7 +117,7 @@ public class UsersService implements IUsersService {
 
         try{
 
-//            if(!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            if(!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
 
                 //
                 String password = Utility.generatePIN();
@@ -145,7 +145,7 @@ public class UsersService implements IUsersService {
                         //
                         log.info("OTP send via EMAIL "+account.getEmail());
                         //return true;
-                    }else if(smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password)){
+                    }else if(smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password,account.getStaffNo())){
                         //
                         log.info("OTP send via PhoneNo "+account.getPhoneNumber());
                     }else{
@@ -167,7 +167,7 @@ public class UsersService implements IUsersService {
                 }
                 //
                 return true;
-//            }
+            }
 
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
@@ -203,7 +203,11 @@ public class UsersService implements IUsersService {
                     if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
                         //
                         log.info("OTP Send Via Email ..");
-                    }else{
+
+                    } else if (smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password,account.getStaffNo())) {
+                        log.info("OTP send via PhoneNo "+account.getPhoneNumber());
+
+                    } else{
                         results.getErrors().add(new ExcelImportError("Send OTP for "+account.getEmail()+" failed."));
                     }
                     imported ++;

@@ -9,7 +9,7 @@ public interface ISmsService {
 
     boolean sendPasswordEmail(String receiverEmail,String fullName,String password,String staffNumber);
 
-    boolean sendPasswordSMS(String phoneNo,String fullName,  String password);
+    boolean sendPasswordSMS(String phoneNo,String fullName,  String password,String staffNo);
     boolean sendDSRCreatedSMS(String phoneNo,String fullName);
 
 

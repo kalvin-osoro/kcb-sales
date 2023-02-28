@@ -774,7 +774,7 @@ public class AuthService implements IAuthService{
                     }
                 }else{
                     //Option 0 - Send via SMS
-                    if(smsService.sendPasswordSMS(userAccount.getPhoneNumber(), userAccount.getFullName(), pass)){
+                    if(smsService.sendPasswordSMS(userAccount.getPhoneNumber(), userAccount.getFullName(), pass,userAccount.getStaffNo())){
 
                         //
                         userAccount.setPassword(passwordEncoder.encode(pass));
