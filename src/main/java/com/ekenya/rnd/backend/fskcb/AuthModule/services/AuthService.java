@@ -4,6 +4,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityAuthCodesRepository;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionAnswersRepo;
 import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.ISecurityQuestionsRepo;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.LoginLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
@@ -51,6 +52,9 @@ public class AuthService implements IAuthService{
     public static int MAX_PIN_LOGIN_ATTEMPTS = 4;
     @Autowired
     ObjectMapper mObjectMapper;
+
+    @Autowired
+    LoginLogsRepository loginLogsRepository;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -839,6 +843,32 @@ public class AuthService implements IAuthService{
             mLogger.log(Level.SEVERE,"Change PIN/password attempt failed.", ex);
         }
         return false;
+    }
+
+    @Override
+    public List<ObjectNode> getLoginLogs() {
+        try {
+            List<ObjectNode> list = new ArrayList<>();
+            List<LoginLogs> logs = loginLogsRepository.findAll();
+            for (LoginLogs log : logs) {
+                ObjectNode node = mObjectMapper.createObjectNode();
+                node.put("id",log.getId());
+//                node.put("staffNo",log.getStaffNo());
+                node.put("loginTime",log.getLoginDate().toString());
+//                node.put("logoutTime",log.getLogoutTime().toString());
+//                node.put("ipAddress",log.getIpAddress());
+//                node.put("browser",log.getBrowser());
+//                node.put("os",log.getOs());
+//                node.put("device",log.getDevice());
+                node.put("device",log.isSuccessful());
+                node.put("status",log.getEmail());
+                list.add(node);
+            }
+            return list;
+        } catch (Exception e) {
+            mLogger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return null;
     }
 
 

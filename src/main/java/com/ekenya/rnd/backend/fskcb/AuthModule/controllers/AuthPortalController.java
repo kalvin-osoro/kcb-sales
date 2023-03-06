@@ -1,9 +1,12 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.LoginLogs;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.LoginLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
 import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
+import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 @CrossOrigin(origins = "*")
 @Api(value = "Auth Controller for Field Agent Rest Api")
@@ -23,6 +27,9 @@ public class AuthPortalController {
     private IAuthService authService;
     @Autowired
     DateFormat dateFormat;
+
+    @Autowired
+    LoginLogsRepository loginLogsRepository;
 
     @Autowired
     ObjectMapper mObjectMapper;
@@ -49,6 +56,8 @@ public class AuthPortalController {
                 node.put("issued",dateFormat.format(resp.getIssued()));
                 node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());
+                //
+                loginTrail(resp.getName(),true,"portal");
                 //
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"User login successful"));
             }else if(resp.getErrorMessage() != null){
@@ -123,5 +132,17 @@ public class AuthPortalController {
         }
         return ResponseEntity.ok(new BaseAppResponse(0,objectMapper.createObjectNode(),"Request Failed"));
 
+    }
+
+
+    public  void loginTrail(String username,  boolean loginStatus, String channel) {
+        LoginLogs loginTrailEntity = new LoginLogs();
+        loginTrailEntity.setFullName(username);
+//        loginTrailEntity.setIpAddress(ipAddress);
+        loginTrailEntity.setSuccessful(loginStatus);
+        loginTrailEntity.setChannel(channel);
+//        loginTrailEntity.setLoginMessage(loginMessage);
+        loginTrailEntity.setLoginDate(new Date());
+        loginLogsRepository.save(loginTrailEntity);
     }
 }

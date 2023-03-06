@@ -20,7 +20,7 @@ public class LoginLogs {
     private Long id;
     private String email;
     private Date loginDate;
-    private boolean successful;
+    private boolean successful=false;
     private String fullName;
     private String channel;
 }

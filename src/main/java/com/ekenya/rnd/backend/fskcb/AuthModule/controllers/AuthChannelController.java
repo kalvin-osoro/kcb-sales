@@ -1,5 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.controllers;
 
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities.LoginLogs;
+import com.ekenya.rnd.backend.fskcb.AuthModule.datasource.repositories.LoginLogsRepository;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.reqs.*;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.AccountLookupState;
 import com.ekenya.rnd.backend.fskcb.AuthModule.models.resp.LoginResponse;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -28,6 +31,9 @@ import java.util.List;
 public class AuthChannelController {
     @Autowired
     DateFormat dateFormat;
+
+    @Autowired
+    LoginLogsRepository loginLogsRepository;
     @Autowired
     IAuthService authService;
     @Autowired
@@ -66,6 +72,7 @@ public class AuthChannelController {
                 node.put("changePin",resp.isShouldChangePin() ? 1 : 0);
                 node.put("setSecQns",resp.isShouldSetSecQns() ? 1 : 0);
                 //
+                loginTrail(resp.getName(),true,"app");
                 return ResponseEntity.ok(new BaseAppResponse(1, node, "Request processed successful"));
 
             }else if(resp.getErrorMessage() != null){
@@ -247,5 +254,16 @@ public class AuthChannelController {
         }
         //
         return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
+    }
+
+    public  void loginTrail(String username,  boolean loginStatus, String channel) {
+        LoginLogs loginTrailEntity = new LoginLogs();
+        loginTrailEntity.setFullName(username);
+//        loginTrailEntity.setIpAddress(ipAddress);
+        loginTrailEntity.setSuccessful(loginStatus);
+        loginTrailEntity.setChannel(channel);
+//        loginTrailEntity.setLoginMessage(loginMessage);
+        loginTrailEntity.setLoginDate(new Date());
+        loginLogsRepository.save(loginTrailEntity);
     }
 }

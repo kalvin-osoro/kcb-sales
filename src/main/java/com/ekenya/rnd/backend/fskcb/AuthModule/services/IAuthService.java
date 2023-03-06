@@ -37,4 +37,6 @@ public interface IAuthService {
     boolean resetDSRPIN(ResetDSRPINRequest model);
 
     boolean changeDSRPhoneNo(ChangeDSRPhoneNoRequest model);
+
+    List<ObjectNode> getLoginLogs();
 }

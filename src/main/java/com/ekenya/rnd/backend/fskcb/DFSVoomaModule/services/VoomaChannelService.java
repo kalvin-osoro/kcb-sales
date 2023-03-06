@@ -1237,6 +1237,7 @@ public class VoomaChannelService implements IVoomaChannelService {
                 objectNode.put("id", agentOnboardV1.getId());
                 objectNode.put("agentName", agentOnboardV1.getAccountName());
                 objectNode.put("email", agentOnboardV1.getBusinessEmail());
+                objectNode.put("accNumber", agentOnboardV1.getAccountNumber());
                 objectNode.put("paybill", Utility.generateRandomNumber());
                 objectNode.put("till", Utility.generateRandomNumber());
                 objectNode.put("createdOn", agentOnboardV1.getCreatedOn().getTime());
