@@ -416,11 +416,12 @@ public class UsersService implements IUsersService {
 
                 userAccountsRepository.save(account.get());
 
-                if(smsService.sendPasswordEmail(account.get().getEmail(),account.get().getFullName(),password,account.get().getStaffNo())){
+                smsService.sendPasswordSMS(account.get().getPhoneNumber(),account.get().getFullName(),password,account.get().getStaffNo());
                     //
-                    return true;
+                return true;
                 }
-            }
+
+
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }

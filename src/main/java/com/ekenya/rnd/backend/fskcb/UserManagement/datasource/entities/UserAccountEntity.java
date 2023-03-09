@@ -3,6 +3,8 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities;
 import com.ekenya.rnd.backend.utils.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -19,6 +21,8 @@ import java.util.Set;
 @Where(clause = "deleted = false")
 @DynamicInsert
 @DynamicUpdate
+@Getter
+@Setter
 public class UserAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
