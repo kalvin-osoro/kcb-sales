@@ -543,7 +543,7 @@ public class UsersService implements IUsersService {
             account.setLastModified(Calendar.getInstance().getTime());
             userAccountsRepository.save(account);
             //
-            return false;
+            return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }
@@ -562,7 +562,7 @@ public class UsersService implements IUsersService {
             account.setLastModified(Calendar.getInstance().getTime());
             userAccountsRepository.save(account);
             //
-            return false;
+            return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }
