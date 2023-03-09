@@ -238,7 +238,7 @@ public class UsersVC {
         }
     }
     //delete user
-    @PostMapping("/users-delete-user")
+    @PostMapping("/delete-user")
     public ResponseEntity<?> deleteUser(@RequestBody DeleteWrapper request) {
 
         //INSIDE SERVICE
