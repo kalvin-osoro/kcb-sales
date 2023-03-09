@@ -108,7 +108,10 @@ public class AuthService implements IAuthService{
                 response.setSuccess(false);
                 response.setErrorMessage("Account NOT allowed to use this channel");
                 return response;
-            }
+//            } else if(account.isBlocked()==true){
+//                    response.setSuccess(false);
+//                    response.setErrorMessage("Account is Blocked");
+//                    return response;
             }else if(account.isBlocked() || account.getRemLoginAttempts() <=0){
                 response.setSuccess(false);
                 response.setRemAttempts(account.getRemLoginAttempts());
