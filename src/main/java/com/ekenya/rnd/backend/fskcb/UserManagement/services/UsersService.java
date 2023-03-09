@@ -251,6 +251,8 @@ public class UsersService implements IUsersService {
                 node.put("email", account.getEmail());
                 node.put("phoneNo", account.getPhoneNumber());
                 node.put("verified", account.isVerified());
+                node.put("blocked", account.isBlocked());
+                node.put("loginAttempt", account.getRemLoginAttempts());
                 node.put("type", account.getAccountType().toString());
                 try {
                     if (account.getLastLogin() != null) {
