@@ -248,7 +248,6 @@ public class UsersVC {
         if(success){
             //Object
             ObjectNode node = mObjectMapper.createObjectNode();
-//          node.put("id",0);
 
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
             }else{
