@@ -14,6 +14,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.RoleR
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
@@ -96,12 +97,13 @@ public class UsersService implements IUsersService {
             userAccountsRepository.save(account);
 
             return true;
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
         }
 
         return false;
     }
+
     public UserAccountEntity findById(Long id) {
         return userAccountsRepository.findById(id).orElse(null);//.orElseThrow(() -> new ResourceNotFoundException("UseApp","id", + id));
     }
@@ -115,9 +117,9 @@ public class UsersService implements IUsersService {
     public boolean attemptCreateUser(AddAdminUserRequest model, AccountType type, boolean verified) {
 
 
-        try{
+        try {
 
-            if(!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()){
+            if (!userAccountsRepository.findByStaffNo(model.getStaffNo()).isPresent()) {
 
                 //
                 String password = Utility.generatePIN();
@@ -134,32 +136,32 @@ public class UsersService implements IUsersService {
                 //userRepository.save(account);//save user to db
                 //
 
-                if(type == AccountType.ADMIN) {
+                if (type == AccountType.ADMIN) {
                     //CAN ACCESS PORTAL
                     UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
                     account.setRoles(Collections.singleton(userRole));//set role to user
                     userAccountsRepository.save(account);//save user to db
 
                     //
-                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
+                    if (smsService.sendPasswordEmail(account.getEmail(), account.getFullName(), password, account.getStaffNo())) {
                         //
-                        log.info("OTP send via EMAIL "+account.getEmail());
+                        log.info("OTP send via EMAIL " + account.getEmail());
                         //return true;
-                    }else if(smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password,account.getStaffNo())){
+                    } else if (smsService.sendPasswordSMS(account.getPhoneNumber(), account.getFullName(), password, account.getStaffNo())) {
                         //
-                        log.info("OTP send via PhoneNo "+account.getPhoneNumber());
-                    }else{
+                        log.info("OTP send via PhoneNo " + account.getPhoneNumber());
+                    } else {
 
                     }
-                }else{
+                } else {
                     //DSR Account..
                     UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
                     account.setRoles(Collections.singleton(userRole));//set role to user
 //                    userAccountsRepository.save(account);//save user to db
-                    if (model.getIsRm()){
+                    if (model.getIsRm()) {
                         userRole = roleRepository.findByName(SystemRoles.RM).get();//get role from db
                         account.setRoles(Collections.singleton(userRole));//set role to user
-                       //save user to db
+                        //save user to db
 
                     }
                     userAccountsRepository.save(account);
@@ -169,8 +171,8 @@ public class UsersService implements IUsersService {
                 return true;
             }
 
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
         }
 
         return false;
@@ -180,14 +182,14 @@ public class UsersService implements IUsersService {
     public ObjectNode attemptImportUsers(MultipartFile importFile) {
 
 
-        try{
+        try {
 
             UsersExcelImportResult results = ExcelHelper.excelToUserAccounts(importFile.getInputStream());
 
             int imported = 0;
-            for (UserAccountEntity account: results.getAccounts()) {
+            for (UserAccountEntity account : results.getAccounts()) {
                 //
-                if(!userAccountsRepository.findByStaffNo(account.getStaffNo()).isPresent()){
+                if (!userAccountsRepository.findByStaffNo(account.getStaffNo()).isPresent()) {
                     //
                     account.setAccountType(AccountType.ADMIN);
                     //
@@ -200,37 +202,37 @@ public class UsersService implements IUsersService {
                     //
                     userAccountsRepository.save(account);
                     //
-                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
+                    if (smsService.sendPasswordEmail(account.getEmail(), account.getFullName(), password, account.getStaffNo())) {
                         //
                         log.info("OTP Send Via Email ..");
 
-                    } else if (smsService.sendPasswordSMS(account.getPhoneNumber(),account.getFullName(),password,account.getStaffNo())) {
-                        log.info("OTP send via PhoneNo "+account.getPhoneNumber());
+                    } else if (smsService.sendPasswordSMS(account.getPhoneNumber(), account.getFullName(), password, account.getStaffNo())) {
+                        log.info("OTP send via PhoneNo " + account.getPhoneNumber());
 
-                    } else{
-                        results.getErrors().add(new ExcelImportError("Send OTP for "+account.getEmail()+" failed."));
+                    } else {
+                        results.getErrors().add(new ExcelImportError("Send OTP for " + account.getEmail() + " failed."));
                     }
-                    imported ++;
-                }else{
-                    results.getErrors().add(new ExcelImportError(0,0,"An account with Staff No '"+account.getStaffNo()+"' already exists"));
+                    imported++;
+                } else {
+                    results.getErrors().add(new ExcelImportError(0, 0, "An account with Staff No '" + account.getStaffNo() + "' already exists"));
                 }
             }
             //
             ObjectNode node = mObjectMapper.createObjectNode();
-            node.put("imported",imported);
+            node.put("imported", imported);
             //
-            if(!results.getErrors().isEmpty()){
+            if (!results.getErrors().isEmpty()) {
                 //
-                node.putPOJO("import-errors",mObjectMapper.convertValue(results.getErrors(),ArrayNode.class));
+                node.putPOJO("import-errors", mObjectMapper.convertValue(results.getErrors(), ArrayNode.class));
                 //
-            }else{
+            } else {
                 //
-                node.putPOJO("import-errors",mObjectMapper.createArrayNode());
+                node.putPOJO("import-errors", mObjectMapper.createArrayNode());
                 //
             }
             return node;
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
         }
         return null;
     }
@@ -238,29 +240,29 @@ public class UsersService implements IUsersService {
     @Override
     public List<ObjectNode> loadAllUsers() {
 
-        try{
+        try {
             List<ObjectNode> list = new ArrayList<>();
-            for(UserAccountEntity account : userAccountsRepository.findAllByAccountTypeAndStatus(AccountType.ADMIN,Status.ACTIVE)){
+            for (UserAccountEntity account : userAccountsRepository.findAllByAccountTypeAndStatus(AccountType.ADMIN, Status.ACTIVE)) {
                 ObjectNode node = mObjectMapper.createObjectNode();
 
-                node.put("id",account.getId());
-                node.put("name",account.getFullName());
-                node.put("staffNo",account.getStaffNo());
-                node.put("email",account.getEmail());
-                node.put("phoneNo",account.getPhoneNumber());
-                node.put("verified",account.isVerified());
-                node.put("type",account.getAccountType().toString());
+                node.put("id", account.getId());
+                node.put("name", account.getFullName());
+                node.put("staffNo", account.getStaffNo());
+                node.put("email", account.getEmail());
+                node.put("phoneNo", account.getPhoneNumber());
+                node.put("verified", account.isVerified());
+                node.put("type", account.getAccountType().toString());
                 try {
-                    if(account.getLastLogin() != null) {
+                    if (account.getLastLogin() != null) {
                         node.put("lastLogin", dateFormat.format(account.getLastLogin()));
-                    }else{
+                    } else {
                         node.put("lastLogin", "");
                     }
-                }catch (Exception ex){
-                    log.error(ex.getMessage(),ex);
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
                     node.put("lastLogin", "");
                 }
-                node.put("lastLocation",account.getLastCoords());
+                node.put("lastLocation", account.getLastCoords());
                 //
 //                ArrayNode profiles = mObjectMapper.createArrayNode();
 //
@@ -281,8 +283,8 @@ public class UsersService implements IUsersService {
                 list.add(node);
             }
             return list;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         return null;
@@ -291,7 +293,7 @@ public class UsersService implements IUsersService {
     @Override
     public boolean syncUsersWithCRM() {
 
-        try{
+        try {
             //Pull add user accounts
             JsonArray crmUsers = crmService.fetchStaffAccounts();
 
@@ -301,7 +303,7 @@ public class UsersService implements IUsersService {
 
                 String staffNo = crmUser.get("staff-no").getAsString();
 
-                if(!userAccountsRepository.findByStaffNo(staffNo).isPresent()){
+                if (!userAccountsRepository.findByStaffNo(staffNo).isPresent()) {
                     //
                     UserAccountEntity account = new UserAccountEntity();
                     account.setStaffNo(staffNo);
@@ -320,15 +322,15 @@ public class UsersService implements IUsersService {
                     //
                     userAccountsRepository.save(account);
                     //
-                    if(smsService.sendPasswordEmail(account.getEmail(),account.getFullName(),password,account.getStaffNo())){
+                    if (smsService.sendPasswordEmail(account.getEmail(), account.getFullName(), password, account.getStaffNo())) {
                         //
                     }
                 }
 
             }
             return true;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -336,59 +338,59 @@ public class UsersService implements IUsersService {
     @Override
     public ObjectNode loadUserDetails(AdminUserDetailsRequest model) {
 
-        try{
+        try {
 
             Optional<UserAccountEntity> account = null;
-            if(model.getUserId() != null ) {
+            if (model.getUserId() != null) {
                 account = userAccountsRepository.findById(model.getUserId());
-            }else if(model.getStaffNo() != null ){
+            } else if (model.getStaffNo() != null) {
                 account = userAccountsRepository.findByStaffNo(model.getStaffNo());
             }
             //
-            if(account == null || account.isEmpty()){
-                return  null;
+            if (account == null || account.isEmpty()) {
+                return null;
             }
             //
             ObjectNode node = mObjectMapper.createObjectNode();
-            node.put("id",account.get().getId());
-            node.put("name",account.get().getFullName());
-            node.put("staffNo",account.get().getStaffNo());
-            node.put("email",account.get().getEmail());
-            node.put("phoneNo",account.get().getPhoneNumber());
-            node.put("verified",account.get().isVerified());
-            node.put("type",account.get().getAccountType().toString());
+            node.put("id", account.get().getId());
+            node.put("name", account.get().getFullName());
+            node.put("staffNo", account.get().getStaffNo());
+            node.put("email", account.get().getEmail());
+            node.put("phoneNo", account.get().getPhoneNumber());
+            node.put("verified", account.get().isVerified());
+            node.put("type", account.get().getAccountType().toString());
             try {
-                if(account.get().getLastLogin() != null) {
+                if (account.get().getLastLogin() != null) {
                     node.put("lastLogin", dateFormat.format(account.get().getLastLogin()));
-                }else{
+                } else {
                     node.put("lastLogin", "");
                 }
-            }catch (Exception ex){
-                log.error(ex.getMessage(),ex);
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
                 node.put("lastLogin", "");
             }
-            node.put("lastLocation",account.get().getLastCoords());
+            node.put("lastLocation", account.get().getLastCoords());
 
             //Roles
             ArrayNode roles = mObjectMapper.createArrayNode();
-            for (UserRoleEntity role: account.get().getRoles()) {
+            for (UserRoleEntity role : account.get().getRoles()) {
                 ObjectNode j = mObjectMapper.createObjectNode();
-                j.put("name",role.getName());
-                j.put("desc",role.getInfo());
+                j.put("name", role.getName());
+                j.put("desc", role.getInfo());
                 roles.add(j);
             }
             node.putPOJO("roles", roles);
 
             //Profiles
             ArrayNode profiles = mObjectMapper.createArrayNode();
-            for (ProfileAndUserEntity userProfiles:
-                 profilesAndUsersRepository.findAllByUserId(account.get().getId())) {
+            for (ProfileAndUserEntity userProfiles :
+                    profilesAndUsersRepository.findAllByUserId(account.get().getId())) {
                 UserProfileEntity profile = userProfilesRepository.findById(userProfiles.getProfileId()).get();
 
                 ObjectNode prof = mObjectMapper.createObjectNode();
-                prof.put("name",profile.getName());
-                prof.put("code",profile.getCode());
-                prof.put("desc",profile.getInfo());
+                prof.put("name", profile.getName());
+                prof.put("code", profile.getCode());
+                prof.put("desc", profile.getInfo());
 
                 profiles.add(prof);
             }
@@ -396,8 +398,8 @@ public class UsersService implements IUsersService {
             node.putPOJO("profiles", profiles);
             //
             return node;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -405,10 +407,10 @@ public class UsersService implements IUsersService {
     @Override
     public boolean attemptResetPassword(ResetUserPasswordRequest model) {
 
-        try{
+        try {
             //
             Optional<UserAccountEntity> account = userAccountsRepository.findByStaffNo(model.getStaffNo());
-            if(account.isPresent()){
+            if (account.isPresent()) {
                 //
                 String password = Utility.generatePIN();
 
@@ -416,14 +418,14 @@ public class UsersService implements IUsersService {
 
                 userAccountsRepository.save(account.get());
 
-                smsService.sendPasswordSMS(account.get().getPhoneNumber(),account.get().getFullName(),password,account.get().getStaffNo());
-                    //
+                smsService.sendPasswordSMS(account.get().getPhoneNumber(), account.get().getFullName(), password, account.get().getStaffNo());
+                //
                 return true;
-                }
+            }
 
 
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -431,22 +433,22 @@ public class UsersService implements IUsersService {
     @Override
     public boolean assignUserToProfiles(AssignUserProfileRequest model) {
 
-        try{
+        try {
             //
             UserAccountEntity account = userAccountsRepository.findByStaffNo(model.getStaffNo()).get();
             //
-            for (long pid: model.getProfiles()) {
+            for (long pid : model.getProfiles()) {
                 //
                 UserProfileEntity profile = userProfilesRepository.findById(pid).get();
                 //
-                if(!profilesAndUsersRepository.findAllByUserIdAndProfileIdAndStatus(account.getId(),profile.getId(),Status.ACTIVE).isPresent()){
+                if (!profilesAndUsersRepository.findAllByUserIdAndProfileIdAndStatus(account.getId(), profile.getId(), Status.ACTIVE).isPresent()) {
                     //
                     ProfileAndUserEntity userProfile = new ProfileAndUserEntity();
                     userProfile.setProfileId(profile.getId());
                     userProfile.setUserId(account.getId());
                     //
                     profilesAndUsersRepository.save(userProfile);
-                }else{
+                } else {
                     //Already exists ..
                 }
             }
@@ -458,15 +460,15 @@ public class UsersService implements IUsersService {
 //            roleRepository.save(userRole);
 
             return true;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
 
     @Override
     public boolean updateUserProfiles(UpdateUserProfilesRequest model) {
-        try{
+        try {
             //
             UserAccountEntity account = userAccountsRepository.findByStaffNo(model.getStaffNo()).get();
 
@@ -474,27 +476,27 @@ public class UsersService implements IUsersService {
 //            log.info("Model {}", model);
 
             //Selected
-            for (long pid: model.getProfiles()) {
+            for (long pid : model.getProfiles()) {
                 //
                 UserProfileEntity profile = userProfilesRepository.findById(pid).get();
 //                log.info("Profile {}", profile);
 
                 //
                 Optional<ProfileAndUserEntity> profileUser =
-                        profilesAndUsersRepository.findAllByUserIdAndProfileIdAndStatus(account.getId(),profile.getId(),Status.ACTIVE);
+                        profilesAndUsersRepository.findAllByUserIdAndProfileIdAndStatus(account.getId(), profile.getId(), Status.ACTIVE);
 
 //                log.info("PrpfileUser {}", profileUser);
 
 
                 //New Adding...
-                if(!profileUser.isPresent()){
+                if (!profileUser.isPresent()) {
                     //
                     ProfileAndUserEntity userProfile = new ProfileAndUserEntity();
                     userProfile.setProfileId(profile.getId());
                     userProfile.setUserId(account.getId());
                     //
                     profilesAndUsersRepository.save(userProfile);
-                }else{
+                } else {
                     //Removed
                     profileUser.get().setStatus(Status.INACTIVE);
                     //
@@ -503,16 +505,16 @@ public class UsersService implements IUsersService {
             }
 
             //Check those note included in selection and remove
-            for (ProfileAndUserEntity e: profilesAndUsersRepository.findAllByUserId(account.getId())) {
+            for (ProfileAndUserEntity e : profilesAndUsersRepository.findAllByUserId(account.getId())) {
                 //
                 boolean found = false;
-                for (long id: model.getProfiles()) {
-                    if(id == e.getProfileId()){
+                for (long id : model.getProfiles()) {
+                    if (id == e.getProfileId()) {
                         found = true;
                     }
                 }
                 //Remove..
-                if(!found){
+                if (!found) {
                     //
                     e.setStatus(Status.INACTIVE);
                     //
@@ -525,8 +527,8 @@ public class UsersService implements IUsersService {
 //        userRole.setUserProfiles(roleUserProfiles);
 //        roleRepository.save(userRole);
             return true;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -534,7 +536,7 @@ public class UsersService implements IUsersService {
     @Override
     public boolean attemptBlockUser(Long userId) {
 
-        try{
+        try {
 
             UserAccountEntity account = userAccountsRepository.findById(userId).get();
             //
@@ -544,8 +546,8 @@ public class UsersService implements IUsersService {
             userAccountsRepository.save(account);
             //
             return true;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -553,7 +555,7 @@ public class UsersService implements IUsersService {
     @Override
     public boolean attemptUnblockUser(Long userId) {
 
-        try{
+        try {
 
             UserAccountEntity account = userAccountsRepository.findById(userId).get();
             //
@@ -563,25 +565,25 @@ public class UsersService implements IUsersService {
             userAccountsRepository.save(account);
             //
             return true;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
 
     @Override
     public ArrayNode loadUserAuditTrail(Long userId) {
-        try{
+        try {
 
             UserAccountEntity account = userAccountsRepository.findById(userId).get();
             //
 
             ArrayNode list = mObjectMapper.createArrayNode();
 
-            for (UserAuditTrailEntity entry: userAuditTrailRepository.findByUserId(account.getId())) {
+            for (UserAuditTrailEntity entry : userAuditTrailRepository.findByUserId(account.getId())) {
 
                 ObjectNode node = mObjectMapper.createObjectNode();
-                node.put("action",entry.getAction().toString());
+                node.put("action", entry.getAction().toString());
                 node.put("desc", entry.getDetails());
                 node.put("date", dateFormat.format(entry.getDateCreated()));
 
@@ -589,8 +591,8 @@ public class UsersService implements IUsersService {
             }
             //
             return list;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         return null;
@@ -599,44 +601,44 @@ public class UsersService implements IUsersService {
     @Override
     public boolean attemptCreateSecurityQuestion(AddSecurityQnRequest model) {
 
-        try{
+        try {
 
-            if(!securityQuestionsRepo.findByTitle(model.getTitle()).isPresent()){
+            if (!securityQuestionsRepo.findByTitle(model.getTitle()).isPresent()) {
 
                 SecurityQuestionEntity qn = new SecurityQuestionEntity();
                 qn.setStatus(Status.ACTIVE);
                 qn.setTitle(model.getTitle());
-                if(model.getType().equalsIgnoreCase(SecurityQuestionType.YES_NO.toString())) {
+                if (model.getType().equalsIgnoreCase(SecurityQuestionType.YES_NO.toString())) {
                     qn.setType(SecurityQuestionType.YES_NO);
-                }else if(model.getType().equalsIgnoreCase(SecurityQuestionType.SELECT_OPTIONS.toString())) {
+                } else if (model.getType().equalsIgnoreCase(SecurityQuestionType.SELECT_OPTIONS.toString())) {
                     //
                     qn.setType(SecurityQuestionType.SELECT_OPTIONS);
                     //
-                    if(model.getChoices()!=null && !model.getChoices().isEmpty()){
+                    if (model.getChoices() != null && !model.getChoices().isEmpty()) {
                         List<SecQuestionOptionEntity> optionEntities = new ArrayList<>();
-                        for (String e: model.getChoices()) {
+                        for (String e : model.getChoices()) {
                             SecQuestionOptionEntity option = new SecQuestionOptionEntity();
                             option.setTitle(e);
                             optionEntities.add(option);
                         }
                         qn.setOptions(optionEntities);
                     }
-                }else if(model.getType().equalsIgnoreCase(SecurityQuestionType.MULTI_LINE.toString())) {
+                } else if (model.getType().equalsIgnoreCase(SecurityQuestionType.MULTI_LINE.toString())) {
                     qn.setType(SecurityQuestionType.MULTI_LINE);
-                }else if(model.getType().equalsIgnoreCase(SecurityQuestionType.NUMERICAL.toString())) {
+                } else if (model.getType().equalsIgnoreCase(SecurityQuestionType.NUMERICAL.toString())) {
                     qn.setType(SecurityQuestionType.NUMERICAL);
-                }else{
+                } else {
                     qn.setType(SecurityQuestionType.ONE_LINE);
                 }
 
                 //
                 securityQuestionsRepo.save(qn);
-            }else{
+            } else {
                 //Qn already exists
             }
             return true;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -644,50 +646,64 @@ public class UsersService implements IUsersService {
     @Override
     public List<ObjectNode> loadAllSecurityQuestions() {
 
-        try{
+        try {
             List<ObjectNode> list = new ArrayList<>();
-            for(SecurityQuestionEntity qn : securityQuestionsRepo.findAll()){
+            for (SecurityQuestionEntity qn : securityQuestionsRepo.findAll()) {
                 ObjectNode node = mObjectMapper.createObjectNode();
 
-                node.put("id",qn.getId());
-                node.put("title",qn.getTitle());
-                if(qn.getType() != null) {
+                node.put("id", qn.getId());
+                node.put("title", qn.getTitle());
+                if (qn.getType() != null) {
                     node.put("type", qn.getType().toString());
-                }else{
+                } else {
                     node.put("type", SecurityQuestionType.ONE_LINE.toString());
                 }
                 //
-                if(!qn.getOptions().isEmpty()) {
+                if (!qn.getOptions().isEmpty()) {
                     ArrayNode options = mObjectMapper.createArrayNode();
-                    for (SecQuestionOptionEntity opt:
-                         qn.getOptions()) {
+                    for (SecQuestionOptionEntity opt :
+                            qn.getOptions()) {
 
                         ObjectNode option = mObjectMapper.createObjectNode();
-                        option.put("title",opt.getTitle());
-                        option.put("id",opt.getId());
+                        option.put("title", opt.getTitle());
+                        option.put("id", opt.getId());
                         options.add(option);
                     }
                     node.putPOJO("options", options);
                 }
                 try {
-                    if(qn.getDateCreated() != null) {
+                    if (qn.getDateCreated() != null) {
                         node.put("dateCreated", dateFormat.format(qn.getDateCreated()));
-                    }else{
+                    } else {
                         node.put("dateCreated", "");
                     }
-                }catch (Exception ex){
-                    log.error(ex.getMessage(),ex);
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
                     node.put("dateCreated", "");
                 }
                 //
                 list.add(node);
             }
             return list;
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return null;
     }
 
+    @Override
+    public boolean attemptDeleteUser(DeleteWrapper request) {
+        try {
+            if (request.getId() != null) {
+                UserAccountEntity account = userAccountsRepository.findById(request.getId()).get();
+                userAccountsRepository.delete(account);
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
 
+
+    }
 }

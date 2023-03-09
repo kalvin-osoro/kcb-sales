@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
@@ -236,6 +237,26 @@ public class UsersVC {
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //delete user
+    @PostMapping("/users-delete-user")
+    public ResponseEntity<?> deleteUser(@RequestBody DeleteWrapper request) {
+
+        //INSIDE SERVICE
+        boolean success = usersService.attemptDeleteUser(request);
+
+        //Response
+        if(success){
+            //Object
+            ObjectNode node = mObjectMapper.createObjectNode();
+//          node.put("id",0);
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            }
+        }
 
 
 }

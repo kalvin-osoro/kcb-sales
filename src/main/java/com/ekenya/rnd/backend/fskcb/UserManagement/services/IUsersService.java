@@ -2,6 +2,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.services;
 
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.UserAccountEntity;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -44,4 +45,6 @@ public interface IUsersService {
     boolean attemptCreateSecurityQuestion(AddSecurityQnRequest model);
 
     List<ObjectNode> loadAllSecurityQuestions();
+
+    boolean attemptDeleteUser(DeleteWrapper request);
 }
