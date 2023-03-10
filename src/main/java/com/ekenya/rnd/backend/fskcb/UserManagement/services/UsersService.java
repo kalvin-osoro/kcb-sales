@@ -15,6 +15,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserP
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUserAccountsRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.EditWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.UsersExcelImportResult;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
@@ -707,5 +708,24 @@ public class UsersService implements IUsersService {
         return false;
 
 
+    }
+
+    @Override
+    public boolean attemptEditUser(EditWrapper request) {
+        try {
+            if (request.getId() != null) {
+                UserAccountEntity account = userAccountsRepository.findById(request.getId()).get();
+                account.setStaffNo(request.getStaffNo());
+                account.setEmail(request.getEmail());
+                account.setPhoneNumber(request.getPhoneNo());
+                account.setFullName(request.getFullName());
+                account.setLastModified(Calendar.getInstance().getTime());
+                userAccountsRepository.save(account);
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
     }
 }

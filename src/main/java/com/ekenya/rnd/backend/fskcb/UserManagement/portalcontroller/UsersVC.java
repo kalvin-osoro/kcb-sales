@@ -3,6 +3,7 @@ package com.ekenya.rnd.backend.fskcb.UserManagement.portalcontroller;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.EditWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
@@ -248,6 +249,25 @@ public class UsersVC {
         if(success){
             //Object
             ObjectNode node = mObjectMapper.createObjectNode();
+
+                return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+            }else{
+
+                //Response
+                return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+            }
+        }
+        //edit user
+        @PostMapping("/edit-user")
+        public ResponseEntity<?> editUser(@RequestBody EditWrapper request) {
+
+            //INSIDE SERVICE
+            boolean success = usersService.attemptEditUser(request);
+
+            //Response
+            if(success){
+                //Object
+                ObjectNode node = mObjectMapper.createObjectNode();
 
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
             }else{
