@@ -1,6 +1,7 @@
 package com.ekenya.rnd.backend.fskcb.DSRModule.service;
 
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.*;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.EditWrapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -57,4 +58,6 @@ public interface IDSRPortalService {
     boolean attemptDeleteTeam(Long teamId);
 
     boolean attemptEditUser(EditWrapper request);
+
+    boolean attemptDeleteUser(DeleteWrapper request);
 }

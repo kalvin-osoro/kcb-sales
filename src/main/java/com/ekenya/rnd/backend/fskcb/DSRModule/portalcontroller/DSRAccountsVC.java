@@ -5,6 +5,7 @@ import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.DSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.models.reqs.ExportDSRAccountsRequest;
 import com.ekenya.rnd.backend.fskcb.DSRModule.service.IDSRPortalService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.SystemRoles;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.EditWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.reps.*;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
@@ -246,6 +247,25 @@ public class DSRAccountsVC {
 
         //INSIDE SERVICE
         boolean success = dsrPortalService.attemptEditUser(request);
+
+        //Response
+        if(success){
+            //Object
+            ObjectNode node = mObjectMapper.createObjectNode();
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
+
+    @PostMapping("/delete-dsr")
+    public ResponseEntity<?> deleteDSR(@RequestBody DeleteWrapper request) {
+
+        //INSIDE SERVICE
+        boolean success = dsrPortalService.attemptDeleteUser(request);
 
         //Response
         if(success){

@@ -18,6 +18,7 @@ import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.IUser
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.ProfilesAndUsersRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.repositories.UserProfilesRepository;
 import com.ekenya.rnd.backend.fskcb.UserManagement.helper.ExcelHelper;
+import com.ekenya.rnd.backend.fskcb.UserManagement.models.DeleteWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.EditWrapper;
 import com.ekenya.rnd.backend.fskcb.UserManagement.models.ExcelImportError;
 import com.ekenya.rnd.backend.fskcb.UserManagement.payload.AddAdminUserRequest;
@@ -1299,6 +1300,20 @@ public class DSRPortalService implements IDSRPortalService {
                 account.setFullName(request.getFullName());
                 account.setUpdatedOn(Calendar.getInstance().getTime());
                 dsrAccountsRepository.save(account);
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean attemptDeleteUser(DeleteWrapper request) {
+        try {
+            if (request.getId() != null) {
+                DSRAccountEntity account = dsrAccountsRepository.findById(request.getId()).get();
+                dsrAccountsRepository.delete(account);
                 return true;
             }
         } catch (Exception e) {
