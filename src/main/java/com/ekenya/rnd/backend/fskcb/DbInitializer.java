@@ -92,7 +92,7 @@ public class  DbInitializer {
         //
         String adminName = "System Admin";
         String adminUserName = "Admin";
-        String adminEmail = "admin@kcbfieldsales.co.ke";
+        String adminEmail = "admin123@kcbfieldsales.co.ke";
         String adminPass = "Admin@4321";
         try{
             //check if user already exists by username or email
@@ -141,7 +141,7 @@ public class  DbInitializer {
         //
         String adminName = "System Admin Test";
         String adminUserName = "AdminTest";
-        String adminEmail = "admintest@kcbfieldsales.co.ke";
+        String adminEmail = "admintest1@kcbfieldsales.co.ke";
         String adminPass = "Admin@4321";
         try{
             //check if user already exists by username or email
@@ -188,8 +188,8 @@ public class  DbInitializer {
     private void createAdminUser2(){
         //
         String adminName = "System delta";
-        String adminUserName = "DeltaTest";
-        String adminEmail = "deltatest@kcbfieldsales.co.ke";
+        String adminUserName = "KCB00987";
+        String adminEmail = "deltatest23@kcbfieldsales.co.ke";
         String adminPass = "delta@4321";
         try{
             //check if user already exists by username or email
