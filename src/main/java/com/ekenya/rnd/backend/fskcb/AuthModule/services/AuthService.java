@@ -340,6 +340,8 @@ public class AuthService implements IAuthService{
                 LoginResponse response = new LoginResponse();
                 response.setSuccess(false);
                 response.setRemAttempts(userAccount.getRemLoginAttempts());
+                //login logs----------
+
                 //
                 return response;
             }
@@ -874,6 +876,19 @@ public class AuthService implements IAuthService{
             mLogger.log(Level.SEVERE, e.getMessage(), e);
         }
         return null;
+    }
+
+
+
+    public  void loginTrail(String username,  boolean loginStatus, String channel) {
+        LoginLogs loginTrailEntity = new LoginLogs();
+        loginTrailEntity.setFullName(username);
+//        loginTrailEntity.setIpAddress(ipAddress);
+        loginTrailEntity.setSuccessful(loginStatus);
+        loginTrailEntity.setChannel(channel);
+//        loginTrailEntity.setLoginMessage(loginMessage);
+        loginTrailEntity.setLoginDate(new Date());
+        loginLogsRepository.save(loginTrailEntity);
     }
 
 
