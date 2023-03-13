@@ -865,6 +865,7 @@ public class AuthService implements IAuthService{
 //                node.put("os",log.getOs());
 //                node.put("device",log.getDevice());
                 node.put("email",log.getEmail());
+                node.put("channel",log.getChannel());
                 node.put("status",log.isSuccessful());
                 list.add(node);
             }
