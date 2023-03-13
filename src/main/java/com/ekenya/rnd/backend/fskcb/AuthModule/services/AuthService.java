@@ -857,15 +857,15 @@ public class AuthService implements IAuthService{
             for (LoginLogs log : logs) {
                 ObjectNode node = mObjectMapper.createObjectNode();
                 node.put("id",log.getId());
-//                node.put("staffNo",log.getStaffNo());
+                node.put("fullName",log.getFullName());
                 node.put("loginTime",log.getLoginDate().toString());
 //                node.put("logoutTime",log.getLogoutTime().toString());
 //                node.put("ipAddress",log.getIpAddress());
 //                node.put("browser",log.getBrowser());
 //                node.put("os",log.getOs());
 //                node.put("device",log.getDevice());
-                node.put("device",log.isSuccessful());
-                node.put("status",log.getEmail());
+                node.put("email",log.getEmail());
+                node.put("status",log.isSuccessful());
                 list.add(node);
             }
             return list;
