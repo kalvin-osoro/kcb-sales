@@ -246,7 +246,7 @@ public class SMSService implements ISmsService{
 //        } else {
 //            jsonObjectBody.addProperty("from", SMS_SENDER_ID);
 //        }
-        jsonObjectBody.addProperty("from", SMS_SENDER_ID1);
+        jsonObjectBody.addProperty("from", SMS_SENDER_ID);
         jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
         jsonObjectBody.addProperty("clientid", client_id);
         jsonObjectBody.addProperty("username", SMS_USER_NAME);
