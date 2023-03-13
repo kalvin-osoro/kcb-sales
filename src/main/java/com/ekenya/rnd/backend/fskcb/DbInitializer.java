@@ -75,6 +75,7 @@ public class  DbInitializer {
         createAdminUser();
         createAdminUser1();
         createAdminUser2();
+        createAdminUser4();
 
         //4. Seed demo DSRs
         createTestRegionsAndTeams();
@@ -227,6 +228,57 @@ public class  DbInitializer {
             }
             //
             log.info("Admin Account registered successfully");
+
+        }catch (Exception exception){
+
+            log.error("Register Admin Account failed."+exception.getMessage(), exception);
+        }
+    }
+
+    private void createAdminUser4(){
+        log.info("Creating admin user 4 .............");
+        //
+        String adminName = "Super Admin";
+        String adminUserName = "Super";
+        String adminEmail = "super@kcbfieldsales.co.ke";
+        String adminPass = "Super@4321";
+        try{
+            //check if user already exists by username or email
+            if(IUserAccountsRepository.existsByEmail(adminEmail)){
+                log.warn("Admin user already exists, skipping ..");
+                return;
+            }
+
+            //create new user object
+            UserAccountEntity userApp = new UserAccountEntity();
+            userApp.setStaffNo(adminUserName);
+            userApp.setEmail(adminEmail);
+            userApp.setFullName(adminName);
+            userApp.setPassword(passwordEncoder.encode(adminPass));
+            userApp.setPhoneNumber("");
+            userApp.setAccountType(AccountType.ADMIN);
+            IUserAccountsRepository.save(userApp);//save user to db
+
+
+
+            //
+            UserRoleEntity userRole = roleRepository.findByName(SystemRoles.SYS_ADMIN).get();//get role from db
+            userApp.setRoles(Collections.singleton(userRole));//set role to user
+            IUserAccountsRepository.save(userApp);//save user to db
+
+            //Add admin to all profiles
+            for (UserProfileEntity profile: profilesRepository.findAll()) {
+                //Add user to profile
+
+                ProfileAndUserEntity profileAndUserEntity = new ProfileAndUserEntity();
+                profileAndUserEntity.setUserId(userApp.getId());
+                profileAndUserEntity.setProfileId(profile.getId());
+                profileAndUserEntity.setStatus(Status.ACTIVE);
+
+                profilesAndUsersRepository.save(profileAndUserEntity);
+            }
+            //
+            log.info("Admin Account registered successfully.........");
 
         }catch (Exception exception){
 
