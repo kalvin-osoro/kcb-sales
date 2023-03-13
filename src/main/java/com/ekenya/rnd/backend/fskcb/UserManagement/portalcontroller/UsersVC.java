@@ -24,9 +24,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "/api/v1")
-//@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
-//@PreAuthorize("isAuthenticated()")
-//hasRole('USER') is the same as hasAuthority('ROLE_USER')
+@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class UsersVC {
 
     @Autowired
