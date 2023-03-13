@@ -241,7 +241,7 @@ public class  DbInitializer {
         String adminName = "Super Admin";
         String adminUserName = "Super";
         String adminEmail = "super@kcbfieldsales.co.ke";
-        String adminPass = "Super@4321";
+        String adminPass = "Super@432";
         try{
             //check if user already exists by username or email
             if(IUserAccountsRepository.existsByEmail(adminEmail)){
