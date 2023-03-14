@@ -18,7 +18,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       database: MYSQL
-      ddl-auto: update
+      ddl-auto: create-drop
       properties:
         hibernate:
           dialect: org.hibernate.dialect.MySQL8Dialect
