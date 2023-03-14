@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "Privilege Management")
 @RestController
 @RequestMapping(path = "/api/v1")
-@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
+//@PreAuthorize("hasAuthority('"+SystemRoles.SYS_ADMIN+"') or hasAuthority('"+SystemRoles.ADMIN+"')")
 public class ProfilesVC {
     @Autowired
     ObjectMapper mObjectMapper;
