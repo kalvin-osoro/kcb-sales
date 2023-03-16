@@ -8,6 +8,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.ekenya.rnd.backend.utils.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -57,7 +59,7 @@ public class AuthPortalController {
                 node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());
                 //
-                loginTrail(resp.getName(),true,"portal");
+                loginTrail(resp.getName(),true,"portal",resp.getProfiles()==null ? null:resp.getProfiles());
                 //
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"User login successful"));
             }else if(resp.getErrorMessage() != null){
@@ -135,7 +137,7 @@ public class AuthPortalController {
     }
 
 
-    public  void loginTrail(String username,  boolean loginStatus, String channel) {
+    public  void loginTrail(String username, boolean loginStatus, String channel, ArrayNode profiles) {
         LoginLogs loginTrailEntity = new LoginLogs();
         loginTrailEntity.setFullName(username);
 //        loginTrailEntity.setIpAddress(ipAddress);

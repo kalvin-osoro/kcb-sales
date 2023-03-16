@@ -9,6 +9,7 @@ import com.ekenya.rnd.backend.fskcb.AuthModule.services.IAuthService;
 import com.ekenya.rnd.backend.fskcb.UserManagement.services.IUsersService;
 import com.ekenya.rnd.backend.responses.BaseAppResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -72,7 +73,7 @@ public class AuthChannelController {
                 node.put("changePin",resp.isShouldChangePin() ? 1 : 0);
                 node.put("setSecQns",resp.isShouldSetSecQns() ? 1 : 0);
                 //
-                loginTrail(resp.getName(),true,"app");
+                loginTrail(resp.getName(),true,"app",resp.getProfiles()==null? null :resp.getProfiles());
                 return ResponseEntity.ok(new BaseAppResponse(1, node, "Request processed successful"));
 
             }else if(resp.getErrorMessage() != null){
@@ -256,7 +257,7 @@ public class AuthChannelController {
         return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
     }
 
-    public  void loginTrail(String username,  boolean loginStatus, String channel) {
+    public  void loginTrail(String username, boolean loginStatus, String channel, ArrayNode profiles) {
         LoginLogs loginTrailEntity = new LoginLogs();
         loginTrailEntity.setFullName(username);
 //        loginTrailEntity.setIpAddress(ipAddress);
