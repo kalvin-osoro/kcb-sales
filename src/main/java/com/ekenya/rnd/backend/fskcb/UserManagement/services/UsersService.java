@@ -713,7 +713,7 @@ public class UsersService implements IUsersService {
     @Override
     public boolean attemptEditUser(EditWrapper request) {
         try {
-            if (request.getId() != null) {
+            if (request.getStaffNo() != null) {
                 UserAccountEntity account = userAccountsRepository.findByStaffNo(request.getStaffNo()).get();
                 account.setStaffNo(request.getStaffNo());
                 account.setEmail(request.getEmail());
