@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EditWrapper {
-    private Long id;
+//    private Long id;
     private String staffNo;
     private String fullName;
     private String email;
