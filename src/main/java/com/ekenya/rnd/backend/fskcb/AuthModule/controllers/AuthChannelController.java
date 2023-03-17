@@ -73,7 +73,7 @@ public class AuthChannelController {
                 node.put("changePin",resp.isShouldChangePin() ? 1 : 0);
                 node.put("setSecQns",resp.isShouldSetSecQns() ? 1 : 0);
                 //
-                loginTrail(resp.getName(),true,"app",resp.getProfiles()==null? null :resp.getProfiles());
+                loginTrail(resp.getName(),true,"app");
                 return ResponseEntity.ok(new BaseAppResponse(1, node, "Request processed successful"));
 
             }else if(resp.getErrorMessage() != null){
@@ -257,13 +257,13 @@ public class AuthChannelController {
         return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createArrayNode(),"Request could NOT be processed. Please try again later"));
     }
 
-    public  void loginTrail(String username, boolean loginStatus, String channel, ArrayNode profiles) {
+    public  void loginTrail(String username, boolean loginStatus, String channel) {
         LoginLogs loginTrailEntity = new LoginLogs();
         loginTrailEntity.setFullName(username);
 //        loginTrailEntity.setIpAddress(ipAddress);
         loginTrailEntity.setSuccessful(loginStatus);
         loginTrailEntity.setChannel(channel);
-        loginTrailEntity.setProfileCode(profiles);
+//        loginTrailEntity.setProfileCode(profiles);
 //        loginTrailEntity.setLoginMessage(loginMessage);
         loginTrailEntity.setLoginDate(new Date());
         loginLogsRepository.save(loginTrailEntity);

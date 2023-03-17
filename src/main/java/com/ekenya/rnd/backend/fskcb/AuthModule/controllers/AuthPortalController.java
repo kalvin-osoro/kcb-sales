@@ -59,7 +59,7 @@ public class AuthPortalController {
                 node.put("expires_in",resp.getExpiresInMinutes());
                 node.putPOJO("profiles",resp.getProfiles());
                 //
-                loginTrail(resp.getName(),true,"portal",resp.getProfiles()==null ? null:resp.getProfiles());
+                loginTrail(resp.getName(),true,"portal");
                 //
                 return ResponseEntity.ok(new BaseAppResponse(1,node,"User login successful"));
             }else if(resp.getErrorMessage() != null){
@@ -137,13 +137,13 @@ public class AuthPortalController {
     }
 
 
-    public  void loginTrail(String username, boolean loginStatus, String channel, ArrayNode profiles) {
+    public  void loginTrail(String username, boolean loginStatus, String channel) {
         LoginLogs loginTrailEntity = new LoginLogs();
         loginTrailEntity.setFullName(username);
 //        loginTrailEntity.setIpAddress(ipAddress);
         loginTrailEntity.setSuccessful(loginStatus);
         loginTrailEntity.setChannel(channel);
-        loginTrailEntity.setProfileCode(profiles);
+//        loginTrailEntity.setProfileCode(profiles);
 //        loginTrailEntity.setLoginMessage(loginMessage);
         loginTrailEntity.setLoginDate(new Date());
         loginLogsRepository.save(loginTrailEntity);
