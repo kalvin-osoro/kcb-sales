@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.AuthModule.datasource.entities;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,5 @@ public class LoginLogs {
     private boolean successful=false;
     private String fullName;
     private String channel;
+    private ArrayNode profileCode;
 }

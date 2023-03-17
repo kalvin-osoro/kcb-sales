@@ -143,6 +143,7 @@ public class AuthPortalController {
 //        loginTrailEntity.setIpAddress(ipAddress);
         loginTrailEntity.setSuccessful(loginStatus);
         loginTrailEntity.setChannel(channel);
+        loginTrailEntity.setProfileCode(profiles);
 //        loginTrailEntity.setLoginMessage(loginMessage);
         loginTrailEntity.setLoginDate(new Date());
         loginLogsRepository.save(loginTrailEntity);
