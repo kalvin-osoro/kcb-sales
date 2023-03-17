@@ -24,5 +24,5 @@ public class LoginLogs {
     private boolean successful=false;
     private String fullName;
     private String channel;
-    private ArrayNode profileCode;
+//    private ArrayNode profileCode;
 }
