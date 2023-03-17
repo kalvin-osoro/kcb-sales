@@ -1,5 +1,6 @@
 package com.ekenya.rnd.backend.fskcb.UserManagement.models;
 
+import com.ekenya.rnd.backend.fskcb.UserManagement.datasource.entities.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class EditWrapper {
     private String fullName;
     private String email;
     private String phoneNo;
+    private AccountType accountType;
 }

@@ -718,6 +718,7 @@ public class UsersService implements IUsersService {
                 account.setStaffNo(request.getStaffNo());
                 account.setEmail(request.getEmail());
                 account.setPhoneNumber(request.getPhoneNo());
+                account.setAccountType(request.getAccountType());
                 account.setFullName(request.getFullName());
                 account.setLastModified(Calendar.getInstance().getTime());
                 userAccountsRepository.save(account);
