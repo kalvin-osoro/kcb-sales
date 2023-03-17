@@ -127,7 +127,7 @@ public class UsersService implements IUsersService {
                 //
                 UserAccountEntity account = new UserAccountEntity();
                 account.setPhoneNumber(model.getPhoneNo());
-                account.setAccountType(AccountType.ADMIN);
+                account.setAccountType(type);
                 account.setFullName(model.getFullName());
                 account.setEmail(model.getEmail());
                 account.setStaffNo(model.getStaffNo());
@@ -137,10 +137,10 @@ public class UsersService implements IUsersService {
                 //userRepository.save(account);//save user to db
                 //
 
-//                if (type == AccountType.ADMIN) {
+                if (type == AccountType.ADMIN) {
                     //CAN ACCESS PORTAL
-//                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
-//                    account.setRoles(Collections.singleton(userRole));//set role to user
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
                     userAccountsRepository.save(account);//save user to db
 
                     //
@@ -154,20 +154,20 @@ public class UsersService implements IUsersService {
                     } else {
 
                     }
-//                } else {
-//                    //DSR Account..
-//                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
-//                    account.setRoles(Collections.singleton(userRole));//set role to user
-////                    userAccountsRepository.save(account);//save user to db
-//                    if (model.getIsRm()) {
-//                        userRole = roleRepository.findByName(SystemRoles.RM).get();//get role from db
-//                        account.setRoles(Collections.singleton(userRole));//set role to user
-//                        //save user to db
-//
-//                    }
-//                    userAccountsRepository.save(account);
-//
-//                }
+                } else {
+                    //DSR Account..
+                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.DSR).get();//get role from db
+                    account.setRoles(Collections.singleton(userRole));//set role to user
+//                    userAccountsRepository.save(account);//save user to db
+                    if (model.getIsRm()) {
+                        userRole = roleRepository.findByName(SystemRoles.RM).get();//get role from db
+                        account.setRoles(Collections.singleton(userRole));//set role to user
+                        //save user to db
+
+                    }
+                    userAccountsRepository.save(account);
+
+                }
                 //
                 return true;
             }
