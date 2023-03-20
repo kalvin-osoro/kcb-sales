@@ -199,7 +199,7 @@ public class UsersService implements IUsersService {
                     account.setPassword(passwordEncoder.encode(password));
                     //add user to db and assign default  role
                     UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
-                    account.setRoles(Collections.singleton(userRole));//set role to user
+//                    account.setRoles(Collections.singleton(userRole));//set role to user
                     //
                     userAccountsRepository.save(account);
                     //
