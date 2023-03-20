@@ -511,7 +511,7 @@ public class DSRPortalService implements IDSRPortalService {
                                 "Sales Code: " + dsrDetails.getSalesCode() + "\n" +
                                 "Expiry Date: " + dsrDetails.getExpiryDate() + "\n\n" +
                                 "Please use this link to download the app:\n" +
-                                "https://drive.google.com/file/d/1pjRUBXpG43Xz0DVTMv00qy2eQagx5LLC/view?usp=share_link\n\n" +
+                                "https://drive.google.com/file/d/1wWcSfBw8toSU3C_96ZA_mnaCCcXvIzRu/view?usp=share_link\n\n" +
                                 "Thank you.";
                         sendEmail(dsrDetails.getEmail(), subject, message);
                     }
@@ -1009,7 +1009,7 @@ public class DSRPortalService implements IDSRPortalService {
                                     "Sales Code: " + account1.getSalesCode() + "\n" +
                                     "Expiry Date: " + account1.getExpiryDate() + "\n\n" +
                                     "Please use this link to download the app:\n" +
-                                    "https://drive.google.com/file/d/1pjRUBXpG43Xz0DVTMv00qy2eQagx5LLC/view?usp=share_link\n\n" +
+                                    "https://drive.google.com/file/d/1wWcSfBw8toSU3C_96ZA_mnaCCcXvIzRu/view?usp=share_link\n\n" +
 //                                    "and this linnk to access the portal:\n" +
 //                                    "http://kcb-ses-poc-frontend-kcb-ses-poc.apps.dev.aro.kcbgroup.com//\n\n" +
                                     "Thank you.";
