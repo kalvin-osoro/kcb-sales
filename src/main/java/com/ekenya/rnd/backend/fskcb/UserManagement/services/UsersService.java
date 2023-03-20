@@ -139,8 +139,8 @@ public class UsersService implements IUsersService {
 
                 if (type == AccountType.ADMIN) {
                     //CAN ACCESS PORTAL
-                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
-                    account.setRoles(Collections.singleton(userRole));//set role to user
+//                    UserRoleEntity userRole = roleRepository.findByName(SystemRoles.ADMIN).get();//get role from db
+//                    account.setRoles(Collections.singleton(userRole));//set role to user
                     userAccountsRepository.save(account);//save user to db
 
                     //
