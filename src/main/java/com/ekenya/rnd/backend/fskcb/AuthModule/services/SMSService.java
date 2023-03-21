@@ -241,11 +241,11 @@ public class SMSService implements ISmsService{
         JsonObject jsonObjectBody = new JsonObject();
         jsonObjectBody.addProperty("to", phoneNo);
         jsonObjectBody.addProperty("message", message);
-//        if (LocalTime.now().isBefore(LocalTime.of(18, 0))) {
-//            jsonObjectBody.addProperty("from", SMS_SENDER_ID1);
-//        } else {
-//            jsonObjectBody.addProperty("from", SMS_SENDER_ID);
-//        }
+        if (LocalTime.now().isBefore(LocalTime.of(18, 0))) {
+            jsonObjectBody.addProperty("from", SMS_SENDER_ID1);
+        } else {
+            jsonObjectBody.addProperty("from", SMS_SENDER_ID);
+        }
         jsonObjectBody.addProperty("from", SMS_SENDER_ID);
         jsonObjectBody.addProperty("transactionID", "FS"+(random.nextInt((max + 1)-min)+min));
         jsonObjectBody.addProperty("clientid", client_id);
