@@ -6,7 +6,7 @@ spring:
     username: user
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         default_schema: rpc-wallet-db
