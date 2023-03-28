@@ -50,4 +50,6 @@ public interface IUsersService {
     boolean attemptDeleteUser(DeleteWrapper request);
 
     boolean attemptEditUser(EditWrapper request);
+
+    boolean attemptUnblockUser1(String staffNo);
 }

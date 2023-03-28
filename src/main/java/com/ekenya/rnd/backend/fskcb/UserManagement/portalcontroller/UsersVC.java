@@ -216,6 +216,26 @@ public class UsersVC {
             return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
         }
     }
+    //test ublock using swagger and staff number
+    @PostMapping("/users-unblock-user1")
+    public ResponseEntity<?> unblockUser1(@RequestBody UnblockAdminUserRequest request) {
+
+        //
+        boolean success = usersService.attemptUnblockUser1(request.getStaffNo());
+
+        //Response
+        if(success){
+            //Object
+            ObjectNode node = mObjectMapper.createObjectNode();
+//          node.put("id",0);
+
+            return ResponseEntity.ok(new BaseAppResponse(1,node,"Request Processed Successfully"));
+        }else{
+
+            //Response
+            return ResponseEntity.ok(new BaseAppResponse(0,mObjectMapper.createObjectNode(),"Request could NOT be processed. Please try again later"));
+        }
+    }
 
     @PostMapping("/users-get-audit-trail")
     public ResponseEntity<?> userAuditTrail(@RequestBody AdminUserAuditTrailRequest request) {

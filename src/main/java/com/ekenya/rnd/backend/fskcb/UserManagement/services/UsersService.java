@@ -729,4 +729,22 @@ public class UsersService implements IUsersService {
         }
         return false;
      }
+
+    @Override
+    public boolean attemptUnblockUser1(String staffNo) {
+        try {
+
+            UserAccountEntity account = userAccountsRepository.findByStaffNo(staffNo).get();
+            //
+            account.setBlocked(false);
+            account.setRemLoginAttempts(3);
+            account.setLastModified(Calendar.getInstance().getTime());
+            userAccountsRepository.save(account);
+            //
+            return true;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
+    }
 }
